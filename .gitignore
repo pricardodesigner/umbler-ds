@@ -1,0 +1,13 @@
+# Skill bundle (build artifact)
+umbler-ds.skill
+umbootstrap-ds.skill
+
+# Skill source (editado via skill folder, não precisa ficar no repo do HTML)
+umbootstrap-ds/
+umbootstrap-ds-workspace/
+
+# Planos / notas locais
+umbootstrap-build-plan.txt
+
+# OS
+.DS_Store
