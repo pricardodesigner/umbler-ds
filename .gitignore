@@ -9,5 +9,9 @@ umbootstrap-ds-workspace/
 # Planos / notas locais
 umbootstrap-build-plan.txt
 
+# Outputs gerados por mim no Cowork
+skill-validation.html
+push-to-github.sh
+
 # OS
 .DS_Store

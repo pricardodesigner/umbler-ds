@@ -986,6 +986,51 @@
       font-size: 11px; font-weight: 700; color: var(--umb-brand-color); cursor: pointer;
     }
 
+    /* --- AVATAR MENU (Theme Switcher + Logout) ---
+       Abre ao clicar no .umb-si-avatar da sidebar; lista os 5 temas do DS
+       (Auto/Claro/Escuro/Esmeralda/Bravia) + link de logout.
+       Usa Bootstrap dropdown (dropend) — o setTheme() global reaproveitado. */
+    .umb-avatar-menu { position: relative; display: flex; }
+    .umb-avatar-menu .umb-si-avatar {
+      border: 0; padding: 0; outline: 0; font-family: inherit;
+      transition: box-shadow .12s;
+    }
+    .umb-avatar-menu .umb-si-avatar:focus-visible,
+    .umb-avatar-menu .umb-si-avatar[aria-expanded="true"] {
+      box-shadow: 0 0 0 2px var(--umb-brand-color);
+    }
+    .umb-avatar-dropdown { min-width: 220px; padding: 12px !important; }
+    .umb-avatar-menu-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--umb-text-dim); margin: 2px 4px 8px;
+    }
+    .umb-avatar-theme-options { display: flex; flex-direction: column; gap: 2px; }
+    /* Sobrescreve as cores do .theme-option dentro do dropdown do avatar —
+       o default usa tokens de sidebar (branco em temas Claro/Esmeralda),
+       que ficam invisíveis no dropdown (fundo branco). Aqui usamos tokens de conteúdo. */
+    .umb-avatar-dropdown .theme-option { color: var(--umb-text-primary); }
+    .umb-avatar-dropdown .theme-option:hover {
+      color: var(--bs-primary);
+      background: rgba(var(--bs-primary-rgb), .08);
+    }
+    .umb-avatar-dropdown .theme-option.active {
+      color: var(--bs-primary);
+      background: rgba(var(--bs-primary-rgb), .12);
+    }
+    .umb-avatar-logout {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; width: 100%; text-align: left;
+      border: 0; background: transparent; border-radius: 8px;
+      font-size: 13px; font-weight: 500; font-family: inherit;
+      color: var(--umb-alert-danger-color); cursor: pointer;
+      transition: background .12s;
+    }
+    .umb-avatar-logout:hover { background: var(--umb-alert-danger-bg); }
+    .umb-avatar-logout i { font-size: 15px; flex-shrink: 0; }
+    /* Permite que o dropdown do avatar extrapole containers de preview com overflow:hidden */
+    .tpl-preview:has(.dropdown-menu.show),
+    .tpl-mobile-frame:has(.dropdown-menu.show) { overflow: visible; }
+
     /* Main area (header + content) */
     .umb-shell-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
@@ -3144,44 +3189,12 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         <div class="comp-row">
           <div style="display:flex;gap:24px;align-items:flex-start">
             <!-- Sidebar isolada -->
-            <div class="umb-shell-sidebar" style="height:360px;border-radius:10px;border:1px solid var(--umb-border)">
-              <div class="umb-shell-logo">
-                <svg id="icon-custom-logo-utalk" width="30" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.8431 11.4306C17.5608 12.1241 17.0622 12.7081 16.4214 13.0955C15.7807 13.483 15.032 13.6533 14.2867 13.5811C13.5414 13.5089 12.8393 13.1981 12.2848 12.6949C11.7303 12.1916 11.353 11.5229 11.2091 10.7881C11.1772 10.6216 11.1579 10.453 11.1514 10.2836C11.1452 10.0614 11.0627 9.84803 10.9178 9.67944C10.7728 9.51085 10.5742 9.39731 10.3554 9.3579L8.70067 9.06865C8.54463 9.0399 8.3842 9.04543 8.2305 9.08485C8.07681 9.12427 7.93352 9.19663 7.81058 9.29694C7.68763 9.39725 7.58798 9.52309 7.51851 9.66574C7.44904 9.8084 7.41142 9.96445 7.40826 10.1231C7.40826 10.1338 7.40826 10.1445 7.40826 10.1566C7.42419 11.847 8.03278 13.4782 9.12796 14.766C10.2231 16.0537 11.7355 16.9163 13.4014 17.2035C15.0673 17.4907 16.7811 17.1842 18.2442 16.3374C19.7073 15.4906 20.8269 14.1573 21.4079 12.5698C21.4594 12.4203 21.4777 12.2613 21.4614 12.104C21.4451 11.9467 21.3946 11.7949 21.3135 11.6591C21.2325 11.5233 21.1227 11.4069 20.992 11.3179C20.8612 11.2289 20.7126 11.1696 20.5566 11.144L18.9009 10.8544C18.6852 10.8152 18.4627 10.851 18.2703 10.9559C18.0779 11.0607 17.9271 11.2282 17.8431 11.4306Z" fill="#FCD7DB"/><path d="M24.5813 5.73039C24.2777 5.83957 24.0225 6.0527 23.861 6.33201C23.6994 6.61132 23.642 6.93879 23.6988 7.25641C23.8133 7.90652 23.8707 8.5654 23.8704 9.22552C23.8704 14.9103 19.6751 19.5185 14.5001 19.5185C9.32508 19.5185 5.12978 14.9103 5.12978 9.22552C5.12128 7.24122 5.65073 5.2917 6.66183 3.5843C6.8199 3.32329 6.88567 3.01673 6.84859 2.71385C6.81151 2.41097 6.67374 2.12934 6.45738 1.91416L4.93136 0.400874C4.78362 0.254338 4.60471 0.143047 4.40796 0.0753028C4.21122 0.00755899 4.00171 -0.0148896 3.79508 0.0096306C3.58845 0.0341508 3.39002 0.105006 3.21459 0.216914C3.03916 0.328822 2.89126 0.478896 2.78192 0.655938C1.22576 3.24258 0.409783 6.20688 0.42301 9.22552C0.42301 17.7656 6.72417 24.6888 14.5001 24.6888C22.276 24.6888 28.5771 17.7656 28.5771 9.22552C28.5777 8.17556 28.4809 7.1278 28.2879 6.09572C28.251 5.89904 28.1719 5.71273 28.0559 5.54968C27.9399 5.38663 27.7898 5.25075 27.6161 5.15144C27.4424 5.05214 27.2492 4.99178 27.0498 4.97455C26.8505 4.95732 26.6497 4.98364 26.4616 5.05167L24.5813 5.73039Z" fill="white"/></svg>
-              </div>
-              <div class="umb-shell-nav">
-                <div class="umb-si active" title="Chat"><i class="ph ph-chat-circle"></i></div>
-                <div class="umb-si" title="Contatos"><i class="ph ph-address-book"></i></div>
-                <div class="umb-si" title="Relatórios"><i class="ph ph-chart-bar"></i></div>
-                <div class="umb-si" title="Integrações"><i class="ph ph-plugs"></i></div>
-                <div class="umb-si" title="Campanhas"><i class="ph ph-paper-plane-tilt"></i></div>
-                <div class="umb-si" title="Agentes de IA"><i class="ph ph-robot"></i></div>
-                <div class="umb-si" title="Automações"><i class="ph ph-flow-arrow"></i></div>
-              </div>
-              <div class="umb-shell-bottom">
-                <div class="umb-si active" title="Configurações"><i class="ph ph-gear"></i></div>
-                <div class="umb-si" title="Notificações"><i class="ph ph-bell"></i></div>
-                <div class="umb-si" title="Ajuda"><i class="ph ph-question"></i></div>
-                <div class="umb-si-avatar" title="Perfil">RC</div>
-              </div>
-            </div>
+            <div class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Conversas" style="height:360px;border-radius:10px;border:1px solid var(--umb-border)"></div>
 
             <!-- Topbar isolada -->
             <div style="flex:1">
               <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--umb-text-dim);margin-bottom:8px">Topbar / Header</p>
-              <div class="umb-shell-header" style="border-radius:10px;border:1px solid var(--umb-border)">
-                <div class="umb-breadcrumb">
-                  <span class="umb-bc-item">Configurações</span>
-                  <span class="umb-bc-sep"><i class="ph ph-caret-right"></i></span>
-                  <span class="umb-bc-item active">Agentes de IA</span>
-                </div>
-                <div class="umb-shell-header-right">
-                  <div class="umb-credits">
-                    <i class="ph ph-coins"></i>
-                    <span>3.206,92</span>
-                  </div>
-                  <button class="btn btn-sm btn-outline-primary" style="font-size:12px">Comprar créditos</button>
-                </div>
-              </div>
+              <div class="umb-shell-header" data-umb-c="header" data-brand="false" data-breadcrumb="Configurações / Agentes de IA" style="border-radius:10px;border:1px solid var(--umb-border)"></div>
 
               <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--umb-text-dim);margin:16px 0 8px">Mobile — Bottom Navigation</p>
               <div class="umb-mobile-bottom-nav" style="border-radius:10px;border:1px solid var(--umb-border)">
@@ -3208,40 +3221,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             <div class="tpl-preview">
               <div class="umb-shell">
                 <!-- Sidebar -->
-                <nav class="umb-shell-sidebar">
-                  <div class="umb-shell-logo">
-                    <svg id="icon-custom-logo-utalk" width="30" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.8431 11.4306C17.5608 12.1241 17.0622 12.7081 16.4214 13.0955C15.7807 13.483 15.032 13.6533 14.2867 13.5811C13.5414 13.5089 12.8393 13.1981 12.2848 12.6949C11.7303 12.1916 11.353 11.5229 11.2091 10.7881C11.1772 10.6216 11.1579 10.453 11.1514 10.2836C11.1452 10.0614 11.0627 9.84803 10.9178 9.67944C10.7728 9.51085 10.5742 9.39731 10.3554 9.3579L8.70067 9.06865C8.54463 9.0399 8.3842 9.04543 8.2305 9.08485C8.07681 9.12427 7.93352 9.19663 7.81058 9.29694C7.68763 9.39725 7.58798 9.52309 7.51851 9.66574C7.44904 9.8084 7.41142 9.96445 7.40826 10.1231C7.40826 10.1338 7.40826 10.1445 7.40826 10.1566C7.42419 11.847 8.03278 13.4782 9.12796 14.766C10.2231 16.0537 11.7355 16.9163 13.4014 17.2035C15.0673 17.4907 16.7811 17.1842 18.2442 16.3374C19.7073 15.4906 20.8269 14.1573 21.4079 12.5698C21.4594 12.4203 21.4777 12.2613 21.4614 12.104C21.4451 11.9467 21.3946 11.7949 21.3135 11.6591C21.2325 11.5233 21.1227 11.4069 20.992 11.3179C20.8612 11.2289 20.7126 11.1696 20.5566 11.144L18.9009 10.8544C18.6852 10.8152 18.4627 10.851 18.2703 10.9559C18.0779 11.0607 17.9271 11.2282 17.8431 11.4306Z" fill="#FCD7DB"/><path d="M24.5813 5.73039C24.2777 5.83957 24.0225 6.0527 23.861 6.33201C23.6994 6.61132 23.642 6.93879 23.6988 7.25641C23.8133 7.90652 23.8707 8.5654 23.8704 9.22552C23.8704 14.9103 19.6751 19.5185 14.5001 19.5185C9.32508 19.5185 5.12978 14.9103 5.12978 9.22552C5.12128 7.24122 5.65073 5.2917 6.66183 3.5843C6.8199 3.32329 6.88567 3.01673 6.84859 2.71385C6.81151 2.41097 6.67374 2.12934 6.45738 1.91416L4.93136 0.400874C4.78362 0.254338 4.60471 0.143047 4.40796 0.0753028C4.21122 0.00755899 4.00171 -0.0148896 3.79508 0.0096306C3.58845 0.0341508 3.39002 0.105006 3.21459 0.216914C3.03916 0.328822 2.89126 0.478896 2.78192 0.655938C1.22576 3.24258 0.409783 6.20688 0.42301 9.22552C0.42301 17.7656 6.72417 24.6888 14.5001 24.6888C22.276 24.6888 28.5771 17.7656 28.5771 9.22552C28.5777 8.17556 28.4809 7.1278 28.2879 6.09572C28.251 5.89904 28.1719 5.71273 28.0559 5.54968C27.9399 5.38663 27.7898 5.25075 27.6161 5.15144C27.4424 5.05214 27.2492 4.99178 27.0498 4.97455C26.8505 4.95732 26.6497 4.98364 26.4616 5.05167L24.5813 5.73039Z" fill="white"/></svg>
-                  </div>
-                  <div class="umb-shell-nav">
-                    <div class="umb-si"><i class="ph ph-chat-circle"></i></div>
-                    <div class="umb-si"><i class="ph ph-address-book"></i></div>
-                    <div class="umb-si"><i class="ph ph-chart-bar"></i></div>
-                    <div class="umb-si"><i class="ph ph-plugs"></i></div>
-                    <div class="umb-si"><i class="ph ph-paper-plane-tilt"></i></div>
-                    <div class="umb-si active"><i class="ph ph-robot"></i></div>
-                    <div class="umb-si"><i class="ph ph-flow-arrow"></i></div>
-                  </div>
-                  <div class="umb-shell-bottom">
-                    <div class="umb-si active"><i class="ph ph-gear"></i></div>
-                    <div class="umb-si"><i class="ph ph-bell"></i></div>
-                    <div class="umb-si"><i class="ph ph-question"></i></div>
-                    <div class="umb-si-avatar">RC</div>
-                  </div>
-                </nav>
+                <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Agentes de IA"></nav>
                 <!-- Main -->
                 <div class="umb-shell-main">
-                  <header class="umb-shell-header">
-                    <div class="umb-shell-brand"><img class="umb-brand-logo" src="https://assets.umbler.com/utalk/assets/umblertalk.svg" alt="Umbler Talk"></div>
-                    <div class="umb-breadcrumb">
-                      <span class="umb-bc-item">Configurações</span>
-                      <span class="umb-bc-sep"><i class="ph ph-caret-right"></i></span>
-                      <span class="umb-bc-item active">Agentes de IA</span>
-                    </div>
-                    <div class="umb-shell-header-right">
-                      <div class="umb-credits"><i class="ph ph-coins"></i><span>3.206,92</span></div>
-                      <button class="btn btn-sm btn-outline-primary" style="font-size:12px;color:var(--umb-brand-color);border-color:var(--umb-sidebar-border)">Comprar créditos</button>
-                    </div>
-                  </header>
+                  <header class="umb-shell-header" data-umb-c="header" data-breadcrumb="Configurações / Agentes de IA"></header>
                   <div class="umb-shell-content">
                     <div class="umb-page-inner">
                       <div class="umb-pg-header">
@@ -3428,41 +3411,9 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             <p class="tpl-preview-label">Desktop</p>
             <div class="tpl-preview">
               <div class="umb-shell">
-                <nav class="umb-shell-sidebar">
-                  <div class="umb-shell-logo">
-                    <svg id="icon-custom-logo-utalk" width="30" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.8431 11.4306C17.5608 12.1241 17.0622 12.7081 16.4214 13.0955C15.7807 13.483 15.032 13.6533 14.2867 13.5811C13.5414 13.5089 12.8393 13.1981 12.2848 12.6949C11.7303 12.1916 11.353 11.5229 11.2091 10.7881C11.1772 10.6216 11.1579 10.453 11.1514 10.2836C11.1452 10.0614 11.0627 9.84803 10.9178 9.67944C10.7728 9.51085 10.5742 9.39731 10.3554 9.3579L8.70067 9.06865C8.54463 9.0399 8.3842 9.04543 8.2305 9.08485C8.07681 9.12427 7.93352 9.19663 7.81058 9.29694C7.68763 9.39725 7.58798 9.52309 7.51851 9.66574C7.44904 9.8084 7.41142 9.96445 7.40826 10.1231C7.40826 10.1338 7.40826 10.1445 7.40826 10.1566C7.42419 11.847 8.03278 13.4782 9.12796 14.766C10.2231 16.0537 11.7355 16.9163 13.4014 17.2035C15.0673 17.4907 16.7811 17.1842 18.2442 16.3374C19.7073 15.4906 20.8269 14.1573 21.4079 12.5698C21.4594 12.4203 21.4777 12.2613 21.4614 12.104C21.4451 11.9467 21.3946 11.7949 21.3135 11.6591C21.2325 11.5233 21.1227 11.4069 20.992 11.3179C20.8612 11.2289 20.7126 11.1696 20.5566 11.144L18.9009 10.8544C18.6852 10.8152 18.4627 10.851 18.2703 10.9559C18.0779 11.0607 17.9271 11.2282 17.8431 11.4306Z" fill="#FCD7DB"/><path d="M24.5813 5.73039C24.2777 5.83957 24.0225 6.0527 23.861 6.33201C23.6994 6.61132 23.642 6.93879 23.6988 7.25641C23.8133 7.90652 23.8707 8.5654 23.8704 9.22552C23.8704 14.9103 19.6751 19.5185 14.5001 19.5185C9.32508 19.5185 5.12978 14.9103 5.12978 9.22552C5.12128 7.24122 5.65073 5.2917 6.66183 3.5843C6.8199 3.32329 6.88567 3.01673 6.84859 2.71385C6.81151 2.41097 6.67374 2.12934 6.45738 1.91416L4.93136 0.400874C4.78362 0.254338 4.60471 0.143047 4.40796 0.0753028C4.21122 0.00755899 4.00171 -0.0148896 3.79508 0.0096306C3.58845 0.0341508 3.39002 0.105006 3.21459 0.216914C3.03916 0.328822 2.89126 0.478896 2.78192 0.655938C1.22576 3.24258 0.409783 6.20688 0.42301 9.22552C0.42301 17.7656 6.72417 24.6888 14.5001 24.6888C22.276 24.6888 28.5771 17.7656 28.5771 9.22552C28.5777 8.17556 28.4809 7.1278 28.2879 6.09572C28.251 5.89904 28.1719 5.71273 28.0559 5.54968C27.9399 5.38663 27.7898 5.25075 27.6161 5.15144C27.4424 5.05214 27.2492 4.99178 27.0498 4.97455C26.8505 4.95732 26.6497 4.98364 26.4616 5.05167L24.5813 5.73039Z" fill="white"/></svg>
-                  </div>
-                  <div class="umb-shell-nav">
-                    <div class="umb-si"><i class="ph ph-chat-circle"></i></div>
-                    <div class="umb-si"><i class="ph ph-address-book"></i></div>
-                    <div class="umb-si"><i class="ph ph-chart-bar"></i></div>
-                    <div class="umb-si"><i class="ph ph-plugs"></i></div>
-                    <div class="umb-si"><i class="ph ph-paper-plane-tilt"></i></div>
-                    <div class="umb-si active"><i class="ph ph-robot"></i></div>
-                    <div class="umb-si"><i class="ph ph-flow-arrow"></i></div>
-                  </div>
-                  <div class="umb-shell-bottom">
-                    <div class="umb-si active"><i class="ph ph-gear"></i></div>
-                    <div class="umb-si"><i class="ph ph-bell"></i></div>
-                    <div class="umb-si"><i class="ph ph-question"></i></div>
-                    <div class="umb-si-avatar">RC</div>
-                  </div>
-                </nav>
+                <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Agentes de IA"></nav>
                 <div class="umb-shell-main">
-                  <header class="umb-shell-header">
-                    <div class="umb-shell-brand"><img class="umb-brand-logo" src="https://assets.umbler.com/utalk/assets/umblertalk.svg" alt="Umbler Talk"></div>
-                    <div class="umb-breadcrumb">
-                      <span class="umb-bc-item">Configurações</span>
-                      <span class="umb-bc-sep"><i class="ph ph-caret-right"></i></span>
-                      <span class="umb-bc-item">Agentes de IA</span>
-                      <span class="umb-bc-sep"><i class="ph ph-caret-right"></i></span>
-                      <span class="umb-bc-item active">Novo</span>
-                    </div>
-                    <div class="umb-shell-header-right">
-                      <div class="umb-credits"><i class="ph ph-coins"></i><span>3.206,92</span></div>
-                      <button class="btn btn-sm btn-outline-primary" style="font-size:12px;color:var(--umb-brand-color);border-color:var(--umb-sidebar-border)">Comprar créditos</button>
-                    </div>
-                  </header>
+                  <header class="umb-shell-header" data-umb-c="header" data-breadcrumb="Configurações / Agentes de IA / Novo"></header>
                   <div class="umb-shell-content">
                     <div class="umb-page-inner">
                       <div class="card" style="border-radius:12px">
@@ -3658,41 +3609,9 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             <p class="tpl-preview-label">Desktop</p>
             <div class="tpl-preview tpl-preview-tall">
               <div class="umb-shell">
-                <nav class="umb-shell-sidebar">
-                  <div class="umb-shell-logo">
-                    <svg id="icon-custom-logo-utalk" width="30" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.8431 11.4306C17.5608 12.1241 17.0622 12.7081 16.4214 13.0955C15.7807 13.483 15.032 13.6533 14.2867 13.5811C13.5414 13.5089 12.8393 13.1981 12.2848 12.6949C11.7303 12.1916 11.353 11.5229 11.2091 10.7881C11.1772 10.6216 11.1579 10.453 11.1514 10.2836C11.1452 10.0614 11.0627 9.84803 10.9178 9.67944C10.7728 9.51085 10.5742 9.39731 10.3554 9.3579L8.70067 9.06865C8.54463 9.0399 8.3842 9.04543 8.2305 9.08485C8.07681 9.12427 7.93352 9.19663 7.81058 9.29694C7.68763 9.39725 7.58798 9.52309 7.51851 9.66574C7.44904 9.8084 7.41142 9.96445 7.40826 10.1231C7.40826 10.1338 7.40826 10.1445 7.40826 10.1566C7.42419 11.847 8.03278 13.4782 9.12796 14.766C10.2231 16.0537 11.7355 16.9163 13.4014 17.2035C15.0673 17.4907 16.7811 17.1842 18.2442 16.3374C19.7073 15.4906 20.8269 14.1573 21.4079 12.5698C21.4594 12.4203 21.4777 12.2613 21.4614 12.104C21.4451 11.9467 21.3946 11.7949 21.3135 11.6591C21.2325 11.5233 21.1227 11.4069 20.992 11.3179C20.8612 11.2289 20.7126 11.1696 20.5566 11.144L18.9009 10.8544C18.6852 10.8152 18.4627 10.851 18.2703 10.9559C18.0779 11.0607 17.9271 11.2282 17.8431 11.4306Z" fill="#FCD7DB"/><path d="M24.5813 5.73039C24.2777 5.83957 24.0225 6.0527 23.861 6.33201C23.6994 6.61132 23.642 6.93879 23.6988 7.25641C23.8133 7.90652 23.8707 8.5654 23.8704 9.22552C23.8704 14.9103 19.6751 19.5185 14.5001 19.5185C9.32508 19.5185 5.12978 14.9103 5.12978 9.22552C5.12128 7.24122 5.65073 5.2917 6.66183 3.5843C6.8199 3.32329 6.88567 3.01673 6.84859 2.71385C6.81151 2.41097 6.67374 2.12934 6.45738 1.91416L4.93136 0.400874C4.78362 0.254338 4.60471 0.143047 4.40796 0.0753028C4.21122 0.00755899 4.00171 -0.0148896 3.79508 0.0096306C3.58845 0.0341508 3.39002 0.105006 3.21459 0.216914C3.03916 0.328822 2.89126 0.478896 2.78192 0.655938C1.22576 3.24258 0.409783 6.20688 0.42301 9.22552C0.42301 17.7656 6.72417 24.6888 14.5001 24.6888C22.276 24.6888 28.5771 17.7656 28.5771 9.22552C28.5777 8.17556 28.4809 7.1278 28.2879 6.09572C28.251 5.89904 28.1719 5.71273 28.0559 5.54968C27.9399 5.38663 27.7898 5.25075 27.6161 5.15144C27.4424 5.05214 27.2492 4.99178 27.0498 4.97455C26.8505 4.95732 26.6497 4.98364 26.4616 5.05167L24.5813 5.73039Z" fill="white"/></svg>
-                  </div>
-                  <div class="umb-shell-nav">
-                    <div class="umb-si"><i class="ph ph-chat-circle"></i></div>
-                    <div class="umb-si"><i class="ph ph-address-book"></i></div>
-                    <div class="umb-si"><i class="ph ph-chart-bar"></i></div>
-                    <div class="umb-si"><i class="ph ph-plugs"></i></div>
-                    <div class="umb-si"><i class="ph ph-paper-plane-tilt"></i></div>
-                    <div class="umb-si active"><i class="ph ph-robot"></i></div>
-                    <div class="umb-si"><i class="ph ph-flow-arrow"></i></div>
-                  </div>
-                  <div class="umb-shell-bottom">
-                    <div class="umb-si active"><i class="ph ph-gear"></i></div>
-                    <div class="umb-si"><i class="ph ph-bell"></i></div>
-                    <div class="umb-si"><i class="ph ph-question"></i></div>
-                    <div class="umb-si-avatar">RC</div>
-                  </div>
-                </nav>
+                <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Agentes de IA"></nav>
                 <div class="umb-shell-main">
-                  <header class="umb-shell-header">
-                    <div class="umb-shell-brand"><img class="umb-brand-logo" src="https://assets.umbler.com/utalk/assets/umblertalk.svg" alt="Umbler Talk"></div>
-                    <div class="umb-breadcrumb">
-                      <span class="umb-bc-item">Configurações</span>
-                      <span class="umb-bc-sep"><i class="ph ph-caret-right"></i></span>
-                      <span class="umb-bc-item">Agentes de IA</span>
-                      <span class="umb-bc-sep"><i class="ph ph-caret-right"></i></span>
-                      <span class="umb-bc-item active">Alessandra Flexy Digital</span>
-                    </div>
-                    <div class="umb-shell-header-right">
-                      <div class="umb-credits"><i class="ph ph-coins"></i><span>3.206,92</span></div>
-                      <button class="btn btn-sm btn-outline-primary" style="font-size:12px;color:var(--umb-brand-color);border-color:var(--umb-sidebar-border)">Comprar créditos</button>
-                    </div>
-                  </header>
+                  <header class="umb-shell-header" data-umb-c="header" data-breadcrumb="Configurações / Agentes de IA / Alessandra Flexy Digital"></header>
                   <div class="umb-shell-content">
                     <div class="umb-page-inner">
                       <div class="card" style="border-radius:12px">
@@ -3876,33 +3795,9 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             <p class="tpl-preview-label">Desktop</p>
             <div class="tpl-preview">
               <div class="umb-shell">
-                <nav class="umb-shell-sidebar">
-                  <div class="umb-shell-logo">
-                    <svg id="icon-custom-logo-utalk" width="30" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.8431 11.4306C17.5608 12.1241 17.0622 12.7081 16.4214 13.0955C15.7807 13.483 15.032 13.6533 14.2867 13.5811C13.5414 13.5089 12.8393 13.1981 12.2848 12.6949C11.7303 12.1916 11.353 11.5229 11.2091 10.7881C11.1772 10.6216 11.1579 10.453 11.1514 10.2836C11.1452 10.0614 11.0627 9.84803 10.9178 9.67944C10.7728 9.51085 10.5742 9.39731 10.3554 9.3579L8.70067 9.06865C8.54463 9.0399 8.3842 9.04543 8.2305 9.08485C8.07681 9.12427 7.93352 9.19663 7.81058 9.29694C7.68763 9.39725 7.58798 9.52309 7.51851 9.66574C7.44904 9.8084 7.41142 9.96445 7.40826 10.1231C7.40826 10.1338 7.40826 10.1445 7.40826 10.1566C7.42419 11.847 8.03278 13.4782 9.12796 14.766C10.2231 16.0537 11.7355 16.9163 13.4014 17.2035C15.0673 17.4907 16.7811 17.1842 18.2442 16.3374C19.7073 15.4906 20.8269 14.1573 21.4079 12.5698C21.4594 12.4203 21.4777 12.2613 21.4614 12.104C21.4451 11.9467 21.3946 11.7949 21.3135 11.6591C21.2325 11.5233 21.1227 11.4069 20.992 11.3179C20.8612 11.2289 20.7126 11.1696 20.5566 11.144L18.9009 10.8544C18.6852 10.8152 18.4627 10.851 18.2703 10.9559C18.0779 11.0607 17.9271 11.2282 17.8431 11.4306Z" fill="#FCD7DB"/><path d="M24.5813 5.73039C24.2777 5.83957 24.0225 6.0527 23.861 6.33201C23.6994 6.61132 23.642 6.93879 23.6988 7.25641C23.8133 7.90652 23.8707 8.5654 23.8704 9.22552C23.8704 14.9103 19.6751 19.5185 14.5001 19.5185C9.32508 19.5185 5.12978 14.9103 5.12978 9.22552C5.12128 7.24122 5.65073 5.2917 6.66183 3.5843C6.8199 3.32329 6.88567 3.01673 6.84859 2.71385C6.81151 2.41097 6.67374 2.12934 6.45738 1.91416L4.93136 0.400874C4.78362 0.254338 4.60471 0.143047 4.40796 0.0753028C4.21122 0.00755899 4.00171 -0.0148896 3.79508 0.0096306C3.58845 0.0341508 3.39002 0.105006 3.21459 0.216914C3.03916 0.328822 2.89126 0.478896 2.78192 0.655938C1.22576 3.24258 0.409783 6.20688 0.42301 9.22552C0.42301 17.7656 6.72417 24.6888 14.5001 24.6888C22.276 24.6888 28.5771 17.7656 28.5771 9.22552C28.5777 8.17556 28.4809 7.1278 28.2879 6.09572C28.251 5.89904 28.1719 5.71273 28.0559 5.54968C27.9399 5.38663 27.7898 5.25075 27.6161 5.15144C27.4424 5.05214 27.2492 4.99178 27.0498 4.97455C26.8505 4.95732 26.6497 4.98364 26.4616 5.05167L24.5813 5.73039Z" fill="white"/></svg>
-                  </div>
-                  <div class="umb-shell-nav">
-                    <div class="umb-si"><i class="ph ph-chat-circle"></i></div>
-                    <div class="umb-si"><i class="ph ph-address-book"></i></div>
-                    <div class="umb-si"><i class="ph ph-chart-bar"></i></div>
-                    <div class="umb-si"><i class="ph ph-plugs"></i></div>
-                    <div class="umb-si"><i class="ph ph-paper-plane-tilt"></i></div>
-                    <div class="umb-si"><i class="ph ph-robot"></i></div>
-                    <div class="umb-si"><i class="ph ph-flow-arrow"></i></div>
-                  </div>
-                  <div class="umb-shell-bottom">
-                    <div class="umb-si active"><i class="ph ph-gear"></i></div>
-                    <div class="umb-si"><i class="ph ph-bell"></i></div>
-                    <div class="umb-si"><i class="ph ph-question"></i></div>
-                    <div class="umb-si-avatar">RC</div>
-                  </div>
-                </nav>
+                <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Configurações"></nav>
                 <div class="umb-shell-main">
-                  <header class="umb-shell-header">
-                    <div class="umb-shell-brand"><img class="umb-brand-logo" src="https://assets.umbler.com/utalk/assets/umblertalk.svg" alt="Umbler Talk"></div>
-                    <div class="umb-breadcrumb">
-                      <span class="umb-bc-item active">Configurações</span>
-                    </div>
-                  </header>
+                  <header class="umb-shell-header" data-umb-c="header" data-breadcrumb="Configurações" data-actions="none"></header>
                   <div class="umb-shell-content">
                     <div class="umb-page-inner">
                     <div class="umb-pg-header">
@@ -4210,6 +4105,135 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
   // Inicializa todas as tabelas interativas da página
   document.querySelectorAll('table.table-hover').forEach(t => initTable(t));
+</script>
+
+<!-- ============================================================================
+     COMPONENTES REUTILIZÁVEIS — SHELL SIDEBAR + HEADER
+     Alterações aqui propagam automaticamente para TODOS os templates que
+     utilizam os placeholders `data-umb-c="sidebar"` e `data-umb-c="header"`.
+     O render roda uma única vez no load (window 'DOMContentLoaded' já passou
+     quando o script abaixo é avaliado, pois ele está no fim do body).
+============================================================================ -->
+<template id="umb-tpl-sidebar">
+  <div class="umb-shell-logo">
+    <svg width="30" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M17.8431 11.4306C17.5608 12.1241 17.0622 12.7081 16.4214 13.0955C15.7807 13.483 15.032 13.6533 14.2867 13.5811C13.5414 13.5089 12.8393 13.1981 12.2848 12.6949C11.7303 12.1916 11.353 11.5229 11.2091 10.7881C11.1772 10.6216 11.1579 10.453 11.1514 10.2836C11.1452 10.0614 11.0627 9.84803 10.9178 9.67944C10.7728 9.51085 10.5742 9.39731 10.3554 9.3579L8.70067 9.06865C8.54463 9.0399 8.3842 9.04543 8.2305 9.08485C8.07681 9.12427 7.93352 9.19663 7.81058 9.29694C7.68763 9.39725 7.58798 9.52309 7.51851 9.66574C7.44904 9.8084 7.41142 9.96445 7.40826 10.1231C7.40826 10.1338 7.40826 10.1445 7.40826 10.1566C7.42419 11.847 8.03278 13.4782 9.12796 14.766C10.2231 16.0537 11.7355 16.9163 13.4014 17.2035C15.0673 17.4907 16.7811 17.1842 18.2442 16.3374C19.7073 15.4906 20.8269 14.1573 21.4079 12.5698C21.4594 12.4203 21.4777 12.2613 21.4614 12.104C21.4451 11.9467 21.3946 11.7949 21.3135 11.6591C21.2325 11.5233 21.1227 11.4069 20.992 11.3179C20.8612 11.2289 20.7126 11.1696 20.5566 11.144L18.9009 10.8544C18.6852 10.8152 18.4627 10.851 18.2703 10.9559C18.0779 11.0607 17.9271 11.2282 17.8431 11.4306Z" fill="#FCD7DB"/><path d="M24.5813 5.73039C24.2777 5.83957 24.0225 6.0527 23.861 6.33201C23.6994 6.61132 23.642 6.93879 23.6988 7.25641C23.8133 7.90652 23.8707 8.5654 23.8704 9.22552C23.8704 14.9103 19.6751 19.5185 14.5001 19.5185C9.32508 19.5185 5.12978 14.9103 5.12978 9.22552C5.12128 7.24122 5.65073 5.2917 6.66183 3.5843C6.8199 3.32329 6.88567 3.01673 6.84859 2.71385C6.81151 2.41097 6.67374 2.12934 6.45738 1.91416L4.93136 0.400874C4.78362 0.254338 4.60471 0.143047 4.40796 0.0753028C4.21122 0.00755899 4.00171 -0.0148896 3.79508 0.0096306C3.58845 0.0341508 3.39002 0.105006 3.21459 0.216914C3.03916 0.328822 2.89126 0.478896 2.78192 0.655938C1.22576 3.24258 0.409783 6.20688 0.42301 9.22552C0.42301 17.7656 6.72417 24.6888 14.5001 24.6888C22.276 24.6888 28.5771 17.7656 28.5771 9.22552C28.5777 8.17556 28.4809 7.1278 28.2879 6.09572C28.251 5.89904 28.1719 5.71273 28.0559 5.54968C27.9399 5.38663 27.7898 5.25075 27.6161 5.15144C27.4424 5.05214 27.2492 4.99178 27.0498 4.97455C26.8505 4.95732 26.6497 4.98364 26.4616 5.05167L24.5813 5.73039Z" fill="white"/></svg>
+  </div>
+  <div class="umb-shell-nav">
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Conversas"><i class="ph ph-chat"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Contatos"><i class="ph ph-user"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Board"><i class="ph ph-kanban"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Chatbots"><i class="ph ph-robot"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Agentes de IA"><i class="ph ph-sparkle"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Envios de campanhas"><i class="ph ph-paper-plane-tilt"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Relatórios"><i class="ph ph-chart-pie-slice"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Configurações"><i class="ph ph-gear"></i></div>
+  </div>
+  <div class="umb-shell-bottom">
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Notificações"><i class="ph ph-bell"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Suporte"><i class="ph ph-question"></i></div>
+    <div class="umb-avatar-menu dropdown dropend">
+      <button type="button" class="umb-si-avatar" data-bs-toggle="dropdown" aria-expanded="false" title="Perfil">RC</button>
+      <div class="dropdown-menu umb-avatar-dropdown">
+        <p class="umb-avatar-menu-label">Tema</p>
+        <div class="umb-avatar-theme-options">
+          <button class="theme-option" data-theme="auto" onclick="setTheme('auto')"><i class="ph ph-arrows-clockwise"></i> Auto</button>
+          <button class="theme-option" data-theme="light" onclick="setTheme('light')"><i class="ph ph-sun"></i> Claro</button>
+          <button class="theme-option" data-theme="dark" onclick="setTheme('dark')"><i class="ph ph-moon"></i> Escuro</button>
+          <button class="theme-option" data-theme="emerald" onclick="setTheme('emerald')"><i class="ph ph-leaf"></i> Esmeralda</button>
+          <button class="theme-option" data-theme="dark-emerald" onclick="setTheme('dark-emerald')"><i class="ph ph-circles-four"></i> Bravia</button>
+        </div>
+        <hr class="dropdown-divider my-2">
+        <button type="button" class="umb-avatar-logout"><i class="ph ph-sign-out"></i> Sair</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="umb-tpl-header">
+  <div class="umb-shell-brand" data-umb-part="brand"><img class="umb-brand-logo" src="https://assets.umbler.com/utalk/assets/umblertalk.svg" alt="Umbler Talk"></div>
+  <div class="umb-breadcrumb" data-umb-part="breadcrumb"></div>
+  <div class="umb-shell-header-right" data-umb-part="actions">
+    <div class="umb-credits"><i class="ph ph-coins"></i><span>3.206,92</span></div>
+    <button class="btn btn-sm btn-outline-primary" style="font-size:12px;color:var(--umb-brand-color);border-color:var(--umb-sidebar-border)">Comprar créditos</button>
+  </div>
+</template>
+
+<script>
+  /* Renderiza sidebar e header a partir dos <template> acima.
+     Uso:
+       <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Conversas"></nav>
+       <header class="umb-shell-header" data-umb-c="header"
+               data-breadcrumb="Configurações / Agentes de IA"
+               data-brand="true" data-actions="credits"></header>
+     Atributos:
+       data-active          — título exato do item ativo (ex: "Agentes de IA")
+       data-breadcrumb      — caminho separado por " / "; o último é marcado .active
+       data-brand           — "true" (default) mostra a brand; "false" oculta
+       data-actions         — "credits" (default) ou "none" */
+  (function(){
+    function renderSidebars() {
+      const tpl = document.getElementById('umb-tpl-sidebar');
+      if (!tpl) return;
+      document.querySelectorAll('[data-umb-c="sidebar"]').forEach(el => {
+        el.innerHTML = tpl.innerHTML;
+        const active = el.dataset.active;
+        if (active) {
+          el.querySelectorAll('.umb-si.active').forEach(x => x.classList.remove('active'));
+          const target = el.querySelector('.umb-si[title="' + CSS.escape(active) + '"]');
+          if (target) target.classList.add('active');
+        }
+      });
+    }
+    function renderHeaders() {
+      const tpl = document.getElementById('umb-tpl-header');
+      if (!tpl) return;
+      document.querySelectorAll('[data-umb-c="header"]').forEach(el => {
+        el.innerHTML = tpl.innerHTML;
+        if (el.dataset.brand === 'false') {
+          const brand = el.querySelector('[data-umb-part="brand"]');
+          if (brand) brand.remove();
+        }
+        const bc = el.querySelector('[data-umb-part="breadcrumb"]');
+        if (bc) {
+          const raw = el.dataset.breadcrumb || '';
+          const items = raw.split('/').map(s => s.trim()).filter(Boolean);
+          bc.innerHTML = items.map((txt, i) => {
+            const isLast = i === items.length - 1;
+            const sep = i > 0 ? '<span class="umb-bc-sep"><i class="ph ph-caret-right"></i></span>' : '';
+            const cls = 'umb-bc-item' + (isLast ? ' active' : '');
+            return sep + '<span class="' + cls + '">' + txt + '</span>';
+          }).join('');
+        }
+        if (el.dataset.actions === 'none') {
+          const right = el.querySelector('[data-umb-part="actions"]');
+          if (right) right.remove();
+        }
+      });
+    }
+    function initComponentTooltips() {
+      if (!window.bootstrap) return;
+      // Tooltips nos itens da sidebar e avatar (o avatar usa data-bs-toggle="dropdown",
+      // por isso precisa ser inicializado manualmente aqui).
+      document.querySelectorAll('[data-umb-c="sidebar"] [data-bs-toggle="tooltip"]').forEach(el => {
+        if (!bootstrap.Tooltip.getInstance(el)) new bootstrap.Tooltip(el, { trigger: 'hover', placement: 'right' });
+      });
+      document.querySelectorAll('.umb-avatar-menu .umb-si-avatar[title]').forEach(el => {
+        if (!bootstrap.Tooltip.getInstance(el)) new bootstrap.Tooltip(el, { trigger: 'hover', placement: 'right' });
+      });
+    }
+    // Render imediato — os <template> acima já estão no DOM quando este script roda.
+    renderSidebars();
+    renderHeaders();
+    // Tooltips: a lib Bootstrap é carregada antes deste bloco; se ainda não estiver
+    // disponível (defer/async), caímos para DOMContentLoaded.
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initComponentTooltips);
+    } else {
+      initComponentTooltips();
+    }
+    // Expor para possíveis re-renders manuais.
+    window.umbRenderShell = function(){ renderSidebars(); renderHeaders(); initComponentTooltips(); };
+  })();
 </script>
 </body>
 </html>
