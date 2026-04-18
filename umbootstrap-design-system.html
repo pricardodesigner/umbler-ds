@@ -732,17 +732,67 @@
     .tab-content { padding: 16px 0; }
 
     /* --- STEPS --- */
-    .steps-container { display: flex; align-items: flex-start; gap: 0; }
-    .step-item { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
-    .step-item:not(:last-child)::after { content: ''; position: absolute; top: 16px; left: 50%; width: 100%; height: 2px; background: var(--umb-step-track); z-index: 0; }
-    .step-item.done::after  { background: var(--bs-success); }
+    /* Horizontal (default): todos os steps com mesma largura (flex:1 1 0) e responsivos */
+    .steps-container { display: flex; align-items: flex-start; gap: 0; width: 100%; }
+    .step-item {
+      flex: 1 1 0; min-width: 0;
+      display: flex; flex-direction: column; align-items: center;
+      position: relative; padding: 6px 6px; border-radius: 10px;
+      transition: background .12s;
+    }
+    /* Trilha de conexão (passa pelo centro do dot) */
+    .step-item:not(:last-child)::after {
+      content: ''; position: absolute;
+      top: calc(6px + 14px);                          /* padding-top + metade do dot (28/2) */
+      left: calc(50% + 18px); right: calc(-50% + 18px);
+      height: 1px; background: var(--umb-step-track); z-index: 0;
+    }
+    .step-item.done::after   { background: var(--bs-primary); }
     .step-item.active::after { background: linear-gradient(to right, var(--bs-primary), var(--umb-step-track)); }
-    .step-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; z-index: 1; border: 2px solid var(--umb-step-track); background: var(--umb-step-bg); color: var(--umb-text-mid); }
-    .step-item.done .step-circle   { background: var(--bs-success); border-color: var(--bs-success); color: #fff; }
-    .step-item.active .step-circle { background: var(--bs-primary); border-color: var(--bs-primary); color: #fff; }
-    .step-label { font-size: 12px; color: var(--umb-text-mid); margin-top: 6px; text-align: center; }
-    .step-item.active .step-label  { color: var(--bs-primary); font-weight: 600; }
-    .step-item.done .step-label    { color: var(--bs-success); }
+    /* Dot */
+    .step-circle {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; z-index: 1;
+      border: 1px solid var(--umb-step-track);
+      background: var(--umb-step-bg);
+      color: var(--umb-text-mid);
+      flex-shrink: 0;
+      transition: background .12s, border-color .12s, color .12s;
+    }
+    .step-item.done  .step-circle { border-color: var(--umb-step-track); background: var(--umb-step-bg); color: var(--bs-primary); }
+    .step-item.active .step-circle { border-color: var(--bs-primary); background: var(--bs-primary); color: #fff; }
+    /* Label */
+    .step-label {
+      font-size: 12px; color: var(--umb-text-mid);
+      margin-top: 6px; text-align: center;
+      max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .step-item.done  .step-label { color: var(--bs-primary); font-weight: 500; }
+    .step-item.active .step-label { color: var(--bs-primary); font-weight: 600; }
+    /* Chip de hover/seleção —
+       Por convenção, qualquer step .done é clicável (usuário pode voltar).
+       O modifier .clickable no container habilita cursor+hover em TODOS os steps. */
+    .step-item.done,
+    .steps-container.clickable .step-item { cursor: pointer; }
+    .step-item.done:hover,
+    .steps-container.clickable .step-item:hover,
+    .step-item.hover-active { background: var(--umb-hover-bg); }
+    /* Variante: Points only — esconde labels (uso em mobile e espaços compactos) */
+    .steps-container.points-only .step-label { display: none; }
+    /* Variante: Vertical */
+    .steps-container.vertical { flex-direction: column; align-items: stretch; width: auto; }
+    .steps-container.vertical .step-item {
+      flex: 0 0 auto; flex-direction: row; align-items: center;
+      padding: 6px 8px; gap: 10px;
+    }
+    .steps-container.vertical .step-item:not(:last-child)::after {
+      top: calc(6px + 28px); bottom: calc(-6px);
+      left: calc(8px + 14px - 0.5px); right: auto;
+      width: 1px; height: auto;
+    }
+    .steps-container.vertical .step-label { margin-top: 0; text-align: left; }
+    .steps-container.vertical.points-only .step-item { justify-content: flex-start; }
 
     /* --- BREADCRUMB --- */
     .breadcrumb { background: transparent; padding: 0; margin: 0; font-size: 14px; }
@@ -2492,32 +2542,88 @@
     <!-- ============================================================ SEÇÃO 12: PASSOS -->
     <section id="passos">
       <p class="sec-title">Passos (Steps)</p>
-      <p class="sec-subtitle">StepCollection — horizontal e vertical</p>
+      <p class="sec-subtitle">StepCollection — horizontal, vertical, points-only. Todos os passos com largura igual e responsiva.</p>
+
+      <!-- Estados -->
       <div class="comp-group">
-        <p class="comp-label">Horizontal</p>
-        <div class="steps-container" style="max-width:600px">
-          <div class="step-item done"><div class="step-circle"><i class="ph ph-check" style="font-size:14px"></i></div><div class="step-label">Objetivo</div></div>
-          <div class="step-item done"><div class="step-circle"><i class="ph ph-check" style="font-size:14px"></i></div><div class="step-label">Conectar</div></div>
-          <div class="step-item active"><div class="step-circle">3</div><div class="step-label">Importar</div></div>
-          <div class="step-item"><div class="step-circle">4</div><div class="step-label">Configurar</div></div>
-          <div class="step-item" style="flex:0"><div class="step-circle">5</div><div class="step-label">Pronto</div></div>
+        <p class="comp-label">Estados — Pending · Active · Done · Done + hover (clickable)</p>
+        <div class="d-flex flex-column gap-4" style="max-width:600px">
+          <!-- Todos Complete -->
+          <div class="steps-container">
+            <div class="step-item done"><div class="step-circle"><i class="ph ph-check" style="font-size:13px"></i></div><div class="step-label">First</div></div>
+            <div class="step-item done"><div class="step-circle"><i class="ph ph-check" style="font-size:13px"></i></div><div class="step-label">Middle</div></div>
+            <div class="step-item done"><div class="step-circle"><i class="ph ph-check" style="font-size:13px"></i></div><div class="step-label">Last</div></div>
+          </div>
+          <!-- Todos Complete + hover (chip) -->
+          <div class="steps-container clickable">
+            <div class="step-item done hover-active"><div class="step-circle"><i class="ph ph-check" style="font-size:13px"></i></div><div class="step-label">First</div></div>
+            <div class="step-item done hover-active"><div class="step-circle"><i class="ph ph-check" style="font-size:13px"></i></div><div class="step-label">Middle</div></div>
+            <div class="step-item done hover-active"><div class="step-circle"><i class="ph ph-check" style="font-size:13px"></i></div><div class="step-label">Last</div></div>
+          </div>
+          <!-- Done + Active + Pending -->
+          <div class="steps-container">
+            <div class="step-item done"><div class="step-circle"><i class="ph ph-check" style="font-size:13px"></i></div><div class="step-label">First</div></div>
+            <div class="step-item active"><div class="step-circle">2</div><div class="step-label">Middle</div></div>
+            <div class="step-item"><div class="step-circle">3</div><div class="step-label">Last</div></div>
+          </div>
+          <!-- Todos Pending -->
+          <div class="steps-container">
+            <div class="step-item"><div class="step-circle">1</div><div class="step-label">First</div></div>
+            <div class="step-item"><div class="step-circle">2</div><div class="step-label">Middle</div></div>
+            <div class="step-item"><div class="step-circle">3</div><div class="step-label">Last</div></div>
+          </div>
         </div>
       </div>
+
+      <!-- Horizontal Full (6 steps) -->
       <div class="comp-group">
-        <p class="comp-label">Vertical</p>
-        <div style="display:flex;flex-direction:column;gap:0;max-width:280px">
-          <div class="d-flex align-items-flex-start gap-3">
-            <div style="display:flex;flex-direction:column;align-items:center"><div class="step-circle done" style="background:var(--bs-success);border-color:var(--bs-success);color:#fff"><i class="ph ph-check" style="font-size:13px"></i></div><div style="width:2px;height:28px;background:var(--bs-success);margin:4px 0"></div></div>
-            <div style="padding-top:4px"><div style="font-size:14px;font-weight:600;color:var(--bs-success)">Conta criada</div><div style="font-size:12px;color:var(--umb-text-mid)">Cadastro concluído.</div></div>
-          </div>
-          <div class="d-flex align-items-flex-start gap-3">
-            <div style="display:flex;flex-direction:column;align-items:center"><div class="step-circle" style="background:var(--bs-primary);border-color:var(--bs-primary);color:#fff">2</div><div style="width:2px;height:28px;background:var(--umb-border);margin:4px 0"></div></div>
-            <div style="padding-top:4px"><div style="font-size:14px;font-weight:600;color:var(--bs-primary)">Conectar Talk</div><div style="font-size:12px;color:var(--umb-text-mid)">Em andamento.</div></div>
-          </div>
-          <div class="d-flex align-items-flex-start gap-3">
-            <div style="display:flex;flex-direction:column;align-items:center"><div class="step-circle">3</div></div>
-            <div style="padding-top:4px"><div style="font-size:14px;font-weight:600">Primeiro board</div><div style="font-size:12px;color:var(--umb-text-mid)">Pendente.</div></div>
-          </div>
+        <p class="comp-label">Horizontal Full (6 passos)</p>
+        <div class="steps-container">
+          <div class="step-item done"><div class="step-circle"><i class="ph ph-check" style="font-size:13px"></i></div><div class="step-label">First</div></div>
+          <div class="step-item active"><div class="step-circle">2</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">3</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">4</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">5</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">6</div><div class="step-label">Last</div></div>
+        </div>
+      </div>
+
+      <!-- Horizontal Points only -->
+      <div class="comp-group">
+        <p class="comp-label">Horizontal Points only — usado em mobile</p>
+        <div class="steps-container points-only" style="max-width:280px">
+          <div class="step-item done"><div class="step-circle"><i class="ph ph-check" style="font-size:13px"></i></div><div class="step-label">First</div></div>
+          <div class="step-item active"><div class="step-circle">2</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">3</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">4</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">5</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">6</div><div class="step-label">Last</div></div>
+        </div>
+      </div>
+
+      <!-- Vertical Full -->
+      <div class="comp-group">
+        <p class="comp-label">Vertical Full</p>
+        <div class="steps-container vertical" style="max-width:220px">
+          <div class="step-item done"><div class="step-circle"><i class="ph ph-check" style="font-size:13px"></i></div><div class="step-label">First</div></div>
+          <div class="step-item active"><div class="step-circle">2</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">3</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">4</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">5</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">6</div><div class="step-label">Last</div></div>
+        </div>
+      </div>
+
+      <!-- Vertical Points only -->
+      <div class="comp-group">
+        <p class="comp-label">Vertical Points only</p>
+        <div class="steps-container vertical points-only" style="max-width:60px">
+          <div class="step-item done"><div class="step-circle"><i class="ph ph-check" style="font-size:13px"></i></div><div class="step-label">First</div></div>
+          <div class="step-item active"><div class="step-circle">2</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">3</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">4</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">5</div><div class="step-label">Middle</div></div>
+          <div class="step-item"><div class="step-circle">6</div><div class="step-label">Last</div></div>
         </div>
       </div>
     </section>
@@ -3528,7 +3634,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                           </div>
                           <button class="btn btn-icon btn-text btn-lg" aria-label="Fechar"><i class="ph ph-x"></i></button>
                         </div>
-                        <!-- Passos — componente steps-container/step-item do DS -->
+                        <!-- Passos — componente steps-container/step-item do DS (horizontal full) -->
                         <div class="px-4 my-4">
                           <div class="steps-container">
                             <div class="step-item active"><div class="step-circle">1</div><div class="step-label">Perfil</div></div>
@@ -3536,7 +3642,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                             <div class="step-item"><div class="step-circle">3</div><div class="step-label">Conhecimento</div></div>
                             <div class="step-item"><div class="step-circle">4</div><div class="step-label">Habilidades</div></div>
                             <div class="step-item"><div class="step-circle">5</div><div class="step-label">Fluxo</div></div>
-                            <div class="step-item" style="flex:0"><div class="step-circle">6</div><div class="step-label">Conversa</div></div>
+                            <div class="step-item"><div class="step-circle">6</div><div class="step-label">Conversa</div></div>
                           </div>
                         </div>
                         <!-- Form content — padding 24px (p-4) -->
@@ -3643,15 +3749,15 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       </div>
                       <button class="btn btn-icon btn-text btn-lg" aria-label="Fechar"><i class="ph ph-x"></i></button>
                     </div>
-                    <!-- Passos — componente steps-container/step-item do DS (scroll horizontal no mobile) -->
-                    <div class="my-4" style="overflow-x:auto;padding:0 12px">
-                      <div class="steps-container" style="min-width:420px">
+                    <!-- Passos — points-only no mobile (sem labels, apenas bolinhas numeradas) -->
+                    <div class="my-4 px-3">
+                      <div class="steps-container points-only">
                         <div class="step-item active"><div class="step-circle">1</div><div class="step-label">Perfil</div></div>
                         <div class="step-item"><div class="step-circle">2</div><div class="step-label">Comportamento</div></div>
                         <div class="step-item"><div class="step-circle">3</div><div class="step-label">Conhecimento</div></div>
                         <div class="step-item"><div class="step-circle">4</div><div class="step-label">Habilidades</div></div>
                         <div class="step-item"><div class="step-circle">5</div><div class="step-label">Fluxo</div></div>
-                        <div class="step-item" style="flex:0"><div class="step-circle">6</div><div class="step-label">Conversa</div></div>
+                        <div class="step-item"><div class="step-circle">6</div><div class="step-label">Conversa</div></div>
                       </div>
                     </div>
                     <!-- Form content: campos em tamanho Large -->
