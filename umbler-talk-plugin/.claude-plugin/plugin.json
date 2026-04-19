@@ -1,0 +1,21 @@
+{
+  "name": "umbler-design",
+  "version": "0.2.0",
+  "description": "Umbler Design: gera telas/fluxos usando o Umbootstrap Design System e acessa dados do Umbler Talk (contatos, conversas, agentes) via MCP.",
+  "author": {
+    "name": "Paulo Ricardo",
+    "email": "paulo@umbler.com"
+  },
+  "homepage": "https://github.com/pricardodesigner/umbler-ds",
+  "repository": "https://github.com/pricardodesigner/umbler-ds",
+  "license": "UNLICENSED",
+  "keywords": [
+    "umbler",
+    "umbler-talk",
+    "design-system",
+    "umbootstrap",
+    "bootstrap",
+    "prototyping",
+    "html"
+  ]
+}

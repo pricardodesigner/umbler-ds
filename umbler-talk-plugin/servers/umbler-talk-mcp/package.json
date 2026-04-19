@@ -1,0 +1,19 @@
+{
+  "name": "umbler-talk-mcp",
+  "version": "0.1.0",
+  "description": "MCP server que expõe endpoints do Umbler Talk (contatos, conversas, agentes) para uso dentro do plugin umbler-talk.",
+  "private": true,
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "umbler-talk-mcp": "src/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "author": "Paulo Ricardo <paulo@umbler.com>",
+  "license": "UNLICENSED"
+}

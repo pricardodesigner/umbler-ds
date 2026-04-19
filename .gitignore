@@ -2,6 +2,10 @@
 umbler-ds.skill
 umbootstrap-ds.skill
 
+# Plugin build artifacts (.plugin = zip empacotado, regerado a cada release)
+umbler-talk.plugin
+umbler-design.plugin
+
 # Skill source (editado via skill folder, não precisa ficar no repo do HTML)
 umbootstrap-ds/
 umbootstrap-ds-workspace/

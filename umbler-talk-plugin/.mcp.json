@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "umbler-talk-api": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/servers/umbler-talk-mcp/src/index.js"],
+      "env": {
+        "UMBLER_TOKEN": "${UMBLER_TOKEN}",
+        "UMBLER_API_BASE": "${UMBLER_API_BASE:-https://app-utalk.umbler.com/api/v1}"
+      }
+    }
+  }
+}
