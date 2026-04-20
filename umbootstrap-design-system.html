@@ -1294,10 +1294,13 @@
 
     /* --- MOBILE HEADER (componente) ---
        Usa a mesma cor da sidebar desktop (var(--umb-sidebar-bg)).
-       Duas variantes:
+       Três variantes:
          - data-variant="home"    → hamburger (esquerda) + logo U (esquerda) + bell + avatar (direita)
          - data-variant="subpage" → back arrow (esquerda) + bell + avatar (direita)
-       Nunca há título de página no header mobile — o título fica no corpo da tela (igual desktop).
+         - data-variant="chat"    → back arrow (esquerda) + avatar + nome do contato + tags + phone + menu (direita)
+       Nos variants home/subpage nunca há título de página — o título fica no corpo da tela.
+       O variant "chat" é EXCLUSIVO do template de chat (§21 rules.md), pois o espaço
+       onde ficaria o logo é usado para mostrar o contato em conversa.
        Componente renderizado via <template id="umb-tpl-mobile-header"> + data-umb-c="mobile-header". */
     .umb-mobile-header {
       height: 56px; min-height: 56px;
@@ -1464,6 +1467,514 @@
       font-size: 11px; color: var(--umb-text-mid);
     }
 
+    /* ============================================================
+       CHAT TEMPLATE (§21 rules.md) — tela de atendimento
+       Lista de conversas (coluna 1) + detalhe do chat (coluna 2).
+       Mantém shell desktop SEM header superior (§21.1): a barra lateral
+       esquerda continua visível, mas o espaço superior é do chat.
+       ============================================================ */
+
+    /* Tokens default — DARK (fallback) */
+    :root, [data-bs-theme="dark"] {
+      --umb-chat-canvas-bg:        #0f1114;
+      --umb-chat-bubble-in-bg:     #2a2d35;
+      --umb-chat-bubble-in-color:  #D3D6DD;
+      --umb-chat-bubble-out-bg:    #557CF2;
+      --umb-chat-bubble-out-color: #ffffff;
+      --umb-chat-list-hover:       rgba(255,255,255,.04);
+      --umb-chat-list-active:      rgba(85,124,242,.12);
+      --umb-chat-sep-bg:           rgba(255,255,255,.08);
+      --umb-chat-pinned-bg:        rgba(255,214,10,.08);
+      --umb-chat-pinned-color:     #e8d588;
+      --umb-chat-pinned-accent:    #FFD60A;
+      --umb-conv-tag-blue-bg:      rgba(85,124,242,.16);  --umb-conv-tag-blue-color:   #a1b3f2;
+      --umb-conv-tag-green-bg:     rgba(56,158,13,.18);   --umb-conv-tag-green-color:  #8ad27a;
+      --umb-conv-tag-amber-bg:     rgba(250,173,20,.18);  --umb-conv-tag-amber-color:  #f0c878;
+      --umb-conv-tag-red-bg:       rgba(218,96,110,.18);  --umb-conv-tag-red-color:    #f5a8b1;
+      --umb-conv-tag-violet-bg:    rgba(124,58,237,.20);  --umb-conv-tag-violet-color: #c4a8f5;
+    }
+    [data-bs-theme="light"] {
+      --umb-chat-canvas-bg:        #F5F7FB;
+      --umb-chat-bubble-in-bg:     #ffffff;
+      --umb-chat-bubble-in-color:  #1a1d2b;
+      --umb-chat-bubble-out-bg:    #557CF2;
+      --umb-chat-bubble-out-color: #ffffff;
+      --umb-chat-list-hover:       rgba(0,0,0,.03);
+      --umb-chat-list-active:      rgba(85,124,242,.10);
+      --umb-chat-sep-bg:           rgba(0,0,0,.06);
+      --umb-chat-pinned-bg:        #FFF8DD;
+      --umb-chat-pinned-color:     #8A6D00;
+      --umb-chat-pinned-accent:    #F0A30A;
+      --umb-conv-tag-blue-bg:      #E2E9FE; --umb-conv-tag-blue-color:   #223261;
+      --umb-conv-tag-green-bg:     #E4F6D9; --umb-conv-tag-green-color:  #135200;
+      --umb-conv-tag-amber-bg:     #FFF3C2; --umb-conv-tag-amber-color:  #614700;
+      --umb-conv-tag-red-bg:       #FDE2E5; --umb-conv-tag-red-color:    #7A1F2A;
+      --umb-conv-tag-violet-bg:    #EADDFB; --umb-conv-tag-violet-color: #4A2574;
+    }
+    [data-bs-theme="emerald"] {
+      --umb-chat-canvas-bg:        #EFF7F6;
+      --umb-chat-bubble-in-bg:     #ffffff;
+      --umb-chat-bubble-in-color:  #1a1d2b;
+      --umb-chat-bubble-out-bg:    #29958D;
+      --umb-chat-bubble-out-color: #ffffff;
+      --umb-chat-list-hover:       rgba(0,0,0,.03);
+      --umb-chat-list-active:      rgba(41,149,141,.10);
+      --umb-chat-sep-bg:           rgba(0,0,0,.06);
+      --umb-chat-pinned-bg:        #FFF8DD;
+      --umb-chat-pinned-color:     #8A6D00;
+      --umb-chat-pinned-accent:    #F0A30A;
+      --umb-conv-tag-blue-bg:      #D6E4FF; --umb-conv-tag-blue-color:   #1d39c4;
+      --umb-conv-tag-green-bg:     #D4EFDC; --umb-conv-tag-green-color:  #0C8E63;
+      --umb-conv-tag-amber-bg:     #FFF3C2; --umb-conv-tag-amber-color:  #614700;
+      --umb-conv-tag-red-bg:       #FDE2E5; --umb-conv-tag-red-color:    #7A1F2A;
+      --umb-conv-tag-violet-bg:    #EADDFB; --umb-conv-tag-violet-color: #4A2574;
+    }
+    [data-bs-theme="dark-emerald"] {
+      --umb-chat-canvas-bg:        #00090A;
+      --umb-chat-bubble-in-bg:     #11282C;
+      --umb-chat-bubble-in-color:  #D3D6DD;
+      --umb-chat-bubble-out-bg:    #2B897F;
+      --umb-chat-bubble-out-color: #ffffff;
+      --umb-chat-list-hover:       rgba(255,255,255,.04);
+      --umb-chat-list-active:      rgba(43,137,127,.16);
+      --umb-chat-sep-bg:           rgba(255,255,255,.07);
+      --umb-chat-pinned-bg:        rgba(255,214,10,.08);
+      --umb-chat-pinned-color:     #e8d588;
+      --umb-chat-pinned-accent:    #FFD60A;
+      --umb-conv-tag-blue-bg:      rgba(85,124,242,.16);  --umb-conv-tag-blue-color:   #a1b3f2;
+      --umb-conv-tag-green-bg:     rgba(56,158,13,.18);   --umb-conv-tag-green-color:  #8ad27a;
+      --umb-conv-tag-amber-bg:     rgba(250,173,20,.18);  --umb-conv-tag-amber-color:  #f0c878;
+      --umb-conv-tag-red-bg:       rgba(218,96,110,.18);  --umb-conv-tag-red-color:    #f5a8b1;
+      --umb-conv-tag-violet-bg:    rgba(124,58,237,.22);  --umb-conv-tag-violet-color: #c4a8f5;
+    }
+
+    /* ---- Chat shell: duas colunas (list + detail), sem header superior ---- */
+    .umb-chat-shell {
+      display: flex; flex: 1; min-height: 0; overflow: hidden;
+      background: var(--umb-content-bg, var(--bs-body-bg));
+    }
+
+    /* ============ COLUNA 1: Lista de conversas ============ */
+    .umb-conv-list {
+      width: 360px; min-width: 360px;
+      background: var(--umb-card-bg);
+      border-right: 1px solid var(--umb-border);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .umb-conv-toolbar {
+      padding: 10px 12px; display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid var(--umb-border);
+    }
+    .umb-conv-toolbar .form-control { height: 34px; font-size: 13px; }
+    .umb-conv-tabs {
+      display: flex; gap: 4px; padding: 6px 8px;
+      border-bottom: 1px solid var(--umb-border);
+    }
+    .umb-conv-tab {
+      flex: 1; text-align: center; font-size: 13px; font-weight: 600;
+      color: var(--umb-text-mid); padding: 8px 10px; border-radius: 8px;
+      cursor: pointer; transition: background .15s, color .15s;
+      border: 0; background: transparent;
+    }
+    .umb-conv-tab:hover { color: var(--umb-text-primary); background: var(--umb-hover-bg); }
+    .umb-conv-tab.active {
+      color: var(--bs-primary);
+      background: rgba(var(--bs-primary-rgb), .10);
+    }
+    .umb-conv-tab-count {
+      display: inline-block; margin-left: 4px;
+      font-size: 11px; font-weight: 700; opacity: .75;
+    }
+    .umb-conv-scroll { flex: 1; overflow-y: auto; padding: 2px 0; }
+    .umb-conv-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      padding: 12px 14px; border-bottom: 1px solid var(--umb-border);
+      cursor: pointer; transition: background .12s;
+      position: relative;
+    }
+    .umb-conv-item:hover { background: var(--umb-chat-list-hover); }
+    .umb-conv-item.active {
+      background: var(--umb-chat-list-active);
+      box-shadow: inset 3px 0 0 var(--bs-primary);
+    }
+    .umb-conv-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--umb-avatar-bg);
+      color: var(--umb-brand-color);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; flex-shrink: 0; position: relative;
+      overflow: visible;
+    }
+    .umb-conv-avatar > img,
+    .umb-conv-avatar > span {
+      width: 100%; height: 100%; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; object-fit: cover;
+    }
+    .umb-conv-avatar-ch {
+      position: absolute; bottom: -1px; right: -1px;
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid var(--umb-card-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; color: #fff;
+    }
+    .umb-conv-avatar-ch.whatsapp  { background: #25D366; }
+    .umb-conv-avatar-ch.instagram { background: linear-gradient(45deg,#F58529,#DD2A7B,#8134AF); }
+    .umb-conv-avatar-ch.email     { background: #546E7A; }
+    .umb-conv-avatar-ch.widget    { background: var(--bs-primary); }
+    .umb-conv-avatar-ch.telegram  { background: #229ED9; }
+
+    .umb-conv-body { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .umb-conv-head {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+    }
+    .umb-conv-name {
+      font-size: 14px; font-weight: 600; color: var(--umb-text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1;
+    }
+    .umb-conv-time { font-size: 11px; color: var(--umb-text-mid); flex-shrink: 0; }
+    .umb-conv-preview {
+      font-size: 12.5px; color: var(--umb-text-mid); line-height: 1.35;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .umb-conv-preview i {
+      font-size: 13px; color: var(--umb-text-dim); vertical-align: -1px; margin-right: 3px;
+    }
+    .umb-conv-meta {
+      display: flex; align-items: center; gap: 4px; margin-top: 4px; flex-wrap: wrap;
+    }
+    .umb-conv-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10.5px; font-weight: 600;
+      padding: 2px 8px; border-radius: 100px; line-height: 1.4;
+      white-space: nowrap;
+    }
+    .umb-conv-tag.blue   { background: var(--umb-conv-tag-blue-bg);   color: var(--umb-conv-tag-blue-color); }
+    .umb-conv-tag.green  { background: var(--umb-conv-tag-green-bg);  color: var(--umb-conv-tag-green-color); }
+    .umb-conv-tag.amber  { background: var(--umb-conv-tag-amber-bg);  color: var(--umb-conv-tag-amber-color); }
+    .umb-conv-tag.red    { background: var(--umb-conv-tag-red-bg);    color: var(--umb-conv-tag-red-color); }
+    .umb-conv-tag.violet { background: var(--umb-conv-tag-violet-bg); color: var(--umb-conv-tag-violet-color); }
+
+    .umb-conv-sector {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10.5px; font-weight: 500; color: var(--umb-text-mid);
+      padding: 2px 8px; border-radius: 100px;
+      background: var(--umb-hover-bg);
+      white-space: nowrap;
+    }
+    .umb-conv-sector i { font-size: 11px; }
+
+    .umb-conv-right {
+      display: flex; flex-direction: column; align-items: flex-end;
+      gap: 4px; flex-shrink: 0;
+    }
+    .umb-conv-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px;
+      background: var(--bs-primary); color: #fff;
+      font-size: 11px; font-weight: 700;
+    }
+
+    /* ============ COLUNA 2: Detalhe do chat ============ */
+    .umb-chat-detail {
+      flex: 1; display: flex; flex-direction: column; min-width: 0;
+      background: var(--umb-chat-canvas-bg);
+    }
+    .umb-chat-header {
+      height: 56px; min-height: 56px;
+      background: var(--umb-card-bg);
+      border-bottom: 1px solid var(--umb-border);
+      display: flex; align-items: center; gap: 12px; padding: 0 16px;
+    }
+    .umb-chat-header-contact {
+      display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;
+    }
+    .umb-chat-header-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--umb-avatar-bg); color: var(--umb-brand-color);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0; overflow: hidden;
+    }
+    .umb-chat-header-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .umb-chat-header-info { min-width: 0; display: flex; flex-direction: column; }
+    .umb-chat-header-name {
+      font-size: 14px; font-weight: 600; color: var(--umb-text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .umb-chat-header-meta {
+      display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-top: 1px;
+    }
+    .umb-chat-header-actions {
+      display: flex; align-items: center; gap: 2px; flex-shrink: 0;
+    }
+    .umb-chat-header-actions .btn-icon { color: var(--umb-text-mid); }
+
+    /* Pinned message bar (logo abaixo do header do chat) */
+    .umb-chat-pinned {
+      display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+      background: var(--umb-chat-pinned-bg);
+      border-bottom: 1px solid var(--umb-border);
+      font-size: 12.5px; color: var(--umb-chat-pinned-color);
+    }
+    .umb-chat-pinned i { font-size: 15px; color: var(--umb-chat-pinned-accent); }
+    .umb-chat-pinned-text {
+      flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .umb-chat-pinned-text strong { font-weight: 600; margin-right: 4px; }
+    .umb-chat-pinned-link {
+      color: var(--umb-chat-pinned-color); text-decoration: underline;
+      font-weight: 600; flex-shrink: 0; font-size: 12px;
+    }
+
+    /* Mensagens (area rolável) */
+    .umb-chat-body {
+      flex: 1; overflow-y: auto; padding: 18px 24px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .umb-chat-date-sep {
+      display: flex; align-items: center; justify-content: center;
+      margin: 14px 0 6px; gap: 10px;
+    }
+    .umb-chat-date-sep::before,
+    .umb-chat-date-sep::after {
+      content: ''; flex: 1; height: 1px; background: var(--umb-chat-sep-bg); max-width: 140px;
+    }
+    .umb-chat-date-sep span {
+      font-size: 11px; font-weight: 600; color: var(--umb-text-mid);
+      text-transform: uppercase; letter-spacing: .04em;
+    }
+
+    .umb-msg { display: flex; gap: 10px; max-width: 72%; }
+    .umb-msg.out { align-self: flex-end; flex-direction: row-reverse; }
+    .umb-msg.in  { align-self: flex-start; }
+    .umb-msg-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--umb-avatar-bg);
+      color: var(--umb-brand-color);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0; overflow: hidden;
+    }
+    .umb-msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .umb-msg-content { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .umb-msg.out .umb-msg-content { align-items: flex-end; }
+    .umb-msg-author {
+      font-size: 11px; font-weight: 600; color: var(--umb-text-mid); padding: 0 4px;
+    }
+    .umb-msg-bubble {
+      padding: 9px 12px; border-radius: 12px;
+      font-size: 13.5px; line-height: 1.45;
+      background: var(--umb-chat-bubble-in-bg);
+      color: var(--umb-chat-bubble-in-color);
+      border: 1px solid var(--umb-border);
+      word-wrap: break-word; white-space: pre-wrap;
+      max-width: 100%;
+    }
+    .umb-msg.out .umb-msg-bubble {
+      background: var(--umb-chat-bubble-out-bg);
+      color: var(--umb-chat-bubble-out-color);
+      border-color: transparent;
+    }
+    .umb-msg.in  .umb-msg-bubble { border-top-left-radius: 3px; }
+    .umb-msg.out .umb-msg-bubble { border-top-right-radius: 3px; }
+    .umb-msg-meta {
+      display: flex; align-items: center; gap: 4px; padding: 0 4px;
+      font-size: 10.5px; color: var(--umb-text-mid);
+    }
+    .umb-msg-meta i { font-size: 12px; }
+    .umb-msg-meta .umb-msg-status-read { color: #33A8FF; }
+
+    /* Variantes de conteúdo dentro do bubble */
+    .umb-msg-image {
+      max-width: 280px; border-radius: 10px; overflow: hidden;
+      background: var(--umb-media-bg); display: block;
+    }
+    .umb-msg-image img { display: block; width: 100%; height: auto; }
+
+    .umb-msg-file {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      background: var(--umb-chat-bubble-in-bg); border: 1px solid var(--umb-border);
+      min-width: 220px;
+    }
+    .umb-msg.out .umb-msg-file {
+      background: rgba(255,255,255,.14);
+      border-color: rgba(255,255,255,.16); color: #fff;
+    }
+    .umb-msg-file-ico {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--umb-hover-bg); color: var(--umb-text-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .umb-msg.out .umb-msg-file-ico { background: rgba(255,255,255,.18); color: #fff; }
+    .umb-msg-file-body { min-width: 0; flex: 1; }
+    .umb-msg-file-name {
+      font-size: 13px; font-weight: 600; color: inherit;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .umb-msg-file-sub { font-size: 11px; color: var(--umb-text-mid); }
+    .umb-msg.out .umb-msg-file-sub { color: rgba(255,255,255,.8); }
+
+    .umb-msg-audio {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; border-radius: 24px;
+      background: var(--umb-chat-bubble-in-bg); border: 1px solid var(--umb-border);
+      min-width: 240px;
+    }
+    .umb-msg.out .umb-msg-audio {
+      background: rgba(255,255,255,.14);
+      border-color: rgba(255,255,255,.16); color: #fff;
+    }
+    .umb-msg-audio-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--bs-primary); color: #fff; border: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .umb-msg.out .umb-msg-audio-btn { background: #fff; color: var(--bs-primary); }
+    .umb-msg-audio-wave {
+      flex: 1; height: 22px;
+      background: repeating-linear-gradient(to right,
+        var(--umb-text-dim) 0 2px, transparent 2px 5px);
+      border-radius: 2px; opacity: .55;
+    }
+    .umb-msg.out .umb-msg-audio-wave {
+      background: repeating-linear-gradient(to right,
+        rgba(255,255,255,.8) 0 2px, transparent 2px 5px);
+      opacity: .7;
+    }
+    .umb-msg-audio-time { font-size: 11px; color: var(--umb-text-mid); flex-shrink: 0; }
+    .umb-msg.out .umb-msg-audio-time { color: rgba(255,255,255,.8); }
+
+    /* Mensagem do sistema (transferência, automação, etc) */
+    .umb-msg-system {
+      align-self: center; max-width: 80%;
+      padding: 6px 14px; border-radius: 100px;
+      font-size: 11.5px; color: var(--umb-text-mid);
+      background: var(--umb-hover-bg);
+      display: flex; align-items: center; gap: 6px;
+      text-align: center;
+    }
+    .umb-msg-system i { font-size: 13px; color: var(--umb-text-dim); }
+
+    /* Composer */
+    .umb-chat-composer {
+      background: var(--umb-card-bg);
+      border-top: 1px solid var(--umb-border);
+      flex-shrink: 0;
+    }
+    .umb-chat-composer-tabs {
+      display: flex; padding: 4px 12px 0; gap: 4px;
+      border-bottom: 1px solid var(--umb-border);
+    }
+    .umb-chat-composer-tab {
+      font-size: 12.5px; font-weight: 500; color: var(--umb-text-mid);
+      padding: 8px 12px; cursor: pointer;
+      border: 0; background: transparent;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: color .15s, border-color .15s;
+      font-family: inherit;
+    }
+    .umb-chat-composer-tab:hover { color: var(--umb-text-primary); }
+    .umb-chat-composer-tab.active {
+      color: var(--bs-primary); border-bottom-color: var(--bs-primary);
+      font-weight: 600;
+    }
+    .umb-chat-composer-input {
+      padding: 10px 14px 4px;
+    }
+    .umb-chat-composer-input textarea {
+      width: 100%; min-height: 38px; max-height: 140px; resize: none;
+      border: 1px solid var(--umb-border); border-radius: 10px;
+      background: var(--umb-input-bg); color: var(--umb-text-primary);
+      padding: 9px 12px; font-family: inherit; font-size: 13.5px; line-height: 1.45;
+    }
+    .umb-chat-composer-input textarea:focus {
+      outline: 0; border-color: var(--bs-primary);
+      box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), .15);
+    }
+    .umb-chat-composer-toolbar {
+      display: flex; align-items: center; gap: 2px;
+      padding: 4px 10px 10px;
+    }
+    .umb-chat-composer-toolbar-left {
+      display: flex; align-items: center; gap: 2px; flex: 1;
+    }
+    .umb-chat-composer-toolbar-right {
+      display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+    }
+    .umb-chat-send-btn {
+      height: 34px; padding: 0 16px; border-radius: 8px;
+      background: var(--bs-primary); color: #fff; border: 0;
+      font-size: 13px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px;
+      cursor: pointer; transition: filter .12s;
+      font-family: inherit;
+    }
+    .umb-chat-send-btn:hover { filter: brightness(1.06); }
+    .umb-chat-send-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .umb-chat-send-btn i { font-size: 15px; }
+
+    /* Empty state — sem chat selecionado (apenas desktop) */
+    .umb-chat-empty {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px; text-align: center; color: var(--umb-text-mid);
+    }
+    .umb-chat-empty-ico {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--umb-hover-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; color: var(--umb-text-mid); margin-bottom: 16px;
+    }
+    .umb-chat-empty-title {
+      font-size: 16px; font-weight: 600; color: var(--umb-text-primary); margin-bottom: 4px;
+    }
+    .umb-chat-empty-sub {
+      font-size: 13px; color: var(--umb-text-mid); max-width: 340px; line-height: 1.45;
+    }
+
+    /* ---- Responsivo: mobile ---- */
+    @media (max-width: 767.98px) {
+      .umb-chat-body { padding: 14px 12px; }
+      .umb-msg { max-width: 86%; }
+      .umb-chat-pinned { padding: 8px 12px; font-size: 12px; }
+      .umb-chat-composer-input { padding: 8px 10px 4px; }
+      .umb-chat-composer-toolbar { padding: 4px 8px 8px; }
+    }
+
+    /* Variante "chat" do mobile-header — mostra contato em vez de logo/brand */
+    .umb-mobile-header[data-variant="chat"] { padding: 0 4px 0 0; gap: 6px; }
+    .umb-mh-chat {
+      display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;
+      padding: 4px 2px;
+    }
+    .umb-mh-chat-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--umb-avatar-bg); color: var(--umb-brand-color);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0; overflow: hidden;
+    }
+    .umb-mh-chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .umb-mh-chat-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .umb-mh-chat-name {
+      font-size: 14px; font-weight: 600; color: var(--umb-brand-color);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .umb-mh-chat-sub {
+      display: flex; align-items: center; gap: 4px; flex-wrap: nowrap;
+      margin-top: 2px; overflow: hidden;
+    }
+    .umb-mh-chat-sub .umb-conv-tag {
+      background: rgba(255,255,255,.2); color: var(--umb-brand-color);
+    }
+    /* Light theme (sidebar azul): mantém contraste */
+    [data-bs-theme="light"] .umb-mh-chat-sub .umb-conv-tag,
+    [data-bs-theme="emerald"] .umb-mh-chat-sub .umb-conv-tag {
+      background: rgba(255,255,255,.22); color: #ffffff;
+    }
 
   </style>
 </head>
@@ -4136,12 +4647,519 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         </div>
       </div>
 
+      <!-- ─────────────────────────────── TEMPLATE 5: CHAT (ATENDIMENTO) ─── -->
+      <div class="comp-group">
+        <p class="comp-label">Template 5 — Chat (Atendimento)</p>
+        <p style="font-size:13px;color:var(--umb-text-mid);margin-bottom:16px">
+          Tela principal de atendimento. Lista de conversas + detalhe do chat com composer.
+          <strong>Importante:</strong> no desktop NÃO há <code>umb-shell-header</code> — o espaço superior é ocupado pelo header do chat (ações + nome do contato). Ref: <code>/chats</code>
+        </p>
+
+        <div class="row g-4">
+          <!-- Desktop -->
+          <div class="col-12">
+            <p class="tpl-preview-label">Desktop — com chat aberto</p>
+            <div class="tpl-preview tpl-preview-tall">
+              <div class="umb-shell">
+                <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Conversas"></nav>
+                <!-- Observação: SEM umb-shell-main + umb-shell-header. O chat-shell ocupa o flex:1 inteiro. -->
+                <div class="umb-chat-shell">
+                  <!-- ============ Coluna 1: Lista de conversas ============ -->
+                  <aside class="umb-conv-list">
+                    <div class="umb-conv-toolbar">
+                      <div class="input-group" style="flex:1">
+                        <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
+                        <input type="search" class="form-control" placeholder="Pesquisar conversas">
+                      </div>
+                      <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros"><i class="ph ph-funnel"></i></button>
+                    </div>
+                    <div class="umb-conv-tabs">
+                      <button class="umb-conv-tab active">Abertos <span class="umb-conv-tab-count">12</span></button>
+                      <button class="umb-conv-tab">Aguardando <span class="umb-conv-tab-count">3</span></button>
+                      <button class="umb-conv-tab">Resolvidos</button>
+                    </div>
+                    <div class="umb-conv-scroll">
+                      <!-- Item ativo -->
+                      <div class="umb-conv-item active">
+                        <div class="umb-conv-avatar"><span>MR</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                        <div class="umb-conv-body">
+                          <div class="umb-conv-head">
+                            <span class="umb-conv-name">Maria Rocha</span>
+                            <span class="umb-conv-time">14:23</span>
+                          </div>
+                          <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
+                          <div class="umb-conv-meta">
+                            <span class="umb-conv-tag green">Cliente</span>
+                            <span class="umb-conv-sector"><i class="ph ph-headset"></i>Suporte</span>
+                          </div>
+                        </div>
+                        <div class="umb-conv-right">
+                          <span class="umb-conv-time">&nbsp;</span>
+                        </div>
+                      </div>
+                      <!-- Outros items -->
+                      <div class="umb-conv-item">
+                        <div class="umb-conv-avatar"><span>RF</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                        <div class="umb-conv-body">
+                          <div class="umb-conv-head">
+                            <span class="umb-conv-name">Rafa Feltrim</span>
+                            <span class="umb-conv-time">13:58</span>
+                          </div>
+                          <p class="umb-conv-preview"><i class="ph ph-image"></i>Foto</p>
+                          <div class="umb-conv-meta">
+                            <span class="umb-conv-tag blue">Lead</span>
+                            <span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span>
+                          </div>
+                        </div>
+                        <div class="umb-conv-right">
+                          <span class="umb-conv-time">&nbsp;</span>
+                          <span class="umb-conv-badge">2</span>
+                        </div>
+                      </div>
+                      <div class="umb-conv-item">
+                        <div class="umb-conv-avatar"><span>CC</span><span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span></div>
+                        <div class="umb-conv-body">
+                          <div class="umb-conv-head">
+                            <span class="umb-conv-name">Cannacare</span>
+                            <span class="umb-conv-time">13:40</span>
+                          </div>
+                          <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
+                          <div class="umb-conv-meta">
+                            <span class="umb-conv-tag violet">Parceiro</span>
+                            <span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span>
+                          </div>
+                        </div>
+                        <div class="umb-conv-right">
+                          <span class="umb-conv-time">&nbsp;</span>
+                          <span class="umb-conv-badge">1</span>
+                        </div>
+                      </div>
+                      <div class="umb-conv-item">
+                        <div class="umb-conv-avatar"><span>FB</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                        <div class="umb-conv-body">
+                          <div class="umb-conv-head">
+                            <span class="umb-conv-name">Fernando B.</span>
+                            <span class="umb-conv-time">12:12</span>
+                          </div>
+                          <p class="umb-conv-preview"><i class="ph ph-microphone"></i>Áudio (0:18)</p>
+                          <div class="umb-conv-meta">
+                            <span class="umb-conv-tag amber">Trial</span>
+                            <span class="umb-conv-sector"><i class="ph ph-headset"></i>Suporte</span>
+                          </div>
+                        </div>
+                        <div class="umb-conv-right">
+                          <span class="umb-conv-time">&nbsp;</span>
+                        </div>
+                      </div>
+                      <div class="umb-conv-item">
+                        <div class="umb-conv-avatar"><span>LS</span><span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span></div>
+                        <div class="umb-conv-body">
+                          <div class="umb-conv-head">
+                            <span class="umb-conv-name">Laura Silva</span>
+                            <span class="umb-conv-time">Ontem</span>
+                          </div>
+                          <p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p>
+                          <div class="umb-conv-meta">
+                            <span class="umb-conv-tag red">VIP</span>
+                            <span class="umb-conv-sector"><i class="ph ph-briefcase"></i>Contas</span>
+                          </div>
+                        </div>
+                        <div class="umb-conv-right">
+                          <span class="umb-conv-time">&nbsp;</span>
+                        </div>
+                      </div>
+                      <div class="umb-conv-item">
+                        <div class="umb-conv-avatar"><span>JP</span><span class="umb-conv-avatar-ch widget"><i class="ph ph-chat-circle"></i></span></div>
+                        <div class="umb-conv-body">
+                          <div class="umb-conv-head">
+                            <span class="umb-conv-name">João P. (site)</span>
+                            <span class="umb-conv-time">Ontem</span>
+                          </div>
+                          <p class="umb-conv-preview">Vocês têm integração com HubSpot?</p>
+                          <div class="umb-conv-meta">
+                            <span class="umb-conv-tag blue">Lead</span>
+                            <span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span>
+                          </div>
+                        </div>
+                        <div class="umb-conv-right">
+                          <span class="umb-conv-time">&nbsp;</span>
+                        </div>
+                      </div>
+                    </div>
+                  </aside>
+
+                  <!-- ============ Coluna 2: Detalhe do chat ============ -->
+                  <main class="umb-chat-detail">
+                    <!-- Header do chat (substitui o umb-shell-header) -->
+                    <header class="umb-chat-header">
+                      <div class="umb-chat-header-contact">
+                        <div class="umb-chat-header-avatar">MR</div>
+                        <div class="umb-chat-header-info">
+                          <div class="umb-chat-header-name">Maria Rocha</div>
+                          <div class="umb-chat-header-meta">
+                            <span class="umb-conv-tag green">Cliente</span>
+                            <span class="umb-conv-sector"><i class="ph ph-whatsapp-logo"></i>WhatsApp</span>
+                            <span class="umb-conv-sector"><i class="ph ph-headset"></i>Suporte</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="umb-chat-header-actions">
+                        <button class="btn btn-icon btn-text btn-sm" aria-label="Ligar"><i class="ph ph-phone"></i></button>
+                        <button class="btn btn-icon btn-text btn-sm" aria-label="Resolver"><i class="ph ph-check-circle"></i></button>
+                        <button class="btn btn-icon btn-text btn-sm" aria-label="Transferir"><i class="ph ph-arrows-left-right"></i></button>
+                        <button class="btn btn-icon btn-text btn-sm" aria-label="Mais"><i class="ph ph-dots-three-vertical"></i></button>
+                        <button class="btn btn-icon btn-text btn-sm" aria-label="Fechar painel"><i class="ph ph-sidebar-simple"></i></button>
+                      </div>
+                    </header>
+
+                    <!-- Pinned message (anotação fixada) -->
+                    <div class="umb-chat-pinned">
+                      <i class="ph ph-push-pin"></i>
+                      <span class="umb-chat-pinned-text"><strong>Anotação:</strong> Cliente plano Pro anual, renovação em maio/26.</span>
+                      <a href="#" class="umb-chat-pinned-link">Ver todas</a>
+                    </div>
+
+                    <!-- Mensagens -->
+                    <div class="umb-chat-body">
+                      <div class="umb-chat-date-sep"><span>Hoje</span></div>
+
+                      <div class="umb-msg in">
+                        <div class="umb-msg-avatar">MR</div>
+                        <div class="umb-msg-content">
+                          <div class="umb-msg-bubble">Oi, tudo bem? Tô com dúvida sobre a cobrança de hoje — apareceu um valor diferente.</div>
+                          <div class="umb-msg-meta"><span>14:08</span></div>
+                        </div>
+                      </div>
+
+                      <div class="umb-msg out">
+                        <div class="umb-msg-avatar">PR</div>
+                        <div class="umb-msg-content">
+                          <div class="umb-msg-bubble">Oi Maria! Tudo ótimo. Já olhei aqui, o acréscimo veio do upgrade do agente de IA que você fez semana passada. Segue o detalhamento:</div>
+                          <div class="umb-msg-meta"><span>14:10</span><i class="ph ph-checks umb-msg-status-read"></i></div>
+                        </div>
+                      </div>
+
+                      <div class="umb-msg out">
+                        <div class="umb-msg-avatar">PR</div>
+                        <div class="umb-msg-content">
+                          <div class="umb-msg-bubble" style="padding:4px;background:transparent;border:0">
+                            <div class="umb-msg-image">
+                              <div style="height:150px;background:linear-gradient(135deg,#557CF2,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">fatura-abr26.png</div>
+                            </div>
+                          </div>
+                          <div class="umb-msg-meta"><span>14:10</span><i class="ph ph-checks umb-msg-status-read"></i></div>
+                        </div>
+                      </div>
+
+                      <div class="umb-msg-system">
+                        <i class="ph ph-arrows-left-right"></i>
+                        Chat transferido de <strong>Atendimento Inicial</strong> para <strong>Suporte</strong>
+                      </div>
+
+                      <div class="umb-msg in">
+                        <div class="umb-msg-avatar">MR</div>
+                        <div class="umb-msg-content">
+                          <div class="umb-msg-bubble" style="padding:4px 6px;background:transparent;border:0">
+                            <div class="umb-msg-audio">
+                              <button class="umb-msg-audio-btn"><i class="ph ph-play-fill"></i></button>
+                              <div class="umb-msg-audio-wave"></div>
+                              <span class="umb-msg-audio-time">0:23</span>
+                            </div>
+                          </div>
+                          <div class="umb-msg-meta"><span>14:18</span></div>
+                        </div>
+                      </div>
+
+                      <div class="umb-msg in">
+                        <div class="umb-msg-avatar">MR</div>
+                        <div class="umb-msg-content">
+                          <div class="umb-msg-bubble" style="padding:4px;background:transparent;border:0">
+                            <div class="umb-msg-file">
+                              <div class="umb-msg-file-ico"><i class="ph ph-file-pdf"></i></div>
+                              <div class="umb-msg-file-body">
+                                <div class="umb-msg-file-name">comprovante-abril.pdf</div>
+                                <div class="umb-msg-file-sub">142 KB · PDF</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="umb-msg-meta"><span>14:20</span></div>
+                        </div>
+                      </div>
+
+                      <div class="umb-msg in">
+                        <div class="umb-msg-avatar">MR</div>
+                        <div class="umb-msg-content">
+                          <div class="umb-msg-bubble">Obrigada! Vou conferir aqui e te aviso.</div>
+                          <div class="umb-msg-meta"><span>14:23</span></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Composer -->
+                    <div class="umb-chat-composer">
+                      <div class="umb-chat-composer-tabs">
+                        <button class="umb-chat-composer-tab active">Conversa</button>
+                        <button class="umb-chat-composer-tab">Nota interna</button>
+                        <button class="umb-chat-composer-tab">Resposta rápida</button>
+                      </div>
+                      <div class="umb-chat-composer-input">
+                        <textarea placeholder="Digite sua mensagem..."></textarea>
+                      </div>
+                      <div class="umb-chat-composer-toolbar">
+                        <div class="umb-chat-composer-toolbar-left">
+                          <button class="btn btn-icon btn-text btn-sm" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
+                          <button class="btn btn-icon btn-text btn-sm" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
+                          <button class="btn btn-icon btn-text btn-sm" aria-label="Template"><i class="ph ph-file-text"></i></button>
+                          <button class="btn btn-icon btn-text btn-sm" aria-label="Áudio"><i class="ph ph-microphone"></i></button>
+                          <button class="btn btn-icon btn-text btn-sm" aria-label="Agendar"><i class="ph ph-clock"></i></button>
+                        </div>
+                        <div class="umb-chat-composer-toolbar-right">
+                          <button class="umb-chat-send-btn"><i class="ph ph-paper-plane-right"></i>Enviar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </main>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desktop — empty state -->
+          <div class="col-12">
+            <p class="tpl-preview-label">Desktop — sem chat selecionado (empty state)</p>
+            <div class="tpl-preview">
+              <div class="umb-shell">
+                <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Conversas"></nav>
+                <div class="umb-chat-shell">
+                  <aside class="umb-conv-list">
+                    <div class="umb-conv-toolbar">
+                      <div class="input-group" style="flex:1">
+                        <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
+                        <input type="search" class="form-control" placeholder="Pesquisar conversas">
+                      </div>
+                      <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros"><i class="ph ph-funnel"></i></button>
+                    </div>
+                    <div class="umb-conv-tabs">
+                      <button class="umb-conv-tab active">Abertos <span class="umb-conv-tab-count">12</span></button>
+                      <button class="umb-conv-tab">Aguardando <span class="umb-conv-tab-count">3</span></button>
+                      <button class="umb-conv-tab">Resolvidos</button>
+                    </div>
+                    <div class="umb-conv-scroll">
+                      <div class="umb-conv-item">
+                        <div class="umb-conv-avatar"><span>MR</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                        <div class="umb-conv-body">
+                          <div class="umb-conv-head"><span class="umb-conv-name">Maria Rocha</span><span class="umb-conv-time">14:23</span></div>
+                          <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
+                          <div class="umb-conv-meta"><span class="umb-conv-tag green">Cliente</span><span class="umb-conv-sector"><i class="ph ph-headset"></i>Suporte</span></div>
+                        </div>
+                        <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
+                      </div>
+                      <div class="umb-conv-item">
+                        <div class="umb-conv-avatar"><span>RF</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                        <div class="umb-conv-body">
+                          <div class="umb-conv-head"><span class="umb-conv-name">Rafa Feltrim</span><span class="umb-conv-time">13:58</span></div>
+                          <p class="umb-conv-preview"><i class="ph ph-image"></i>Foto</p>
+                          <div class="umb-conv-meta"><span class="umb-conv-tag blue">Lead</span><span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span></div>
+                        </div>
+                        <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">2</span></div>
+                      </div>
+                      <div class="umb-conv-item">
+                        <div class="umb-conv-avatar"><span>CC</span><span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span></div>
+                        <div class="umb-conv-body">
+                          <div class="umb-conv-head"><span class="umb-conv-name">Cannacare</span><span class="umb-conv-time">13:40</span></div>
+                          <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
+                          <div class="umb-conv-meta"><span class="umb-conv-tag violet">Parceiro</span><span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span></div>
+                        </div>
+                        <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">1</span></div>
+                      </div>
+                    </div>
+                  </aside>
+                  <main class="umb-chat-detail">
+                    <div class="umb-chat-empty">
+                      <div class="umb-chat-empty-ico"><i class="ph ph-chats-circle"></i></div>
+                      <p class="umb-chat-empty-title">Selecione uma conversa</p>
+                      <p class="umb-chat-empty-sub">Escolha uma conversa na lista ao lado para começar o atendimento. Você também pode iniciar um novo contato pelo botão no topo.</p>
+                    </div>
+                  </main>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile — lista de conversas -->
+          <div class="col-md-6">
+            <p class="tpl-preview-label">Mobile (390px) — Lista de conversas</p>
+            <div class="tpl-mobile-frame" style="height:720px">
+              <div class="umb-mobile-shell">
+                <header class="umb-mobile-header" data-umb-c="mobile-header" data-variant="home"></header>
+                <div class="umb-mobile-content" style="padding:0">
+                  <div class="umb-conv-toolbar">
+                    <div class="input-group" style="flex:1">
+                      <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
+                      <input type="search" class="form-control" placeholder="Pesquisar conversas">
+                    </div>
+                    <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros"><i class="ph ph-funnel"></i></button>
+                  </div>
+                  <div class="umb-conv-tabs">
+                    <button class="umb-conv-tab active">Abertos <span class="umb-conv-tab-count">12</span></button>
+                    <button class="umb-conv-tab">Aguardando</button>
+                    <button class="umb-conv-tab">Resolvidos</button>
+                  </div>
+                  <div class="umb-conv-scroll">
+                    <div class="umb-conv-item">
+                      <div class="umb-conv-avatar"><span>MR</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                      <div class="umb-conv-body">
+                        <div class="umb-conv-head"><span class="umb-conv-name">Maria Rocha</span><span class="umb-conv-time">14:23</span></div>
+                        <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
+                        <div class="umb-conv-meta"><span class="umb-conv-tag green">Cliente</span></div>
+                      </div>
+                      <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
+                    </div>
+                    <div class="umb-conv-item">
+                      <div class="umb-conv-avatar"><span>RF</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                      <div class="umb-conv-body">
+                        <div class="umb-conv-head"><span class="umb-conv-name">Rafa Feltrim</span><span class="umb-conv-time">13:58</span></div>
+                        <p class="umb-conv-preview"><i class="ph ph-image"></i>Foto</p>
+                        <div class="umb-conv-meta"><span class="umb-conv-tag blue">Lead</span></div>
+                      </div>
+                      <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">2</span></div>
+                    </div>
+                    <div class="umb-conv-item">
+                      <div class="umb-conv-avatar"><span>CC</span><span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span></div>
+                      <div class="umb-conv-body">
+                        <div class="umb-conv-head"><span class="umb-conv-name">Cannacare</span><span class="umb-conv-time">13:40</span></div>
+                        <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
+                        <div class="umb-conv-meta"><span class="umb-conv-tag violet">Parceiro</span></div>
+                      </div>
+                      <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">1</span></div>
+                    </div>
+                    <div class="umb-conv-item">
+                      <div class="umb-conv-avatar"><span>FB</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                      <div class="umb-conv-body">
+                        <div class="umb-conv-head"><span class="umb-conv-name">Fernando B.</span><span class="umb-conv-time">12:12</span></div>
+                        <p class="umb-conv-preview"><i class="ph ph-microphone"></i>Áudio (0:18)</p>
+                        <div class="umb-conv-meta"><span class="umb-conv-tag amber">Trial</span></div>
+                      </div>
+                      <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
+                    </div>
+                    <div class="umb-conv-item">
+                      <div class="umb-conv-avatar"><span>LS</span><span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span></div>
+                      <div class="umb-conv-body">
+                        <div class="umb-conv-head"><span class="umb-conv-name">Laura Silva</span><span class="umb-conv-time">Ontem</span></div>
+                        <p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p>
+                        <div class="umb-conv-meta"><span class="umb-conv-tag red">VIP</span></div>
+                      </div>
+                      <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="umb-mobile-bottom-nav">
+                  <div class="umb-mobile-nav-item active"><i class="ph ph-chat-circle"></i><span>Chat</span></div>
+                  <div class="umb-mobile-nav-item"><i class="ph ph-address-book"></i><span>Contatos</span></div>
+                  <div class="umb-mobile-nav-item"><i class="ph ph-chart-bar"></i><span>Relatórios</span></div>
+                  <div class="umb-mobile-nav-item"><i class="ph ph-gear"></i><span>Config.</span></div>
+                  <div class="umb-mobile-nav-item"><i class="ph ph-dots-three-outline"></i><span>Mais</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile — chat aberto -->
+          <div class="col-md-6">
+            <p class="tpl-preview-label">Mobile (390px) — Chat aberto</p>
+            <div class="tpl-mobile-frame" style="height:720px">
+              <div class="umb-mobile-shell">
+                <!-- Variante "chat": back + avatar + nome + tags + phone + menu -->
+                <header class="umb-mobile-header"
+                        data-umb-c="mobile-header"
+                        data-variant="chat"
+                        data-contact-name="Maria Rocha"
+                        data-contact-tags="Cliente:green"></header>
+                <div class="umb-chat-pinned">
+                  <i class="ph ph-push-pin"></i>
+                  <span class="umb-chat-pinned-text"><strong>Anotação:</strong> Plano Pro anual, renova em maio/26.</span>
+                </div>
+                <div class="umb-chat-body">
+                  <div class="umb-chat-date-sep"><span>Hoje</span></div>
+                  <div class="umb-msg in">
+                    <div class="umb-msg-avatar">MR</div>
+                    <div class="umb-msg-content">
+                      <div class="umb-msg-bubble">Oi, tudo bem? Tô com dúvida sobre a cobrança.</div>
+                      <div class="umb-msg-meta"><span>14:08</span></div>
+                    </div>
+                  </div>
+                  <div class="umb-msg out">
+                    <div class="umb-msg-avatar">PR</div>
+                    <div class="umb-msg-content">
+                      <div class="umb-msg-bubble">Oi Maria! Tudo ótimo. Já olhei aqui — o acréscimo veio do upgrade do agente de IA.</div>
+                      <div class="umb-msg-meta"><span>14:10</span><i class="ph ph-checks umb-msg-status-read"></i></div>
+                    </div>
+                  </div>
+                  <div class="umb-msg out">
+                    <div class="umb-msg-avatar">PR</div>
+                    <div class="umb-msg-content">
+                      <div class="umb-msg-bubble" style="padding:4px;background:transparent;border:0">
+                        <div class="umb-msg-image">
+                          <div style="height:130px;background:linear-gradient(135deg,#557CF2,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">fatura-abr26.png</div>
+                        </div>
+                      </div>
+                      <div class="umb-msg-meta"><span>14:10</span><i class="ph ph-checks umb-msg-status-read"></i></div>
+                    </div>
+                  </div>
+                  <div class="umb-msg-system"><i class="ph ph-arrows-left-right"></i>Transferido para <strong>Suporte</strong></div>
+                  <div class="umb-msg in">
+                    <div class="umb-msg-avatar">MR</div>
+                    <div class="umb-msg-content">
+                      <div class="umb-msg-bubble" style="padding:4px 6px;background:transparent;border:0">
+                        <div class="umb-msg-audio">
+                          <button class="umb-msg-audio-btn"><i class="ph ph-play-fill"></i></button>
+                          <div class="umb-msg-audio-wave"></div>
+                          <span class="umb-msg-audio-time">0:23</span>
+                        </div>
+                      </div>
+                      <div class="umb-msg-meta"><span>14:18</span></div>
+                    </div>
+                  </div>
+                  <div class="umb-msg in">
+                    <div class="umb-msg-avatar">MR</div>
+                    <div class="umb-msg-content">
+                      <div class="umb-msg-bubble">Obrigada! Vou conferir aqui e te aviso.</div>
+                      <div class="umb-msg-meta"><span>14:23</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="umb-chat-composer">
+                  <div class="umb-chat-composer-tabs">
+                    <button class="umb-chat-composer-tab active">Conversa</button>
+                    <button class="umb-chat-composer-tab">Nota</button>
+                    <button class="umb-chat-composer-tab">Rápida</button>
+                  </div>
+                  <div class="umb-chat-composer-input">
+                    <textarea placeholder="Digite..."></textarea>
+                  </div>
+                  <div class="umb-chat-composer-toolbar">
+                    <div class="umb-chat-composer-toolbar-left">
+                      <button class="btn btn-icon btn-text btn-sm" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
+                      <button class="btn btn-icon btn-text btn-sm" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
+                      <button class="btn btn-icon btn-text btn-sm" aria-label="Áudio"><i class="ph ph-microphone"></i></button>
+                    </div>
+                    <div class="umb-chat-composer-toolbar-right">
+                      <button class="umb-chat-send-btn"><i class="ph ph-paper-plane-right"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <!-- RODAPÉ -->
     <div style="text-align:center;padding:48px 0 32px;color:#4a4b60;font-size:13px">
       <div style="font-size:16px;font-weight:700;color:#9091a8;margin-bottom:8px">Umbootstrap Design System</div>
-      <div>143 componentes · 4 templates · Bootstrap 5.3 · Phosphor Icons · Plus Jakarta Sans</div>
+      <div>143 componentes · 5 templates · Bootstrap 5.3 · Phosphor Icons · Plus Jakarta Sans</div>
       <div style="margin-top:6px"><a href="https://design-system.umbler.com/components" style="color:var(--bs-primary);text-decoration:none">design-system.umbler.com/components</a></div>
     </div>
 
@@ -4359,7 +5377,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 </template>
 
 <template id="umb-tpl-mobile-header">
-  <!-- Left slot: hamburger (home) OU back arrow (subpage) -->
+  <!-- Left slot: hamburger (home) OU back arrow (subpage|chat) -->
   <button type="button" class="umb-mh-icon-btn" data-umb-part="left" aria-label="">
     <i class="ph" data-umb-part="left-icon"></i>
   </button>
@@ -4367,11 +5385,19 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   <div class="umb-mh-brand" data-umb-part="brand">
     <svg class="umb-mh-logo" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M17.8431 11.4306C17.5608 12.1241 17.0622 12.7081 16.4214 13.0955C15.7807 13.483 15.032 13.6533 14.2867 13.5811C13.5414 13.5089 12.8393 13.1981 12.2848 12.6949C11.7303 12.1916 11.353 11.5229 11.2091 10.7881C11.1772 10.6216 11.1579 10.453 11.1514 10.2836C11.1452 10.0614 11.0627 9.84803 10.9178 9.67944C10.7728 9.51085 10.5742 9.39731 10.3554 9.3579L8.70067 9.06865C8.54463 9.0399 8.3842 9.04543 8.2305 9.08485C8.07681 9.12427 7.93352 9.19663 7.81058 9.29694C7.68763 9.39725 7.58798 9.52309 7.51851 9.66574C7.44904 9.8084 7.41142 9.96445 7.40826 10.1231C7.40826 10.1338 7.40826 10.1445 7.40826 10.1566C7.42419 11.847 8.03278 13.4782 9.12796 14.766C10.2231 16.0537 11.7355 16.9163 13.4014 17.2035C15.0673 17.4907 16.7811 17.1842 18.2442 16.3374C19.7073 15.4906 20.8269 14.1573 21.4079 12.5698C21.4594 12.4203 21.4777 12.2613 21.4614 12.104C21.4451 11.9467 21.3946 11.7949 21.3135 11.6591C21.2325 11.5233 21.1227 11.4069 20.992 11.3179C20.8612 11.2289 20.7126 11.1696 20.5566 11.144L18.9009 10.8544C18.6852 10.8152 18.4627 10.851 18.2703 10.9559C18.0779 11.0607 17.9271 11.2282 17.8431 11.4306Z" fill="#FCD7DB"/><path d="M24.5813 5.73039C24.2777 5.83957 24.0225 6.0527 23.861 6.33201C23.6994 6.61132 23.642 6.93879 23.6988 7.25641C23.8133 7.90652 23.8707 8.5654 23.8704 9.22552C23.8704 14.9103 19.6751 19.5185 14.5001 19.5185C9.32508 19.5185 5.12978 14.9103 5.12978 9.22552C5.12128 7.24122 5.65073 5.2917 6.66183 3.5843C6.8199 3.32329 6.88567 3.01673 6.84859 2.71385C6.81151 2.41097 6.67374 2.12934 6.45738 1.91416L4.93136 0.400874C4.78362 0.254338 4.60471 0.143047 4.40796 0.0753028C4.21122 0.00755899 4.00171 -0.0148896 3.79508 0.0096306C3.58845 0.0341508 3.39002 0.105006 3.21459 0.216914C3.03916 0.328822 2.89126 0.478896 2.78192 0.655938C1.22576 3.24258 0.409783 6.20688 0.42301 9.22552C0.42301 17.7656 6.72417 24.6888 14.5001 24.6888C22.276 24.6888 28.5771 17.7656 28.5771 9.22552C28.5777 8.17556 28.4809 7.1278 28.2879 6.09572C28.251 5.89904 28.1719 5.71273 28.0559 5.54968C27.9399 5.38663 27.7898 5.25075 27.6161 5.15144C27.4424 5.05214 27.2492 4.99178 27.0498 4.97455C26.8505 4.95732 26.6497 4.98364 26.4616 5.05167L24.5813 5.73039Z" fill="white"/></svg>
   </div>
+  <!-- Chat info block: somente no variant="chat" -->
+  <div class="umb-mh-chat" data-umb-part="chat">
+    <div class="umb-mh-chat-avatar" data-umb-part="chat-avatar"></div>
+    <div class="umb-mh-chat-info">
+      <div class="umb-mh-chat-name" data-umb-part="chat-name"></div>
+      <div class="umb-mh-chat-sub" data-umb-part="chat-sub"></div>
+    </div>
+  </div>
   <!-- Spacer: ocupa o espaço entre o slot esquerdo e as ações à direita -->
   <div class="umb-mh-spacer"></div>
-  <!-- Right actions: bell + avatar -->
+  <!-- Right actions: bell + avatar (home/subpage) OU phone + menu (chat) -->
   <div class="umb-mh-right" data-umb-part="actions">
-    <button type="button" class="umb-mh-icon-btn" aria-label="Notificações"><i class="ph ph-bell"></i></button>
+    <button type="button" class="umb-mh-icon-btn" aria-label="Notificações" data-umb-part="bell"><i class="ph ph-bell"></i></button>
     <button type="button" class="umb-mh-avatar" data-umb-part="avatar" aria-label="Perfil">RC</button>
   </div>
 </template>
@@ -4390,8 +5416,12 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
        data-breadcrumb      — header: caminho separado por " / "; o último é marcado .active
        data-brand           — header: "true" (default) mostra a brand; "false" oculta
        data-actions         — header / mobile-header: "credits|default" (default) ou "none"
-       data-variant         — mobile-header: "home" (default) | "subpage"
-       data-avatar          — mobile-header: iniciais do avatar (default "RC") */
+       data-variant         — mobile-header: "home" (default) | "subpage" | "chat"
+       data-avatar          — mobile-header: iniciais do avatar (default "RC")
+       data-contact-name    — mobile-header (variant=chat): nome do contato
+       data-contact-avatar  — mobile-header (variant=chat): URL da foto (opcional; cai para iniciais)
+       data-contact-tags    — mobile-header (variant=chat): tags separadas por vírgula, formato "Label:cor"
+       data-contact-sub     — mobile-header (variant=chat): texto livre (ex: telefone) */
   (function(){
     function renderSidebars() {
       const tpl = document.getElementById('umb-tpl-sidebar');
@@ -4440,11 +5470,11 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         el.setAttribute('data-variant', variant);
         el.innerHTML = tpl.innerHTML;
 
-        // Left slot: hamburger (home) ou back arrow (subpage)
+        // Left slot: hamburger (home) ou back arrow (subpage|chat)
         const leftBtn  = el.querySelector('[data-umb-part="left"]');
         const leftIco  = el.querySelector('[data-umb-part="left-icon"]');
         if (leftBtn && leftIco) {
-          if (variant === 'subpage') {
+          if (variant === 'subpage' || variant === 'chat') {
             leftIco.classList.add('ph-caret-left');
             leftBtn.setAttribute('aria-label', 'Voltar');
           } else {
@@ -4453,15 +5483,72 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
           }
         }
 
-        // Brand: só no variant="home" (no subpage removemos para manter header limpo)
-        if (variant === 'subpage') {
+        // Brand: só no variant="home"
+        if (variant !== 'home') {
           const brand = el.querySelector('[data-umb-part="brand"]');
           if (brand) brand.remove();
+        }
+
+        // Chat info block: só no variant="chat"
+        const chatBlock = el.querySelector('[data-umb-part="chat"]');
+        if (variant === 'chat' && chatBlock) {
+          const avatar = el.querySelector('[data-umb-part="chat-avatar"]');
+          const nameEl = el.querySelector('[data-umb-part="chat-name"]');
+          const subEl  = el.querySelector('[data-umb-part="chat-sub"]');
+          const photo  = el.dataset.contactAvatar; // URL opcional de imagem
+          const name   = el.dataset.contactName   || 'Contato';
+          const tags   = (el.dataset.contactTags  || '').split(',').map(s => s.trim()).filter(Boolean);
+          const sub    = el.dataset.contactSub;    // texto livre (ex: telefone)
+
+          if (avatar) {
+            if (photo) {
+              avatar.innerHTML = '<img src="' + photo + '" alt="">';
+            } else {
+              // Iniciais a partir do nome
+              const ini = name.split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0].toUpperCase()).join('') || '?';
+              avatar.textContent = ini;
+            }
+          }
+          if (nameEl) nameEl.textContent = name;
+          if (subEl) {
+            subEl.innerHTML = '';
+            if (sub) {
+              const s = document.createElement('span');
+              s.style.fontSize = '11px';
+              s.style.opacity = '.8';
+              s.style.color = 'var(--umb-brand-sub)';
+              s.style.whiteSpace = 'nowrap';
+              s.style.overflow = 'hidden';
+              s.style.textOverflow = 'ellipsis';
+              s.textContent = sub;
+              subEl.appendChild(s);
+            }
+            tags.forEach(t => {
+              // Formato: "texto:cor" (ex: "Expert:violet"); default blue
+              const [txt, color] = t.split(':');
+              const span = document.createElement('span');
+              span.className = 'umb-conv-tag ' + (color || 'blue');
+              span.textContent = txt;
+              subEl.appendChild(span);
+            });
+          }
+        } else if (chatBlock) {
+          chatBlock.remove();
         }
 
         // Avatar initials
         const av = el.querySelector('[data-umb-part="avatar"]');
         if (av) av.textContent = el.dataset.avatar || 'RC';
+
+        // Right actions — variante "chat": substitui bell+avatar por phone+menu
+        if (variant === 'chat') {
+          const right = el.querySelector('[data-umb-part="actions"]');
+          if (right) {
+            right.innerHTML =
+              '<button type="button" class="umb-mh-icon-btn" aria-label="Ligar"><i class="ph ph-phone"></i></button>' +
+              '<button type="button" class="umb-mh-icon-btn" aria-label="Mais opções"><i class="ph ph-dots-three-vertical"></i></button>';
+          }
+        }
 
         // Right actions off
         if (el.dataset.actions === 'none') {

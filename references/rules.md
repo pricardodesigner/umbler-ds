@@ -24,6 +24,7 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 18. Steps (Passos) — estados e variantes
 19. Breakpoints & Responsividade — desktop/mobile no mesmo HTML
 20. O que NUNCA fazer
+21. Template de Chat (atendimento)
 
 ---
 
@@ -347,6 +348,13 @@ O mobile header é o terceiro componente de shell do DS (junto com sidebar e hea
 
 <!-- Variant SUBPAGE — novo/editar recurso: back + sino + avatar -->
 <header class="umb-mobile-header" data-umb-c="mobile-header" data-variant="subpage"></header>
+
+<!-- Variant CHAT — chat aberto (§21): back + avatar + nome do contato + tags + phone + menu -->
+<header class="umb-mobile-header"
+        data-umb-c="mobile-header"
+        data-variant="chat"
+        data-contact-name="Maria Rocha"
+        data-contact-tags="Cliente:green"></header>
 ```
 
 ### Atributos
@@ -354,9 +362,13 @@ O mobile header é o terceiro componente de shell do DS (junto com sidebar e hea
 | Atributo | Valores | Default | Descrição |
 |---|---|---|---|
 | `data-umb-c` | `"mobile-header"` | obrigatório | Marca o placeholder para o render JS |
-| `data-variant` | `"home"` \| `"subpage"` | `"home"` | Layout: home mostra hamburger + logo U à esquerda; subpage mostra back arrow |
-| `data-avatar` | iniciais | `"RC"` | Iniciais do avatar à direita |
-| `data-actions` | `"none"` | — | Se `"none"`, remove o bloco da direita (sino + avatar) |
+| `data-variant` | `"home"` \| `"subpage"` \| `"chat"` | `"home"` | Layout: home mostra hamburger + logo U; subpage mostra back arrow; chat mostra back + avatar + nome do contato (§21) |
+| `data-avatar` | iniciais | `"RC"` | (home/subpage) Iniciais do avatar do operador à direita |
+| `data-actions` | `"none"` | — | Se `"none"`, remove o bloco da direita (sino + avatar em home/subpage; phone + menu em chat) |
+| `data-contact-name` | texto | — | **(chat)** Nome do contato exibido no header |
+| `data-contact-avatar` | URL | — | **(chat)** URL da foto (opcional; cai para iniciais do nome quando ausente) |
+| `data-contact-tags` | `"Label:cor,Label:cor"` | — | **(chat)** Tags do contato separadas por vírgula, cada uma no formato `"texto:cor"` (cores disponíveis: `blue`, `green`, `amber`, `red`, `violet`; default `blue`) |
+| `data-contact-sub` | texto | — | **(chat)** Texto livre abaixo do nome (ex: telefone, canal) |
 
 ### Regras visuais
 
@@ -550,3 +562,161 @@ Após gerar uma tela, redimensione a janela do browser cruzando os 768px e confi
 - Nunca misture tamanhos (ex: botão Lg com campo Md na mesma linha)
 - Nunca use ícones que não sejam Phosphor Icons (`ph ph-*`)
 - Nunca coloque o logo "Umbler Talk" no header dos temas Bravia/Esmeralda
+
+## 21. Template de Chat (atendimento)
+
+O Template 5 — Chat é a **tela mais usada do Umbler Talk**: lista de conversas à esquerda, detalhe do chat em conversa à direita. É o único template do DS que **NÃO usa `umb-shell-header`** — esse espaço é ocupado pelo header do chat (ações + contato).
+
+### 21.1 Estrutura desktop — SEM `umb-shell-header`
+
+```html
+<div class="umb-shell d-none d-md-flex">
+  <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Conversas"></nav>
+
+  <!-- Em vez de umb-shell-main + umb-shell-header + umb-shell-content,
+       usamos umb-chat-shell ocupando o flex:1 inteiro. -->
+  <div class="umb-chat-shell">
+    <aside class="umb-conv-list">…lista de conversas…</aside>
+    <main  class="umb-chat-detail">…detalhe do chat ou empty state…</main>
+  </div>
+</div>
+```
+
+**Motivo**: cada chat tem suas próprias ações (ligar, resolver, transferir, mais opções, fechar painel) e o contato em conversa já é mostrado no `umb-chat-header`. Duplicar breadcrumb + ações globais roubaria área útil das mensagens.
+
+O `umb-chat-shell` é um container `display:flex` que ocupa altura total e divide em duas colunas (360px + flex:1). Não usar em outro template — é exclusivo do chat.
+
+### 21.2 Coluna 1 — Lista de conversas (`.umb-conv-list`)
+
+Largura fixa **360px** em desktop. Componentes internos:
+
+- **`.umb-conv-toolbar`** (busca + filtros) — usa `input-group` padrão + `btn btn-icon btn-text` para filtros. Segue §4 e §7.
+- **`.umb-conv-tabs`** (filtros rápidos) — "Abertos / Aguardando / Resolvidos". Cada tab é `<button class="umb-conv-tab">` com badge de contagem opcional `.umb-conv-tab-count`. Única tab `.active` por vez.
+- **`.umb-conv-scroll`** → lista de **`.umb-conv-item`**.
+
+**`.umb-conv-item`** é um grid de 3 colunas `auto 1fr auto`:
+1. **Avatar** (`.umb-conv-avatar`, 42×42) com indicador de canal no canto inferior direito (`.umb-conv-avatar-ch.{whatsapp|instagram|email|widget|telegram}`). O avatar renderiza uma `<img>` **ou** iniciais em `<span>`.
+2. **Body** (`.umb-conv-body`): nome + hora na mesma linha, preview da última mensagem (1 linha truncada), e linha de meta com **tags** (`.umb-conv-tag.{blue|green|amber|red|violet}`) + **setor** (`.umb-conv-sector` com ícone Phosphor).
+3. **Right** (`.umb-conv-right`): hora e opcional **badge de não-lidas** (`.umb-conv-badge`).
+
+Estados: `:hover` usa `var(--umb-chat-list-hover)`; `.active` usa `var(--umb-chat-list-active)` + barra azul `inset 3px 0 0 var(--bs-primary)` à esquerda (indicando o chat selecionado).
+
+**Preview com mídia**: o preview aceita ícone Phosphor antes do texto para indicar tipo não-texto: `<i class="ph ph-image"></i>Foto`, `<i class="ph ph-microphone"></i>Áudio (0:18)`, `<i class="ph ph-paperclip"></i>nome.pdf`, `<i class="ph ph-file-pdf"></i>`, etc.
+
+### 21.3 Coluna 2 — Detalhe do chat (`.umb-chat-detail`)
+
+Ocupa o espaço restante (`flex: 1`) e usa `var(--umb-chat-canvas-bg)` como fundo. Layout vertical:
+
+1. **Header** (`.umb-chat-header`, 56px) — substitui o shell header padrão. Contém:
+   - `.umb-chat-header-contact` (avatar 36×36 + nome + meta com tags/setor/canal)
+   - `.umb-chat-header-actions` — exclusivamente `btn btn-icon btn-text btn-sm` (§1): `ph-phone`, `ph-check-circle` (resolver), `ph-arrows-left-right` (transferir), `ph-dots-three-vertical`, `ph-sidebar-simple` (fechar painel de informações)
+2. **Pinned message** (`.umb-chat-pinned`, opcional) — barra amarela com ícone `ph-push-pin` para anotações/avisos fixados do chat. Mostra texto truncado e opcional link "Ver todas".
+3. **Body** (`.umb-chat-body`) — área scrollável com `flex: 1`. Contém:
+   - Separadores de data: `.umb-chat-date-sep` com `<span>Hoje</span>` / `<span>Ontem</span>` / `<span>18 de abril</span>`
+   - Mensagens: `.umb-msg.{in|out}` com avatar + content + meta
+   - Mensagens do sistema (transferências, automações): `.umb-msg-system` centralizada com ícone + texto
+4. **Composer** (`.umb-chat-composer`) — sempre no rodapé, `flex-shrink: 0`. Contém:
+   - Tabs (`.umb-chat-composer-tabs`): "Conversa / Nota interna / Resposta rápida" — única ativa por vez
+   - `<textarea>` auto-expansível (min 38px, max 140px) em `.umb-chat-composer-input`
+   - Toolbar com ícones à esquerda (anexar, emoji, template, áudio, agendar — todos `btn btn-icon btn-text btn-sm`) e botão sólido **Enviar** à direita (`.umb-chat-send-btn`)
+
+**Empty state** (nenhum chat selecionado): substitua o conteúdo da coluna 2 por um `.umb-chat-empty` com ícone circular (`.umb-chat-empty-ico`) + título + subtítulo.
+
+### 21.4 Mensagens (`.umb-msg`)
+
+Cada mensagem é um flex de 3 partes: **avatar** (28×28) + **content** + **meta**. Em `.umb-msg.out` (enviada pelo operador) o layout vira `row-reverse` e o content alinha à direita.
+
+Estrutura canônica:
+```html
+<div class="umb-msg in">
+  <div class="umb-msg-avatar">MR</div>
+  <div class="umb-msg-content">
+    <!-- autor opcional para conversas multi-operador: -->
+    <!-- <span class="umb-msg-author">Ana Paula</span> -->
+    <div class="umb-msg-bubble">…texto…</div>
+    <div class="umb-msg-meta"><span>14:23</span><i class="ph ph-checks umb-msg-status-read"></i></div>
+  </div>
+</div>
+```
+
+- `max-width: 72%` (desktop) / `86%` (mobile) no `.umb-msg` inteiro — evita bubbles infinitas.
+- Canto superior do bubble é "cortado" (3px) do lado do autor: `in` perde radius top-left, `out` perde radius top-right. Esse detalhe cria a "pontinha" visual sem usar SVG.
+- Texto é `white-space: pre-wrap; word-wrap: break-word` — respeita quebras de linha e quebra palavras longas.
+
+**Status de leitura** (`out`): `<i class="ph ph-checks umb-msg-status-read"></i>` (duplo check azul) para lida; use `ph-check` para entregue e `ph-clock` para pendente.
+
+**Variantes de conteúdo** — substituem o texto dentro de `.umb-msg-bubble` (com `style="padding:4px;background:transparent;border:0"` para não duplicar bordas):
+- **Imagem**: `.umb-msg-image > img` (max-width 280px, border-radius 10px)
+- **Áudio**: `.umb-msg-audio` (pill) com `.umb-msg-audio-btn` (play) + `.umb-msg-audio-wave` + `.umb-msg-audio-time`
+- **Arquivo**: `.umb-msg-file` com `.umb-msg-file-ico` (ícone Phosphor do tipo) + `.umb-msg-file-body` (nome + tamanho)
+
+Em mensagens `out` os containers internos (audio/file) ganham background `rgba(255,255,255,.14)` sobre o bubble azul — contraste mantido.
+
+**Mensagem do sistema** (`.umb-msg-system`) — pill cinza centralizada, usada para transferências, entradas/saídas de agentes, automações. Nunca tem avatar nem meta. Ex:
+```html
+<div class="umb-msg-system">
+  <i class="ph ph-arrows-left-right"></i>
+  Chat transferido de <strong>Atendimento Inicial</strong> para <strong>Suporte</strong>
+</div>
+```
+
+### 21.5 Tags de conversa (`.umb-conv-tag`)
+
+Cinco cores semânticas, cada uma com tokens próprios por tema (bg/color). Use consistência de significado por organização:
+
+| Cor | Classe | Uso típico |
+|---|---|---|
+| Azul | `.umb-conv-tag.blue` | Lead / prospect |
+| Verde | `.umb-conv-tag.green` | Cliente ativo |
+| Amarelo | `.umb-conv-tag.amber` | Trial / atenção |
+| Vermelho | `.umb-conv-tag.red` | VIP / urgência |
+| Violeta | `.umb-conv-tag.violet` | Parceiro / expert |
+
+Aparecem em: `.umb-conv-meta` (lista), `.umb-chat-header-meta` (header do chat) e `.umb-mh-chat-sub` (header mobile chat). Sempre como pills finas (border-radius 100px, padding 2px 8px, font-size 10.5px).
+
+### 21.6 Mobile — duas variantes de tela
+
+A lista de conversas **reusa** a variant `home` do mobile header (§15) porque é uma "home" de recurso (Chat). O chat aberto usa a **nova variant `chat`** introduzida aqui:
+
+```html
+<!-- Lista de conversas (mobile) — variant home padrão -->
+<header class="umb-mobile-header" data-umb-c="mobile-header" data-variant="home"></header>
+
+<!-- Chat aberto (mobile) — variant chat — contato no header, phone+menu à direita -->
+<header class="umb-mobile-header"
+        data-umb-c="mobile-header"
+        data-variant="chat"
+        data-contact-name="Maria Rocha"
+        data-contact-tags="Cliente:green"></header>
+```
+
+Dentro da lista mobile, use `umb-conv-list` sem a largura fixa (ele ocupa o `umb-mobile-content` inteiro), mantendo `.umb-conv-toolbar`, `.umb-conv-tabs` e `.umb-conv-item`. Dentro do chat aberto mobile, use `.umb-chat-pinned` (opcional) + `.umb-chat-body` + `.umb-chat-composer`, **sem** o `.umb-chat-header` desktop (o mobile-header chat já cumpre esse papel).
+
+**Navegação entre telas mobile**: clicar num `.umb-conv-item` no mobile deve abrir a tela de chat (push navigation). Voltar para a lista via botão back do mobile header (variant `chat` → `home`). Essa lógica não é parte do DS — é responsabilidade do produto — mas o markup das duas telas **deve** coexistir no mesmo HTML gerado, alternando por media query + JS de navegação (ver §19).
+
+### 21.7 Tokens específicos do chat
+
+Todos os tokens abaixo são sobrescritos em cada um dos 4 temas (`:root/dark`, `light`, `emerald`, `dark-emerald`):
+
+| Token | Uso |
+|---|---|
+| `--umb-chat-canvas-bg` | Fundo da área de mensagens (`.umb-chat-detail`) |
+| `--umb-chat-bubble-in-bg` / `-color` | Bubble recebido (entrada) |
+| `--umb-chat-bubble-out-bg` / `-color` | Bubble enviado (saída) — usa a `--bs-primary` do tema |
+| `--umb-chat-list-hover` | Hover de `.umb-conv-item` |
+| `--umb-chat-list-active` | Background do item ativo (contraste sutil) |
+| `--umb-chat-sep-bg` | Linha horizontal dos separadores de data |
+| `--umb-chat-pinned-bg` / `-color` / `-accent` | Barra de mensagem fixada |
+| `--umb-conv-tag-{blue,green,amber,red,violet}-bg` / `-color` | Cores de tag de conversa |
+
+Nos temas **claro/esmeralda** os bubbles de entrada ficam em `#ffffff` sobre canvas `#F5F7FB`/`#EFF7F6` (card sobre canvas levemente colorido). Nos temas **escuro/bravia** o canvas é mais escuro que o `--umb-card-bg` da lista, criando profundidade.
+
+### 21.8 Regras específicas do chat
+
+- **Nunca** coloque o `umb-shell-header` em cima do chat — o espaço é do chat.
+- **Nunca** coloque `.umb-page-tabs`, `.umb-pg-header` ou `.umb-toolbar` dentro de `.umb-chat-detail` — essas abstrações são para páginas de CRUD, não para a tela de atendimento.
+- **Sempre** use **um** item `.umb-conv-item.active` por lista no desktop quando há chat aberto; no empty state, **nenhum** item fica ativo.
+- **Sempre** ancore o composer no rodapé (`flex-shrink: 0`) e faça o body scrollar — nunca o body empurre o composer para fora da viewport.
+- **Ações do header do chat**: sempre `btn btn-icon btn-text btn-sm` (§1). Nunca use `btn-primary` sólido no header — o Primary é reservado ao botão Enviar do composer.
+- **Botão Enviar** (`.umb-chat-send-btn`): é o único CTA sólido da tela. Disable quando o textarea estiver vazio (`:disabled` já estilizado).
+- **Badges de canal** (`.umb-conv-avatar-ch`): sempre usam as cores oficiais do canal (WhatsApp verde `#25D366`, Instagram gradient, etc.) — essas são as únicas cores hex permitidas na tela de chat, porque são brand dos canais (exceção à §20).
