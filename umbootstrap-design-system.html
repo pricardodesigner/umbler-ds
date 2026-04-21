@@ -687,8 +687,8 @@
 
     .form-control.is-valid   { border-color: var(--bs-success) !important; }
     .form-control.is-invalid { border-color: var(--bs-danger)  !important; }
-    .valid-feedback   { color: #6dbba1; font-size: 12px; }
-    .invalid-feedback { color: #c4827d; font-size: 12px; }
+    .valid-feedback   { color: var(--umb-alert-success-color); font-size: 12px; }
+    .invalid-feedback { color: var(--umb-alert-danger-color); font-size: 12px; }
 
     /* --- SWITCHES & CHECKS --- */
     .form-check-input { background-color: var(--umb-input-border); border-color: var(--umb-border-strong); cursor: pointer; }
@@ -856,7 +856,7 @@
 
     /* --- TOOLTIP --- */
     .umb-tooltip-demo { position: relative; display: inline-block; }
-    .umb-tooltip-demo .tooltip-box { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #080808; color: #f0f0f8; border-radius: 6px; padding: 6px 10px; font-size: 12px; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,.3); z-index: 99; }
+    .umb-tooltip-demo .tooltip-box { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--umb-tooltip-bg); color: var(--umb-text-primary); border-radius: 6px; padding: 6px 10px; font-size: 12px; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,.3); z-index: 99; }
     .umb-tooltip-demo:hover .tooltip-box { display: block; }
     /* Botão fechar — adapta ao tema */
     .btn-close { filter: none; }
@@ -866,13 +866,13 @@
       [data-bs-theme="auto"] .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
     }
     /* Bootstrap tooltip — força mesma cor em todos os temas */
-    .tooltip { --bs-tooltip-bg: #080808; --bs-tooltip-color: #f0f0f8; }
-    .tooltip .tooltip-inner { background-color: #080808; color: #f0f0f8; }
+    .tooltip { --bs-tooltip-bg: var(--umb-tooltip-bg); --bs-tooltip-color: var(--umb-text-primary); }
+    .tooltip .tooltip-inner { background-color: var(--umb-tooltip-bg); color: var(--umb-text-primary); }
     .tooltip .tooltip-arrow::before { border-color: transparent; }
-    .bs-tooltip-top    .tooltip-arrow::before { border-top-color:    #080808 !important; }
-    .bs-tooltip-bottom .tooltip-arrow::before { border-bottom-color: #080808 !important; }
-    .bs-tooltip-start  .tooltip-arrow::before { border-left-color:   #080808 !important; }
-    .bs-tooltip-end    .tooltip-arrow::before { border-right-color:  #080808 !important; }
+    .bs-tooltip-top    .tooltip-arrow::before { border-top-color:    var(--umb-tooltip-bg) !important; }
+    .bs-tooltip-bottom .tooltip-arrow::before { border-bottom-color: var(--umb-tooltip-bg) !important; }
+    .bs-tooltip-start  .tooltip-arrow::before { border-left-color:   var(--umb-tooltip-bg) !important; }
+    .bs-tooltip-end    .tooltip-arrow::before { border-right-color:  var(--umb-tooltip-bg) !important; }
 
     /* --- LOADER --- */
     .umb-loader { width: 36px; height: 36px; border: 3px solid rgba(var(--bs-primary-rgb),.2); border-top-color: var(--bs-primary); border-radius: 50%; animation: spin .8s linear infinite; }
@@ -882,10 +882,10 @@
 
     /* --- HEALTH DOTS --- */
     .health-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-    .health-dot.hot  { background: #22c55e; box-shadow: 0 0 6px #22c55e; animation: pulse-hot 1.5s infinite; }
-    .health-dot.warm { background: #f59e0b; }
-    .health-dot.cold { background: #ef4444; }
-    @keyframes pulse-hot { 0%,100%{box-shadow:0 0 4px #22c55e} 50%{box-shadow:0 0 10px #22c55e} }
+    .health-dot.hot  { background: var(--bs-success); box-shadow: 0 0 6px var(--bs-success); animation: pulse-hot 1.5s infinite; }
+    .health-dot.warm { background: var(--bs-warning); }
+    .health-dot.cold { background: var(--bs-danger); }
+    @keyframes pulse-hot { 0%,100%{box-shadow:0 0 4px var(--bs-success)} 50%{box-shadow:0 0 10px var(--bs-success)} }
 
     /* --- MISC UTILS --- */
     .text-primary-umb { color: var(--umb-text-primary); }
@@ -1229,7 +1229,7 @@
       text-align: center; cursor: pointer; transition: all .2s;
       position: relative;
     }
-    .umb-choice-card:hover { border-color: var(--bs-primary); background: rgba(85,124,242,.04); }
+    .umb-choice-card:hover { border-color: var(--bs-primary); background: rgba(var(--bs-primary-rgb), .04); }
     .umb-choice-avatar {
       width: 64px; height: 64px; border-radius: 50%;
       background: var(--umb-hover-bg);
