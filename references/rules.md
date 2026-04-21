@@ -588,7 +588,7 @@ O `umb-chat-shell` é um container `display:flex` que ocupa altura total e divid
 
 ### 21.2 Coluna 1 — Lista de conversas (`.umb-conv-list`)
 
-Largura fixa **360px** em desktop. Componentes internos, **nesta ordem vertical**:
+Largura fixa **360px** em desktop. Background `var(--umb-card-bg)`. **Canto superior direito** arredondado com `border-top-right-radius: 2rem` — a coluna 1 "entra" no canvas do chat criando o recorte característico visto em produção. **Sem** `border-right` (a separação visual vem do contraste entre `--umb-card-bg` e `--umb-chat-canvas-bg`). Componentes internos, **nesta ordem vertical**:
 
 1. **`.umb-conv-topbar`** (56px de altura fixa — pixel-perfect aligned com `.umb-chat-header` da coluna 2). Contém exatamente **6 botões icon-only** com tooltip no hover (`data-bs-toggle="tooltip" data-bs-placement="bottom" title="…"`):
    - `ph-chat` — "Conversas com cliente" — `btn btn-icon btn-text btn-lg`
@@ -598,7 +598,8 @@ Largura fixa **360px** em desktop. Componentes internos, **nesta ordem vertical*
    - `ph-sort-descending` — "Ordem da lista de conversas" — `btn btn-icon btn-text btn-lg`
    - `.umb-conv-topbar-spacer` (`flex: 1`)
    - `ph-plus` — "Iniciar nova conversa" — `btn btn-primary btn-icon btn-lg` (o **único** botão primário/sólido do topbar)
-2. **`.umb-conv-toolbar`** (busca + filtros) — `input-group` com placeholder "Buscar por nome ou telefone" + `btn btn-icon btn-text btn-sm` "Filtros" (`ph-funnel`) com tooltip.
+   O topbar herda o `border-top-right-radius: 2rem` da coluna para acompanhar o recorte visual. **Sem** `border-bottom` — o recorte já separa o topbar do restante.
+2. **`.umb-conv-toolbar`** (filtros + busca) — ordem fixa: **primeiro** o botão `btn btn-icon btn-text btn-lg` "Filtros" (`ph-funnel`) com tooltip, **depois** o `input-group` com placeholder "Buscar por nome ou telefone". O input tem altura 40px para alinhar verticalmente com o `btn-lg`.
 3. **`.umb-conv-segmented`** — wrapper do Segmented. **Substitui o antigo `.umb-conv-tabs`**. Usa `inset-control inset-control-lg` (§ Segmented). Os 3 segmentos são:
    - "Entrada" com contador `<span class="umb-seg-count">12</span>` — `.active` por default
    - "Esperando" com contador `<span class="umb-seg-count">3</span>`
@@ -619,7 +620,7 @@ Estados: `:hover` usa `var(--umb-chat-list-hover)`; `.active` usa `var(--umb-cha
 
 Ocupa o espaço restante (`flex: 1`) e usa `var(--umb-chat-canvas-bg)` como fundo. Layout vertical:
 
-1. **Header** (`.umb-chat-header`, **56px** — mesma altura do `.umb-conv-topbar` para que o divisor horizontal inferior fique alinhado pixel-perfect entre as duas colunas). Substitui o shell header padrão. Contém:
+1. **Header** (`.umb-chat-header`, **56px** — mesma altura do `.umb-conv-topbar` para alinhamento pixel-perfect). Background `var(--umb-chat-canvas-bg)` — **o mesmo fundo da área de mensagens**, integrando o header ao canvas do chat (não há card próprio nem `border-bottom`). Substitui o shell header padrão. Contém:
    - `.umb-chat-header-contact` (avatar 36×36 + nome + meta com tags/setor/canal)
    - `.umb-chat-header-actions` — exatamente **8 botões icon-only** `btn btn-icon btn-text btn-lg` (§1), cada um com tooltip via `data-bs-toggle="tooltip" data-bs-placement="bottom" title="…"`, nesta ordem:
      - `ph-user` — "Detalhes do contato"

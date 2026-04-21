@@ -1555,26 +1555,31 @@
     }
 
     /* ============ COLUNA 1: Lista de conversas ============ */
+    /* Canto superior direito arredondado (2rem) — a coluna 1 "entra" no canvas do chat,
+       criando o recorte visto no produto em produção. */
     .umb-conv-list {
       width: 360px; min-width: 360px;
       background: var(--umb-card-bg);
-      border-right: 1px solid var(--umb-border);
       display: flex; flex-direction: column; overflow: hidden;
+      border-top-right-radius: 2rem;
     }
     /* Topbar (56px): 5 btn-icon btn-text btn-lg + spacer + 1 btn-primary btn-icon btn-lg.
-       Altura deve bater 1:1 com .umb-chat-header para o divisor alinhar pixel-perfect. */
+       Altura deve bater 1:1 com .umb-chat-header para o divisor alinhar pixel-perfect.
+       SEM border-bottom — o recorte visual vem do radius da coluna. */
     .umb-conv-topbar {
       height: 56px; min-height: 56px;
       padding: 8px 12px; display: flex; align-items: center; gap: 2px;
-      border-bottom: 1px solid var(--umb-border);
       background: var(--umb-card-bg);
+      border-top-right-radius: 2rem;
     }
     .umb-conv-topbar-spacer { flex: 1 1 auto; }
-    /* Toolbar de busca + filtro — sem border-bottom (o border é do topbar) */
+    /* Toolbar de busca + filtro. O botão de filtro vem ANTES do input (à esquerda). */
     .umb-conv-toolbar {
       padding: 10px 12px; display: flex; align-items: center; gap: 8px;
     }
-    .umb-conv-toolbar .form-control { height: 34px; font-size: 13px; }
+    /* Input height casa com btn-lg (40px) para alinhar o botão de filtro. */
+    .umb-conv-toolbar .form-control,
+    .umb-conv-toolbar .input-group-text { height: 40px; font-size: 13px; }
     /* Wrapper do Segmented (substitui o antigo .umb-conv-tabs) */
     .umb-conv-segmented {
       padding: 4px 12px 10px;
@@ -1706,10 +1711,11 @@
       flex: 1; display: flex; flex-direction: column; min-width: 0;
       background: var(--umb-chat-canvas-bg);
     }
+    /* Chat-header da coluna 2: mesmo fundo da área de mensagens (canvas-bg),
+       sem card próprio e sem border-bottom — integrado visualmente ao corpo do chat. */
     .umb-chat-header {
       height: 56px; min-height: 56px;
-      background: var(--umb-card-bg);
-      border-bottom: 1px solid var(--umb-border);
+      background: var(--umb-chat-canvas-bg);
       display: flex; align-items: center; gap: 12px; padding: 0 16px;
     }
     .umb-chat-header-contact {
@@ -4703,12 +4709,13 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       <button class="btn btn-primary btn-icon btn-lg" aria-label="Iniciar nova conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar nova conversa"><i class="ph ph-plus"></i></button>
                     </div>
                     <!-- Busca + filtro -->
+                    <!-- Busca + filtro: o botão de filtro vem ANTES do input (à esquerda) -->
                     <div class="umb-conv-toolbar">
+                      <button class="btn btn-icon btn-text btn-lg" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                       <div class="input-group" style="flex:1">
                         <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
                         <input type="search" class="form-control" placeholder="Buscar por nome ou telefone">
                       </div>
-                      <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                     </div>
                     <!-- Segmented (substitui o antigo .umb-conv-tabs) -->
                     <div class="umb-conv-segmented">
@@ -4986,12 +4993,13 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       <div class="umb-conv-topbar-spacer"></div>
                       <button class="btn btn-primary btn-icon btn-lg" aria-label="Iniciar nova conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar nova conversa"><i class="ph ph-plus"></i></button>
                     </div>
+                    <!-- Busca + filtro: o botão de filtro vem ANTES do input (à esquerda) -->
                     <div class="umb-conv-toolbar">
+                      <button class="btn btn-icon btn-text btn-lg" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                       <div class="input-group" style="flex:1">
                         <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
                         <input type="search" class="form-control" placeholder="Buscar por nome ou telefone">
                       </div>
-                      <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                     </div>
                     <div class="umb-conv-segmented">
                       <div class="inset-control inset-control-lg">
@@ -5060,11 +5068,11 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                     <button class="btn btn-primary btn-icon btn-lg" aria-label="Iniciar nova conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar nova conversa"><i class="ph ph-plus"></i></button>
                   </div>
                   <div class="umb-conv-toolbar">
+                    <button class="btn btn-icon btn-text btn-lg" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                     <div class="input-group" style="flex:1">
                       <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
                       <input type="search" class="form-control" placeholder="Buscar por nome ou telefone">
                     </div>
-                    <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                   </div>
                   <div class="umb-conv-segmented">
                     <div class="inset-control inset-control-lg">
