@@ -1618,85 +1618,165 @@
     }
     .umb-conv-scroll { flex: 1; overflow-y: auto; padding: 2px 0; }
     .umb-conv-item {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 10px;
-      padding: 12px 14px; border-bottom: 1px solid var(--umb-border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--umb-border);
       cursor: pointer; transition: background .12s;
       position: relative;
     }
     .umb-conv-item:hover { background: var(--umb-chat-list-hover); }
     .umb-conv-item.active {
-      background: var(--umb-chat-list-active);
+      background: var(--umb-bg-active);
       box-shadow: inset 3px 0 0 var(--bs-primary);
     }
     .umb-conv-avatar {
-      width: 42px; height: 42px; border-radius: 50%;
-      background: var(--umb-avatar-bg);
+      width: 52px; height: 52px;
+      flex-shrink: 0;
+      position: relative;
       color: var(--umb-brand-color);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 600; flex-shrink: 0; position: relative;
-      overflow: visible;
+      font-size: 14px; font-weight: 600;
     }
-    .umb-conv-avatar > img,
-    .umb-conv-avatar > span {
+    .umb-conv-avatar > img {
       width: 100%; height: 100%; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden; object-fit: cover;
+      object-fit: cover; display: block;
     }
-    .umb-conv-avatar-ch {
-      position: absolute; bottom: -1px; right: -1px;
-      width: 18px; height: 18px; border-radius: 50%;
+    /* Fallback de iniciais (span SEM classe de badge) — nao afeta o .umb-conv-avatar-ch */
+    .umb-conv-avatar > span:not(.umb-conv-avatar-ch) {
+      width: 100%; height: 100%; border-radius: 50%;
+      background: var(--umb-avatar-bg);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    /* Badge de canal — canto INFERIOR ESQUERDO. Proporcao ~38% do avatar.
+       Especificidade maior com .umb-conv-avatar > para nao perder de regras genericas. */
+    .umb-conv-avatar > .umb-conv-avatar-ch {
+      position: absolute; bottom: 0; left: 0;
+      width: 20px; height: 20px; border-radius: 50%;
       border: 2px solid var(--umb-card-bg);
       display: flex; align-items: center; justify-content: center;
-      font-size: 9px; color: #fff;
+      font-size: 10px; line-height: 1; color: #fff;
+      box-sizing: border-box;
     }
+    .umb-conv-avatar > .umb-conv-avatar-ch i { font-size: 10px; }
+    /* Canais canonicos (novos) */
+    .umb-conv-avatar-ch.whatsapp-starter { background: #7c3aed; } /* Starter = roxo */
+    .umb-conv-avatar-ch.whatsapp-api     { background: #25D366; } /* Business API = verde */
+    .umb-conv-avatar-ch.livechat         { background: #ff6b35; } /* Live chat = laranja */
+    /* Aliases legados (mantidos para retrocompat) */
     .umb-conv-avatar-ch.whatsapp  { background: #25D366; }
     .umb-conv-avatar-ch.instagram { background: linear-gradient(45deg,#F58529,#DD2A7B,#8134AF); }
     .umb-conv-avatar-ch.email     { background: #546E7A; }
     .umb-conv-avatar-ch.widget    { background: var(--bs-primary); }
     .umb-conv-avatar-ch.telegram  { background: #229ED9; }
 
-    .umb-conv-body { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .umb-conv-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
     .umb-conv-head {
-      display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
     }
     .umb-conv-name {
-      font-size: 14px; font-weight: 600; color: var(--umb-text-primary);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1;
-    }
-    .umb-conv-time { font-size: 11px; color: var(--umb-text-mid); flex-shrink: 0; }
-    .umb-conv-preview {
-      font-size: 12.5px; color: var(--umb-text-mid); line-height: 1.35;
+      font-size: 15px; font-weight: 400; color: var(--umb-text-primary);
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      min-width: 0; flex: 1;
+    }
+    /* Conversa selecionada — unico item com nome em destaque (600). */
+    .umb-conv-item.active .umb-conv-name { font-weight: 600; }
+    .umb-conv-head-right {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11.5px; color: var(--umb-text-mid);
+      flex-shrink: 0;
+    }
+    .umb-conv-head-right i { font-size: 14px; }
+    .umb-conv-head-event { display: inline-flex; align-items: center; gap: 3px; }
+    .umb-conv-head-mute { color: var(--umb-text-mid); }
+    .umb-conv-time { font-size: 11.5px; color: var(--umb-text-mid); flex-shrink: 0; }
+
+    /* Linha do preview: mensagem à esquerda; avatar do responsável + badge pending à direita */
+    .umb-conv-preview-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      min-width: 0;
+    }
+    .umb-conv-preview-end {
+      display: flex; align-items: center; gap: 6px;
+      flex-shrink: 0;
+    }
+    .umb-conv-preview {
+      flex: 1; min-width: 0;
+      font-size: 13px; color: var(--umb-text-mid); line-height: 1.35;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin: 0;
     }
     .umb-conv-preview i {
       font-size: 13px; color: var(--umb-text-dim); vertical-align: -1px; margin-right: 3px;
     }
+
     .umb-conv-meta {
-      display: flex; align-items: center; gap: 4px; margin-top: 4px; flex-wrap: wrap;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; margin-top: 2px;
     }
+    .umb-conv-meta-left, .umb-conv-meta-right {
+      display: flex; align-items: center; gap: 6px; min-width: 0;
+    }
+    .umb-conv-meta-left { flex: 1; min-width: 0; }
+
+    /* Tag de contato (pill colorida) */
     .umb-conv-tag {
       display: inline-flex; align-items: center; gap: 4px;
-      font-size: 10.5px; font-weight: 600;
-      padding: 2px 8px; border-radius: 100px; line-height: 1.4;
+      font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 100px; line-height: 1.4;
+      white-space: nowrap; color: #fff;
+    }
+    .umb-conv-tag i { font-size: 13px; }
+    .umb-conv-tag.blue    { background: var(--umb-conv-tag-blue-bg);   color: var(--umb-conv-tag-blue-color); }
+    .umb-conv-tag.green   { background: var(--umb-conv-tag-green-bg);  color: var(--umb-conv-tag-green-color); }
+    .umb-conv-tag.amber   { background: var(--umb-conv-tag-amber-bg);  color: var(--umb-conv-tag-amber-color); }
+    .umb-conv-tag.red     { background: var(--umb-conv-tag-red-bg);    color: var(--umb-conv-tag-red-color); }
+    .umb-conv-tag.violet  { background: var(--umb-conv-tag-violet-bg); color: var(--umb-conv-tag-violet-color); }
+    .umb-conv-tag.pink    { background: #D9348A; color: #fff; }
+
+    /* Tag "+N" — pill outline com contador de tags adicionais */
+    .umb-conv-tag-more {
+      display: inline-flex; align-items: center;
+      font-size: 11px; font-weight: 600;
+      padding: 2px 10px; border-radius: 100px; line-height: 1.4;
+      color: var(--umb-text-mid);
+      background: transparent;
+      border: 1px solid var(--umb-border-strong);
       white-space: nowrap;
     }
-    .umb-conv-tag.blue   { background: var(--umb-conv-tag-blue-bg);   color: var(--umb-conv-tag-blue-color); }
-    .umb-conv-tag.green  { background: var(--umb-conv-tag-green-bg);  color: var(--umb-conv-tag-green-color); }
-    .umb-conv-tag.amber  { background: var(--umb-conv-tag-amber-bg);  color: var(--umb-conv-tag-amber-color); }
-    .umb-conv-tag.red    { background: var(--umb-conv-tag-red-bg);    color: var(--umb-conv-tag-red-color); }
-    .umb-conv-tag.violet { background: var(--umb-conv-tag-violet-bg); color: var(--umb-conv-tag-violet-color); }
 
+    /* Avatar do responsavel (mini) */
+    .umb-conv-assignee {
+      width: 22px; height: 22px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+      background: var(--umb-avatar-bg);
+    }
+
+    /* Badge numerica circular (mensagens pendentes) */
+    .umb-conv-pending {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 22px; height: 22px; padding: 0 6px;
+      border-radius: 100px;
+      background: var(--bs-success); color: #fff;
+      font-size: 11px; font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* Setor — pill outline (nao mais filled) */
     .umb-conv-sector {
       display: inline-flex; align-items: center; gap: 4px;
-      font-size: 10.5px; font-weight: 500; color: var(--umb-text-mid);
-      padding: 2px 8px; border-radius: 100px;
-      background: var(--umb-hover-bg);
+      font-size: 11px; font-weight: 500;
+      padding: 2px 10px; border-radius: 100px; line-height: 1.4;
+      color: var(--umb-text-mid);
+      background: transparent;
+      border: 1px solid var(--umb-border-strong);
       white-space: nowrap;
     }
     .umb-conv-sector i { font-size: 11px; }
 
+    /* Legado (retrocompat): antigo .umb-conv-right ainda existe em alguns lugares.
+       Mantem-se, mas o padrao agora e meta-left + meta-right. */
     .umb-conv-right {
       display: flex; flex-direction: column; align-items: flex-end;
       gap: 4px; flex-shrink: 0;
@@ -1715,7 +1795,7 @@
     }
     .umb-chat-header {
       height: 56px; min-height: 56px;
-      background: var(--umb-card-bg);
+      background: var(--umb-bg-primary, var(--bs-body-bg));
       border-bottom: 1px solid var(--umb-border);
       display: flex; align-items: center; gap: 12px; padding: 0 16px;
     }
@@ -1892,63 +1972,44 @@
     }
     .umb-msg-system i { font-size: 13px; color: var(--umb-text-dim); }
 
-    /* Composer */
+    /* Composer — card flutuante ancorado no rodapé do chat-detail.
+       Usa componentes canônicos: .inset-control (Segmented), form-switch, .btn padrão. */
     .umb-chat-composer {
-      background: var(--umb-card-bg);
-      border-top: 1px solid var(--umb-border);
       flex-shrink: 0;
+      margin: 12px 16px 16px;
+      background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      display: flex; flex-direction: column;
     }
-    .umb-chat-composer-tabs {
-      display: flex; padding: 4px 12px 0; gap: 4px;
-      border-bottom: 1px solid var(--umb-border);
+    .umb-chat-composer-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 10px 12px 6px;
     }
-    .umb-chat-composer-tab {
-      font-size: 12.5px; font-weight: 500; color: var(--umb-text-mid);
-      padding: 8px 12px; cursor: pointer;
-      border: 0; background: transparent;
-      border-bottom: 2px solid transparent; margin-bottom: -1px;
-      transition: color .15s, border-color .15s;
-      font-family: inherit;
+    .umb-chat-composer-assignee {
+      display: flex; align-items: center; gap: 8px; min-width: 0;
     }
-    .umb-chat-composer-tab:hover { color: var(--umb-text-primary); }
-    .umb-chat-composer-tab.active {
-      color: var(--bs-primary); border-bottom-color: var(--bs-primary);
-      font-weight: 600;
+    .umb-chat-composer-assignee .form-check { margin: 0; padding-left: 2.5em; min-height: auto; }
+    .umb-chat-composer-assignee-name {
+      font-size: 13px; font-weight: 600; color: var(--umb-text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .umb-chat-composer-input {
-      padding: 10px 14px 4px;
-    }
+    .umb-chat-composer-input { padding: 2px 14px 4px; }
     .umb-chat-composer-input textarea {
-      width: 100%; min-height: 38px; max-height: 140px; resize: none;
-      border: 1px solid var(--umb-border); border-radius: 10px;
-      background: var(--umb-input-bg); color: var(--umb-text-primary);
-      padding: 9px 12px; font-family: inherit; font-size: 13.5px; line-height: 1.45;
+      width: 100%; min-height: 60px; max-height: 180px; resize: none;
+      border: 0; background: transparent; color: var(--umb-text-primary);
+      padding: 8px 0; font-family: inherit; font-size: 13.5px; line-height: 1.5;
     }
-    .umb-chat-composer-input textarea:focus {
-      outline: 0; border-color: var(--bs-primary);
-      box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), .15);
-    }
+    .umb-chat-composer-input textarea:focus { outline: 0; box-shadow: none; }
     .umb-chat-composer-toolbar {
-      display: flex; align-items: center; gap: 2px;
-      padding: 4px 10px 10px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; padding: 6px 10px 10px;
     }
-    .umb-chat-composer-toolbar-left {
-      display: flex; align-items: center; gap: 2px; flex: 1;
-    }
+    .umb-chat-composer-toolbar-left,
     .umb-chat-composer-toolbar-right {
-      display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+      display: flex; align-items: center; gap: 4px;
     }
-    .umb-chat-send-btn {
-      height: 34px; padding: 0 16px; border-radius: 8px;
-      background: var(--bs-primary); color: #fff; border: 0;
-      font-size: 13px; font-weight: 600;
-      display: inline-flex; align-items: center; gap: 6px;
-      cursor: pointer; transition: filter .12s;
-      font-family: inherit;
-    }
-    .umb-chat-send-btn:hover { filter: brightness(1.06); }
-    .umb-chat-send-btn:disabled { opacity: .5; cursor: not-allowed; }
-    .umb-chat-send-btn i { font-size: 15px; }
 
     /* Empty state — sem chat selecionado (apenas desktop) */
     .umb-chat-empty {
@@ -4726,112 +4787,127 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       </div>
                     </div>
                     <div class="umb-conv-scroll">
-                      <!-- Item ativo -->
+
                       <div class="umb-conv-item active">
-                        <div class="umb-conv-avatar"><span>MR</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                        <div class="umb-conv-avatar">
+                          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=faces" alt="Vitor">
+                          <span class="umb-conv-avatar-ch whatsapp-starter"><i class="ph ph-whatsapp-logo"></i></span>
+                        </div>
+                        <div class="umb-conv-body">
+                          <div class="umb-conv-head">
+                            <span class="umb-conv-name">Vitor</span>
+                            <div class="umb-conv-head-right"><span class="umb-conv-head-event"><i class="ph ph-calendar-blank"></i>1</span><i class="ph ph-speaker-slash umb-conv-head-mute"></i><span class="umb-conv-time">10 horas atras</span></div>
+                          </div>
+                          <div class="umb-conv-preview-row">
+                            <p class="umb-conv-preview">Ola. Tudo bem?</p>
+                            <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1507081323647-4d250478b919?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"><span class="umb-conv-pending">3</span></div>
+                          </div>
+                          <div class="umb-conv-meta">
+                            <div class="umb-conv-meta-left"><span class="umb-conv-tag pink"><i class="ph ph-user-circle"></i>Magenta</span><span class="umb-conv-tag-more">+3</span></div>
+                            <div class="umb-conv-meta-right"><span class="umb-conv-sector">Comercial</span></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="umb-conv-item">
+                        <div class="umb-conv-avatar">
+                          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces" alt="Maria Rocha">
+                          <span class="umb-conv-avatar-ch whatsapp-api"><i class="ph ph-whatsapp-logo"></i></span>
+                        </div>
                         <div class="umb-conv-body">
                           <div class="umb-conv-head">
                             <span class="umb-conv-name">Maria Rocha</span>
-                            <span class="umb-conv-time">14:23</span>
+                            <div class="umb-conv-head-right"><span class="umb-conv-time">14:23</span></div>
                           </div>
-                          <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
+                          <div class="umb-conv-preview-row">
+                            <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
+                            <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"></div>
+                          </div>
                           <div class="umb-conv-meta">
-                            <span class="umb-conv-tag green">Cliente</span>
-                            <span class="umb-conv-sector"><i class="ph ph-headset"></i>Suporte</span>
+                            <div class="umb-conv-meta-left"><span class="umb-conv-tag green"><i class="ph ph-user-circle"></i>Cliente</span></div>
+                            <div class="umb-conv-meta-right"><span class="umb-conv-sector">Suporte</span></div>
                           </div>
-                        </div>
-                        <div class="umb-conv-right">
-                          <span class="umb-conv-time">&nbsp;</span>
                         </div>
                       </div>
-                      <!-- Outros items -->
                       <div class="umb-conv-item">
-                        <div class="umb-conv-avatar"><span>RF</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                        <div class="umb-conv-avatar">
+                          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=96&h=96&fit=crop&crop=faces" alt="Ricardo Farias">
+                          <span class="umb-conv-avatar-ch whatsapp-starter"><i class="ph ph-whatsapp-logo"></i></span>
+                        </div>
                         <div class="umb-conv-body">
                           <div class="umb-conv-head">
-                            <span class="umb-conv-name">Rafa Feltrim</span>
-                            <span class="umb-conv-time">13:58</span>
+                            <span class="umb-conv-name">Ricardo Farias</span>
+                            <div class="umb-conv-head-right"><span class="umb-conv-time">14:05</span></div>
                           </div>
-                          <p class="umb-conv-preview"><i class="ph ph-image"></i>Foto</p>
+                          <div class="umb-conv-preview-row">
+                            <p class="umb-conv-preview">Consegue trocar o plano pro anual?</p>
+                            <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1507081323647-4d250478b919?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"><span class="umb-conv-pending">2</span></div>
+                          </div>
                           <div class="umb-conv-meta">
-                            <span class="umb-conv-tag blue">Lead</span>
-                            <span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span>
+                            <div class="umb-conv-meta-left"><span class="umb-conv-tag amber"><i class="ph ph-user-circle"></i>Trial</span><span class="umb-conv-tag-more">+2</span></div>
+                            <div class="umb-conv-meta-right"><span class="umb-conv-sector">Vendas</span></div>
                           </div>
-                        </div>
-                        <div class="umb-conv-right">
-                          <span class="umb-conv-time">&nbsp;</span>
-                          <span class="umb-conv-badge">2</span>
                         </div>
                       </div>
                       <div class="umb-conv-item">
-                        <div class="umb-conv-avatar"><span>CC</span><span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span></div>
+                        <div class="umb-conv-avatar">
+                          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&crop=faces" alt="Joao P. (site)">
+                          <span class="umb-conv-avatar-ch livechat"><i class="ph ph-chat-circle"></i></span>
+                        </div>
+                        <div class="umb-conv-body">
+                          <div class="umb-conv-head">
+                            <span class="umb-conv-name">Joao P. (site)</span>
+                            <div class="umb-conv-head-right"><span class="umb-conv-time">13:55</span></div>
+                          </div>
+                          <div class="umb-conv-preview-row">
+                            <p class="umb-conv-preview">Voces tem integracao com HubSpot?</p>
+                          </div>
+                          <div class="umb-conv-meta">
+                            <div class="umb-conv-meta-left"><span class="umb-conv-tag blue"><i class="ph ph-user-circle"></i>Lead</span></div>
+                            <div class="umb-conv-meta-right"><span class="umb-conv-sector">Vendas</span></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="umb-conv-item">
+                        <div class="umb-conv-avatar">
+                          <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=96&h=96&fit=crop&crop=faces" alt="Cannacare">
+                          <span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span>
+                        </div>
                         <div class="umb-conv-body">
                           <div class="umb-conv-head">
                             <span class="umb-conv-name">Cannacare</span>
-                            <span class="umb-conv-time">13:40</span>
+                            <div class="umb-conv-head-right"><span class="umb-conv-time">13:40</span></div>
                           </div>
-                          <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
+                          <div class="umb-conv-preview-row">
+                            <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
+                            <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"><span class="umb-conv-pending">1</span></div>
+                          </div>
                           <div class="umb-conv-meta">
-                            <span class="umb-conv-tag violet">Parceiro</span>
-                            <span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span>
+                            <div class="umb-conv-meta-left"><span class="umb-conv-tag violet"><i class="ph ph-user-circle"></i>Parceiro</span><span class="umb-conv-tag-more">+1</span></div>
+                            <div class="umb-conv-meta-right"><span class="umb-conv-sector">Vendas</span></div>
                           </div>
-                        </div>
-                        <div class="umb-conv-right">
-                          <span class="umb-conv-time">&nbsp;</span>
-                          <span class="umb-conv-badge">1</span>
                         </div>
                       </div>
                       <div class="umb-conv-item">
-                        <div class="umb-conv-avatar"><span>FB</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
-                        <div class="umb-conv-body">
-                          <div class="umb-conv-head">
-                            <span class="umb-conv-name">Fernando B.</span>
-                            <span class="umb-conv-time">12:12</span>
-                          </div>
-                          <p class="umb-conv-preview"><i class="ph ph-microphone"></i>Áudio (0:18)</p>
-                          <div class="umb-conv-meta">
-                            <span class="umb-conv-tag amber">Trial</span>
-                            <span class="umb-conv-sector"><i class="ph ph-headset"></i>Suporte</span>
-                          </div>
+                        <div class="umb-conv-avatar">
+                          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&crop=faces" alt="Laura Silva">
+                          <span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span>
                         </div>
-                        <div class="umb-conv-right">
-                          <span class="umb-conv-time">&nbsp;</span>
-                        </div>
-                      </div>
-                      <div class="umb-conv-item">
-                        <div class="umb-conv-avatar"><span>LS</span><span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span></div>
                         <div class="umb-conv-body">
                           <div class="umb-conv-head">
                             <span class="umb-conv-name">Laura Silva</span>
-                            <span class="umb-conv-time">Ontem</span>
+                            <div class="umb-conv-head-right"><span class="umb-conv-time">Ontem</span></div>
                           </div>
-                          <p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p>
+                          <div class="umb-conv-preview-row">
+                            <p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p>
+                          </div>
                           <div class="umb-conv-meta">
-                            <span class="umb-conv-tag red">VIP</span>
-                            <span class="umb-conv-sector"><i class="ph ph-briefcase"></i>Contas</span>
+                            <div class="umb-conv-meta-left"><span class="umb-conv-tag red"><i class="ph ph-user-circle"></i>VIP</span></div>
+                            <div class="umb-conv-meta-right"><span class="umb-conv-sector">Contas</span></div>
                           </div>
-                        </div>
-                        <div class="umb-conv-right">
-                          <span class="umb-conv-time">&nbsp;</span>
                         </div>
                       </div>
-                      <div class="umb-conv-item">
-                        <div class="umb-conv-avatar"><span>JP</span><span class="umb-conv-avatar-ch widget"><i class="ph ph-chat-circle"></i></span></div>
-                        <div class="umb-conv-body">
-                          <div class="umb-conv-head">
-                            <span class="umb-conv-name">João P. (site)</span>
-                            <span class="umb-conv-time">Ontem</span>
-                          </div>
-                          <p class="umb-conv-preview">Vocês têm integração com HubSpot?</p>
-                          <div class="umb-conv-meta">
-                            <span class="umb-conv-tag blue">Lead</span>
-                            <span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span>
-                          </div>
-                        </div>
-                        <div class="umb-conv-right">
-                          <span class="umb-conv-time">&nbsp;</span>
-                        </div>
-                      </div>
+                    
+                    
                     </div>
                   </aside>
 
@@ -4946,26 +5022,37 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       </div>
                     </div>
 
-                    <!-- Composer -->
+                    <!-- Composer: card flutuante com switch + Segmented + toolbar (§21.4) -->
                     <div class="umb-chat-composer">
-                      <div class="umb-chat-composer-tabs">
-                        <button class="umb-chat-composer-tab active">Conversa</button>
-                        <button class="umb-chat-composer-tab">Nota interna</button>
-                        <button class="umb-chat-composer-tab">Resposta rápida</button>
+                      <div class="umb-chat-composer-topbar">
+                        <div class="umb-chat-composer-assignee">
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="composer-online" checked>
+                          </div>
+                          <span class="umb-chat-composer-assignee-name">Paulo Ricardo</span>
+                          <button class="btn btn-icon btn-text" aria-label="Trocar atendente" data-bs-toggle="tooltip" data-bs-placement="top" title="Trocar atendente"><i class="ph ph-pencil-simple"></i></button>
+                        </div>
+                        <div class="inset-control">
+                          <button class="btn active" type="button"><i class="ph ph-chat-circle me-1"></i>Mensagem</button>
+                          <button class="btn" type="button"><i class="ph ph-note me-1"></i>Notas</button>
+                        </div>
                       </div>
                       <div class="umb-chat-composer-input">
-                        <textarea placeholder="Digite sua mensagem..."></textarea>
+                        <textarea placeholder="Digite sua mensagem ou arraste um arquivo..."></textarea>
                       </div>
                       <div class="umb-chat-composer-toolbar">
                         <div class="umb-chat-composer-toolbar-left">
-                          <button class="btn btn-icon btn-text btn-sm" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
-                          <button class="btn btn-icon btn-text btn-sm" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
-                          <button class="btn btn-icon btn-text btn-sm" aria-label="Template"><i class="ph ph-file-text"></i></button>
-                          <button class="btn btn-icon btn-text btn-sm" aria-label="Áudio"><i class="ph ph-microphone"></i></button>
-                          <button class="btn btn-icon btn-text btn-sm" aria-label="Agendar"><i class="ph ph-clock"></i></button>
+                          <button class="btn btn-icon btn-text" aria-label="Anexar arquivo" data-bs-toggle="tooltip" data-bs-placement="top" title="Anexar arquivo"><i class="ph ph-paperclip"></i></button>
+                          <button class="btn btn-icon btn-text" aria-label="Teclado emoji" data-bs-toggle="tooltip" data-bs-placement="top" title="Teclado emoji"><i class="ph ph-smiley"></i></button>
+                          <button class="btn btn-icon btn-text" aria-label="Respostas rapidas" data-bs-toggle="tooltip" data-bs-placement="top" title="Respostas rapidas"><i class="ph ph-chat-centered-dots"></i></button>
+                          <button class="btn btn-icon btn-text" aria-label="Templates" data-bs-toggle="tooltip" data-bs-placement="top" title="Templates"><i class="ph ph-quotes"></i></button>
+                          <button class="btn btn-icon btn-text" aria-label="Chatbot" data-bs-toggle="tooltip" data-bs-placement="top" title="Chatbot"><i class="ph ph-robot"></i></button>
+                          <button class="btn btn-icon btn-text" aria-label="Figurinhas" data-bs-toggle="tooltip" data-bs-placement="top" title="Figurinhas"><i class="ph ph-sticker"></i></button>
+                          <button class="btn btn-icon btn-text" aria-label="Editar atalhos" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar atalhos"><i class="ph ph-pencil-simple"></i></button>
                         </div>
                         <div class="umb-chat-composer-toolbar-right">
-                          <button class="umb-chat-send-btn"><i class="ph ph-paper-plane-right"></i>Enviar</button>
+                          <button class="btn btn-icon btn-text" aria-label="Agendar envio" data-bs-toggle="tooltip" data-bs-placement="top" title="Agendar envio"><i class="ph ph-clock"></i></button>
+                          <button type="button" class="btn btn-primary btn-icon" aria-label="Gravar audio" data-bs-toggle="tooltip" data-bs-placement="top" title="Gravar audio"><i class="ph ph-microphone"></i></button>
                         </div>
                       </div>
                     </div>
@@ -5009,7 +5096,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                     </div>
                     <div class="umb-conv-scroll">
                       <div class="umb-conv-item">
-                        <div class="umb-conv-avatar"><span>MR</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                        <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces" alt="MR"><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
                         <div class="umb-conv-body">
                           <div class="umb-conv-head"><span class="umb-conv-name">Maria Rocha</span><span class="umb-conv-time">14:23</span></div>
                           <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
@@ -5018,7 +5105,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                         <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
                       </div>
                       <div class="umb-conv-item">
-                        <div class="umb-conv-avatar"><span>RF</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                        <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=96&h=96&fit=crop&crop=faces" alt="RF"><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
                         <div class="umb-conv-body">
                           <div class="umb-conv-head"><span class="umb-conv-name">Rafa Feltrim</span><span class="umb-conv-time">13:58</span></div>
                           <p class="umb-conv-preview"><i class="ph ph-image"></i>Foto</p>
@@ -5027,10 +5114,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                         <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">2</span></div>
                       </div>
                       <div class="umb-conv-item">
-                        <div class="umb-conv-avatar"><span>CC</span><span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span></div>
+                        <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=96&h=96&fit=crop&crop=faces" alt="CC"><span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span></div>
                         <div class="umb-conv-body">
                           <div class="umb-conv-head"><span class="umb-conv-name">Cannacare</span><span class="umb-conv-time">13:40</span></div>
-                          <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
+                          <div class="umb-conv-preview-row"><p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p></div>
                           <div class="umb-conv-meta"><span class="umb-conv-tag violet">Parceiro</span><span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span></div>
                         </div>
                         <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">1</span></div>
@@ -5082,7 +5169,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                   </div>
                   <div class="umb-conv-scroll">
                     <div class="umb-conv-item">
-                      <div class="umb-conv-avatar"><span>MR</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                      <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces" alt="MR"><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
                       <div class="umb-conv-body">
                         <div class="umb-conv-head"><span class="umb-conv-name">Maria Rocha</span><span class="umb-conv-time">14:23</span></div>
                         <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
@@ -5091,7 +5178,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
                     </div>
                     <div class="umb-conv-item">
-                      <div class="umb-conv-avatar"><span>RF</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                      <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=96&h=96&fit=crop&crop=faces" alt="RF"><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
                       <div class="umb-conv-body">
                         <div class="umb-conv-head"><span class="umb-conv-name">Rafa Feltrim</span><span class="umb-conv-time">13:58</span></div>
                         <p class="umb-conv-preview"><i class="ph ph-image"></i>Foto</p>
@@ -5100,7 +5187,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">2</span></div>
                     </div>
                     <div class="umb-conv-item">
-                      <div class="umb-conv-avatar"><span>CC</span><span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span></div>
+                      <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=96&h=96&fit=crop&crop=faces" alt="CC"><span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span></div>
                       <div class="umb-conv-body">
                         <div class="umb-conv-head"><span class="umb-conv-name">Cannacare</span><span class="umb-conv-time">13:40</span></div>
                         <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
@@ -5109,7 +5196,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">1</span></div>
                     </div>
                     <div class="umb-conv-item">
-                      <div class="umb-conv-avatar"><span>FB</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
+                      <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=96&h=96&fit=crop&crop=faces" alt="FB"><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
                       <div class="umb-conv-body">
                         <div class="umb-conv-head"><span class="umb-conv-name">Fernando B.</span><span class="umb-conv-time">12:12</span></div>
                         <p class="umb-conv-preview"><i class="ph ph-microphone"></i>Áudio (0:18)</p>
@@ -5118,10 +5205,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
                     </div>
                     <div class="umb-conv-item">
-                      <div class="umb-conv-avatar"><span>LS</span><span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span></div>
+                      <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&crop=faces" alt="LS"><span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span></div>
                       <div class="umb-conv-body">
                         <div class="umb-conv-head"><span class="umb-conv-name">Laura Silva</span><span class="umb-conv-time">Ontem</span></div>
-                        <p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p>
+                        <div class="umb-conv-preview-row"><p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p></div>
                         <div class="umb-conv-meta"><span class="umb-conv-tag red">VIP</span></div>
                       </div>
                       <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
@@ -5204,22 +5291,44 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                   </div>
                 </div>
                 <div class="umb-chat-composer">
-                  <div class="umb-chat-composer-tabs">
-                    <button class="umb-chat-composer-tab active">Conversa</button>
-                    <button class="umb-chat-composer-tab">Nota</button>
-                    <button class="umb-chat-composer-tab">Rápida</button>
+                  <div class="umb-chat-composer-topbar">
+                    <div class="umb-chat-composer-assignee">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="composer-online-m" checked>
+                      </div>
+                      <span class="umb-chat-composer-assignee-name">Paulo Ricardo</span>
+                    </div>
+                    <div class="inset-control inset-control-sm">
+                      <button class="btn active" type="button">Mensagem</button>
+                      <button class="btn" type="button">Notas</button>
+                    </div>
                   </div>
+                  <div class="umb-chat-composer-input">
+                    <textarea placeholder="Digite sua mensagem ou arraste um arquivo..."></textarea>
+                  </div>
+                  <div class="umb-chat-composer-toolbar">
+                    <div class="umb-chat-composer-toolbar-left">
+                      <button class="btn btn-icon btn-text" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
+                      <button class="btn btn-icon btn-text" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
+                      <button class="btn btn-icon btn-text" aria-label="Templates"><i class="ph ph-chat-teardrop-text"></i></button>
+                    </div>
+                    <div class="umb-chat-composer-toolbar-right">
+                      <button class="btn btn-icon btn-text" aria-label="Agendar"><i class="ph ph-clock"></i></button>
+                      <button type="button" class="btn btn-primary btn-icon" aria-label="Gravar audio"><i class="ph ph-microphone"></i></button>
+                    </div>
+                  </div>
+                </div>
                   <div class="umb-chat-composer-input">
                     <textarea placeholder="Digite..."></textarea>
                   </div>
                   <div class="umb-chat-composer-toolbar">
                     <div class="umb-chat-composer-toolbar-left">
-                      <button class="btn btn-icon btn-text btn-sm" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
-                      <button class="btn btn-icon btn-text btn-sm" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
-                      <button class="btn btn-icon btn-text btn-sm" aria-label="Áudio"><i class="ph ph-microphone"></i></button>
+                      <button class="btn btn-icon btn-text" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
+                      <button class="btn btn-icon btn-text" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
+                      <button class="btn btn-icon btn-text" aria-label="Áudio"><i class="ph ph-microphone"></i></button>
                     </div>
                     <div class="umb-chat-composer-toolbar-right">
-                      <button class="umb-chat-send-btn"><i class="ph ph-paper-plane-right"></i></button>
+                      <button type="button" class="btn btn-primary btn-icon" aria-label="Enviar"><i class="ph ph-paper-plane-right"></i></button>
                     </div>
                   </div>
                 </div>
@@ -5654,6 +5763,34 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     } else {
       initComponentTooltips();
     }
+    // Auto-close do avatar-menu (§12): clique fora e tecla Esc fecham o dropdown.
+    // Handler defensivo — se o data-api do Bootstrap falhar (elementos criados
+    // via <template>, containers com overflow:hidden), garantimos o comportamento.
+    function initAvatarMenuAutoClose() {
+      if (!window.bootstrap) return;
+      document.addEventListener('click', function(e) {
+        document.querySelectorAll('.umb-avatar-menu .dropdown-menu.show').forEach(function(menu) {
+          var host = menu.closest('.umb-avatar-menu');
+          if (host && !host.contains(e.target)) {
+            var trigger = host.querySelector('[data-bs-toggle="dropdown"]');
+            if (trigger) bootstrap.Dropdown.getOrCreateInstance(trigger).hide();
+          }
+        });
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape') return;
+        document.querySelectorAll('.umb-avatar-menu .dropdown-menu.show').forEach(function(menu) {
+          var trigger = menu.closest('.umb-avatar-menu').querySelector('[data-bs-toggle="dropdown"]');
+          if (trigger) bootstrap.Dropdown.getOrCreateInstance(trigger).hide();
+        });
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAvatarMenuAutoClose);
+    } else {
+      initAvatarMenuAutoClose();
+    }
+
     // Expor para possíveis re-renders manuais.
     window.umbRenderShell = function(){ renderSidebars(); renderHeaders(); renderMobileHeaders(); initComponentTooltips(); };
   })();
