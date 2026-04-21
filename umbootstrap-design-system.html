@@ -6,7 +6,7 @@
   <title>Umbootstrap — Design System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" rel="stylesheet">
   <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" rel="stylesheet">
@@ -34,7 +34,8 @@
       --umb-card-bg:         #202326;
       --umb-surface-raised:  #2a2d35;
       --umb-shell-header-bg: #141619;
-      --umb-content-bg:      #141619;  /* dark: page bg inside content area */
+      --umb-bg-primary:      #141619;  /* bgPrimary: fundo principal das telas (dark) */
+      --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
       --umb-hover-bg:        rgba(255,255,255,.05);
       --umb-inset-bg:        rgba(255,255,255,.06);
       --umb-header-bg:       rgba(248,249,250,.03);
@@ -72,7 +73,8 @@
       --umb-copy-btn-bg:     #2e3048;
       --umb-copy-btn-hover:  #3a3d50;
       --umb-table-hover:     rgba(255,255,255,.03);
-      --umb-table-row-active: #484B53;
+      --umb-bg-active:       #484B53;  /* bgActive: item selecionado (menus, tabela, cards, conversa) */
+      --umb-table-row-active: var(--umb-bg-active);  /* legacy alias — use --umb-bg-active */
       --umb-step-track:      #2e3048;
       --umb-step-bg:         #212529;
       --umb-tooltip-bg:      #080808;
@@ -119,7 +121,8 @@
 
       --umb-sidebar-bg:      #557CF2; --umb-sidebar-border: rgba(255,255,255,.18);
       --umb-shell-header-bg: #ffffff;  /* Header is WHITE, separate from blue sidebar */
-      --umb-content-bg:      #EEF2FE;  /* Page content area lavender-blue */
+      --umb-bg-primary:      #EEF2FE;  /* bgPrimary: fundo principal das telas (light) */
+      --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
       --umb-card-bg:         #ffffff;
       --umb-surface-raised:  #ffffff;
       --umb-hover-bg:        rgba(0,0,0,.04);
@@ -159,7 +162,8 @@
       --umb-copy-btn-bg:     #f0f4ff;
       --umb-copy-btn-hover:  #dce6ff;
       --umb-table-hover:     rgba(0,0,0,.025);
-      --umb-table-row-active: #E2E9FE;
+      --umb-bg-active:       #E2E9FE;  /* bgActive: item selecionado (menus, tabela, cards, conversa) */
+      --umb-table-row-active: var(--umb-bg-active);  /* legacy alias — use --umb-bg-active */
       --umb-step-track:      #d0d9f8;
       --umb-step-bg:         #ffffff;
       --umb-tooltip-bg:      #080808;
@@ -194,7 +198,8 @@
 
       --umb-sidebar-bg:      #29958D; --umb-sidebar-border: rgba(255,255,255,.18);
       --umb-shell-header-bg: #ffffff;
-      --umb-content-bg:      #f4faf9;  /* emerald: light green-tinted page bg */
+      --umb-bg-primary:      #F6F7F7;  /* bgPrimary: fundo principal das telas (emerald) */
+      --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
       --umb-card-bg:         #ffffff;
       --umb-surface-raised:  #ffffff;
       --umb-hover-bg:        rgba(0,0,0,.04);
@@ -234,7 +239,8 @@
       --umb-copy-btn-bg:     #edf7f6;
       --umb-copy-btn-hover:  #b2ddd9;
       --umb-table-hover:     rgba(0,0,0,.025);
-      --umb-table-row-active: #D3EFEC;
+      --umb-bg-active:       #D3EFEC;  /* bgActive: item selecionado (menus, tabela, cards, conversa) */
+      --umb-table-row-active: var(--umb-bg-active);  /* legacy alias — use --umb-bg-active */
       --umb-step-track:      #b2ddd9;
       --umb-step-bg:         #ffffff;
       --umb-tooltip-bg:      #080808;
@@ -261,7 +267,8 @@
         --bs-primary:#557CF2; --bs-primary-rgb:85,124,242; --bs-secondary:#6c757d;
         --bs-success:#0C8E63; --bs-success-rgb:12,142,99; --bs-info:#3B59B2; --bs-info-rgb:59,89,178;
         --bs-warning:#A6882E; --bs-warning-rgb:166,136,46; --bs-danger:#9C2F27; --bs-danger-rgb:156,47,39;
-        --bs-body-bg:#212529; --bs-body-color:#f8f9fa; --bs-body-font-family:'Poppins',sans-serif; --bs-border-color:#2e3048; --bs-card-bg:#212529;
+        --bs-body-bg:#141619; --bs-body-color:#f8f9fa; --bs-body-font-family:'Poppins',sans-serif; --bs-border-color:#2e3048; --bs-card-bg:#212529;
+        --umb-bg-primary:#141619; --umb-content-bg:var(--umb-bg-primary);
         --umb-sidebar-bg:#222429; --umb-sidebar-border:#2e3048; --umb-card-bg:#212529;
         --umb-surface-raised:#2a2d35; --umb-hover-bg:rgba(255,255,255,.05); --umb-inset-bg:rgba(255,255,255,.06);
         --umb-header-bg:rgba(248,249,250,.03); --umb-header-border:rgba(248,249,250,.06);
@@ -276,7 +283,7 @@
         --umb-placeholder-bg:#2e3048; --umb-placeholder-sh:#383b4d; --umb-kbd-bg:#2e3048;
         --umb-offcanvas-bg:#222429; --umb-modal-bg:#222429; --umb-dropdown-bg:#2a2d35;
         --umb-media-bg:#2a2d35; --umb-copy-btn-bg:#2e3048; --umb-copy-btn-hover:#3a3d50;
-        --umb-table-hover:rgba(255,255,255,.03); --umb-table-row-active:#484B53; --umb-step-track:#2e3048; --umb-step-bg:#212529;
+        --umb-table-hover:rgba(255,255,255,.03); --umb-bg-active:#484B53; --umb-table-row-active:var(--umb-bg-active); --umb-step-track:#2e3048; --umb-step-bg:#212529;
         --umb-tooltip-bg:#080808; --umb-surface-1:#2a2d35; --umb-btn-secondary:#6c757d;
       }
 
@@ -294,7 +301,8 @@
         --bs-primary:#557CF2; --bs-primary-rgb:85,124,242; --bs-secondary:#D9E2FF;
         --bs-success:#389E0D; --bs-success-rgb:56,158,13; --bs-info:#A2B8FA; --bs-info-rgb:162,184,250;
         --bs-warning:#FAAD14; --bs-warning-rgb:250,173,20; --bs-danger:#DA606E; --bs-danger-rgb:218,96,110;
-        --bs-body-bg:#f0f4ff; --bs-body-color:#212529; --bs-body-font-family:'Poppins',sans-serif; --bs-border-color:#d9d9d9; --bs-card-bg:#ffffff;
+        --bs-body-bg:#EEF2FE; --bs-body-color:#212529; --bs-body-font-family:'Poppins',sans-serif; --bs-border-color:#d9d9d9; --bs-card-bg:#ffffff;
+        --umb-bg-primary:#EEF2FE; --umb-content-bg:var(--umb-bg-primary);
         --umb-sidebar-bg:#557CF2; --umb-sidebar-border:rgba(255,255,255,.18); --umb-card-bg:#ffffff;
         --umb-surface-raised:#ffffff; --umb-hover-bg:rgba(0,0,0,.04); --umb-inset-bg:rgba(0,0,0,.07);
         --umb-header-bg:rgba(0,0,0,.02); --umb-header-border:rgba(0,0,0,.06); --umb-preview-bg:#f8f9fa;
@@ -309,7 +317,7 @@
         --umb-placeholder-bg:#e9ecef; --umb-placeholder-sh:#f8f9fa; --umb-kbd-bg:#e9ecef;
         --umb-offcanvas-bg:#ffffff; --umb-modal-bg:#ffffff; --umb-dropdown-bg:#ffffff;
         --umb-media-bg:#f8f9fa; --umb-copy-btn-bg:#f0f4ff; --umb-copy-btn-hover:#dce6ff;
-        --umb-table-hover:rgba(0,0,0,.025); --umb-table-row-active:#E2E9FE; --umb-step-track:#d0d9f8; --umb-step-bg:#ffffff;
+        --umb-table-hover:rgba(0,0,0,.025); --umb-bg-active:#E2E9FE; --umb-table-row-active:var(--umb-bg-active); --umb-step-track:#d0d9f8; --umb-step-bg:#ffffff;
         --umb-tooltip-bg:#080808; --umb-surface-1:#ffffff; --umb-btn-secondary:#6c757d;
       }
 
@@ -336,6 +344,8 @@
       --bs-body-font-family: 'Plus Jakarta Sans', sans-serif;
       --bs-border-color:     #002B27; --bs-card-bg:       #011A18;
 
+      --umb-bg-primary:      #000C0B;  /* bgPrimary: fundo principal das telas (Bravia) */
+      --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
       --umb-sidebar-bg:      #000C0B; --umb-sidebar-border: #002B27;
       --umb-card-bg:         #011A18;
       --umb-surface-raised:  #172D2C;
@@ -376,7 +386,8 @@
       --umb-copy-btn-bg:     #002B27;
       --umb-copy-btn-hover:  #004640;
       --umb-table-hover:     rgba(255,255,255,.025);
-      --umb-table-row-active: #175651;
+      --umb-bg-active:       #175651;  /* bgActive: item selecionado (menus, tabela, cards, conversa) */
+      --umb-table-row-active: var(--umb-bg-active);  /* legacy alias — use --umb-bg-active */
       --umb-step-track:      #002B27;
       --umb-step-bg:         #011A18;
       --umb-tooltip-bg:      #080808;
@@ -444,9 +455,9 @@
       transition: background .25s, border-color .25s;
     }
     .ds-sidebar .brand { display: flex; align-items: center; gap: 8px; padding: 0 8px 20px; border-bottom: 1px solid var(--umb-sidebar-border); margin-bottom: 16px; }
-    .ds-sidebar .brand span { font-weight: 700; font-size: 15px; color: var(--umb-brand-color); }
+    .ds-sidebar .brand span { font-weight: 600; font-size: 15px; color: var(--umb-brand-color); }
     .ds-sidebar .brand small { font-size: 11px; color: var(--umb-brand-sub); }
-    .ds-sidebar h6 { color: var(--umb-section-h); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin: 16px 0 4px 8px; }
+    .ds-sidebar h6 { color: var(--umb-section-h); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin: 16px 0 4px 8px; }
     .ds-sidebar .nav-link { color: var(--umb-nav-color); font-size: 13px; font-weight: 500; padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px; transition: all .15s; }
     .ds-sidebar .nav-link:hover { color: var(--umb-nav-hover-color); background: var(--umb-nav-hover-bg); }
     .ds-sidebar .nav-link.active { color: var(--umb-nav-active-color); background: var(--umb-nav-active-bg); font-weight: 600; }
@@ -454,7 +465,7 @@
 
     /* --- THEME SWITCHER --- */
     .theme-switcher { padding: 0 8px 16px; margin-bottom: 16px; border-bottom: 1px solid var(--umb-sidebar-border); }
-    .theme-switcher label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--umb-section-h); display: block; margin-bottom: 6px; }
+    .theme-switcher label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--umb-section-h); display: block; margin-bottom: 6px; }
     .theme-switcher .theme-options { display: flex; flex-direction: column; gap: 2px; }
     .theme-option { display: flex; align-items: center; gap: 8px; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--umb-nav-color); transition: all .15s; border: none; background: transparent; width: 100%; text-align: left; }
     .theme-option:hover { color: var(--umb-nav-hover-color); background: var(--umb-nav-hover-bg); }
@@ -462,7 +473,7 @@
     .theme-option i { font-size: 15px; flex-shrink: 0; }
 
     /* --- SECTION TITLES --- */
-    .sec-title { font-size: 24px; font-weight: 700; color: var(--umb-text-primary); margin: 0 0 6px; }
+    .sec-title { font-size: 24px; font-weight: 600; color: var(--umb-text-primary); margin: 0 0 6px; }
     .sec-subtitle { font-size: 14px; color: var(--umb-text-mid); margin: 0 0 28px; }
     .sec-divider { border: none; border-top: 1px solid var(--umb-border); margin: 48px 0; }
     .comp-label { font-size: 11px; color: var(--umb-text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
@@ -548,7 +559,7 @@
     .card-preview { background: var(--umb-preview-bg); border-radius: 12px; padding: 24px; border: 1px solid var(--umb-border); margin-bottom: 0; }
 
     /* --- BADGES --- */
-    .badge { border-radius: 12px !important; padding: 4px 9px !important; font-size: 12px !important; font-weight: 700 !important; }
+    .badge { border-radius: 12px !important; padding: 4px 9px !important; font-size: 12px !important; font-weight: 600 !important; }
     .bg-primary   { background-color: var(--bs-primary) !important; }
     .bg-success   { background-color: var(--bs-success) !important; }
     .bg-danger    { background-color: var(--bs-danger)  !important; }
@@ -575,7 +586,7 @@
     .alert-info      { background: var(--umb-alert-info-bg);      color: var(--umb-alert-info-color); }
     .alert-light     { background: var(--umb-alert-light-bg);     color: var(--umb-alert-light-color); }
     .alert-dark      { background: var(--umb-alert-dark-bg);      color: var(--umb-alert-dark-color); }
-    .alert .alert-title { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+    .alert .alert-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
     .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
 
     /* --- FORMS --- */
@@ -753,7 +764,7 @@
     .step-circle {
       width: 28px; height: 28px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; z-index: 1;
+      font-size: 12px; font-weight: 600; z-index: 1;
       border: 1px solid var(--umb-step-track);
       background: var(--umb-step-bg);
       color: var(--umb-text-mid);
@@ -808,7 +819,7 @@
     .dropdown-divider { border-color: var(--umb-border); margin: 4px 0; }
 
     /* --- PROFILE --- */
-    .profile-avatar { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; background: var(--umb-avatar-bg); flex-shrink: 0; font-size: 14px; overflow: hidden; }
+    .profile-avatar { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #fff; background: var(--umb-avatar-bg); flex-shrink: 0; font-size: 14px; overflow: hidden; }
     .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .profile-card-umb { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: background .15s; }
     .profile-card-umb:hover { background: var(--umb-profile-hover); }
@@ -841,7 +852,7 @@
 
     /* --- NOTIFICATION BADGE --- */
     .notif-badge { position: relative; display: inline-block; }
-    .notif-badge .count { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; border-radius: 9px; background: var(--bs-danger); color: #fff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 2px solid var(--umb-card-bg); }
+    .notif-badge .count { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; border-radius: 9px; background: var(--bs-danger); color: #fff; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 2px solid var(--umb-card-bg); }
 
     /* --- TOOLTIP --- */
     .umb-tooltip-demo { position: relative; display: inline-block; }
@@ -932,7 +943,7 @@
   border-radius: 10px; padding: 16px 20px; margin-top: 24px; margin-bottom: 8px;
 }
 .comp-practices-title {
-  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
   letter-spacing: .07em; color: var(--umb-text-mid); margin: 0 0 10px;
 }
 .comp-practices ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--umb-text-primary); line-height: 1.75; }
@@ -1005,7 +1016,7 @@
       position: relative;
     }
     .tpl-preview.tpl-preview-tall { height: 640px; }
-    .tpl-preview-label { font-size: 11px; font-weight: 700; text-transform: uppercase;
+    .tpl-preview-label { font-size: 11px; font-weight: 600; text-transform: uppercase;
       letter-spacing: .09em; color: var(--umb-text-dim); margin-bottom: 8px; }
     /* Mobile preview frame */
     .tpl-mobile-frame {
@@ -1071,7 +1082,7 @@
       width: 28px; height: 28px; border-radius: 50%;
       background: var(--umb-avatar-bg);
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700; color: var(--umb-brand-color); cursor: pointer;
+      font-size: 11px; font-weight: 600; color: var(--umb-brand-color); cursor: pointer;
     }
 
     /* --- AVATAR MENU (Theme Switcher + Logout) ---
@@ -1089,7 +1100,7 @@
     }
     .umb-avatar-dropdown { min-width: 220px; padding: 12px !important; }
     .umb-avatar-menu-label {
-      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+      font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
       color: var(--umb-text-dim); margin: 2px 4px 8px;
     }
     .umb-avatar-theme-options { display: flex; flex-direction: column; gap: 2px; }
@@ -1130,7 +1141,7 @@
       display: flex; align-items: center; padding: 0 20px; gap: 8px;
     }
     .umb-shell-header-logo {
-      font-size: 15px; font-weight: 800; color: var(--umb-brand-color);
+      font-size: 15px; font-weight: 600; color: var(--umb-brand-color);
       letter-spacing: -.02em; display: none;
     }
     .umb-shell-hamburger {
@@ -1184,7 +1195,7 @@
     .umb-pg-header .umb-pg-title {
       grid-column: 2; grid-row: 1;
       align-self: center;
-      font-size: 20px; font-weight: 700; color: var(--umb-text-primary);
+      font-size: 20px; font-weight: 600; color: var(--umb-text-primary);
       margin: 0;
     }
     .umb-pg-header .umb-pg-sub {
@@ -1228,7 +1239,7 @@
     .umb-choice-avatar-standard { background: linear-gradient(135deg, #4CAF50, #81C784); }
     .umb-choice-avatar-expert   { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
     .umb-choice-avatar i { font-size: 28px; color: rgba(255,255,255,.9); }
-    .umb-choice-title { font-size: 17px; font-weight: 700; color: var(--umb-text-primary); margin-bottom: 6px; }
+    .umb-choice-title { font-size: 17px; font-weight: 600; color: var(--umb-text-primary); margin-bottom: 6px; }
     .umb-choice-desc  { font-size: 12px; color: var(--umb-text-mid); margin-bottom: 12px; }
     .umb-choice-list  { list-style: none; padding: 0; margin: 0 0 14px; text-align: left; width: 100%; }
     .umb-choice-list li { font-size: 12px; color: var(--umb-text-mid); padding: 3px 0;
@@ -1238,7 +1249,7 @@
     .umb-recommended {
       position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
       background: var(--umb-ai-purple); color: #fff;
-      font-size: 10px; font-weight: 700; padding: 2px 10px;
+      font-size: 10px; font-weight: 600; padding: 2px 10px;
       border-radius: 20px; white-space: nowrap;
     }
 
@@ -1336,7 +1347,7 @@
       background: var(--umb-avatar-bg);
       color: var(--umb-brand-color);
       display: inline-flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700;
+      font-size: 12px; font-weight: 600;
       border: 0; padding: 0; cursor: pointer; flex-shrink: 0;
       transition: box-shadow .12s;
     }
@@ -1377,7 +1388,7 @@
       background: var(--umb-ai-purple);
       border: 2px solid var(--umb-card-bg);
       display: flex; align-items: center; justify-content: center;
-      font-size: 6px; color: #fff; font-weight: 900;
+      font-size: 6px; color: #fff; font-weight: 600;
     }
 
     /* Template section code block */
@@ -1409,7 +1420,7 @@
       border: 1.5px solid var(--umb-border);
       background: var(--umb-card-bg);
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700; color: var(--umb-text-dim);
+      font-size: 11px; font-weight: 600; color: var(--umb-text-dim);
       position: relative; z-index: 1; flex-shrink: 0;
     }
     .umb-wstep.active .umb-wstep-num {
@@ -1435,7 +1446,7 @@
     }
     .umb-fn-card:hover { border-color: var(--bs-primary); }
     .umb-fn-card.selected { border-color: var(--bs-primary); background: rgba(var(--bs-primary-rgb),.05); }
-    .umb-fn-card-title { font-size: 13px; font-weight: 700; color: var(--umb-text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .umb-fn-card-title { font-size: 13px; font-weight: 600; color: var(--umb-text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
     .umb-fn-card-desc { font-size: 11px; color: var(--umb-text-mid); margin-bottom: 4px; }
     .umb-fn-card-ideal { font-size: 10px; color: var(--umb-text-dim); }
     .umb-fn-card-ideal strong { color: var(--umb-text-mid); }
@@ -1476,7 +1487,6 @@
 
     /* Tokens default — DARK (fallback) */
     :root, [data-bs-theme="dark"] {
-      --umb-chat-canvas-bg:        #0f1114;
       --umb-chat-bubble-in-bg:     #2a2d35;
       --umb-chat-bubble-in-color:  #D3D6DD;
       --umb-chat-bubble-out-bg:    #557CF2;
@@ -1494,7 +1504,6 @@
       --umb-conv-tag-violet-bg:    rgba(124,58,237,.20);  --umb-conv-tag-violet-color: #c4a8f5;
     }
     [data-bs-theme="light"] {
-      --umb-chat-canvas-bg:        #F5F7FB;
       --umb-chat-bubble-in-bg:     #ffffff;
       --umb-chat-bubble-in-color:  #1a1d2b;
       --umb-chat-bubble-out-bg:    #557CF2;
@@ -1512,7 +1521,6 @@
       --umb-conv-tag-violet-bg:    #EADDFB; --umb-conv-tag-violet-color: #4A2574;
     }
     [data-bs-theme="emerald"] {
-      --umb-chat-canvas-bg:        #EFF7F6;
       --umb-chat-bubble-in-bg:     #ffffff;
       --umb-chat-bubble-in-color:  #1a1d2b;
       --umb-chat-bubble-out-bg:    #29958D;
@@ -1530,7 +1538,6 @@
       --umb-conv-tag-violet-bg:    #EADDFB; --umb-conv-tag-violet-color: #4A2574;
     }
     [data-bs-theme="dark-emerald"] {
-      --umb-chat-canvas-bg:        #00090A;
       --umb-chat-bubble-in-bg:     #11282C;
       --umb-chat-bubble-in-color:  #D3D6DD;
       --umb-chat-bubble-out-bg:    #2B897F;
@@ -1555,31 +1562,26 @@
     }
 
     /* ============ COLUNA 1: Lista de conversas ============ */
-    /* Canto superior direito arredondado (2rem) — a coluna 1 "entra" no canvas do chat,
-       criando o recorte visto no produto em produção. */
     .umb-conv-list {
       width: 360px; min-width: 360px;
       background: var(--umb-card-bg);
+      border-right: 1px solid var(--umb-border);
       display: flex; flex-direction: column; overflow: hidden;
-      border-top-right-radius: 2rem;
     }
     /* Topbar (56px): 5 btn-icon btn-text btn-lg + spacer + 1 btn-primary btn-icon btn-lg.
-       Altura deve bater 1:1 com .umb-chat-header para o divisor alinhar pixel-perfect.
-       SEM border-bottom — o recorte visual vem do radius da coluna. */
+       Altura deve bater 1:1 com .umb-chat-header para o divisor alinhar pixel-perfect. */
     .umb-conv-topbar {
       height: 56px; min-height: 56px;
       padding: 8px 12px; display: flex; align-items: center; gap: 2px;
+      border-bottom: 1px solid var(--umb-border);
       background: var(--umb-card-bg);
-      border-top-right-radius: 2rem;
     }
     .umb-conv-topbar-spacer { flex: 1 1 auto; }
-    /* Toolbar de busca + filtro. O botão de filtro vem ANTES do input (à esquerda). */
+    /* Toolbar de busca + filtro — sem border-bottom (o border é do topbar) */
     .umb-conv-toolbar {
       padding: 10px 12px; display: flex; align-items: center; gap: 8px;
     }
-    /* Input height casa com btn-lg (40px) para alinhar o botão de filtro. */
-    .umb-conv-toolbar .form-control,
-    .umb-conv-toolbar .input-group-text { height: 40px; font-size: 13px; }
+    .umb-conv-toolbar .form-control { height: 34px; font-size: 13px; }
     /* Wrapper do Segmented (substitui o antigo .umb-conv-tabs) */
     .umb-conv-segmented {
       padding: 4px 12px 10px;
@@ -1590,7 +1592,7 @@
     .umb-conv-segmented .inset-control .btn { flex: 1; }
     .umb-conv-segmented .inset-control .btn .umb-seg-count {
       display: inline-block; margin-left: 6px;
-      font-size: 11px; font-weight: 700; opacity: .8;
+      font-size: 11px; font-weight: 600; opacity: .8;
     }
     .umb-conv-segmented .inset-control .btn.active .umb-seg-count { opacity: 1; }
     /* Compat: classes antigas de abas mantidas pra não quebrar telas já geradas,
@@ -1612,7 +1614,7 @@
     }
     .umb-conv-tab-count {
       display: inline-block; margin-left: 4px;
-      font-size: 11px; font-weight: 700; opacity: .75;
+      font-size: 11px; font-weight: 600; opacity: .75;
     }
     .umb-conv-scroll { flex: 1; overflow-y: auto; padding: 2px 0; }
     .umb-conv-item {
@@ -1633,7 +1635,7 @@
       background: var(--umb-avatar-bg);
       color: var(--umb-brand-color);
       display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 700; flex-shrink: 0; position: relative;
+      font-size: 14px; font-weight: 600; flex-shrink: 0; position: relative;
       overflow: visible;
     }
     .umb-conv-avatar > img,
@@ -1703,19 +1705,18 @@
       display: inline-flex; align-items: center; justify-content: center;
       min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px;
       background: var(--bs-primary); color: #fff;
-      font-size: 11px; font-weight: 700;
+      font-size: 11px; font-weight: 600;
     }
 
     /* ============ COLUNA 2: Detalhe do chat ============ */
     .umb-chat-detail {
       flex: 1; display: flex; flex-direction: column; min-width: 0;
-      background: var(--umb-chat-canvas-bg);
+      background: var(--umb-bg-primary, var(--bs-body-bg));
     }
-    /* Chat-header da coluna 2: mesmo fundo da área de mensagens (canvas-bg),
-       sem card próprio e sem border-bottom — integrado visualmente ao corpo do chat. */
     .umb-chat-header {
       height: 56px; min-height: 56px;
-      background: var(--umb-chat-canvas-bg);
+      background: var(--umb-card-bg);
+      border-bottom: 1px solid var(--umb-border);
       display: flex; align-items: center; gap: 12px; padding: 0 16px;
     }
     .umb-chat-header-contact {
@@ -1725,7 +1726,7 @@
       width: 36px; height: 36px; border-radius: 50%;
       background: var(--umb-avatar-bg); color: var(--umb-brand-color);
       display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 700; flex-shrink: 0; overflow: hidden;
+      font-size: 13px; font-weight: 600; flex-shrink: 0; overflow: hidden;
     }
     .umb-chat-header-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .umb-chat-header-info { min-width: 0; display: flex; flex-direction: column; }
@@ -1786,7 +1787,7 @@
       background: var(--umb-avatar-bg);
       color: var(--umb-brand-color);
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700; flex-shrink: 0; overflow: hidden;
+      font-size: 11px; font-weight: 600; flex-shrink: 0; overflow: hidden;
     }
     .umb-msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .umb-msg-content { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
@@ -1987,7 +1988,7 @@
       width: 36px; height: 36px; border-radius: 50%;
       background: var(--umb-avatar-bg); color: var(--umb-brand-color);
       display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 700; flex-shrink: 0; overflow: hidden;
+      font-size: 13px; font-weight: 600; flex-shrink: 0; overflow: hidden;
     }
     .umb-mh-chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .umb-mh-chat-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -2016,7 +2017,7 @@
   <!-- SIDEBAR -->
   <aside class="ds-sidebar">
     <div class="brand">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#557CF2"/><text x="14" y="19" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="800" font-size="14" fill="white">U</text></svg>
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#557CF2"/><text x="14" y="19" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="600" font-size="14" fill="white">U</text></svg>
       <div><span>Umbootstrap</span><br><small>Design System v1.0</small></div>
     </div>
     <div class="theme-switcher">
@@ -2193,7 +2194,7 @@
       <div class="comp-group">
         <p class="comp-label">Utilitários de Texto</p>
         <div class="comp-row" style="gap:20px;flex-wrap:wrap">
-          <span style="text-transform:uppercase;font-size:12px;letter-spacing:.08em;font-weight:700;color:var(--umb-text-dim)">UPPERCASE LABEL</span>
+          <span style="text-transform:uppercase;font-size:12px;letter-spacing:.08em;font-weight:600;color:var(--umb-text-dim)">UPPERCASE LABEL</span>
           <span style="text-decoration:line-through;color:var(--umb-text-mid)">Tachado</span>
           <span class="badge bg-primary">Badge inline</span>
           <span style="font-size:12px;background:rgba(85,124,242,.12);color:var(--bs-primary);border-radius:6px;padding:2px 8px;font-weight:600">highlight</span>
@@ -2887,7 +2888,7 @@
                 <span class="health-dot hot"></span>
               </div>
               <div class="d-flex justify-content-between align-items-center">
-                <span style="font-size:13px;font-weight:700;color:var(--bs-success)">R$ 8.500</span>
+                <span style="font-size:13px;font-weight:600;color:var(--bs-success)">R$ 8.500</span>
                 <span class="badge bg-success">Proposta</span>
               </div>
             </div>
@@ -3941,18 +3942,18 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
             <!-- Topbar isolada -->
             <div style="flex:1">
-              <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--umb-text-dim);margin-bottom:8px">Topbar / Header</p>
+              <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--umb-text-dim);margin-bottom:8px">Topbar / Header</p>
               <div class="umb-shell-header" data-umb-c="header" data-brand="false" data-breadcrumb="Configurações / Agentes de IA" style="border-radius:10px;border:1px solid var(--umb-border)"></div>
 
-              <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--umb-text-dim);margin:16px 0 8px">Mobile — Header (Home)</p>
+              <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--umb-text-dim);margin:16px 0 8px">Mobile — Header (Home)</p>
               <p style="font-size:12px;color:var(--umb-text-mid);margin-bottom:6px">Página inicial do recurso: hamburger + logo à esquerda + sino + avatar.</p>
               <header class="umb-mobile-header" data-umb-c="mobile-header" data-variant="home" style="border-radius:10px;border:1px solid var(--umb-border);max-width:390px"></header>
 
-              <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--umb-text-dim);margin:16px 0 8px">Mobile — Header (Subpage)</p>
+              <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--umb-text-dim);margin:16px 0 8px">Mobile — Header (Subpage)</p>
               <p style="font-size:12px;color:var(--umb-text-mid);margin-bottom:6px">Novo/editar recurso: voltar + sino + avatar. O título da tela fica no corpo, não no header.</p>
               <header class="umb-mobile-header" data-umb-c="mobile-header" data-variant="subpage" style="border-radius:10px;border:1px solid var(--umb-border);max-width:390px"></header>
 
-              <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--umb-text-dim);margin:16px 0 8px">Mobile — Bottom Navigation</p>
+              <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--umb-text-dim);margin:16px 0 8px">Mobile — Bottom Navigation</p>
               <div class="umb-mobile-bottom-nav" style="max-width:390px">
                 <div class="umb-mobile-nav-item active"><i class="ph ph-chat-circle"></i><span>Chat</span></div>
                 <div class="umb-mobile-nav-item"><i class="ph ph-address-book"></i><span>Contatos</span></div>
@@ -4172,7 +4173,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                         <!-- Card header: sem border-bottom -->
                         <div class="d-flex align-items-center justify-content-between px-4 pt-4 pb-2">
                           <div class="d-flex align-items-center gap-2">
-                            <span style="font-size:15px;font-weight:700;color:var(--umb-text-primary)">Novo agente de IA</span>
+                            <span style="font-size:15px;font-weight:600;color:var(--umb-text-primary)">Novo agente de IA</span>
                             <span class="badge rounded-pill badge-expert" style="font-size:11px">Expert</span>
                           </div>
                           <button class="btn btn-icon btn-text btn-lg" aria-label="Fechar"><i class="ph ph-x"></i></button>
@@ -4190,7 +4191,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                         </div>
                         <!-- Form content — padding 24px (p-4) -->
                         <div class="px-4 pb-4">
-                          <p style="font-size:13px;font-weight:700;color:var(--umb-text-primary);margin-bottom:12px">Escolha um Agente IA pré treinado para começar</p>
+                          <p style="font-size:13px;font-weight:600;color:var(--umb-text-primary);margin-bottom:12px">Escolha um Agente IA pré treinado para começar</p>
                           <div class="mb-3">
                             <label class="form-label">Setor da sua empresa</label>
                             <select class="form-select form-select-lg">
@@ -4287,7 +4288,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                     <!-- Card header: sem border-bottom -->
                     <div class="d-flex align-items-center justify-content-between px-3 pt-3 pb-1">
                       <div class="d-flex align-items-center gap-2">
-                        <span style="font-size:14px;font-weight:700;color:var(--umb-text-primary)">Novo agente de IA</span>
+                        <span style="font-size:14px;font-weight:600;color:var(--umb-text-primary)">Novo agente de IA</span>
                         <span class="badge rounded-pill badge-expert" style="font-size:9px">Expert</span>
                       </div>
                       <button class="btn btn-icon btn-text btn-lg" aria-label="Fechar"><i class="ph ph-x"></i></button>
@@ -4366,7 +4367,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       <div class="card" style="border-radius:12px">
                         <!-- Card header: sem border-bottom -->
                         <div class="d-flex align-items-center px-4 pt-4 pb-0">
-                          <span style="font-size:15px;font-weight:700;color:var(--umb-text-primary)">Alessandra Flexy Digital</span>
+                          <span style="font-size:15px;font-weight:600;color:var(--umb-text-primary)">Alessandra Flexy Digital</span>
                           <span class="badge rounded-pill badge-expert ms-2" style="font-size:10px">Expert</span>
                           <div class="ms-auto d-flex align-items-center gap-2">
                             <span class="badge" style="background:rgba(var(--bs-success-rgb),.12);color:var(--bs-success);border:1px solid rgba(var(--bs-success-rgb),.25);font-size:11px;font-weight:600">Avaliação - 0%</span>
@@ -4385,7 +4386,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                         </div>
                         <!-- Tab content: Identidade — padding 24px -->
                         <div class="px-4 py-4">
-                          <p style="font-size:13px;font-weight:700;color:var(--umb-text-primary);margin-bottom:12px">Escolha um Agente IA pré treinado para começar</p>
+                          <p style="font-size:13px;font-weight:600;color:var(--umb-text-primary);margin-bottom:12px">Escolha um Agente IA pré treinado para começar</p>
                           <div class="mb-3">
                             <label class="form-label">Setor da sua empresa</label>
                             <select class="form-select form-select-lg"><option>Infoproduto</option></select>
@@ -4487,7 +4488,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                     </div>
                     <!-- Tab content: campos Large -->
                     <div class="px-3 py-2">
-                      <p style="font-size:12px;font-weight:700;color:var(--umb-text-primary);margin-bottom:10px">Escolha um Agente IA pré treinado para começar</p>
+                      <p style="font-size:12px;font-weight:600;color:var(--umb-text-primary);margin-bottom:10px">Escolha um Agente IA pré treinado para começar</p>
                       <div class="mb-3">
                         <label class="form-label">Setor da sua empresa</label>
                         <select class="form-select form-select-lg"><option>Infoproduto</option></select>
@@ -4709,13 +4710,12 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       <button class="btn btn-primary btn-icon btn-lg" aria-label="Iniciar nova conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar nova conversa"><i class="ph ph-plus"></i></button>
                     </div>
                     <!-- Busca + filtro -->
-                    <!-- Busca + filtro: o botão de filtro vem ANTES do input (à esquerda) -->
                     <div class="umb-conv-toolbar">
-                      <button class="btn btn-icon btn-text btn-lg" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                       <div class="input-group" style="flex:1">
                         <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
                         <input type="search" class="form-control" placeholder="Buscar por nome ou telefone">
                       </div>
+                      <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                     </div>
                     <!-- Segmented (substitui o antigo .umb-conv-tabs) -->
                     <div class="umb-conv-segmented">
@@ -4895,7 +4895,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                         <div class="umb-msg-content">
                           <div class="umb-msg-bubble" style="padding:4px;background:transparent;border:0">
                             <div class="umb-msg-image">
-                              <div style="height:150px;background:linear-gradient(135deg,#557CF2,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">fatura-abr26.png</div>
+                              <div style="height:150px;background:linear-gradient(135deg,#557CF2,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600">fatura-abr26.png</div>
                             </div>
                           </div>
                           <div class="umb-msg-meta"><span>14:10</span><i class="ph ph-checks umb-msg-status-read"></i></div>
@@ -4993,13 +4993,12 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       <div class="umb-conv-topbar-spacer"></div>
                       <button class="btn btn-primary btn-icon btn-lg" aria-label="Iniciar nova conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar nova conversa"><i class="ph ph-plus"></i></button>
                     </div>
-                    <!-- Busca + filtro: o botão de filtro vem ANTES do input (à esquerda) -->
                     <div class="umb-conv-toolbar">
-                      <button class="btn btn-icon btn-text btn-lg" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                       <div class="input-group" style="flex:1">
                         <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
                         <input type="search" class="form-control" placeholder="Buscar por nome ou telefone">
                       </div>
+                      <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                     </div>
                     <div class="umb-conv-segmented">
                       <div class="inset-control inset-control-lg">
@@ -5068,11 +5067,11 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                     <button class="btn btn-primary btn-icon btn-lg" aria-label="Iniciar nova conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar nova conversa"><i class="ph ph-plus"></i></button>
                   </div>
                   <div class="umb-conv-toolbar">
-                    <button class="btn btn-icon btn-text btn-lg" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                     <div class="input-group" style="flex:1">
                       <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
                       <input type="search" class="form-control" placeholder="Buscar por nome ou telefone">
                     </div>
+                    <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                   </div>
                   <div class="umb-conv-segmented">
                     <div class="inset-control inset-control-lg">
@@ -5176,7 +5175,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                     <div class="umb-msg-content">
                       <div class="umb-msg-bubble" style="padding:4px;background:transparent;border:0">
                         <div class="umb-msg-image">
-                          <div style="height:130px;background:linear-gradient(135deg,#557CF2,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">fatura-abr26.png</div>
+                          <div style="height:130px;background:linear-gradient(135deg,#557CF2,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600">fatura-abr26.png</div>
                         </div>
                       </div>
                       <div class="umb-msg-meta"><span>14:10</span><i class="ph ph-checks umb-msg-status-read"></i></div>
@@ -5234,7 +5233,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
     <!-- RODAPÉ -->
     <div style="text-align:center;padding:48px 0 32px;color:#4a4b60;font-size:13px">
-      <div style="font-size:16px;font-weight:700;color:#9091a8;margin-bottom:8px">Umbootstrap Design System</div>
+      <div style="font-size:16px;font-weight:600;color:#9091a8;margin-bottom:8px">Umbootstrap Design System</div>
       <div>143 componentes · 5 templates · Bootstrap 5.3 · Phosphor Icons · Plus Jakarta Sans</div>
       <div style="margin-top:6px"><a href="https://design-system.umbler.com/components" style="color:var(--bs-primary);text-decoration:none">design-system.umbler.com/components</a></div>
     </div>

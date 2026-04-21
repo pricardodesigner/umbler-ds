@@ -25,6 +25,8 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 19. Breakpoints & Responsividade — desktop/mobile no mesmo HTML
 20. O que NUNCA fazer
 21. Template de Chat (atendimento)
+22. Tokens de fundo — bgPrimary e bgActive
+23. Font weight — máximo 600
 
 ---
 
@@ -247,6 +249,8 @@ O `.umb-si-avatar` no canto inferior da sidebar é **sempre** um trigger de drop
 
 ### Regras
 
+- O `.umb-avatar-menu` é o **único componente válido** para troca de tema em toda a aplicação. **Nunca** crie um theme switcher paralelo (botões flutuantes, barra lateral extra, modal de configurações, etc.) — mesmo em prévias, templates de demo ou telas isoladas. Se o usuário não pedir explicitamente um switcher adicional no prompt, reutilize o existente na sidebar canônica (`data-umb-c="sidebar"`).
+- O dropdown do avatar **deve** fechar em três condições: (a) clique em um item do menu, (b) clique em qualquer ponto fora do `.umb-avatar-menu`, (c) tecla `Escape`. Esse é o comportamento padrão do Bootstrap 5 dropdown e é esperado pelo usuário — **nunca** modifique esse contrato (ex: `data-bs-auto-close="false"`, `stopPropagation()` no dropdown, `inside` ao invés de `true`) sem um pedido explícito do usuário. Em templates gerados que renderizam o avatar via `<template>`, garanta que o JS preserve o outside-click close: se o data-api do Bootstrap não disparar (overflow:hidden no container, elementos criados dinamicamente, etc.), adicione um handler defensivo com `bootstrap.Dropdown.getOrCreateInstance(trigger).hide()`.
 - O trigger **sempre** é um `<button>` com `.umb-si-avatar` (não `<div>`) — necessário pra Bootstrap dropdown e acessibilidade.
 - O container usa `dropend` (abre à direita da sidebar, que é estreita — 52px — e fica à esquerda da tela).
 - Reaproveita a classe `.theme-option` já existente na sidebar de documentação do DS — o `setTheme()` global sincroniza o estado `active` em **todos** os theme-switchers do documento.
@@ -554,6 +558,10 @@ Após gerar uma tela, redimensione a janela do browser cruzando os 768px e confi
 ## 20. O que NUNCA fazer
 
 - Nunca use cores hex hardcoded — sempre tokens via `var(--umb-*)`
+- Nunca use `--umb-chat-canvas-bg` (removido): o fundo do chat **é** o `--umb-bg-primary` (ver §22)
+- Nunca crie um token de fundo dedicado por tela — reuse `--umb-bg-primary` para canvas e `--umb-bg-active` para seleção
+- Nunca crie um theme switcher novo (botão flutuante, barra extra, modal) — a troca de tema é **exclusivamente** pelo `.umb-avatar-menu` da sidebar (§12). Exceção: apenas quando o usuário pedir explicitamente um switcher adicional no prompt.
+- Nunca use `font-weight` > 600 no DS (valores proibidos: `700`, `800`, `900`, `bold`, `bolder`). Se precisar reforçar hierarquia, aumente o `font-size` ou use `color` de contraste — nunca um peso mais pesado que 600 (ver §23).
 - Nunca use `btn-outline-secondary` em ações — use `btn-outline-primary`
 - Nunca use `font-weight: bold` em labels de formulário
 - Nunca coloque borda nos filhos do input-group — a borda vai no wrapper
@@ -588,7 +596,7 @@ O `umb-chat-shell` é um container `display:flex` que ocupa altura total e divid
 
 ### 21.2 Coluna 1 — Lista de conversas (`.umb-conv-list`)
 
-Largura fixa **360px** em desktop. Background `var(--umb-card-bg)`. **Canto superior direito** arredondado com `border-top-right-radius: 2rem` — a coluna 1 "entra" no canvas do chat criando o recorte característico visto em produção. **Sem** `border-right` (a separação visual vem do contraste entre `--umb-card-bg` e `--umb-chat-canvas-bg`). Componentes internos, **nesta ordem vertical**:
+Largura fixa **360px** em desktop. Componentes internos, **nesta ordem vertical**:
 
 1. **`.umb-conv-topbar`** (56px de altura fixa — pixel-perfect aligned com `.umb-chat-header` da coluna 2). Contém exatamente **6 botões icon-only** com tooltip no hover (`data-bs-toggle="tooltip" data-bs-placement="bottom" title="…"`):
    - `ph-chat` — "Conversas com cliente" — `btn btn-icon btn-text btn-lg`
@@ -598,8 +606,7 @@ Largura fixa **360px** em desktop. Background `var(--umb-card-bg)`. **Canto supe
    - `ph-sort-descending` — "Ordem da lista de conversas" — `btn btn-icon btn-text btn-lg`
    - `.umb-conv-topbar-spacer` (`flex: 1`)
    - `ph-plus` — "Iniciar nova conversa" — `btn btn-primary btn-icon btn-lg` (o **único** botão primário/sólido do topbar)
-   O topbar herda o `border-top-right-radius: 2rem` da coluna para acompanhar o recorte visual. **Sem** `border-bottom` — o recorte já separa o topbar do restante.
-2. **`.umb-conv-toolbar`** (filtros + busca) — ordem fixa: **primeiro** o botão `btn btn-icon btn-text btn-lg` "Filtros" (`ph-funnel`) com tooltip, **depois** o `input-group` com placeholder "Buscar por nome ou telefone". O input tem altura 40px para alinhar verticalmente com o `btn-lg`.
+2. **`.umb-conv-toolbar`** (busca + filtros) — `input-group` com placeholder "Buscar por nome ou telefone" + `btn btn-icon btn-text btn-sm` "Filtros" (`ph-funnel`) com tooltip.
 3. **`.umb-conv-segmented`** — wrapper do Segmented. **Substitui o antigo `.umb-conv-tabs`**. Usa `inset-control inset-control-lg` (§ Segmented). Os 3 segmentos são:
    - "Entrada" com contador `<span class="umb-seg-count">12</span>` — `.active` por default
    - "Esperando" com contador `<span class="umb-seg-count">3</span>`
@@ -618,9 +625,9 @@ Estados: `:hover` usa `var(--umb-chat-list-hover)`; `.active` usa `var(--umb-cha
 
 ### 21.3 Coluna 2 — Detalhe do chat (`.umb-chat-detail`)
 
-Ocupa o espaço restante (`flex: 1`) e usa `var(--umb-chat-canvas-bg)` como fundo. Layout vertical:
+Ocupa o espaço restante (`flex: 1`) e usa `var(--umb-bg-primary, var(--bs-body-bg))` como fundo (§22). Layout vertical:
 
-1. **Header** (`.umb-chat-header`, **56px** — mesma altura do `.umb-conv-topbar` para alinhamento pixel-perfect). Background `var(--umb-chat-canvas-bg)` — **o mesmo fundo da área de mensagens**, integrando o header ao canvas do chat (não há card próprio nem `border-bottom`). Substitui o shell header padrão. Contém:
+1. **Header** (`.umb-chat-header`, **56px** — mesma altura do `.umb-conv-topbar` para que o divisor horizontal inferior fique alinhado pixel-perfect entre as duas colunas). Substitui o shell header padrão. Contém:
    - `.umb-chat-header-contact` (avatar 36×36 + nome + meta com tags/setor/canal)
    - `.umb-chat-header-actions` — exatamente **8 botões icon-only** `btn btn-icon btn-text btn-lg` (§1), cada um com tooltip via `data-bs-toggle="tooltip" data-bs-placement="bottom" title="…"`, nesta ordem:
      - `ph-user` — "Detalhes do contato"
@@ -721,7 +728,6 @@ Todos os tokens abaixo são sobrescritos em cada um dos 4 temas (`:root/dark`, `
 
 | Token | Uso |
 |---|---|
-| `--umb-chat-canvas-bg` | Fundo da área de mensagens (`.umb-chat-detail`) |
 | `--umb-chat-bubble-in-bg` / `-color` | Bubble recebido (entrada) |
 | `--umb-chat-bubble-out-bg` / `-color` | Bubble enviado (saída) — usa a `--bs-primary` do tema |
 | `--umb-chat-list-hover` | Hover de `.umb-conv-item` |
@@ -730,7 +736,7 @@ Todos os tokens abaixo são sobrescritos em cada um dos 4 temas (`:root/dark`, `
 | `--umb-chat-pinned-bg` / `-color` / `-accent` | Barra de mensagem fixada |
 | `--umb-conv-tag-{blue,green,amber,red,violet}-bg` / `-color` | Cores de tag de conversa |
 
-Nos temas **claro/esmeralda** os bubbles de entrada ficam em `#ffffff` sobre canvas `#F5F7FB`/`#EFF7F6` (card sobre canvas levemente colorido). Nos temas **escuro/bravia** o canvas é mais escuro que o `--umb-card-bg` da lista, criando profundidade.
+O fundo da área de mensagens (`.umb-chat-detail`) usa `--umb-bg-primary` (ver §22) — o mesmo token do fundo principal de qualquer tela do DS. Não existe mais token dedicado `--umb-chat-canvas-bg`: isso garante que o chat, menus, tabelas e demais telas compartilhem o mesmo fundo por tema. Nos temas **claro/esmeralda** os bubbles de entrada ficam em `#ffffff` sobre `--umb-bg-primary` (card sobre canvas levemente colorido). Nos temas **escuro/bravia** o `--umb-card-bg` da lista é mais claro que o canvas, criando profundidade.
 
 ### 21.8 Regras específicas do chat
 
@@ -743,3 +749,95 @@ Nos temas **claro/esmeralda** os bubbles de entrada ficam em `#ffffff` sobre can
 - **Filtros de lista**: use **Segmented** (`.umb-conv-segmented > .inset-control.inset-control-lg`) com 3 segmentos "Entrada / Esperando / Finalizados" e contadores via `<span class="umb-seg-count">`. Nunca use `.umb-conv-tabs` (deprecated — mantido apenas por retrocompatibilidade).
 - **Botão Enviar** (`.umb-chat-send-btn`): é o único CTA sólido da tela. Disable quando o textarea estiver vazio (`:disabled` já estilizado).
 - **Badges de canal** (`.umb-conv-avatar-ch`): sempre usam as cores oficiais do canal (WhatsApp verde `#25D366`, Instagram gradient, etc.) — essas são as únicas cores hex permitidas na tela de chat, porque são brand dos canais (exceção à §20).
+
+## 22. Tokens de fundo — bgPrimary e bgActive
+
+Estes são os dois tokens semânticos que governam o fundo de qualquer tela e o estado selecionado de qualquer item. Todo componente novo deve usar **apenas estes dois** para fundos de superfície e de seleção — não crie tokens paralelos por tela.
+
+### 22.1 `--umb-bg-primary` — fundo principal das telas
+
+Aplique em qualquer área de conteúdo "canvas" (shell content, chat detail, mobile content, edit body, preview container). É o fundo mais amplo da tela, por trás dos cards/sidebar.
+
+| Tema | Valor |
+|---|---|
+| Escuro (`dark`) | `#141619` |
+| Claro (`light`) | `#EEF2FE` |
+| Bravia (`dark-emerald`) | `#000C0B` |
+| Esmeralda (`emerald`) | `#F6F7F7` |
+
+**Uso em CSS**: `background: var(--umb-bg-primary, var(--bs-body-bg));`
+
+**Alias legado**: `--umb-content-bg` continua existindo como alias de `--umb-bg-primary` para retrocompatibilidade. Em código novo, sempre prefira `--umb-bg-primary`.
+
+### 22.2 `--umb-bg-active` — fundo do item selecionado
+
+Aplique em todos os estados "ativo/selecionado" de:
+
+- Linha de tabela selecionada
+- Item de menu dropdown selecionado
+- Card selecionado
+- Conversa ativa na lista lateral do chat (quando o detalhe dessa conversa está aberto)
+- Qualquer item de nav secundária que represente seleção persistente
+
+| Tema | Valor |
+|---|---|
+| Escuro (`dark`) | `#484B53` |
+| Claro (`light`) | `#E2E9FE` |
+| Bravia (`dark-emerald`) | `#175651` |
+| Esmeralda (`emerald`) | `#D3EFEC` |
+
+**Uso em CSS**: `background: var(--umb-bg-active);`
+
+**Alias legado**: `--umb-table-row-active` continua existindo como alias de `--umb-bg-active`. Em código novo, sempre prefira `--umb-bg-active`.
+
+### 22.3 O que NÃO é `--umb-bg-active`
+
+- **Hover** (não é seleção) → use `--umb-hover-bg` (ou `--umb-table-hover` na tabela).
+- **Nav ativo da sidebar principal** → continua com `--umb-nav-active-bg` (tem contraste específico sobre fundo azul/esmeralda do sidebar).
+- **Estado ativo de botão/segmented** → continua com os tokens do próprio componente.
+
+A distinção: `--umb-bg-active` é para **seleção de conteúdo** (o usuário escolheu essa linha/card/conversa). Os demais tokens de "ativo" são para **estados de UI** em componentes específicos.
+
+## 23. Font weight — máximo 600
+
+O DS limita o peso de fonte a três valores: **400 (regular)**, **500 (medium)** e **600 (semibold)**. Qualquer valor acima é proibido — incluindo `700`, `800`, `900`, `bold` e `bolder`.
+
+### Por quê
+
+- **Hierarquia visual consistente.** Limitar a 3 pesos evita que cada tela invente a própria escala, o que leva a descompasso entre títulos, labels, CTAs e badges.
+- **Performance.** Carregar só os pesos realmente usados reduz o tamanho das fontes baixadas do Google Fonts (Poppins e Plus Jakarta Sans).
+- **Acessibilidade de renderização.** Em telas de baixa densidade e em fonts sem hinting fino para 700+, pesos altos podem criar borramento; 600 é suficiente para diferenciar títulos de corpo.
+
+### Como aplicar hierarquia sem usar peso > 600
+
+| Necessidade | Solução no DS |
+|---|---|
+| Diferenciar título de parágrafo | `font-size` maior + `600` |
+| Destacar número/métrica | `font-size` maior + `color: var(--umb-text-primary)` |
+| Dar ênfase em palavra no meio do texto | `color: var(--umb-text-primary)` ou tag específica (`<strong>` estilizada com `600`) |
+| Eyebrow/label de seção | `text-transform: uppercase` + `letter-spacing` + `600` |
+
+### Configuração do Google Fonts
+
+Carregue **apenas** os pesos permitidos:
+
+```html
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+```
+
+**Nunca** inclua `;700`, `;800` ou `;900` na query de pesos.
+
+### Auditoria
+
+Para verificar o código do DS:
+
+```bash
+# Não deve retornar nenhuma ocorrência:
+grep -rE "font-weight\s*:\s*(700|800|900|bold|bolder)" .
+grep -rE 'font-weight="(700|800|900)"' .   # SVGs
+```
+
+### Exceção
+
+A única exceção são **elementos de marca externos** (ex: logos de canais — WhatsApp, Instagram) que trazem sua própria tipografia e não estão sob o escopo do DS.
+
