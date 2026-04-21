@@ -1561,11 +1561,35 @@
       border-right: 1px solid var(--umb-border);
       display: flex; flex-direction: column; overflow: hidden;
     }
+    /* Topbar (56px): 5 btn-icon btn-text btn-lg + spacer + 1 btn-primary btn-icon btn-lg.
+       Altura deve bater 1:1 com .umb-chat-header para o divisor alinhar pixel-perfect. */
+    .umb-conv-topbar {
+      height: 56px; min-height: 56px;
+      padding: 8px 12px; display: flex; align-items: center; gap: 2px;
+      border-bottom: 1px solid var(--umb-border);
+      background: var(--umb-card-bg);
+    }
+    .umb-conv-topbar-spacer { flex: 1 1 auto; }
+    /* Toolbar de busca + filtro — sem border-bottom (o border é do topbar) */
     .umb-conv-toolbar {
       padding: 10px 12px; display: flex; align-items: center; gap: 8px;
-      border-bottom: 1px solid var(--umb-border);
     }
     .umb-conv-toolbar .form-control { height: 34px; font-size: 13px; }
+    /* Wrapper do Segmented (substitui o antigo .umb-conv-tabs) */
+    .umb-conv-segmented {
+      padding: 4px 12px 10px;
+    }
+    .umb-conv-segmented .inset-control {
+      display: flex; width: 100%;
+    }
+    .umb-conv-segmented .inset-control .btn { flex: 1; }
+    .umb-conv-segmented .inset-control .btn .umb-seg-count {
+      display: inline-block; margin-left: 6px;
+      font-size: 11px; font-weight: 700; opacity: .8;
+    }
+    .umb-conv-segmented .inset-control .btn.active .umb-seg-count { opacity: 1; }
+    /* Compat: classes antigas de abas mantidas pra não quebrar telas já geradas,
+       mas o padrão é .umb-conv-segmented + .inset-control-lg. */
     .umb-conv-tabs {
       display: flex; gap: 4px; padding: 6px 8px;
       border-bottom: 1px solid var(--umb-border);
@@ -1709,6 +1733,8 @@
     .umb-chat-header-actions {
       display: flex; align-items: center; gap: 2px; flex-shrink: 0;
     }
+    /* Ações do header: padrão "btn btn-icon btn-text btn-lg" (40×40) com tooltip no hover.
+       Mesmo estilo da topbar da conv-list pra manter coerência visual entre as 2 colunas. */
     .umb-chat-header-actions .btn-icon { color: var(--umb-text-mid); }
 
     /* Pinned message bar (logo abaixo do header do chat) */
@@ -4666,17 +4692,31 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 <div class="umb-chat-shell">
                   <!-- ============ Coluna 1: Lista de conversas ============ -->
                   <aside class="umb-conv-list">
+                    <!-- Topbar (56px): 5 text-lg + 1 primary "+". Alinhada com chat-header da direita. -->
+                    <div class="umb-conv-topbar">
+                      <button class="btn btn-icon btn-text btn-lg" aria-label="Conversas com cliente" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Conversas com cliente"><i class="ph ph-chat"></i></button>
+                      <button class="btn btn-icon btn-text btn-lg" aria-label="Conversas com a equipe" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Conversas com a equipe"><i class="ph ph-users-three"></i></button>
+                      <button class="btn btn-icon btn-text btn-lg" aria-label="Conversas visíveis" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Conversas visíveis"><i class="ph ph-eye"></i></button>
+                      <button class="btn btn-icon btn-text btn-lg" aria-label="Aplicar ação para múltiplas conversas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Aplicar ação para múltiplas conversas"><i class="ph ph-list-checks"></i></button>
+                      <button class="btn btn-icon btn-text btn-lg" aria-label="Ordem da lista de conversas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ordem da lista de conversas"><i class="ph ph-sort-descending"></i></button>
+                      <div class="umb-conv-topbar-spacer"></div>
+                      <button class="btn btn-primary btn-icon btn-lg" aria-label="Iniciar nova conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar nova conversa"><i class="ph ph-plus"></i></button>
+                    </div>
+                    <!-- Busca + filtro -->
                     <div class="umb-conv-toolbar">
                       <div class="input-group" style="flex:1">
                         <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
-                        <input type="search" class="form-control" placeholder="Pesquisar conversas">
+                        <input type="search" class="form-control" placeholder="Buscar por nome ou telefone">
                       </div>
-                      <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros"><i class="ph ph-funnel"></i></button>
+                      <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                     </div>
-                    <div class="umb-conv-tabs">
-                      <button class="umb-conv-tab active">Abertos <span class="umb-conv-tab-count">12</span></button>
-                      <button class="umb-conv-tab">Aguardando <span class="umb-conv-tab-count">3</span></button>
-                      <button class="umb-conv-tab">Resolvidos</button>
+                    <!-- Segmented (substitui o antigo .umb-conv-tabs) -->
+                    <div class="umb-conv-segmented">
+                      <div class="inset-control inset-control-lg">
+                        <button class="btn active" onclick="[...this.parentElement.querySelectorAll('.btn')].forEach(b=>b.classList.remove('active'));this.classList.add('active')">Entrada<span class="umb-seg-count">12</span></button>
+                        <button class="btn" onclick="[...this.parentElement.querySelectorAll('.btn')].forEach(b=>b.classList.remove('active'));this.classList.add('active')">Esperando<span class="umb-seg-count">3</span></button>
+                        <button class="btn" onclick="[...this.parentElement.querySelectorAll('.btn')].forEach(b=>b.classList.remove('active'));this.classList.add('active')">Finalizados</button>
+                      </div>
                     </div>
                     <div class="umb-conv-scroll">
                       <!-- Item ativo -->
@@ -4803,12 +4843,16 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                           </div>
                         </div>
                       </div>
+                      <!-- 8 btn-text-lg com tooltips. Alinhados com o topbar da esquerda (56px height). -->
                       <div class="umb-chat-header-actions">
-                        <button class="btn btn-icon btn-text btn-sm" aria-label="Ligar"><i class="ph ph-phone"></i></button>
-                        <button class="btn btn-icon btn-text btn-sm" aria-label="Resolver"><i class="ph ph-check-circle"></i></button>
-                        <button class="btn btn-icon btn-text btn-sm" aria-label="Transferir"><i class="ph ph-arrows-left-right"></i></button>
-                        <button class="btn btn-icon btn-text btn-sm" aria-label="Mais"><i class="ph ph-dots-three-vertical"></i></button>
-                        <button class="btn btn-icon btn-text btn-sm" aria-label="Fechar painel"><i class="ph ph-sidebar-simple"></i></button>
+                        <button class="btn btn-icon btn-text btn-lg" aria-label="Detalhes do contato" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Detalhes do contato"><i class="ph ph-user"></i></button>
+                        <button class="btn btn-icon btn-text btn-lg" aria-label="Detalhes da conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Detalhes da conversa"><i class="ph ph-article"></i></button>
+                        <button class="btn btn-icon btn-text btn-lg" aria-label="Transferir conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Transferir conversa"><i class="ph ph-arrow-bend-up-right"></i></button>
+                        <button class="btn btn-icon btn-text btn-lg" aria-label="Privar atendimento" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Privar atendimento"><i class="ph ph-lock-simple-open"></i></button>
+                        <button class="btn btn-icon btn-text btn-lg" aria-label="Agendar envio de mensagem" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Agendar envio de mensagem"><i class="ph ph-calendar-blank"></i></button>
+                        <button class="btn btn-icon btn-text btn-lg" aria-label="Finalizar conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Finalizar conversa"><i class="ph ph-check"></i></button>
+                        <button class="btn btn-icon btn-text btn-lg" aria-label="Pesquisar mensagem" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pesquisar mensagem"><i class="ph ph-magnifying-glass"></i></button>
+                        <button class="btn btn-icon btn-text btn-lg" aria-label="Ocultar essa janela" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ocultar essa janela"><i class="ph ph-x"></i></button>
                       </div>
                     </header>
 
@@ -4932,17 +4976,29 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Conversas"></nav>
                 <div class="umb-chat-shell">
                   <aside class="umb-conv-list">
+                    <!-- Topbar (56px): 5 text-lg + 1 primary "+". Alinhada com chat-header da direita. -->
+                    <div class="umb-conv-topbar">
+                      <button class="btn btn-icon btn-text btn-lg" aria-label="Conversas com cliente" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Conversas com cliente"><i class="ph ph-chat"></i></button>
+                      <button class="btn btn-icon btn-text btn-lg" aria-label="Conversas com a equipe" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Conversas com a equipe"><i class="ph ph-users-three"></i></button>
+                      <button class="btn btn-icon btn-text btn-lg" aria-label="Conversas visíveis" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Conversas visíveis"><i class="ph ph-eye"></i></button>
+                      <button class="btn btn-icon btn-text btn-lg" aria-label="Aplicar ação para múltiplas conversas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Aplicar ação para múltiplas conversas"><i class="ph ph-list-checks"></i></button>
+                      <button class="btn btn-icon btn-text btn-lg" aria-label="Ordem da lista de conversas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ordem da lista de conversas"><i class="ph ph-sort-descending"></i></button>
+                      <div class="umb-conv-topbar-spacer"></div>
+                      <button class="btn btn-primary btn-icon btn-lg" aria-label="Iniciar nova conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar nova conversa"><i class="ph ph-plus"></i></button>
+                    </div>
                     <div class="umb-conv-toolbar">
                       <div class="input-group" style="flex:1">
                         <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
-                        <input type="search" class="form-control" placeholder="Pesquisar conversas">
+                        <input type="search" class="form-control" placeholder="Buscar por nome ou telefone">
                       </div>
-                      <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros"><i class="ph ph-funnel"></i></button>
+                      <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                     </div>
-                    <div class="umb-conv-tabs">
-                      <button class="umb-conv-tab active">Abertos <span class="umb-conv-tab-count">12</span></button>
-                      <button class="umb-conv-tab">Aguardando <span class="umb-conv-tab-count">3</span></button>
-                      <button class="umb-conv-tab">Resolvidos</button>
+                    <div class="umb-conv-segmented">
+                      <div class="inset-control inset-control-lg">
+                        <button class="btn active" onclick="[...this.parentElement.querySelectorAll('.btn')].forEach(b=>b.classList.remove('active'));this.classList.add('active')">Entrada<span class="umb-seg-count">12</span></button>
+                        <button class="btn" onclick="[...this.parentElement.querySelectorAll('.btn')].forEach(b=>b.classList.remove('active'));this.classList.add('active')">Esperando<span class="umb-seg-count">3</span></button>
+                        <button class="btn" onclick="[...this.parentElement.querySelectorAll('.btn')].forEach(b=>b.classList.remove('active'));this.classList.add('active')">Finalizados</button>
+                      </div>
                     </div>
                     <div class="umb-conv-scroll">
                       <div class="umb-conv-item">
@@ -4993,17 +5049,29 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
               <div class="umb-mobile-shell">
                 <header class="umb-mobile-header" data-umb-c="mobile-header" data-variant="home"></header>
                 <div class="umb-mobile-content" style="padding:0">
+                  <!-- Topbar (mobile): mesma anatomia do desktop -->
+                  <div class="umb-conv-topbar">
+                    <button class="btn btn-icon btn-text btn-lg" aria-label="Conversas com cliente" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Conversas com cliente"><i class="ph ph-chat"></i></button>
+                    <button class="btn btn-icon btn-text btn-lg" aria-label="Conversas com a equipe" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Conversas com a equipe"><i class="ph ph-users-three"></i></button>
+                    <button class="btn btn-icon btn-text btn-lg" aria-label="Conversas visíveis" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Conversas visíveis"><i class="ph ph-eye"></i></button>
+                    <button class="btn btn-icon btn-text btn-lg" aria-label="Aplicar ação para múltiplas conversas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Aplicar ação para múltiplas conversas"><i class="ph ph-list-checks"></i></button>
+                    <button class="btn btn-icon btn-text btn-lg" aria-label="Ordem da lista de conversas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ordem da lista de conversas"><i class="ph ph-sort-descending"></i></button>
+                    <div class="umb-conv-topbar-spacer"></div>
+                    <button class="btn btn-primary btn-icon btn-lg" aria-label="Iniciar nova conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar nova conversa"><i class="ph ph-plus"></i></button>
+                  </div>
                   <div class="umb-conv-toolbar">
                     <div class="input-group" style="flex:1">
                       <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
-                      <input type="search" class="form-control" placeholder="Pesquisar conversas">
+                      <input type="search" class="form-control" placeholder="Buscar por nome ou telefone">
                     </div>
-                    <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros"><i class="ph ph-funnel"></i></button>
+                    <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
                   </div>
-                  <div class="umb-conv-tabs">
-                    <button class="umb-conv-tab active">Abertos <span class="umb-conv-tab-count">12</span></button>
-                    <button class="umb-conv-tab">Aguardando</button>
-                    <button class="umb-conv-tab">Resolvidos</button>
+                  <div class="umb-conv-segmented">
+                    <div class="inset-control inset-control-lg">
+                      <button class="btn active" onclick="[...this.parentElement.querySelectorAll('.btn')].forEach(b=>b.classList.remove('active'));this.classList.add('active')">Entrada<span class="umb-seg-count">12</span></button>
+                      <button class="btn" onclick="[...this.parentElement.querySelectorAll('.btn')].forEach(b=>b.classList.remove('active'));this.classList.add('active')">Esperando<span class="umb-seg-count">3</span></button>
+                      <button class="btn" onclick="[...this.parentElement.querySelectorAll('.btn')].forEach(b=>b.classList.remove('active'));this.classList.add('active')">Finalizados</button>
+                    </div>
                   </div>
                   <div class="umb-conv-scroll">
                     <div class="umb-conv-item">
