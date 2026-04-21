@@ -561,6 +561,7 @@ Após gerar uma tela, redimensione a janela do browser cruzando os 768px e confi
 
 - Nunca use cores hex hardcoded — sempre tokens via `var(--umb-*)`
 - Nunca use `--umb-chat-canvas-bg` (removido): o fundo do chat **é** o `--umb-bg-primary` (ver §22)
+- Nunca use `--umb-chat-list-active` (removido): conversa selecionada usa `--umb-bg-active` (§22); era um token paralelo que violava a regra sistêmica de um único token semântico para seleção
 - Nunca crie um token de fundo dedicado por tela — reuse `--umb-bg-primary` para canvas e `--umb-bg-active` para seleção
 - Nunca crie um theme switcher novo (botão flutuante, barra extra, modal) — a troca de tema é **exclusivamente** pelo `.umb-avatar-menu` da sidebar (§12). Exceção: apenas quando o usuário pedir explicitamente um switcher adicional no prompt.
 - Nunca use `font-weight` > 600 no DS (valores proibidos: `700`, `800`, `900`, `bold`, `bolder`). Se precisar reforçar hierarquia, aumente o `font-size` ou use `color` de contraste — nunca um peso mais pesado que 600 (ver §23).
