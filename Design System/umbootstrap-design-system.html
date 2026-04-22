@@ -635,6 +635,19 @@
     }
     .form-control::placeholder { color: var(--umb-text-mid) !important; }
     .form-control:disabled, .form-select:disabled { opacity: .5; }
+    /* Caret do form-select — o shorthand `background:` com !important acima apaga o
+       background-image padrao do Bootstrap. Restauramos aqui. Cor #647383 funciona
+       legivelmente em todos os temas. */
+    .form-select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23647383' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+      background-repeat: no-repeat !important;
+      background-position: right 12px center !important;
+      background-size: 12px !important;
+      padding-right: 36px !important;
+      appearance: none;
+    }
+    .form-select-sm { background-position: right 10px center !important; padding-right: 30px !important; background-size: 10px !important; }
+    .form-select-lg { background-position: right 16px center !important; padding-right: 44px !important; }
     /* Textarea — altura livre, sem height fixo */
     textarea.form-control { height: auto !important; padding: 8px 12px !important; min-height: 80px; }
 
