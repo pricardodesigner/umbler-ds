@@ -55,9 +55,12 @@
       --umb-code-color:      #9091a8;
       --umb-nav-color:       #D3D6DD;
       --umb-nav-hover-color: #ffffff;
-      --umb-nav-hover-bg:    rgba(255,255,255,.05);
-      --umb-nav-active-color:#557CF2;
-      --umb-nav-active-bg:   rgba(85,124,242,.12);
+      --umb-nav-hover-bg:    rgba(72,75,83,.3);
+      --umb-nav-active-color:#ffffff;
+      --umb-nav-active-bg:   #484B53;
+      /* Popup menu items (dropdowns, theme switcher, etc) */
+      --umb-menu-item-hover-bg:  #32343A;
+      --umb-menu-item-active-bg: #484B53;
       --umb-section-h:       #4a4b60;
       --umb-brand-color:     #D3D6DD;
       --umb-brand-sub:       #83858C;
@@ -86,6 +89,15 @@
       --umb-tag-expert-color: #E8D8F5;
       --umb-tag-standard-bg: #237804;  /* Standard badge — dark green, medido no app */
       --umb-tag-standard-color: #D9F7BE;
+      /* Tag palette — cores brand para etiquetas de contato/conversa (iguais em todos os temas) */
+      --umb-tag-geekblue-bg: #2F54EB;
+      --umb-tag-volcano-bg:  #FA541C;
+      --umb-tag-green-bg:    #52C41A;
+      --umb-tag-magenta-bg:  #EB2F96;
+      --umb-tag-orange-bg:   #FA8C16;
+      --umb-tag-red-bg:      #F5222D;
+      --umb-tag-cyan-bg:     #13C2C2;
+      --umb-tag-purple-bg:   #722ED1;
       --umb-btn-secondary:   #6c757d;
       --umb-border-primary:     #3D4047;
       --umb-btn-outline-color:  #D3D6DD;
@@ -144,9 +156,12 @@
       --umb-code-color:      #4a5568;
       --umb-nav-color:       rgba(255,255,255,.78);
       --umb-nav-hover-color: #ffffff;
-      --umb-nav-hover-bg:    rgba(255,255,255,.18);
+      --umb-nav-hover-bg:    rgba(119,153,253,.3);
       --umb-nav-active-color:#ffffff;
-      --umb-nav-active-bg:   rgba(255,255,255,.28);
+      --umb-nav-active-bg:   #7799FD;
+      /* Popup menu items (dropdowns, theme switcher, etc) */
+      --umb-menu-item-hover-bg:  #FAFAFA;
+      --umb-menu-item-active-bg: #E2E9FE;
       --umb-section-h:       rgba(255,255,255,.52);
       --umb-brand-color:     #ffffff;
       --umb-brand-sub:       rgba(255,255,255,.72);
@@ -186,7 +201,7 @@
 
     /* ── EMERALD ─────────────────────────────────────────────────── */
     [data-bs-theme="emerald"] {
-      --bs-primary:          #29958D; --bs-primary-rgb:   41,149,141;
+      --bs-primary:          #005C55; --bs-primary-rgb:   0,92,85;
       --bs-secondary:        #B2DDD9;
       --bs-success:          #0C8E63; --bs-success-rgb:   12,142,99;
       --bs-info:             #3B59B2; --bs-info-rgb:      59,89,178;
@@ -196,7 +211,7 @@
       --bs-body-font-family: 'Plus Jakarta Sans', sans-serif;
       --bs-border-color:     #d9d9d9; --bs-card-bg:       #ffffff;
 
-      --umb-sidebar-bg:      #29958D; --umb-sidebar-border: rgba(255,255,255,.18);
+      --umb-sidebar-bg:      #005C55; --umb-sidebar-border: rgba(255,255,255,.18);
       --umb-shell-header-bg: #ffffff;
       --umb-bg-primary:      #F6F7F7;  /* bgPrimary: fundo principal das telas (emerald) */
       --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
@@ -218,12 +233,15 @@
       --umb-progress-track:  #e9ecef;
       --umb-code-bg:         #edf7f6;
       --umb-code-border:     #b2ddd9;
-      --umb-code-color:      #29958D;
+      --umb-code-color:      #005C55;
       --umb-nav-color:       rgba(255,255,255,.78);
       --umb-nav-hover-color: #ffffff;
-      --umb-nav-hover-bg:    rgba(255,255,255,.18);
+      --umb-nav-hover-bg:    rgba(41,149,141,.3);
       --umb-nav-active-color:#ffffff;
-      --umb-nav-active-bg:   rgba(255,255,255,.28);
+      --umb-nav-active-bg:   #29958D;
+      /* Popup menu items (dropdowns, theme switcher, etc) */
+      --umb-menu-item-hover-bg:  #EFF9F8;
+      --umb-menu-item-active-bg: #D3EFEC;
       --umb-section-h:       rgba(255,255,255,.52);
       --umb-brand-color:     #ffffff;
       --umb-brand-sub:       rgba(255,255,255,.72);
@@ -276,8 +294,9 @@
         --umb-border:#3D4047; --umb-border-primary:#3D4047; --umb-border-strong:#424649; --umb-input-bg:#212529; --umb-input-border:#3D4047;
         --umb-input-group-bg:#2e3048; --umb-progress-track:#2e3048; --umb-code-bg:#0c0d14;
         --umb-code-border:#1f2030; --umb-code-color:#9091a8; --umb-nav-color:#9091a8;
-        --umb-nav-hover-color:#f0f0f8; --umb-nav-hover-bg:rgba(255,255,255,.05);
-        --umb-nav-active-color:#557CF2; --umb-nav-active-bg:rgba(85,124,242,.12);
+        --umb-nav-hover-color:#f0f0f8; --umb-nav-hover-bg:rgba(72,75,83,.3);
+        --umb-nav-active-color:#ffffff; --umb-nav-active-bg:#484B53;
+        --umb-menu-item-hover-bg:#32343A; --umb-menu-item-active-bg:#484B53;
         --umb-section-h:#4a4b60; --umb-brand-color:#f0f0f8; --umb-brand-sub:#9091a8;
         --umb-avatar-bg:#111930; --umb-profile-hover:rgba(255,255,255,.05);
         --umb-placeholder-bg:#2e3048; --umb-placeholder-sh:#383b4d; --umb-kbd-bg:#2e3048;
@@ -310,8 +329,9 @@
         --umb-border:#F0F0F0; --umb-border-primary:#DFDFDF; --umb-border-strong:#d9d9d9; --umb-input-bg:#ffffff; --umb-input-border:#DFDFDF;
         --umb-input-group-bg:#f8f9fa; --umb-progress-track:#e9ecef; --umb-code-bg:#eef1fb;
         --umb-code-border:#d0d9f8; --umb-code-color:#4a5568; --umb-nav-color:rgba(255,255,255,.78);
-        --umb-nav-hover-color:#ffffff; --umb-nav-hover-bg:rgba(255,255,255,.18);
-        --umb-nav-active-color:#ffffff; --umb-nav-active-bg:rgba(255,255,255,.28);
+        --umb-nav-hover-color:#ffffff; --umb-nav-hover-bg:rgba(119,153,253,.3);
+        --umb-nav-active-color:#ffffff; --umb-nav-active-bg:#7799FD;
+        --umb-menu-item-hover-bg:#FAFAFA; --umb-menu-item-active-bg:#E2E9FE;
         --umb-section-h:rgba(255,255,255,.52); --umb-brand-color:#ffffff; --umb-brand-sub:rgba(255,255,255,.72);
         --umb-avatar-bg:#dce6ff; --umb-profile-hover:rgba(0,0,0,.04);
         --umb-placeholder-bg:#e9ecef; --umb-placeholder-sh:#f8f9fa; --umb-kbd-bg:#e9ecef;
@@ -368,9 +388,12 @@
       --umb-code-color:      #748180;
       --umb-nav-color:       #748180;
       --umb-nav-hover-color: #D5E3E1;
-      --umb-nav-hover-bg:    rgba(255,255,255,.04);
-      --umb-nav-active-color:#2B897F;
-      --umb-nav-active-bg:   rgba(43,137,127,.18);
+      --umb-nav-hover-bg:    rgba(23,86,81,.3);
+      --umb-nav-active-color:#ffffff;
+      --umb-nav-active-bg:   #175651;
+      /* Popup menu items (dropdowns, theme switcher, etc) */
+      --umb-menu-item-hover-bg:  #003530;
+      --umb-menu-item-active-bg: #175651;
       --umb-section-h:       #225E59;
       --umb-brand-color:     #D5E3E1;
       --umb-brand-sub:       #748180;
@@ -570,6 +593,68 @@
     /* Agent type badges — matched to app per theme */
     .badge-expert   { background: var(--umb-tag-expert-bg);   color: var(--umb-tag-expert-color);   border: 1px solid var(--umb-tag-expert-bg); }
     .badge-standard { background: var(--umb-tag-standard-bg); color: var(--umb-tag-standard-color); border: 1px solid var(--umb-tag-standard-bg); }
+
+    /* === TAG (Etiqueta) ===================================================
+       Pill colorida com ícone opcional e botão X que aparece no hover SEM
+       empurrar o layout (position:absolute). 8 cores canônicas.
+       O botão X herda a cor da tag via --tag-bg, criando efeito de "máscara"
+       sobre o texto por baixo.
+       Uso:
+         <span class="umb-tag tag-geekblue">
+           <i class="ph ph-user-circle"></i>Campanha VIPs
+         </span>
+       O X é injetado automaticamente pelo JS (window.umbInitTags()).
+       Para opt-out, adicione data-no-close="true". */
+    .umb-tag {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+      border: 0;
+      white-space: nowrap;
+    }
+    .umb-tag > i:first-child { font-size: 12px; }
+    .umb-tag.tag-geekblue { background: var(--umb-tag-geekblue-bg); --tag-bg: var(--umb-tag-geekblue-bg); }
+    .umb-tag.tag-volcano  { background: var(--umb-tag-volcano-bg);  --tag-bg: var(--umb-tag-volcano-bg); }
+    .umb-tag.tag-green    { background: var(--umb-tag-green-bg);    --tag-bg: var(--umb-tag-green-bg); }
+    .umb-tag.tag-magenta  { background: var(--umb-tag-magenta-bg);  --tag-bg: var(--umb-tag-magenta-bg); }
+    .umb-tag.tag-orange   { background: var(--umb-tag-orange-bg);   --tag-bg: var(--umb-tag-orange-bg); }
+    .umb-tag.tag-red      { background: var(--umb-tag-red-bg);      --tag-bg: var(--umb-tag-red-bg); }
+    .umb-tag.tag-cyan     { background: var(--umb-tag-cyan-bg);     --tag-bg: var(--umb-tag-cyan-bg); }
+    .umb-tag.tag-purple   { background: var(--umb-tag-purple-bg);   --tag-bg: var(--umb-tag-purple-bg); }
+
+    .umb-tag-close {
+      position: absolute;
+      top: 50%;
+      right: 4px;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--tag-bg);
+      color: #fff;
+      border: 0;
+      padding: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 11px;
+      line-height: 1;
+      box-shadow: 0 0 0 2px var(--tag-bg);
+    }
+    .umb-tag-close:hover {
+      background: color-mix(in srgb, var(--tag-bg) 80%, black);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--tag-bg) 80%, black);
+    }
+    .umb-tag:hover .umb-tag-close { display: inline-flex; }
+
     [data-bs-theme="light"] .badge-expert,
     [data-bs-theme="emerald"] .badge-expert   { background: transparent; color: var(--umb-tag-expert-color); border-color: var(--umb-tag-expert-color); }
     [data-bs-theme="light"] .badge-standard,
@@ -813,9 +898,12 @@
 
     /* --- DROPDOWN --- */
     .dropdown-menu { background: var(--umb-dropdown-bg); border: 1px solid var(--umb-border); border-radius: 12px; padding: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
-    .dropdown-item { color: var(--bs-body-color); border-radius: 8px; padding: 7px 12px; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: background .12s; }
-    .dropdown-item:hover { background: rgba(var(--bs-primary-rgb),.1); color: var(--bs-primary); }
-    .dropdown-item.active { background: var(--bs-primary); color: #fff; }
+    /* Popup menu items — consomem --umb-menu-item-*-bg (por tema) e mantem
+       texto/icone em --umb-text-primary independente do estado. */
+    .dropdown-item { color: var(--umb-text-primary); border-radius: 8px; padding: 7px 12px; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: background .12s; }
+    .dropdown-item:hover { background: var(--umb-menu-item-hover-bg); color: var(--umb-text-primary); }
+    .dropdown-item.active,
+    .dropdown-item:active { background: var(--umb-menu-item-active-bg); color: var(--umb-text-primary); }
     .dropdown-divider { border-color: var(--umb-border); margin: 4px 0; }
 
     /* --- PROFILE --- */
@@ -1109,12 +1197,12 @@
        que ficam invisíveis no dropdown (fundo branco). Aqui usamos tokens de conteúdo. */
     .umb-avatar-dropdown .theme-option { color: var(--umb-text-primary); }
     .umb-avatar-dropdown .theme-option:hover {
-      color: var(--bs-primary);
-      background: rgba(var(--bs-primary-rgb), .08);
+      color: var(--umb-text-primary);
+      background: var(--umb-menu-item-hover-bg);
     }
     .umb-avatar-dropdown .theme-option.active {
-      color: var(--bs-primary);
-      background: rgba(var(--bs-primary-rgb), .12);
+      color: var(--umb-text-primary);
+      background: var(--umb-menu-item-active-bg);
     }
     .umb-avatar-logout {
       display: flex; align-items: center; gap: 8px;
@@ -1521,7 +1609,7 @@
     [data-bs-theme="emerald"] {
       --umb-chat-bubble-in-bg:     #ffffff;
       --umb-chat-bubble-in-color:  #1a1d2b;
-      --umb-chat-bubble-out-bg:    #29958D;
+      --umb-chat-bubble-out-bg:    #005C55;
       --umb-chat-bubble-out-color: #ffffff;
       --umb-chat-list-hover:       rgba(0,0,0,.03);
       --umb-chat-sep-bg:           rgba(0,0,0,.06);
@@ -1821,21 +1909,43 @@
     .umb-chat-header-actions .btn-icon { color: var(--umb-text-mid); }
 
     /* Pinned message bar (logo abaixo do header do chat) */
+    /* Pinned message — card flutuante usando o componente Alert (warning) do DS.
+       Estrutura: <div class="umb-chat-pinned alert alert-warning">. As cores de
+       fundo/texto vem de var(--umb-alert-warning-*) (por tema). O unico pedaco
+       proprio aqui e a margem externa, o layout flex e o botao de fechar. */
     .umb-chat-pinned {
-      display: flex; align-items: center; gap: 10px; padding: 10px 16px;
-      background: var(--umb-chat-pinned-bg);
-      border-bottom: 1px solid var(--umb-border);
-      font-size: 12.5px; color: var(--umb-chat-pinned-color);
+      margin: 12px 16px 0;
+      align-items: center !important;
+      gap: 10px;
+      font-size: 13px;
+      line-height: 1.4;
     }
-    .umb-chat-pinned i { font-size: 15px; color: var(--umb-chat-pinned-accent); }
+    .umb-chat-pinned-icon {
+      font-size: 16px; flex-shrink: 0;
+      color: var(--umb-chat-pinned-accent);
+    }
     .umb-chat-pinned-text {
-      flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      flex: 1; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      color: inherit;
     }
     .umb-chat-pinned-text strong { font-weight: 600; margin-right: 4px; }
     .umb-chat-pinned-link {
-      color: var(--umb-chat-pinned-color); text-decoration: underline;
-      font-weight: 600; flex-shrink: 0; font-size: 12px;
+      display: inline-flex; align-items: center; gap: 4px;
+      color: inherit; text-decoration: none;
+      font-weight: 600; flex-shrink: 0; font-size: 13px;
     }
+    .umb-chat-pinned-link:hover { text-decoration: underline; }
+    .umb-chat-pinned-link i { font-size: 15px; }
+    .umb-chat-pinned-close {
+      flex-shrink: 0;
+      background: transparent; border: 0; padding: 2px; margin: 0;
+      color: inherit; opacity: .6; cursor: pointer;
+      font-size: 18px; line-height: 1;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: opacity .12s;
+    }
+    .umb-chat-pinned-close:hover { opacity: 1; }
 
     /* Mensagens (area rolável) */
     .umb-chat-body {
@@ -2096,6 +2206,7 @@
     <a class="nav-link" href="#busca"><i class="ph ph-magnifying-glass"></i> Busca</a>
     <a class="nav-link" href="#switches"><i class="ph ph-toggle-right"></i> Checkbox & Switch</a>
     <a class="nav-link" href="#badges"><i class="ph ph-tag"></i> Badges</a>
+    <a class="nav-link" href="#etiquetas"><i class="ph ph-bookmark-simple"></i> Etiquetas (Tags)</a>
     <a class="nav-link" href="#alertas"><i class="ph ph-warning-circle"></i> Alertas</a>
     <a class="nav-link" href="#cards"><i class="ph ph-cards"></i> Cards</a>
     <a class="nav-link" href="#accordion"><i class="ph ph-caret-down"></i> Accordion</a>
@@ -2849,6 +2960,77 @@
 &lt;button class="btn btn-outline-primary btn-lg"&gt;
   Notificações &lt;span class="badge bg-primary ms-1"&gt;4&lt;/span&gt;
 &lt;/button&gt;</code></pre>
+    </div>
+    </section>
+    <hr class="sec-divider">
+
+    <!-- ============================================================ ETIQUETAS (TAGS) -->
+    <section id="etiquetas">
+      <p class="sec-title">Etiquetas (Tags)</p>
+      <p class="sec-subtitle">UmbTag — pill colorida com X no hover. 8 cores canônicas.</p>
+
+      <div class="comp-group">
+        <p class="comp-label">Paleta — 8 cores</p>
+        <div class="comp-row" style="gap:8px;flex-wrap:wrap">
+          <span class="umb-tag tag-geekblue" data-no-close="true"><i class="ph ph-user-circle"></i>Geekblue</span>
+          <span class="umb-tag tag-volcano" data-no-close="true"><i class="ph ph-user-circle"></i>Volcano</span>
+          <span class="umb-tag tag-green" data-no-close="true"><i class="ph ph-user-circle"></i>Green</span>
+          <span class="umb-tag tag-magenta" data-no-close="true"><i class="ph ph-user-circle"></i>Magenta</span>
+          <span class="umb-tag tag-orange" data-no-close="true"><i class="ph ph-user-circle"></i>Orange</span>
+          <span class="umb-tag tag-red" data-no-close="true"><i class="ph ph-user-circle"></i>Red</span>
+          <span class="umb-tag tag-cyan" data-no-close="true"><i class="ph ph-user-circle"></i>Cyan</span>
+          <span class="umb-tag tag-purple" data-no-close="true"><i class="ph ph-user-circle"></i>Purple</span>
+        </div>
+      </div>
+
+      <div class="comp-group">
+        <p class="comp-label">Com X no hover (passe o mouse)</p>
+        <div class="comp-row" style="gap:8px;flex-wrap:wrap">
+          <span class="umb-tag tag-geekblue"><i class="ph ph-user-circle"></i>Campanha VIPs</span>
+          <span class="umb-tag tag-green"><i class="ph ph-user-circle"></i>Cliente ativo</span>
+          <span class="umb-tag tag-volcano"><i class="ph ph-user-circle"></i>Lead quente</span>
+          <span class="umb-tag tag-magenta"><i class="ph ph-user-circle"></i>Parceiro</span>
+        </div>
+        <p class="comp-note" style="font-size:12px;color:var(--umb-text-mid);margin-top:8px">O botão X aparece no hover em <code>position: absolute</code> — sem empurrar a largura da pill nem reposicionar as etiquetas adjacentes.</p>
+      </div>
+
+      <div class="comp-group">
+        <p class="comp-label">Sem ícone</p>
+        <div class="comp-row" style="gap:8px;flex-wrap:wrap">
+          <span class="umb-tag tag-geekblue">Design</span>
+          <span class="umb-tag tag-volcano">Frontend</span>
+          <span class="umb-tag tag-green">Vendas</span>
+          <span class="umb-tag tag-red">Urgente</span>
+        </div>
+      </div>
+
+    <div class="comp-practices">
+      <p class="comp-practices-title">Best Practices</p>
+      <ul>
+        <li>Use tags para <strong>categorização de entidades</strong> (contatos, conversas, leads) — não para status.</li>
+        <li>Para <strong>status semântico</strong> (erro/sucesso/aviso), prefira Badges com <code>bg-*</code> ou Alertas.</li>
+        <li>Consistência de cor por significado: trate <em>Volcano = Lead quente</em>, <em>Green = Cliente ativo</em>, etc. como convenção fixa na sua organização.</li>
+        <li>O X é injetado pelo JS <code>window.umbInitTags()</code> — opt-out com <code>data-no-close="true"</code> (ex.: tags dentro de popover de seleção onde o controle é por checkbox).</li>
+        <li>Para remoção programática, escute o click no <code>.umb-tag-close</code> e remova o elemento — o DS já faz isso quando não há lógica externa.</li>
+        <li>Nunca use mais de <strong>3–4 cores diferentes</strong> na mesma tela — vira ruído visual.</li>
+      </ul>
+    </div>
+
+    <div class="comp-code-wrap">
+      <div class="comp-code-header">
+        <span>HTML</span>
+        <button class="comp-code-copy" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre class="comp-code-pre"><code class="language-html">&lt;!-- Tag com ícone + X injetado automaticamente --&gt;
+&lt;span class="umb-tag tag-geekblue"&gt;
+  &lt;i class="ph ph-user-circle"&gt;&lt;/i&gt;Campanha VIPs
+&lt;/span&gt;
+
+&lt;!-- Sem X (opt-out) --&gt;
+&lt;span class="umb-tag tag-green" data-no-close="true"&gt;Cliente ativo&lt;/span&gt;
+
+&lt;!-- Init (auto-chamado no DS, necessário em apps terceiros) --&gt;
+&lt;script&gt;window.umbInitTags();&lt;/script&gt;</code></pre>
     </div>
     </section>
     <hr class="sec-divider">
@@ -4935,11 +5117,12 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                       </div>
                     </header>
 
-                    <!-- Pinned message (anotação fixada) -->
-                    <div class="umb-chat-pinned">
-                      <i class="ph ph-push-pin"></i>
-                      <span class="umb-chat-pinned-text"><strong>Anotação:</strong> Cliente plano Pro anual, renovação em maio/26.</span>
-                      <a href="#" class="umb-chat-pinned-link">Ver todas</a>
+                    <!-- Pinned message — Alert warning flutuante (§21.X) -->
+                    <div class="umb-chat-pinned alert alert-warning" role="status">
+                      <i class="ph ph-push-pin umb-chat-pinned-icon"></i>
+                      <span class="umb-chat-pinned-text">É um cara legal</span>
+                      <a href="#" class="umb-chat-pinned-link"><i class="ph ph-list-bullets"></i>(1)</a>
+                      <button type="button" class="umb-chat-pinned-close" aria-label="Fechar anotação"><i class="ph ph-x"></i></button>
                     </div>
 
                     <!-- Mensagens -->
@@ -5879,6 +6062,17 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     // Auto-close do avatar-menu (§12): clique fora e tecla Esc fecham o dropdown.
     // Handler defensivo — se o data-api do Bootstrap falhar (elementos criados
     // via <template>, containers com overflow:hidden), garantimos o comportamento.
+    // Pinned message close (§21) — remove o alerta ao clicar no X
+    function initPinnedClose() {
+      document.addEventListener('click', function(e){
+        var btn = e.target.closest('.umb-chat-pinned-close');
+        if (btn) {
+          var pinned = btn.closest('.umb-chat-pinned');
+          if (pinned) pinned.remove();
+        }
+      });
+    }
+
     function initAvatarMenuAutoClose() {
       if (!window.bootstrap) return;
       document.addEventListener('click', function(e) {
@@ -5902,10 +6096,46 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       document.addEventListener('DOMContentLoaded', initAvatarMenuAutoClose);
     } else {
       initAvatarMenuAutoClose();
+      initPinnedClose();
     }
 
     // Expor para possíveis re-renders manuais.
     window.umbRenderShell = function(){ renderSidebars(); renderHeaders(); renderMobileHeaders(); initComponentTooltips(); };
+  })();
+</script>
+
+<script>
+  /* umbInitTags — injeta o botão .umb-tag-close em toda .umb-tag do DOM.
+     Respeita data-no-close="true" (opt-out) e tags dentro de contextos onde
+     o controle é por checkbox (.umb-tag-pop-item). Idempotente: chama várias
+     vezes sem duplicar botões. Chamar após render dinâmico de conteúdo. */
+  (function(){
+    function injectOne(tag) {
+      if (tag.dataset.noClose === 'true') return;
+      if (tag.closest('.umb-tag-pop-item')) return;
+      if (tag.querySelector('.umb-tag-close')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'umb-tag-close';
+      btn.setAttribute('aria-label', 'Remover etiqueta');
+      btn.innerHTML = '<i class="ph ph-x"></i>';
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var ev = new CustomEvent('umb:tag-remove', { bubbles: true, cancelable: true, detail: { tag: tag } });
+        tag.dispatchEvent(ev);
+        // Se o handler externo não chamou preventDefault, remove o elemento.
+        if (!ev.defaultPrevented) tag.remove();
+      });
+      tag.appendChild(btn);
+    }
+    window.umbInitTags = function(root) {
+      (root || document).querySelectorAll('.umb-tag').forEach(injectOne);
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function(){ window.umbInitTags(); });
+    } else {
+      window.umbInitTags();
+    }
   })();
 </script>
 </body>

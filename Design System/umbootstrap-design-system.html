@@ -89,6 +89,15 @@
       --umb-tag-expert-color: #E8D8F5;
       --umb-tag-standard-bg: #237804;  /* Standard badge — dark green, medido no app */
       --umb-tag-standard-color: #D9F7BE;
+      /* Tag palette — cores brand para etiquetas de contato/conversa (iguais em todos os temas) */
+      --umb-tag-geekblue-bg: #2F54EB;
+      --umb-tag-volcano-bg:  #FA541C;
+      --umb-tag-green-bg:    #52C41A;
+      --umb-tag-magenta-bg:  #EB2F96;
+      --umb-tag-orange-bg:   #FA8C16;
+      --umb-tag-red-bg:      #F5222D;
+      --umb-tag-cyan-bg:     #13C2C2;
+      --umb-tag-purple-bg:   #722ED1;
       --umb-btn-secondary:   #6c757d;
       --umb-border-primary:     #3D4047;
       --umb-btn-outline-color:  #D3D6DD;
@@ -584,6 +593,68 @@
     /* Agent type badges — matched to app per theme */
     .badge-expert   { background: var(--umb-tag-expert-bg);   color: var(--umb-tag-expert-color);   border: 1px solid var(--umb-tag-expert-bg); }
     .badge-standard { background: var(--umb-tag-standard-bg); color: var(--umb-tag-standard-color); border: 1px solid var(--umb-tag-standard-bg); }
+
+    /* === TAG (Etiqueta) ===================================================
+       Pill colorida com ícone opcional e botão X que aparece no hover SEM
+       empurrar o layout (position:absolute). 8 cores canônicas.
+       O botão X herda a cor da tag via --tag-bg, criando efeito de "máscara"
+       sobre o texto por baixo.
+       Uso:
+         <span class="umb-tag tag-geekblue">
+           <i class="ph ph-user-circle"></i>Campanha VIPs
+         </span>
+       O X é injetado automaticamente pelo JS (window.umbInitTags()).
+       Para opt-out, adicione data-no-close="true". */
+    .umb-tag {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+      border: 0;
+      white-space: nowrap;
+    }
+    .umb-tag > i:first-child { font-size: 12px; }
+    .umb-tag.tag-geekblue { background: var(--umb-tag-geekblue-bg); --tag-bg: var(--umb-tag-geekblue-bg); }
+    .umb-tag.tag-volcano  { background: var(--umb-tag-volcano-bg);  --tag-bg: var(--umb-tag-volcano-bg); }
+    .umb-tag.tag-green    { background: var(--umb-tag-green-bg);    --tag-bg: var(--umb-tag-green-bg); }
+    .umb-tag.tag-magenta  { background: var(--umb-tag-magenta-bg);  --tag-bg: var(--umb-tag-magenta-bg); }
+    .umb-tag.tag-orange   { background: var(--umb-tag-orange-bg);   --tag-bg: var(--umb-tag-orange-bg); }
+    .umb-tag.tag-red      { background: var(--umb-tag-red-bg);      --tag-bg: var(--umb-tag-red-bg); }
+    .umb-tag.tag-cyan     { background: var(--umb-tag-cyan-bg);     --tag-bg: var(--umb-tag-cyan-bg); }
+    .umb-tag.tag-purple   { background: var(--umb-tag-purple-bg);   --tag-bg: var(--umb-tag-purple-bg); }
+
+    .umb-tag-close {
+      position: absolute;
+      top: 50%;
+      right: 4px;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--tag-bg);
+      color: #fff;
+      border: 0;
+      padding: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 11px;
+      line-height: 1;
+      box-shadow: 0 0 0 2px var(--tag-bg);
+    }
+    .umb-tag-close:hover {
+      background: color-mix(in srgb, var(--tag-bg) 80%, black);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--tag-bg) 80%, black);
+    }
+    .umb-tag:hover .umb-tag-close { display: inline-flex; }
+
     [data-bs-theme="light"] .badge-expert,
     [data-bs-theme="emerald"] .badge-expert   { background: transparent; color: var(--umb-tag-expert-color); border-color: var(--umb-tag-expert-color); }
     [data-bs-theme="light"] .badge-standard,
@@ -2135,6 +2206,7 @@
     <a class="nav-link" href="#busca"><i class="ph ph-magnifying-glass"></i> Busca</a>
     <a class="nav-link" href="#switches"><i class="ph ph-toggle-right"></i> Checkbox & Switch</a>
     <a class="nav-link" href="#badges"><i class="ph ph-tag"></i> Badges</a>
+    <a class="nav-link" href="#etiquetas"><i class="ph ph-bookmark-simple"></i> Etiquetas (Tags)</a>
     <a class="nav-link" href="#alertas"><i class="ph ph-warning-circle"></i> Alertas</a>
     <a class="nav-link" href="#cards"><i class="ph ph-cards"></i> Cards</a>
     <a class="nav-link" href="#accordion"><i class="ph ph-caret-down"></i> Accordion</a>
@@ -2888,6 +2960,77 @@
 &lt;button class="btn btn-outline-primary btn-lg"&gt;
   Notificações &lt;span class="badge bg-primary ms-1"&gt;4&lt;/span&gt;
 &lt;/button&gt;</code></pre>
+    </div>
+    </section>
+    <hr class="sec-divider">
+
+    <!-- ============================================================ ETIQUETAS (TAGS) -->
+    <section id="etiquetas">
+      <p class="sec-title">Etiquetas (Tags)</p>
+      <p class="sec-subtitle">UmbTag — pill colorida com X no hover. 8 cores canônicas.</p>
+
+      <div class="comp-group">
+        <p class="comp-label">Paleta — 8 cores</p>
+        <div class="comp-row" style="gap:8px;flex-wrap:wrap">
+          <span class="umb-tag tag-geekblue" data-no-close="true"><i class="ph ph-user-circle"></i>Geekblue</span>
+          <span class="umb-tag tag-volcano" data-no-close="true"><i class="ph ph-user-circle"></i>Volcano</span>
+          <span class="umb-tag tag-green" data-no-close="true"><i class="ph ph-user-circle"></i>Green</span>
+          <span class="umb-tag tag-magenta" data-no-close="true"><i class="ph ph-user-circle"></i>Magenta</span>
+          <span class="umb-tag tag-orange" data-no-close="true"><i class="ph ph-user-circle"></i>Orange</span>
+          <span class="umb-tag tag-red" data-no-close="true"><i class="ph ph-user-circle"></i>Red</span>
+          <span class="umb-tag tag-cyan" data-no-close="true"><i class="ph ph-user-circle"></i>Cyan</span>
+          <span class="umb-tag tag-purple" data-no-close="true"><i class="ph ph-user-circle"></i>Purple</span>
+        </div>
+      </div>
+
+      <div class="comp-group">
+        <p class="comp-label">Com X no hover (passe o mouse)</p>
+        <div class="comp-row" style="gap:8px;flex-wrap:wrap">
+          <span class="umb-tag tag-geekblue"><i class="ph ph-user-circle"></i>Campanha VIPs</span>
+          <span class="umb-tag tag-green"><i class="ph ph-user-circle"></i>Cliente ativo</span>
+          <span class="umb-tag tag-volcano"><i class="ph ph-user-circle"></i>Lead quente</span>
+          <span class="umb-tag tag-magenta"><i class="ph ph-user-circle"></i>Parceiro</span>
+        </div>
+        <p class="comp-note" style="font-size:12px;color:var(--umb-text-mid);margin-top:8px">O botão X aparece no hover em <code>position: absolute</code> — sem empurrar a largura da pill nem reposicionar as etiquetas adjacentes.</p>
+      </div>
+
+      <div class="comp-group">
+        <p class="comp-label">Sem ícone</p>
+        <div class="comp-row" style="gap:8px;flex-wrap:wrap">
+          <span class="umb-tag tag-geekblue">Design</span>
+          <span class="umb-tag tag-volcano">Frontend</span>
+          <span class="umb-tag tag-green">Vendas</span>
+          <span class="umb-tag tag-red">Urgente</span>
+        </div>
+      </div>
+
+    <div class="comp-practices">
+      <p class="comp-practices-title">Best Practices</p>
+      <ul>
+        <li>Use tags para <strong>categorização de entidades</strong> (contatos, conversas, leads) — não para status.</li>
+        <li>Para <strong>status semântico</strong> (erro/sucesso/aviso), prefira Badges com <code>bg-*</code> ou Alertas.</li>
+        <li>Consistência de cor por significado: trate <em>Volcano = Lead quente</em>, <em>Green = Cliente ativo</em>, etc. como convenção fixa na sua organização.</li>
+        <li>O X é injetado pelo JS <code>window.umbInitTags()</code> — opt-out com <code>data-no-close="true"</code> (ex.: tags dentro de popover de seleção onde o controle é por checkbox).</li>
+        <li>Para remoção programática, escute o click no <code>.umb-tag-close</code> e remova o elemento — o DS já faz isso quando não há lógica externa.</li>
+        <li>Nunca use mais de <strong>3–4 cores diferentes</strong> na mesma tela — vira ruído visual.</li>
+      </ul>
+    </div>
+
+    <div class="comp-code-wrap">
+      <div class="comp-code-header">
+        <span>HTML</span>
+        <button class="comp-code-copy" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre class="comp-code-pre"><code class="language-html">&lt;!-- Tag com ícone + X injetado automaticamente --&gt;
+&lt;span class="umb-tag tag-geekblue"&gt;
+  &lt;i class="ph ph-user-circle"&gt;&lt;/i&gt;Campanha VIPs
+&lt;/span&gt;
+
+&lt;!-- Sem X (opt-out) --&gt;
+&lt;span class="umb-tag tag-green" data-no-close="true"&gt;Cliente ativo&lt;/span&gt;
+
+&lt;!-- Init (auto-chamado no DS, necessário em apps terceiros) --&gt;
+&lt;script&gt;window.umbInitTags();&lt;/script&gt;</code></pre>
     </div>
     </section>
     <hr class="sec-divider">
@@ -5958,6 +6101,41 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
     // Expor para possíveis re-renders manuais.
     window.umbRenderShell = function(){ renderSidebars(); renderHeaders(); renderMobileHeaders(); initComponentTooltips(); };
+  })();
+</script>
+
+<script>
+  /* umbInitTags — injeta o botão .umb-tag-close em toda .umb-tag do DOM.
+     Respeita data-no-close="true" (opt-out) e tags dentro de contextos onde
+     o controle é por checkbox (.umb-tag-pop-item). Idempotente: chama várias
+     vezes sem duplicar botões. Chamar após render dinâmico de conteúdo. */
+  (function(){
+    function injectOne(tag) {
+      if (tag.dataset.noClose === 'true') return;
+      if (tag.closest('.umb-tag-pop-item')) return;
+      if (tag.querySelector('.umb-tag-close')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'umb-tag-close';
+      btn.setAttribute('aria-label', 'Remover etiqueta');
+      btn.innerHTML = '<i class="ph ph-x"></i>';
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var ev = new CustomEvent('umb:tag-remove', { bubbles: true, cancelable: true, detail: { tag: tag } });
+        tag.dispatchEvent(ev);
+        // Se o handler externo não chamou preventDefault, remove o elemento.
+        if (!ev.defaultPrevented) tag.remove();
+      });
+      tag.appendChild(btn);
+    }
+    window.umbInitTags = function(root) {
+      (root || document).querySelectorAll('.umb-tag').forEach(injectOne);
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function(){ window.umbInitTags(); });
+    } else {
+      window.umbInitTags();
+    }
   })();
 </script>
 </body>
