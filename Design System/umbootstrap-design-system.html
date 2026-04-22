@@ -502,9 +502,72 @@
     /* --- SECTION TITLES --- */
     .sec-title { font-size: 24px; font-weight: 600; color: var(--umb-text-primary); margin: 0 0 6px; }
     .sec-subtitle { font-size: 14px; color: var(--umb-text-mid); margin: 0 0 28px; }
-    .sec-divider { border: none; border-top: 1px solid var(--umb-border); margin: 48px 0; }
+    .sec-divider { border: none; border-top: 2px solid var(--umb-border); margin: 64px 0 48px; }
+
+    /* ── Comp Label (fora de comp-group, mantém estilo antigo — small caps cinza) ── */
     .comp-label { font-size: 11px; color: var(--umb-text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
-    .comp-group { margin-bottom: 32px; }
+
+    /* ── Comp Group: agora é um card bordado por componente ──
+       Cada variação de componente ganha borda, padding e âncora deep-link.
+       Hover/target reforça a borda. O bg herda da seção (transparente) para
+       funcionar bem em todos os temas claros/escuros sem definir um novo token. */
+    .comp-group {
+      border: 1px solid var(--umb-border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      transition: border-color .15s, box-shadow .15s;
+      scroll-margin-top: 24px; /* espaço acima ao pular via âncora */
+    }
+    .comp-group:hover { border-color: var(--umb-border-strong); }
+    .comp-group:target {
+      border-color: var(--bs-primary);
+      box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), .15);
+    }
+
+    /* Header do card: label + chip de categoria + botão copiar link.
+       Injetado via JS (enhance-comp-cards). Labels fora de comp-group não são afetados. */
+    .comp-card-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--umb-border);
+    }
+    .comp-group > .comp-card-header .comp-label {
+      margin: 0; flex: 1; min-width: 0;
+      font-size: 13.5px; font-weight: 600;
+      text-transform: none; letter-spacing: normal;
+      color: var(--umb-text-primary);
+    }
+
+    /* Chip de categoria — atômico/composto/foundation/padrão. */
+    .comp-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .06em;
+      padding: 3px 8px; border-radius: 999px;
+      line-height: 1; flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .comp-chip[data-type="foundation"] { background: rgba(var(--bs-primary-rgb), .12); color: var(--bs-primary); }
+    .comp-chip[data-type="atomic"]     { background: rgba(var(--bs-success-rgb), .15); color: var(--bs-success); }
+    .comp-chip[data-type="composite"]  { background: rgba(124, 58, 237, .15); color: #a78bfa; }
+    .comp-chip[data-type="pattern"]    { background: rgba(var(--bs-warning-rgb), .18); color: var(--bs-warning); }
+
+    /* Botão de copiar link — só aparece no hover do card ou quando o card é alvo. */
+    .comp-anchor-btn {
+      background: transparent; border: 0;
+      color: var(--umb-text-dim); font-size: 14px;
+      cursor: pointer; padding: 4px 6px; border-radius: 6px;
+      line-height: 0; flex-shrink: 0;
+      opacity: 0; transition: opacity .15s, color .15s, background .15s;
+    }
+    .comp-group:hover .comp-anchor-btn,
+    .comp-group:focus-within .comp-anchor-btn,
+    .comp-group:target .comp-anchor-btn { opacity: 1; }
+    .comp-anchor-btn:hover { color: var(--bs-primary); background: var(--umb-hover-bg); }
+    .comp-anchor-btn.copied { color: var(--bs-success); opacity: 1; }
+
     .comp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 10px; }
 
     /* --- BUTTONS --- */
@@ -6927,6 +6990,122 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
   // Syntax highlighting
   hljs.highlightAll();
+
+  /* ──────────────────────────────────────────────────────────────
+     enhance-comp-cards
+     Injeta header (label + chip + âncora) em cada .comp-group.
+     Zero mudança no HTML dos componentes — todo DS existente e todo
+     novo comp-group herda o tratamento automaticamente.
+
+     Categorização via seção pai (section[id]). Chip indica o tipo:
+       • foundation — tokens, base (cores, tipografia)
+       • atomic     — elemento UI indivisível (botão, input, badge)
+       • composite  — combinação de atomics (card, modal, dropdown)
+       • pattern    — layout/template (shell, páginas canônicas)
+     ────────────────────────────────────────────────────────────── */
+  (function enhanceCompCards() {
+    const CATEGORY_MAP = {
+      cores: 'foundation', tipografia: 'foundation',
+      botoes: 'atomic', formularios: 'atomic', busca: 'atomic',
+      switches: 'atomic', badges: 'atomic', etiquetas: 'atomic',
+      alertas: 'atomic', clipboard: 'atomic', progresso: 'atomic',
+      tooltip: 'atomic', segmentado: 'atomic',
+      cards: 'composite', accordion: 'composite', abas: 'composite',
+      passos: 'composite', navegacao: 'composite', dropdown: 'composite',
+      perfil: 'composite', modais: 'composite', offcanvas: 'composite',
+      empty: 'composite', tabela: 'composite', midia: 'composite',
+      'tag-popover': 'composite', wizard: 'composite', upload: 'composite',
+      'decision-cards': 'composite', 'data-components': 'composite',
+      utilitarios: 'composite',
+      templates: 'pattern'
+    };
+    const CATEGORY_LABELS = {
+      foundation: 'Foundation',
+      atomic: 'Atômico',
+      composite: 'Composto',
+      pattern: 'Padrão'
+    };
+
+    function slugify(text) {
+      return text.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
+        .replace(/[—–\-]+/g, ' ')                          // traços/em/en-dash
+        .replace(/[^a-z0-9\s]/g, '')
+        .trim()
+        .replace(/\s+/g, '-');
+    }
+
+    document.querySelectorAll('.comp-group').forEach(group => {
+      // Só processa groups que têm label DIRETO (evita conflito com sub-labels aninhados)
+      const label = group.querySelector(':scope > .comp-label');
+      if (!label) return;
+      // Se já foi enhanced, pula (idempotente)
+      if (group.querySelector(':scope > .comp-card-header')) return;
+
+      const section = group.closest('section[id]');
+      const sectionId = section ? section.id : 'c';
+      const baseSlug = slugify(label.textContent);
+      if (!baseSlug) return;
+
+      // Gera ID único (resolve colisão adicionando sufixo numérico)
+      let id = sectionId + '-' + baseSlug;
+      let suffix = 1;
+      while (document.getElementById(id)) {
+        suffix++;
+        id = sectionId + '-' + baseSlug + '-' + suffix;
+      }
+      group.id = id;
+
+      // Monta header
+      const header = document.createElement('div');
+      header.className = 'comp-card-header';
+
+      // Move o label pro header (não clona — preserva event listeners se houver)
+      header.appendChild(label);
+
+      // Chip de categoria
+      const category = CATEGORY_MAP[sectionId];
+      if (category && CATEGORY_LABELS[category]) {
+        const chip = document.createElement('span');
+        chip.className = 'comp-chip';
+        chip.setAttribute('data-type', category);
+        chip.textContent = CATEGORY_LABELS[category];
+        header.appendChild(chip);
+      }
+
+      // Botão copiar link
+      const anchor = document.createElement('button');
+      anchor.className = 'comp-anchor-btn';
+      anchor.type = 'button';
+      anchor.setAttribute('aria-label', 'Copiar link para este componente');
+      anchor.setAttribute('title', 'Copiar link');
+      anchor.innerHTML = '<i class="ph ph-link"></i>';
+      anchor.addEventListener('click', () => {
+        const url = window.location.origin + window.location.pathname + '#' + id;
+        const done = () => {
+          anchor.classList.add('copied');
+          anchor.innerHTML = '<i class="ph-bold ph-check"></i>';
+          setTimeout(() => {
+            anchor.classList.remove('copied');
+            anchor.innerHTML = '<i class="ph ph-link"></i>';
+          }, 1500);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(done).catch(() => {
+            window.history.replaceState(null, '', '#' + id);
+            done();
+          });
+        } else {
+          window.history.replaceState(null, '', '#' + id);
+          done();
+        }
+      });
+      header.appendChild(anchor);
+
+      // Insere header como primeiro filho do group
+      group.insertBefore(header, group.firstChild);
+    });
+  })();
 
   function setBtnSize(size) {
     // Update switcher buttons
