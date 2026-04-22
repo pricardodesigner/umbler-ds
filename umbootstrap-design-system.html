@@ -722,6 +722,88 @@
     }
     .inset-control--block .btn { flex: 1; justify-content: center; }
 
+    /* === WIZARD (.umb-wiz) =============================================
+       Card modal full-width para fluxos multi-etapa (criação, configuração,
+       onboarding). Integra com .steps-container já existente no DS.
+       Estrutura:
+         .umb-wiz
+           .umb-wiz-close           — botão X (absolute, canto superior direito)
+           [steps-container]        — passos do wizard (my-4)
+           .umb-wiz-screen[s]       — telas do wizard (uma visível por vez)
+             .umb-wiz-header
+               .umb-wiz-title
+               .umb-wiz-sub
+             ...conteúdo...
+             .umb-wiz-footer
+               .umb-wiz-footer-left  (Voltar — btn-text btn-lg)
+               .umb-wiz-footer-right (Avançar — btn-primary btn-lg)
+
+       Regras do footer (§26 rules.md):
+       - SEM border-top (separação via margin-top: 32px)
+       - Voltar: sempre btn-text btn-lg com ícone ph-caret-left
+       - Avançar: sempre btn-primary btn-lg com ícone ph-caret-right
+       Exceção à §1 (btn-primary apenas para CTAs de destaque) — em wizard,
+       o Avançar sólido é o padrão recorrente. */
+    .umb-wiz {
+      position: relative;
+      background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border);
+      border-radius: 16px;
+      padding: 32px;
+    }
+    .umb-wiz-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    .umb-wiz-header { margin-bottom: 4px; }
+    .umb-wiz-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--umb-text-primary);
+      margin: 0 0 4px;
+    }
+    .umb-wiz-sub {
+      font-size: 13px;
+      color: var(--umb-text-mid);
+      margin: 0;
+      max-width: 720px;
+    }
+    .umb-wiz .steps-container { padding: 0 24px; }
+    .umb-wiz-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 32px;
+      /* SEM border-top — separação é a margem */
+    }
+    .umb-wiz-footer-left,
+    .umb-wiz-footer-center,
+    .umb-wiz-footer-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Responsividade mobile: padding reduzido, título menor, footer empilha
+       (Avançar ocupa largura total), steps com scroll controlado. */
+    @media (max-width: 767.98px) {
+      .umb-wiz { padding: 20px 16px; border-radius: 12px; }
+      .umb-wiz .steps-container { padding: 0; overflow-x: auto; }
+      .umb-wiz-title { font-size: 18px; }
+      .umb-wiz-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 8px;
+        margin-top: 24px;
+      }
+      .umb-wiz-footer-left,
+      .umb-wiz-footer-right { justify-content: center; }
+      .umb-wiz-footer-right .btn { width: 100%; }
+    }
+
+
 
     [data-bs-theme="light"] .badge-expert,
     [data-bs-theme="emerald"] .badge-expert   { background: transparent; color: var(--umb-tag-expert-color); border-color: var(--umb-tag-expert-color); }
@@ -2289,6 +2371,7 @@
     <a class="nav-link" href="#badges"><i class="ph ph-tag"></i> Badges</a>
     <a class="nav-link" href="#etiquetas"><i class="ph ph-bookmark-simple"></i> Etiquetas (Tags)</a>
     <a class="nav-link" href="#tag-popover"><i class="ph ph-list-checks"></i> Tag Popover</a>
+    <a class="nav-link" href="#wizard"><i class="ph ph-path"></i> Wizard</a>
     <a class="nav-link" href="#alertas"><i class="ph ph-warning-circle"></i> Alertas</a>
     <a class="nav-link" href="#cards"><i class="ph ph-cards"></i> Cards</a>
     <a class="nav-link" href="#accordion"><i class="ph ph-caret-down"></i> Accordion</a>
@@ -3209,6 +3292,170 @@
         &lt;i class="ph ph-user-circle"&gt;&lt;/i&gt;Cliente ativo
       &lt;/span&gt;
       &lt;input type="checkbox" class="form-check-input"&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+    </section>
+    <hr class="sec-divider">
+
+    <!-- ============================================================ WIZARD -->
+    <section id="wizard">
+      <p class="sec-title">Wizard</p>
+      <p class="sec-subtitle">UmbWizard — card modal para fluxos multi-etapa. Integra com .steps-container.</p>
+
+      <div class="comp-group">
+        <p class="comp-label">Exemplo interativo — 3 passos navegáveis</p>
+        <div id="wiz-demo" class="umb-wiz" style="max-width:720px">
+          <button type="button" class="btn btn-icon btn-text btn-lg umb-wiz-close" aria-label="Fechar" onclick="alert(&#39;Fechar — em produção chama seu handler&#39;)">
+            <i class="ph ph-x"></i>
+          </button>
+
+          <div class="my-4">
+            <div class="steps-container clickable" id="wiz-demo-steps">
+              <div class="step-item active" data-step="1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Identificação</div>
+              </div>
+              <div class="step-item" data-step="2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Configuração</div>
+              </div>
+              <div class="step-item" data-step="3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Resumo</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="umb-wiz-screen" data-wiz-screen="1">
+            <div class="umb-wiz-header">
+              <h2 class="umb-wiz-title">Identifique seu agente</h2>
+              <p class="umb-wiz-sub">Como você quer chamar este agente de IA? O nome aparece para os clientes em conversa.</p>
+            </div>
+            <div style="margin-top:16px">
+              <label class="form-label">Nome do agente</label>
+              <input type="text" class="form-control form-control-lg" placeholder="Ex: Atendimento Comercial">
+            </div>
+            <div class="umb-wiz-footer">
+              <div class="umb-wiz-footer-left"></div>
+              <div class="umb-wiz-footer-right">
+                <button type="button" class="btn btn-primary btn-lg" onclick="wizDemoGoto(2)">Avançar<i class="ph ph-caret-right ms-1"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="umb-wiz-screen" data-wiz-screen="2" style="display:none">
+            <div class="umb-wiz-header">
+              <h2 class="umb-wiz-title">Configure o comportamento</h2>
+              <p class="umb-wiz-sub">Defina o tom de voz e as instruções iniciais do agente.</p>
+            </div>
+            <div style="margin-top:16px">
+              <label class="form-label">Tom de voz</label>
+              <select class="form-select form-select-lg">
+                <option>Formal</option>
+                <option selected>Informal e amigável</option>
+                <option>Técnico</option>
+              </select>
+            </div>
+            <div class="umb-wiz-footer">
+              <div class="umb-wiz-footer-left">
+                <button type="button" class="btn btn-text btn-lg" onclick="wizDemoGoto(1)"><i class="ph ph-caret-left me-1"></i>Voltar</button>
+              </div>
+              <div class="umb-wiz-footer-right">
+                <button type="button" class="btn btn-primary btn-lg" onclick="wizDemoGoto(3)">Avançar<i class="ph ph-caret-right ms-1"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="umb-wiz-screen" data-wiz-screen="3" style="display:none">
+            <div class="umb-wiz-header">
+              <h2 class="umb-wiz-title">Pronto para criar</h2>
+              <p class="umb-wiz-sub">Revise as configurações e confirme para ativar o agente.</p>
+            </div>
+            <div class="alert alert-success" style="margin-top:16px">
+              <i class="ph ph-check-circle alert-icon"></i>
+              <div class="alert-body">
+                <div class="alert-title">Tudo pronto!</div>
+                <div style="font-size:13px;opacity:.9">O agente será criado com as configurações acima.</div>
+              </div>
+            </div>
+            <div class="umb-wiz-footer">
+              <div class="umb-wiz-footer-left">
+                <button type="button" class="btn btn-text btn-lg" onclick="wizDemoGoto(2)"><i class="ph ph-caret-left me-1"></i>Voltar</button>
+              </div>
+              <div class="umb-wiz-footer-right">
+                <button type="button" class="btn btn-primary btn-lg" onclick="alert(&#39;Criado! (demo)&#39;)"><i class="ph ph-check me-1"></i>Criar agente</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Demo-only: controla a navegação do wizard de exemplo.
+        function wizDemoGoto(n) {
+          var wiz = document.getElementById('wiz-demo');
+          wiz.querySelectorAll('[data-wiz-screen]').forEach(function(el) {
+            el.style.display = (el.dataset.wizScreen === String(n)) ? '' : 'none';
+          });
+          wiz.querySelectorAll('#wiz-demo-steps .step-item').forEach(function(el, i) {
+            var step = i + 1;
+            el.classList.remove('active', 'done');
+            var circle = el.querySelector('.step-circle');
+            if (step < n) { el.classList.add('done'); circle.innerHTML = '<i class="ph ph-check" style="font-size:13px"></i>'; }
+            else if (step === n) { el.classList.add('active'); circle.textContent = step; }
+            else { circle.textContent = step; }
+          });
+        }
+      </script>
+
+    <div class="comp-practices">
+      <p class="comp-practices-title">Best Practices</p>
+      <ul>
+        <li><strong>Footer sem border-top.</strong> A separação vem do <code>margin-top: 32px</code>. Diferente de <code>.offcanvas-footer</code>. Em mobile, vira <code>margin-top: 24px</code>.</li>
+        <li><strong>Hierarquia Voltar/Avançar é fixa:</strong> Voltar sempre <code>btn-text btn-lg</code> com <code>ph-caret-left</code>; Avançar sempre <code>btn-primary btn-lg</code> com <code>ph-caret-right</code>. Essa é a única situação do DS onde <code>btn-primary</code> sólido é padrão recorrente — exceção explícita à §1.</li>
+        <li><strong>Primeira tela sem steps.</strong> Quando a primeira tela é uma escolha de origem/tipo que determina o fluxo (ex: "enviar para contatos do Talk" vs "importar arquivo"), esconda o <code>.steps-container</code>. Steps aparecem a partir do 2º passo, renderizados conforme o caminho.</li>
+        <li><strong>Steps dinâmicos e variáveis.</strong> O número e nomes dos passos devem mudar conforme a escolha inicial. Render via JS a partir de uma lista de passos do caminho escolhido — evite markup duplicado.</li>
+        <li><strong>Sub-views dentro de um passo.</strong> Se um passo tem uma tela informativa inicial + uma tela detalhada opcional (ex: resumo → tabela), use <code>[data-subview]</code> no mesmo <code>.umb-wiz-screen</code>. Não crie um step extra para isso.</li>
+        <li><strong>Botão fechar no canto superior direito.</strong> <code>.umb-wiz-close</code> com <code>position: absolute; top:20px; right:20px</code>. Chama um confirm se o usuário tiver progresso não salvo.</li>
+        <li><strong>Responsivo automático.</strong> Abaixo de 768px: padding reduzido, título menor, footer empilha vertical com Avançar ocupando largura total. Sem overrides manuais na maioria dos casos.</li>
+      </ul>
+    </div>
+
+    <div class="comp-code-wrap">
+      <div class="comp-code-header">
+        <span>HTML</span>
+        <button class="comp-code-copy" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre class="comp-code-pre"><code class="language-html">&lt;div class="umb-wiz"&gt;
+  &lt;button class="btn btn-icon btn-text btn-lg umb-wiz-close" aria-label="Fechar"&gt;
+    &lt;i class="ph ph-x"&gt;&lt;/i&gt;
+  &lt;/button&gt;
+
+  &lt;!-- Steps (escondidos no 1º passo se for escolha de origem) --&gt;
+  &lt;div class="my-4"&gt;
+    &lt;div class="steps-container clickable"&gt;
+      &lt;div class="step-item active"&gt;&lt;div class="step-circle"&gt;1&lt;/div&gt;&lt;div class="step-label"&gt;Identificação&lt;/div&gt;&lt;/div&gt;
+      &lt;!-- ...n passos --&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class="umb-wiz-screen" data-wiz-screen="1"&gt;
+    &lt;div class="umb-wiz-header"&gt;
+      &lt;h2 class="umb-wiz-title"&gt;Título do passo&lt;/h2&gt;
+      &lt;p class="umb-wiz-sub"&gt;Descrição curta&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;!-- ...conteúdo da tela... --&gt;
+
+    &lt;div class="umb-wiz-footer"&gt;
+      &lt;div class="umb-wiz-footer-left"&gt;
+        &lt;button class="btn btn-text btn-lg"&gt;&lt;i class="ph ph-caret-left me-1"&gt;&lt;/i&gt;Voltar&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class="umb-wiz-footer-right"&gt;
+        &lt;button class="btn btn-primary btn-lg"&gt;Avançar&lt;i class="ph ph-caret-right ms-1"&gt;&lt;/i&gt;&lt;/button&gt;
+      &lt;/div&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
