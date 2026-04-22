@@ -1,0 +1,206 @@
+From c06ef53c4b9b104e34c6b3d6514afc2c9bbc7378 Mon Sep 17 00:00:00 2001
+From: Paulo Ricardo <paulo@umbler.com>
+Date: Tue, 21 Apr 2026 18:27:18 +0000
+Subject: [PATCH] fix(chat): pending badge verde vai para linha do preview
+ (linha 2)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Badge numerica circular verde (.umb-conv-pending) que conta
+mensagens nao lidas passa da linha 3 (meta-right) para a linha 2,
+alinhada a direita do .umb-conv-preview.
+
+CSS:
+- Novo .umb-conv-preview-row: flex horizontal com preview a
+  esquerda (flex:1 com ellipsis) e pending a direita.
+- .umb-conv-preview agora tem flex:1 e min-width:0 para respeitar
+  o espaco do pending sem quebrar o ellipsis.
+
+Markup:
+- Em todos os .umb-conv-item do DS e chat.html, o <p class=preview>
+  agora vive dentro de <div class=preview-row> junto com o pending
+  (quando ha mensagens nao lidas).
+- .umb-conv-meta-right deixa de abrigar o pending; mantem apenas
+  assignee e setor.
+
+rules.md (§21.2):
+- Exemplo HTML canonico atualizado.
+- Tabela de elementos: .umb-conv-preview-row adicionada;
+  .umb-conv-pending documenta 'vive na linha 2'.
+- Nova regra: 'O pending fica SEMPRE na linha 2, nunca na linha 3'.
+---
+ references/rules.md            | 16 ++++++++++------
+ umbootstrap-design-system.html | 28 +++++++++++++++++-----------
+ 2 files changed, 27 insertions(+), 17 deletions(-)
+
+diff --git a/references/rules.md b/references/rules.md
+index 91c6c5d..ede1b6f 100644
+--- a/references/rules.md
++++ b/references/rules.md
+@@ -626,9 +626,12 @@ Largura fixa **360px** no desktop. Estrutura vertical:
+         <span class="umb-conv-time">10 horas atrás</span>
+       </div>
+     </div>
+-    <!-- Linha 2: preview -->
+-    <p class="umb-conv-preview">Olá. Tudo bem?</p>
+-    <!-- Linha 3: tags à esquerda, assignee+pending+setor à direita -->
++    <!-- Linha 2: preview + badge pending (verde) à direita -->
++    <div class="umb-conv-preview-row">
++      <p class="umb-conv-preview">Olá. Tudo bem?</p>
++      <span class="umb-conv-pending">3</span>
++    </div>
++    <!-- Linha 3: tags à esquerda, assignee+setor à direita -->
+     <div class="umb-conv-meta">
+       <div class="umb-conv-meta-left">
+         <span class="umb-conv-tag pink"><i class="ph ph-user-circle"></i>Magenta</span>
+@@ -636,7 +639,6 @@ Largura fixa **360px** no desktop. Estrutura vertical:
+       </div>
+       <div class="umb-conv-meta-right">
+         <img class="umb-conv-assignee" src="..." alt="Responsável">
+-        <span class="umb-conv-pending">3</span>
+         <span class="umb-conv-sector">Comercial</span>
+       </div>
+     </div>
+@@ -652,11 +654,12 @@ Largura fixa **360px** no desktop. Estrutura vertical:
+ | `.umb-conv-avatar-ch` | Badge do canal — **canto inferior esquerdo**, 22×22, borda de 2px na cor `--umb-card-bg`. |
+ | `.umb-conv-name` | 15px, peso 600, `text-primary`. |
+ | `.umb-conv-head-right` | Container à direita da linha 1. Abriga `head-event` (calendário + N eventos), `head-mute` (ícone speaker-slash quando mudo) e `.umb-conv-time` (texto). |
+-| `.umb-conv-preview` | 13px, `text-mid`, 1 linha com ellipsis. Aceita ícone Phosphor inline para sinalizar tipo de mídia (áudio, anexo, etc.). |
++| `.umb-conv-preview` | 13px, `text-mid`, 1 linha com ellipsis. Vive dentro de `.umb-conv-preview-row` com `flex: 1`, para que o pending (se houver) fique encostado à direita. Aceita ícone Phosphor inline para sinalizar tipo de mídia (áudio, anexo, etc.). |
+ | `.umb-conv-tag` | Pill colorida com ícone + label. Cores canônicas: `blue`, `green`, `amber`, `red`, `violet`, `pink`. Todas com fundo sólido + texto branco/escuro contrastante. |
+ | `.umb-conv-tag-more` | Pill **outline** "+N" — conta de tags adicionais não exibidas. |
+ | `.umb-conv-assignee` | Mini avatar 22×22 do atendente responsável. |
+-| `.umb-conv-pending` | Badge numérica circular 22×22 com fundo `--bs-success` (verde) — mensagens pendentes. |
++| `.umb-conv-preview-row` | Container da linha 2. Flex horizontal com `.umb-conv-preview` (ocupa o espaço) e `.umb-conv-pending` à direita. |
++| `.umb-conv-pending` | Badge numérica circular 22×22 com fundo `--bs-success` (verde) — mensagens pendentes. Vive **na linha do preview** (linha 2), alinhado à direita. Nunca no `.umb-conv-meta-right` (linha 3). |
+ | `.umb-conv-sector` | Pill **outline** do setor (Comercial, Suporte, Vendas, Contas). |
+ 
+ #### Badges de canal (`.umb-conv-avatar-ch`)
+@@ -681,6 +684,7 @@ Canais canônicos com cor fixa (não dependem do tema):
+ - O `.umb-conv-sector` é **sempre** outline (sem fundo sólido). Cores de setor não variam.
+ - A `.umb-conv-tag` é **sempre** filled com cor forte — representa uma tag de contato definida pelo usuário. Se não souber a cor, use `violet` como fallback neutro.
+ - Quando há mais de 1 tag, mostre a primeira + `.umb-conv-tag-more` com o contador `+N` das demais.
++- O `.umb-conv-pending` (badge verde de mensagens não lidas) fica **sempre na linha 2**, alinhado à direita do preview, dentro de `.umb-conv-preview-row`. **Nunca** o coloque na linha 3 junto com o assignee/setor.
+ 
+ ### 21.3 Coluna 2 — Detalhe do chat (`.umb-chat-detail`)
+ 
+diff --git a/umbootstrap-design-system.html b/umbootstrap-design-system.html
+index 082a382..f7c7a9f 100644
+--- a/umbootstrap-design-system.html
++++ b/umbootstrap-design-system.html
+@@ -1685,7 +1685,13 @@
+     .umb-conv-head-mute { color: var(--umb-text-mid); }
+     .umb-conv-time { font-size: 11.5px; color: var(--umb-text-mid); flex-shrink: 0; }
+ 
++    /* Linha do preview: mensagem à esquerda, badge pending à direita */
++    .umb-conv-preview-row {
++      display: flex; align-items: center; justify-content: space-between; gap: 8px;
++      min-width: 0;
++    }
+     .umb-conv-preview {
++      flex: 1; min-width: 0;
+       font-size: 13px; color: var(--umb-text-mid); line-height: 1.35;
+       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+       margin: 0;
+@@ -4786,7 +4792,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                             <span class="umb-conv-time">10 horas atras</span>
+                             </div>
+                           </div>
+-                          <p class="umb-conv-preview">Ola. Tudo bem?</p>
++                          <div class="umb-conv-preview-row"><p class="umb-conv-preview">Ola. Tudo bem?</p><span class="umb-conv-pending">3</span></div>
+                           <div class="umb-conv-meta">
+                             <div class="umb-conv-meta-left">
+                             <span class="umb-conv-tag pink"><i class="ph ph-user-circle"></i>Magenta</span>
+@@ -4794,7 +4800,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                             </div>
+                             <div class="umb-conv-meta-right">
+                             <img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1507081323647-4d250478b919?w=96&h=96&fit=crop" alt="Responsavel">
+-                            <span class="umb-conv-pending">3</span>
++                            
+                             <span class="umb-conv-sector">Comercial</span>
+                             </div>
+                           </div>
+@@ -4812,7 +4818,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                             <span class="umb-conv-time">14:23</span>
+                             </div>
+                           </div>
+-                          <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
++                          <div class="umb-conv-preview-row"><p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p></div>
+                           <div class="umb-conv-meta">
+                             <div class="umb-conv-meta-left">
+                             <span class="umb-conv-tag green"><i class="ph ph-user-circle"></i>Cliente</span>
+@@ -4836,7 +4842,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                             <span class="umb-conv-time">14:05</span>
+                             </div>
+                           </div>
+-                          <p class="umb-conv-preview">Consegue trocar o plano pro anual?</p>
++                          <div class="umb-conv-preview-row"><p class="umb-conv-preview">Consegue trocar o plano pro anual?</p><span class="umb-conv-pending">2</span></div>
+                           <div class="umb-conv-meta">
+                             <div class="umb-conv-meta-left">
+                             <span class="umb-conv-tag amber"><i class="ph ph-user-circle"></i>Trial</span>
+@@ -4844,7 +4850,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                             </div>
+                             <div class="umb-conv-meta-right">
+                             <img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1507081323647-4d250478b919?w=96&h=96&fit=crop" alt="Responsavel">
+-                            <span class="umb-conv-pending">2</span>
++                            
+                             <span class="umb-conv-sector">Vendas</span>
+                             </div>
+                           </div>
+@@ -4862,7 +4868,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                             <span class="umb-conv-time">13:55</span>
+                             </div>
+                           </div>
+-                          <p class="umb-conv-preview">Voces tem integracao com HubSpot?</p>
++                          <div class="umb-conv-preview-row"><p class="umb-conv-preview">Voces tem integracao com HubSpot?</p></div>
+                           <div class="umb-conv-meta">
+                             <div class="umb-conv-meta-left">
+                             <span class="umb-conv-tag blue"><i class="ph ph-user-circle"></i>Lead</span>
+@@ -4885,14 +4891,14 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                             <span class="umb-conv-time">13:40</span>
+                             </div>
+                           </div>
+-                          <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
++                          <div class="umb-conv-preview-row"><p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p><span class="umb-conv-pending">1</span></div>
+                           <div class="umb-conv-meta">
+                             <div class="umb-conv-meta-left">
+                             <span class="umb-conv-tag violet"><i class="ph ph-user-circle"></i>Parceiro</span>
+                             <span class="umb-conv-tag-more">+1</span>
+                             </div>
+                             <div class="umb-conv-meta-right">
+-                            <span class="umb-conv-pending">1</span>
++                            
+                             <span class="umb-conv-sector">Vendas</span>
+                             </div>
+                           </div>
+@@ -4910,7 +4916,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                             <span class="umb-conv-time">Ontem</span>
+                             </div>
+                           </div>
+-                          <p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p>
++                          <div class="umb-conv-preview-row"><p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p></div>
+                           <div class="umb-conv-meta">
+                             <div class="umb-conv-meta-left">
+                             <span class="umb-conv-tag red"><i class="ph ph-user-circle"></i>VIP</span>
+@@ -5131,7 +5137,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                         <div class="umb-conv-avatar"><span>CC</span><span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span></div>
+                         <div class="umb-conv-body">
+                           <div class="umb-conv-head"><span class="umb-conv-name">Cannacare</span><span class="umb-conv-time">13:40</span></div>
+-                          <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
++                          <div class="umb-conv-preview-row"><p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p></div>
+                           <div class="umb-conv-meta"><span class="umb-conv-tag violet">Parceiro</span><span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span></div>
+                         </div>
+                         <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">1</span></div>
+@@ -5222,7 +5228,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                       <div class="umb-conv-avatar"><span>LS</span><span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span></div>
+                       <div class="umb-conv-body">
+                         <div class="umb-conv-head"><span class="umb-conv-name">Laura Silva</span><span class="umb-conv-time">Ontem</span></div>
+-                        <p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p>
++                        <div class="umb-conv-preview-row"><p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p></div>
+                         <div class="umb-conv-meta"><span class="umb-conv-tag red">VIP</span></div>
+                       </div>
+                       <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
+-- 
+2.34.1
+

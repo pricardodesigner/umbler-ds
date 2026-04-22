@@ -1,0 +1,2820 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Umbler Talk — Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" rel="stylesheet">
+  <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    /* ============================================================
+       UMBOOTSTRAP — THEME SYSTEM (4 temas: Escuro / Claro / Esmeralda / Auto)
+       Baseado em: design-system.umbler.com/components
+    ============================================================ */
+
+    /* ── DARK (default) ─────────────────────────────────────────── */
+    :root, [data-bs-theme="dark"] {
+      --bs-primary:          #557CF2; --bs-primary-rgb:   85,124,242;
+      --bs-secondary:        #6c757d;
+      --bs-success:          #0C8E63; --bs-success-rgb:   12,142,99;
+      --bs-info:             #3B59B2; --bs-info-rgb:      59,89,178;
+      --bs-warning:          #A6882E; --bs-warning-rgb:   166,136,46;
+      --bs-danger:           #9C2F27; --bs-danger-rgb:    156,47,39;
+      --bs-body-bg:          #141619; --bs-body-color:    #D3D6DD;
+      --bs-body-font-family: 'Plus Jakarta Sans', sans-serif;
+      --bs-border-color:     #3D4047; --bs-card-bg:       #202326;
+
+      --umb-sidebar-bg:      #141619; --umb-sidebar-border: #3D4047;
+      --umb-card-bg:         #202326;
+      --umb-surface-raised:  #2a2d35;
+      --umb-shell-header-bg: #141619;
+      --umb-bg-primary:      #141619;  /* bgPrimary: fundo principal das telas (dark) */
+      --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
+      --umb-hover-bg:        rgba(255,255,255,.05);
+      --umb-inset-bg:        rgba(255,255,255,.06);
+      --umb-header-bg:       rgba(248,249,250,.03);
+      --umb-header-border:   rgba(248,249,250,.06);
+      --umb-preview-bg:      rgba(255,255,255,.02);
+      --umb-text-primary:    #D3D6DD;
+      --umb-text-mid:        #83858C;
+      --umb-text-dim:        #4a4b60;
+      --umb-border:          #3D4047;
+      --umb-border-strong:   #424649;
+      --umb-input-bg:        #202326;
+      --umb-input-border:    #3D4047;
+      --umb-input-group-bg:  #2e3048;
+      --umb-progress-track:  #2e3048;
+      --umb-code-bg:         #0c0d14;
+      --umb-code-border:     #1f2030;
+      --umb-code-color:      #9091a8;
+      --umb-nav-color:       #D3D6DD;
+      --umb-nav-hover-color: #ffffff;
+      --umb-nav-hover-bg:    rgba(255,255,255,.05);
+      --umb-nav-active-color:#557CF2;
+      --umb-nav-active-bg:   rgba(85,124,242,.12);
+      --umb-section-h:       #4a4b60;
+      --umb-brand-color:     #D3D6DD;
+      --umb-brand-sub:       #83858C;
+      --umb-avatar-bg:       #111930;
+      --umb-profile-hover:   rgba(255,255,255,.05);
+      --umb-placeholder-bg:  #2e3048;
+      --umb-placeholder-sh:  #383b4d;
+      --umb-kbd-bg:          #2e3048;
+      --umb-offcanvas-bg:    #222429;
+      --umb-modal-bg:        #222429;
+      --umb-dropdown-bg:     #2a2d35;
+      --umb-media-bg:        #2a2d35;
+      --umb-copy-btn-bg:     #2e3048;
+      --umb-copy-btn-hover:  #3a3d50;
+      --umb-table-hover:     rgba(255,255,255,.03);
+      --umb-bg-active:       #484B53;  /* bgActive: item selecionado (menus, tabela, cards, conversa) */
+      --umb-table-row-active: var(--umb-bg-active);  /* legacy alias — use --umb-bg-active */
+      --umb-step-track:      #2e3048;
+      --umb-step-bg:         #212529;
+      --umb-tooltip-bg:      #080808;
+      --umb-surface-1:       #2a2d35;
+      --umb-bg-0:            #07080d; --umb-bg-1: #0c0d14;
+      --umb-bg-2:            #11121a; --umb-bg-3: #181921;
+      --umb-orange:          #ff6b35; --umb-ai-purple: #7c3aed;
+      --umb-tag-expert-bg:   #641882;  /* Expert badge — dark grape, medido no app */
+      --umb-tag-expert-color: #E8D8F5;
+      --umb-tag-standard-bg: #237804;  /* Standard badge — dark green, medido no app */
+      --umb-tag-standard-color: #D9F7BE;
+      --umb-btn-secondary:   #6c757d;
+      --umb-border-primary:     #3D4047;
+      --umb-btn-outline-color:  #D3D6DD;
+      --umb-btn-text-hover:     rgba(255,255,255,.10);
+
+      /* Alert colors — dark theme: usa --bs-*-bg-subtle + --bs-*-text-emphasis (Bootstrap 5.3) */
+      --umb-alert-success-bg: #021c14; --umb-alert-success-color: #6dbba1;
+      --umb-alert-danger-bg:  #1f0908; --umb-alert-danger-color:  #c4827d;
+      --umb-alert-warning-bg: #211b09; --umb-alert-warning-color: #cab882;
+      --umb-alert-info-bg:    #0c1224; --umb-alert-info-color:    #899bd1;
+      --umb-alert-primary-bg: #111930; --umb-alert-primary-color: #99b0f7;
+      --umb-alert-secondary-bg: #161719; --umb-alert-secondary-color: #a7acb1;
+      --umb-alert-light-bg:   #343a40; --umb-alert-light-color:   #f8f9fa;
+      --umb-alert-dark-bg:    #1a1d20; --umb-alert-dark-color:    #dee2e6;
+    }
+
+    /* ── LIGHT ───────────────────────────────────────────────────── */
+    [data-bs-theme="light"] {
+      --bs-primary:          #557CF2; --bs-primary-rgb:   85,124,242;
+      /* Badge tokens — outline style in light theme */
+      --umb-tag-expert-bg:   transparent;
+      --umb-tag-expert-color: #7C3498;  /* grape outline */
+      --umb-tag-standard-bg: transparent;
+      --umb-tag-standard-color: #389E0D;  /* green outline */
+      --bs-secondary:        #D9E2FF;
+      --bs-success:          #389E0D; --bs-success-rgb:   56,158,13;
+      --bs-info:             #A2B8FA; --bs-info-rgb:      162,184,250;
+      --bs-warning:          #FAAD14; --bs-warning-rgb:   250,173,20;
+      --bs-danger:           #DA606E; --bs-danger-rgb:    218,96,110;
+      --bs-body-bg:          #f0f4ff; --bs-body-color:    #212529;
+      --bs-body-font-family: 'Poppins', sans-serif;
+      --bs-border-color:     #d9d9d9; --bs-card-bg:       #ffffff;
+
+      --umb-sidebar-bg:      #557CF2; --umb-sidebar-border: rgba(255,255,255,.18);
+      --umb-shell-header-bg: #ffffff;  /* Header is WHITE, separate from blue sidebar */
+      --umb-bg-primary:      #EEF2FE;  /* bgPrimary: fundo principal das telas (light) */
+      --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
+      --umb-card-bg:         #ffffff;
+      --umb-surface-raised:  #ffffff;
+      --umb-hover-bg:        rgba(0,0,0,.04);
+      --umb-inset-bg:        rgba(0,0,0,.07);
+      --umb-header-bg:       rgba(0,0,0,.02);
+      --umb-header-border:   rgba(0,0,0,.06);
+      --umb-preview-bg:      #f8f9fa;
+      --umb-text-primary:    #1a1d2b;
+      --umb-text-mid:        #6c757d;
+      --umb-text-dim:        #adb5bd;
+      --umb-border:          #F0F0F0;
+      --umb-border-strong:   #d9d9d9;
+      --umb-input-bg:        #ffffff;
+      --umb-input-border:    #DFDFDF;
+      --umb-input-group-bg:  #f8f9fa;
+      --umb-progress-track:  #e9ecef;
+      --umb-code-bg:         #eef1fb;
+      --umb-code-border:     #d0d9f8;
+      --umb-code-color:      #4a5568;
+      --umb-nav-color:       rgba(255,255,255,.78);
+      --umb-nav-hover-color: #ffffff;
+      --umb-nav-hover-bg:    rgba(255,255,255,.18);
+      --umb-nav-active-color:#ffffff;
+      --umb-nav-active-bg:   rgba(255,255,255,.28);
+      --umb-section-h:       rgba(255,255,255,.52);
+      --umb-brand-color:     #ffffff;
+      --umb-brand-sub:       rgba(255,255,255,.72);
+      --umb-avatar-bg:       #dce6ff;
+      --umb-profile-hover:   rgba(0,0,0,.04);
+      --umb-placeholder-bg:  #e9ecef;
+      --umb-placeholder-sh:  #f8f9fa;
+      --umb-kbd-bg:          #e9ecef;
+      --umb-offcanvas-bg:    #ffffff;
+      --umb-modal-bg:        #ffffff;
+      --umb-dropdown-bg:     #ffffff;
+      --umb-media-bg:        #f8f9fa;
+      --umb-copy-btn-bg:     #f0f4ff;
+      --umb-copy-btn-hover:  #dce6ff;
+      --umb-table-hover:     rgba(0,0,0,.025);
+      --umb-bg-active:       #E2E9FE;  /* bgActive: item selecionado (menus, tabela, cards, conversa) */
+      --umb-table-row-active: var(--umb-bg-active);  /* legacy alias — use --umb-bg-active */
+      --umb-step-track:      #d0d9f8;
+      --umb-step-bg:         #ffffff;
+      --umb-tooltip-bg:      #080808;
+      --umb-surface-1:       #ffffff;
+      --umb-btn-secondary:   #6c757d;
+      --umb-border-primary:     #DFDFDF;
+      --umb-btn-outline-color:  #1F1F1F;
+      --umb-btn-text-hover:     rgba(0,0,0,.06);
+
+      /* Alert colors — light theme: subtle pastels */
+      --umb-alert-success-bg: #f6ffed; --umb-alert-success-color: #135200;
+      --umb-alert-danger-bg:  #fff1f0; --umb-alert-danger-color:  #5c0011;
+      --umb-alert-warning-bg: #fffbe6; --umb-alert-warning-color: #614700;
+      --umb-alert-info-bg:    #d6e4ff; --umb-alert-info-color:    #1d39c4;
+      --umb-alert-primary-bg: #dde5fc; --umb-alert-primary-color: #223261;
+      --umb-alert-secondary-bg: #f7f9ff; --umb-alert-secondary-color: #575a66;
+      --umb-alert-light-bg:   #f8f9fa; --umb-alert-light-color:   #212529;
+      --umb-alert-dark-bg:    #e9ecef; --umb-alert-dark-color:    #212529;
+    }
+
+    /* ── EMERALD ─────────────────────────────────────────────────── */
+    [data-bs-theme="emerald"] {
+      --bs-primary:          #29958D; --bs-primary-rgb:   41,149,141;
+      --bs-secondary:        #B2DDD9;
+      --bs-success:          #0C8E63; --bs-success-rgb:   12,142,99;
+      --bs-info:             #3B59B2; --bs-info-rgb:      59,89,178;
+      --bs-warning:          #A6882E; --bs-warning-rgb:   166,136,46;
+      --bs-danger:           #9C2F27; --bs-danger-rgb:    156,47,39;
+      --bs-body-bg:          #ffffff; --bs-body-color:    #000000;
+      --bs-body-font-family: 'Plus Jakarta Sans', sans-serif;
+      --bs-border-color:     #d9d9d9; --bs-card-bg:       #ffffff;
+
+      --umb-sidebar-bg:      #29958D; --umb-sidebar-border: rgba(255,255,255,.18);
+      --umb-shell-header-bg: #ffffff;
+      --umb-bg-primary:      #F6F7F7;  /* bgPrimary: fundo principal das telas (emerald) */
+      --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
+      --umb-card-bg:         #ffffff;
+      --umb-surface-raised:  #ffffff;
+      --umb-hover-bg:        rgba(0,0,0,.04);
+      --umb-inset-bg:        rgba(0,0,0,.07);
+      --umb-header-bg:       rgba(0,0,0,.02);
+      --umb-header-border:   rgba(0,0,0,.06);
+      --umb-preview-bg:      #f4faf9;
+      --umb-text-primary:    #1a1d2b;
+      --umb-text-mid:        #6c757d;
+      --umb-text-dim:        #adb5bd;
+      --umb-border:          #F0F0F0;
+      --umb-border-strong:   #d9d9d9;
+      --umb-input-bg:        #ffffff;
+      --umb-input-border:    #DFDFDF;
+      --umb-input-group-bg:  #f4faf9;
+      --umb-progress-track:  #e9ecef;
+      --umb-code-bg:         #edf7f6;
+      --umb-code-border:     #b2ddd9;
+      --umb-code-color:      #29958D;
+      --umb-nav-color:       rgba(255,255,255,.78);
+      --umb-nav-hover-color: #ffffff;
+      --umb-nav-hover-bg:    rgba(255,255,255,.18);
+      --umb-nav-active-color:#ffffff;
+      --umb-nav-active-bg:   rgba(255,255,255,.28);
+      --umb-section-h:       rgba(255,255,255,.52);
+      --umb-brand-color:     #ffffff;
+      --umb-brand-sub:       rgba(255,255,255,.72);
+      --umb-avatar-bg:       #b2ddd9;
+      --umb-profile-hover:   rgba(0,0,0,.04);
+      --umb-placeholder-bg:  #e9ecef;
+      --umb-placeholder-sh:  #f4faf9;
+      --umb-kbd-bg:          #e9ecef;
+      --umb-offcanvas-bg:    #ffffff;
+      --umb-modal-bg:        #ffffff;
+      --umb-dropdown-bg:     #ffffff;
+      --umb-media-bg:        #f4faf9;
+      --umb-copy-btn-bg:     #edf7f6;
+      --umb-copy-btn-hover:  #b2ddd9;
+      --umb-table-hover:     rgba(0,0,0,.025);
+      --umb-bg-active:       #D3EFEC;  /* bgActive: item selecionado (menus, tabela, cards, conversa) */
+      --umb-table-row-active: var(--umb-bg-active);  /* legacy alias — use --umb-bg-active */
+      --umb-step-track:      #b2ddd9;
+      --umb-step-bg:         #ffffff;
+      --umb-tooltip-bg:      #080808;
+      --umb-surface-1:       #ffffff;
+      --umb-btn-secondary:   #748180;
+      --umb-border-primary:     #DFDFDF;
+      --umb-btn-outline-color:  #1F1F1F;
+      --umb-btn-text-hover:     rgba(var(--bs-primary-rgb), .15);
+
+      /* Alert colors — emerald: subtle pastels (light theme) */
+      --umb-alert-success-bg: #f6ffed; --umb-alert-success-color: #135200;
+      --umb-alert-danger-bg:  #fff1f0; --umb-alert-danger-color:  #5c0011;
+      --umb-alert-warning-bg: #fffbe6; --umb-alert-warning-color: #614700;
+      --umb-alert-info-bg:    #d6e4ff; --umb-alert-info-color:    #1d39c4;
+      --umb-alert-primary-bg: #d6f0ee; --umb-alert-primary-color: #0d5954;
+      --umb-alert-secondary-bg: #f4faf9; --umb-alert-secondary-color: #3d6f6a;
+      --umb-alert-light-bg:   #f8f9fa; --umb-alert-light-color:   #212529;
+      --umb-alert-dark-bg:    #e9ecef; --umb-alert-dark-color:    #212529;
+    }
+
+    /* ── AUTO (follows system preference) ────────────────────────── */
+    @media (prefers-color-scheme: dark) {
+      [data-bs-theme="auto"] {
+        --bs-primary:#557CF2; --bs-primary-rgb:85,124,242; --bs-secondary:#6c757d;
+        --bs-success:#0C8E63; --bs-success-rgb:12,142,99; --bs-info:#3B59B2; --bs-info-rgb:59,89,178;
+        --bs-warning:#A6882E; --bs-warning-rgb:166,136,46; --bs-danger:#9C2F27; --bs-danger-rgb:156,47,39;
+        --bs-body-bg:#141619; --bs-body-color:#f8f9fa; --bs-body-font-family:'Poppins',sans-serif; --bs-border-color:#2e3048; --bs-card-bg:#212529;
+        --umb-bg-primary:#141619; --umb-content-bg:var(--umb-bg-primary);
+        --umb-sidebar-bg:#222429; --umb-sidebar-border:#2e3048; --umb-card-bg:#212529;
+        --umb-surface-raised:#2a2d35; --umb-hover-bg:rgba(255,255,255,.05); --umb-inset-bg:rgba(255,255,255,.06);
+        --umb-header-bg:rgba(248,249,250,.03); --umb-header-border:rgba(248,249,250,.06);
+        --umb-preview-bg:rgba(255,255,255,.02); --umb-text-primary:#f0f0f8; --umb-text-mid:#9091a8; --umb-text-dim:#4a4b60;
+        --umb-border:#3D4047; --umb-border-primary:#3D4047; --umb-border-strong:#424649; --umb-input-bg:#212529; --umb-input-border:#3D4047;
+        --umb-input-group-bg:#2e3048; --umb-progress-track:#2e3048; --umb-code-bg:#0c0d14;
+        --umb-code-border:#1f2030; --umb-code-color:#9091a8; --umb-nav-color:#9091a8;
+        --umb-nav-hover-color:#f0f0f8; --umb-nav-hover-bg:rgba(255,255,255,.05);
+        --umb-nav-active-color:#557CF2; --umb-nav-active-bg:rgba(85,124,242,.12);
+        --umb-section-h:#4a4b60; --umb-brand-color:#f0f0f8; --umb-brand-sub:#9091a8;
+        --umb-avatar-bg:#111930; --umb-profile-hover:rgba(255,255,255,.05);
+        --umb-placeholder-bg:#2e3048; --umb-placeholder-sh:#383b4d; --umb-kbd-bg:#2e3048;
+        --umb-offcanvas-bg:#222429; --umb-modal-bg:#222429; --umb-dropdown-bg:#2a2d35;
+        --umb-media-bg:#2a2d35; --umb-copy-btn-bg:#2e3048; --umb-copy-btn-hover:#3a3d50;
+        --umb-table-hover:rgba(255,255,255,.03); --umb-bg-active:#484B53; --umb-table-row-active:var(--umb-bg-active); --umb-step-track:#2e3048; --umb-step-bg:#212529;
+        --umb-tooltip-bg:#080808; --umb-surface-1:#2a2d35; --umb-btn-secondary:#6c757d;
+      }
+
+        --umb-alert-success-bg:#021c14; --umb-alert-success-color:#6dbba1;
+        --umb-alert-danger-bg:#1f0908; --umb-alert-danger-color:#c4827d;
+        --umb-alert-warning-bg:#211b09; --umb-alert-warning-color:#cab882;
+        --umb-alert-info-bg:#0c1224; --umb-alert-info-color:#899bd1;
+        --umb-alert-primary-bg:#111930; --umb-alert-primary-color:#99b0f7;
+        --umb-alert-secondary-bg:#161719; --umb-alert-secondary-color:#a7acb1;
+        --umb-alert-light-bg:#343a40; --umb-alert-light-color:#f8f9fa;
+        --umb-alert-dark-bg:#1a1d20; --umb-alert-dark-color:#dee2e6;
+    }
+    @media (prefers-color-scheme: light) {
+      [data-bs-theme="auto"] {
+        --bs-primary:#557CF2; --bs-primary-rgb:85,124,242; --bs-secondary:#D9E2FF;
+        --bs-success:#389E0D; --bs-success-rgb:56,158,13; --bs-info:#A2B8FA; --bs-info-rgb:162,184,250;
+        --bs-warning:#FAAD14; --bs-warning-rgb:250,173,20; --bs-danger:#DA606E; --bs-danger-rgb:218,96,110;
+        --bs-body-bg:#EEF2FE; --bs-body-color:#212529; --bs-body-font-family:'Poppins',sans-serif; --bs-border-color:#d9d9d9; --bs-card-bg:#ffffff;
+        --umb-bg-primary:#EEF2FE; --umb-content-bg:var(--umb-bg-primary);
+        --umb-sidebar-bg:#557CF2; --umb-sidebar-border:rgba(255,255,255,.18); --umb-card-bg:#ffffff;
+        --umb-surface-raised:#ffffff; --umb-hover-bg:rgba(0,0,0,.04); --umb-inset-bg:rgba(0,0,0,.07);
+        --umb-header-bg:rgba(0,0,0,.02); --umb-header-border:rgba(0,0,0,.06); --umb-preview-bg:#f8f9fa;
+        --umb-text-primary:#1a1d2b; --umb-text-mid:#6c757d; --umb-text-dim:#adb5bd;
+        --umb-border:#F0F0F0; --umb-border-primary:#DFDFDF; --umb-border-strong:#d9d9d9; --umb-input-bg:#ffffff; --umb-input-border:#DFDFDF;
+        --umb-input-group-bg:#f8f9fa; --umb-progress-track:#e9ecef; --umb-code-bg:#eef1fb;
+        --umb-code-border:#d0d9f8; --umb-code-color:#4a5568; --umb-nav-color:rgba(255,255,255,.78);
+        --umb-nav-hover-color:#ffffff; --umb-nav-hover-bg:rgba(255,255,255,.18);
+        --umb-nav-active-color:#ffffff; --umb-nav-active-bg:rgba(255,255,255,.28);
+        --umb-section-h:rgba(255,255,255,.52); --umb-brand-color:#ffffff; --umb-brand-sub:rgba(255,255,255,.72);
+        --umb-avatar-bg:#dce6ff; --umb-profile-hover:rgba(0,0,0,.04);
+        --umb-placeholder-bg:#e9ecef; --umb-placeholder-sh:#f8f9fa; --umb-kbd-bg:#e9ecef;
+        --umb-offcanvas-bg:#ffffff; --umb-modal-bg:#ffffff; --umb-dropdown-bg:#ffffff;
+        --umb-media-bg:#f8f9fa; --umb-copy-btn-bg:#f0f4ff; --umb-copy-btn-hover:#dce6ff;
+        --umb-table-hover:rgba(0,0,0,.025); --umb-bg-active:#E2E9FE; --umb-table-row-active:var(--umb-bg-active); --umb-step-track:#d0d9f8; --umb-step-bg:#ffffff;
+        --umb-tooltip-bg:#080808; --umb-surface-1:#ffffff; --umb-btn-secondary:#6c757d;
+      }
+
+        --umb-alert-success-bg:#f6ffed; --umb-alert-success-color:#135200;
+        --umb-alert-danger-bg:#fff1f0; --umb-alert-danger-color:#5c0011;
+        --umb-alert-warning-bg:#fffbe6; --umb-alert-warning-color:#614700;
+        --umb-alert-info-bg:#d6e4ff; --umb-alert-info-color:#1d39c4;
+        --umb-alert-primary-bg:#dde5fc; --umb-alert-primary-color:#223261;
+        --umb-alert-secondary-bg:#f7f9ff; --umb-alert-secondary-color:#575a66;
+        --umb-alert-light-bg:#f8f9fa; --umb-alert-light-color:#212529;
+        --umb-alert-dark-bg:#e9ecef; --umb-alert-dark-color:#212529;
+    }
+
+
+    /* ── BRAVIA / DARK-EMERALD ───────────────────────────────────── */
+    [data-bs-theme="dark-emerald"] {
+      --bs-primary:          #2B897F; --bs-primary-rgb:   43,137,127;
+      --bs-secondary:        #6c757d;
+      --bs-success:          #0C8E63; --bs-success-rgb:   12,142,99;
+      --bs-info:             #3B59B2; --bs-info-rgb:      59,89,178;
+      --bs-warning:          #A6882E; --bs-warning-rgb:   166,136,46;
+      --bs-danger:           #9C2F27; --bs-danger-rgb:    156,47,39;
+      --bs-body-bg:          #000C0B; --bs-body-color:    #D5E3E1;
+      --bs-body-font-family: 'Plus Jakarta Sans', sans-serif;
+      --bs-border-color:     #002B27; --bs-card-bg:       #011A18;
+
+      --umb-bg-primary:      #000C0B;  /* bgPrimary: fundo principal das telas (Bravia) */
+      --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
+      --umb-sidebar-bg:      #000C0B; --umb-sidebar-border: #002B27;
+      --umb-card-bg:         #011A18;
+      --umb-surface-raised:  #172D2C;
+      --umb-hover-bg:        rgba(255,255,255,.04);
+      --umb-inset-bg:        rgba(255,255,255,.06);
+      --umb-header-bg:       rgba(255,255,255,.025);
+      --umb-header-border:   rgba(255,255,255,.05);
+      --umb-preview-bg:      rgba(255,255,255,.015);
+      --umb-text-primary:    #D5E3E1;
+      --umb-text-mid:        #748180;
+      --umb-text-dim:        #225E59;
+      --umb-border:          #002B27;
+      --umb-border-strong:   #004640;
+      --umb-input-bg:        #000C0B;
+      --umb-input-border:    #004640;
+      --umb-input-group-bg:  #011A18;
+      --umb-progress-track:  #002B27;
+      --umb-code-bg:         #000C0B;
+      --umb-code-border:     #002B27;
+      --umb-code-color:      #748180;
+      --umb-nav-color:       #748180;
+      --umb-nav-hover-color: #D5E3E1;
+      --umb-nav-hover-bg:    rgba(255,255,255,.04);
+      --umb-nav-active-color:#2B897F;
+      --umb-nav-active-bg:   rgba(43,137,127,.18);
+      --umb-section-h:       #225E59;
+      --umb-brand-color:     #D5E3E1;
+      --umb-brand-sub:       #748180;
+      --umb-avatar-bg:       #004640;
+      --umb-profile-hover:   rgba(255,255,255,.04);
+      --umb-placeholder-bg:  #002B27;
+      --umb-placeholder-sh:  #004640;
+      --umb-kbd-bg:          #002B27;
+      --umb-offcanvas-bg:    #000C0B;
+      --umb-modal-bg:        #011A18;
+      --umb-dropdown-bg:     #172D2C;
+      --umb-media-bg:        #172D2C;
+      --umb-copy-btn-bg:     #002B27;
+      --umb-copy-btn-hover:  #004640;
+      --umb-table-hover:     rgba(255,255,255,.025);
+      --umb-bg-active:       #175651;  /* bgActive: item selecionado (menus, tabela, cards, conversa) */
+      --umb-table-row-active: var(--umb-bg-active);  /* legacy alias — use --umb-bg-active */
+      --umb-step-track:      #002B27;
+      --umb-step-bg:         #011A18;
+      --umb-tooltip-bg:      #080808;
+      --umb-surface-1:       #172D2C;
+      --umb-btn-secondary:   #748180;
+      --umb-border-primary:     #004640;
+      --umb-btn-outline-color:  #D5E3E1;
+      --umb-btn-text-hover:     rgba(var(--bs-primary-rgb), .15);
+
+      /* Alert colors — dark-emerald/Bravia: idêntico ao tema Escuro */
+      --umb-alert-success-bg: #021c14; --umb-alert-success-color: #6dbba1;
+      --umb-alert-danger-bg:  #1f0908; --umb-alert-danger-color:  #c4827d;
+      --umb-alert-warning-bg: #211b09; --umb-alert-warning-color: #cab882;
+      --umb-alert-info-bg:    #0c1224; --umb-alert-info-color:    #899bd1;
+      --umb-alert-primary-bg: #111930; --umb-alert-primary-color: #99b0f7;
+      --umb-alert-secondary-bg: rgba(255,255,255,.05); --umb-alert-secondary-color: #748180;
+      --umb-alert-light-bg:   #172D2C; --umb-alert-light-color:   #D5E3E1;
+      --umb-alert-dark-bg:    #011A18; --umb-alert-dark-color:    #748180;
+    }
+
+    /* ─────────────────────────────────────────────────────────────
+       COMPONENT STYLES (usam vars acima — theme-aware)
+    ───────────────────────────────────────────────────────────── */
+    * { box-sizing: border-box; }
+    body { background: var(--bs-body-bg); color: var(--bs-body-color); font-family: var(--bs-body-font-family, 'Plus Jakarta Sans', sans-serif); font-size: 16px; margin: 0; transition: background .25s, color .25s; }
+
+    /* --- SCROLLBARS --- */
+    /* Scrollbars finos, suaves e theme-aware em todo o DS (incluindo exemplos internos como frames mobile/desktop) */
+    * {
+      scrollbar-width: thin;                                   /* Firefox */
+      scrollbar-color: var(--umb-border-strong) transparent;   /* Firefox: thumb track */
+    }
+    *::-webkit-scrollbar { width: 8px; height: 8px; }
+    *::-webkit-scrollbar-track { background: transparent; }
+    *::-webkit-scrollbar-thumb {
+      background: var(--umb-border-strong);
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      transition: background-color .15s;
+    }
+    *::-webkit-scrollbar-thumb:hover {
+      background: var(--umb-text-mid);
+      background-clip: padding-box;
+      border: 2px solid transparent;
+    }
+    *::-webkit-scrollbar-corner { background: transparent; }
+    /* No tema claro queremos contraste ainda mais sutil */
+    [data-bs-theme="light"] *::-webkit-scrollbar-thumb { background: rgba(0,0,0,.18); background-clip: padding-box; border: 2px solid transparent; }
+    [data-bs-theme="light"] *::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,.32); background-clip: padding-box; border: 2px solid transparent; }
+    [data-bs-theme="light"] * { scrollbar-color: rgba(0,0,0,.18) transparent; }
+    @media (prefers-color-scheme: light) {
+      [data-bs-theme="auto"] *::-webkit-scrollbar-thumb { background: rgba(0,0,0,.18); background-clip: padding-box; border: 2px solid transparent; }
+      [data-bs-theme="auto"] *::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,.32); background-clip: padding-box; border: 2px solid transparent; }
+      [data-bs-theme="auto"] * { scrollbar-color: rgba(0,0,0,.18) transparent; }
+    }
+
+    /* --- LAYOUT --- */
+    .ds-wrapper { display: flex; min-height: 100vh; }
+    .ds-sidebar {
+      width: 260px; min-width: 260px; background: var(--umb-sidebar-bg);
+      padding: 20px 12px; position: sticky; top: 0;
+      height: 100vh; overflow-y: auto; flex-shrink: 0;
+      border-right: 1px solid var(--umb-sidebar-border);
+      transition: background .25s, border-color .25s;
+    }
+    .ds-sidebar .brand { display: flex; align-items: center; gap: 8px; padding: 0 8px 20px; border-bottom: 1px solid var(--umb-sidebar-border); margin-bottom: 16px; }
+    .ds-sidebar .brand span { font-weight: 600; font-size: 15px; color: var(--umb-brand-color); }
+    .ds-sidebar .brand small { font-size: 11px; color: var(--umb-brand-sub); }
+    .ds-sidebar h6 { color: var(--umb-section-h); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin: 16px 0 4px 8px; }
+    .ds-sidebar .nav-link { color: var(--umb-nav-color); font-size: 13px; font-weight: 500; padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px; transition: all .15s; }
+    .ds-sidebar .nav-link:hover { color: var(--umb-nav-hover-color); background: var(--umb-nav-hover-bg); }
+    .ds-sidebar .nav-link.active { color: var(--umb-nav-active-color); background: var(--umb-nav-active-bg); font-weight: 600; }
+    .ds-content { flex: 1; padding: 40px 48px; max-width: 1100px; }
+
+    /* --- THEME SWITCHER --- */
+    .theme-switcher { padding: 0 8px 16px; margin-bottom: 16px; border-bottom: 1px solid var(--umb-sidebar-border); }
+    .theme-switcher label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--umb-section-h); display: block; margin-bottom: 6px; }
+    .theme-switcher .theme-options { display: flex; flex-direction: column; gap: 2px; }
+    .theme-option { display: flex; align-items: center; gap: 8px; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--umb-nav-color); transition: all .15s; border: none; background: transparent; width: 100%; text-align: left; }
+    .theme-option:hover { color: var(--umb-nav-hover-color); background: var(--umb-nav-hover-bg); }
+    .theme-option.active { color: var(--umb-nav-active-color); background: var(--umb-nav-active-bg); font-weight: 600; }
+    .theme-option i { font-size: 15px; flex-shrink: 0; }
+
+    /* --- SECTION TITLES --- */
+    .sec-title { font-size: 24px; font-weight: 600; color: var(--umb-text-primary); margin: 0 0 6px; }
+    .sec-subtitle { font-size: 14px; color: var(--umb-text-mid); margin: 0 0 28px; }
+    .sec-divider { border: none; border-top: 1px solid var(--umb-border); margin: 48px 0; }
+    .comp-label { font-size: 11px; color: var(--umb-text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+    .comp-group { margin-bottom: 32px; }
+    .comp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 10px; }
+
+    /* --- BUTTONS --- */
+    /* ── BUTTONS ──────────────────────────────────────────────────── */
+    .btn {
+      border-radius: 30px !important; font-weight: 600; font-size: 13px;
+      height: 32px; padding: 0 18px; border-width: 2px !important; font-family: inherit;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: background .15s, color .15s, border-color .15s, filter .15s, box-shadow .15s;
+      line-height: 1; box-sizing: border-box;
+    }
+    .btn-sm { font-size: 12px !important; height: 24px !important; padding: 0 14px !important; border-radius: 30px !important; }
+    .btn-lg { font-size: 13px !important; height: 40px !important; padding: 0 24px !important; border-radius: 30px !important; }
+
+    /* Focus ring usa a cor primária do tema */
+    .btn:focus-visible {
+      outline: 3px solid rgba(var(--bs-primary-rgb), .35);
+      outline-offset: 2px; box-shadow: none !important;
+    }
+    /* Active / Pressed */
+    .btn:not(:disabled):active { filter: brightness(.80) !important; }
+
+    /* Solid — filled */
+    .btn-primary   { background: var(--bs-primary) !important; border-color: var(--bs-primary) !important; color: #fff !important; }
+    .btn-primary:hover:not(:disabled)   { filter: brightness(.88); }
+    .btn-secondary { background: var(--umb-btn-secondary) !important; border-color: var(--umb-btn-secondary) !important; color: #fff !important; }
+    .btn-secondary:hover:not(:disabled) { filter: brightness(.88); }
+    .btn-success   { background: var(--bs-success) !important; border-color: var(--bs-success) !important; color: #fff !important; }
+    .btn-success:hover:not(:disabled)   { filter: brightness(.88); }
+    .btn-danger    { background: var(--bs-danger) !important;  border-color: var(--bs-danger) !important;  color: #fff !important; }
+    .btn-danger:hover:not(:disabled)    { filter: brightness(.88); }
+    .btn-warning   { background: var(--bs-warning) !important; border-color: var(--bs-warning) !important; color: #fff !important; }
+    .btn-warning:hover:not(:disabled)   { filter: brightness(.88); }
+    .btn-info      { background: var(--bs-info) !important;    border-color: var(--bs-info) !important;    color: #fff !important; }
+    .btn-info:hover:not(:disabled)      { filter: brightness(.88); }
+    .btn-light     { background: var(--umb-surface-raised) !important; border-color: var(--umb-border-strong) !important; color: var(--umb-text-primary) !important; }
+    .btn-light:hover:not(:disabled)     { filter: brightness(.96); }
+    .btn-dark      { background: var(--umb-tooltip-bg) !important; border-color: var(--umb-tooltip-bg) !important; color: #fff !important; }
+    .btn-dark:hover:not(:disabled)      { filter: brightness(1.12); }
+
+    /* Text variant — sem bg, sem borda, só texto colorido */
+    .btn-text      { background: transparent !important; border-color: transparent !important; color: var(--umb-btn-outline-color) !important; }
+    .btn-text:hover:not(:disabled)      { background: var(--umb-btn-text-hover) !important; color: var(--umb-btn-outline-color) !important; }
+    .btn-text-danger  { background: transparent !important; border-color: transparent !important; color: var(--bs-danger) !important; }
+    .btn-text-danger:hover:not(:disabled){ background: rgba(var(--bs-danger-rgb), .08) !important; }
+    .btn-text-success { background: transparent !important; border-color: transparent !important; color: var(--bs-success) !important; }
+    .btn-text-success:hover:not(:disabled){ background: rgba(var(--bs-success-rgb), .08) !important; }
+
+    /* Link variant */
+    .btn-link      { background: transparent !important; border-color: transparent !important; color: var(--bs-primary) !important; text-decoration: none; }
+    .btn-link:hover:not(:disabled) { background: transparent !important; text-decoration: underline; }
+
+    /* Outlined variants */
+    /* primary outlined: borda e texto neutros por tema; hover troca texto para cor primária, borda inalterada */
+    .btn-outline-primary   { background: transparent !important; border-color: var(--umb-border-primary) !important; color: var(--umb-btn-outline-color) !important; }
+    .btn-outline-primary:hover:not(:disabled) { background: transparent !important; border-color: var(--umb-border-primary) !important; color: var(--bs-primary) !important; }
+    /* demais outlined: hover mantém estética, rebaixa a cor ~20% sem fill */
+    .btn-outline-secondary { background: transparent !important; border-color: var(--umb-btn-secondary) !important; color: var(--umb-text-mid) !important; }
+    .btn-outline-secondary:hover:not(:disabled) { background: transparent !important; filter: brightness(.80); }
+    .btn-outline-success   { background: transparent !important; border-color: var(--bs-success) !important; color: var(--bs-success) !important; }
+    .btn-outline-success:hover:not(:disabled) { background: transparent !important; filter: brightness(.80); }
+    .btn-outline-danger    { background: transparent !important; border-color: var(--bs-danger) !important; color: var(--bs-danger) !important; }
+    .btn-outline-danger:hover:not(:disabled) { background: transparent !important; filter: brightness(.80); }
+    .btn-outline-warning   { background: transparent !important; border-color: var(--bs-warning) !important; color: var(--bs-warning) !important; }
+    .btn-outline-warning:hover:not(:disabled) { background: transparent !important; filter: brightness(.80); }
+    .btn-outline-info      { background: transparent !important; border-color: var(--bs-info) !important; color: var(--bs-info) !important; }
+    .btn-outline-info:hover:not(:disabled) { background: transparent !important; filter: brightness(.80); }
+    .btn-icon { width: 32px !important; height: 32px !important; padding: 0 !important; display: inline-flex; align-items: center; justify-content: center; border-radius: 50% !important; font-size: 16px !important; }
+    .btn-icon.btn-sm { width: 24px !important; height: 24px !important; font-size: 13px !important; }
+    .btn-icon.btn-lg { width: 40px !important; height: 40px !important; font-size: 18px !important; }
+    .btn-icon.dropdown-toggle::after { display: none !important; }
+    .btn:disabled, .btn.disabled { opacity: .38 !important; cursor: not-allowed; pointer-events: all; }
+
+    /* --- CARDS --- */
+    .card { background: var(--umb-card-bg) !important; border: none !important; border-radius: 16px !important; box-shadow: 0 1px 2px rgba(0,0,0,.08); transition: background .25s; }
+    .card-header { background: var(--umb-header-bg) !important; border-radius: 16px 16px 0 0 !important; padding: 10px 20px; font-weight: 600; font-size: 14px; border-bottom: 1px solid var(--umb-header-border) !important; color: var(--umb-text-primary); }
+    .card-body { padding: 16px 20px; }
+    .card-footer { background: var(--umb-header-bg) !important; border-radius: 0 0 16px 16px !important; padding: 10px 20px; border-top: 1px solid var(--umb-header-border) !important; font-size: 14px; color: var(--umb-text-mid); }
+    .card-preview { background: var(--umb-preview-bg); border-radius: 12px; padding: 24px; border: 1px solid var(--umb-border); margin-bottom: 0; }
+
+    /* --- BADGES --- */
+    .badge { border-radius: 12px !important; padding: 4px 9px !important; font-size: 12px !important; font-weight: 600 !important; }
+    .bg-primary   { background-color: var(--bs-primary) !important; }
+    .bg-success   { background-color: var(--bs-success) !important; }
+    .bg-danger    { background-color: var(--bs-danger)  !important; }
+    .bg-warning   { background-color: var(--bs-warning) !important; }
+    .bg-info      { background-color: var(--bs-info)    !important; }
+    .bg-purple    { background-color: #7c3aed !important; }
+    .bg-secondary { background-color: #6c757d !important; }
+    /* Agent type badges — matched to app per theme */
+    .badge-expert   { background: var(--umb-tag-expert-bg);   color: var(--umb-tag-expert-color);   border: 1px solid var(--umb-tag-expert-bg); }
+    .badge-standard { background: var(--umb-tag-standard-bg); color: var(--umb-tag-standard-color); border: 1px solid var(--umb-tag-standard-bg); }
+    [data-bs-theme="light"] .badge-expert,
+    [data-bs-theme="emerald"] .badge-expert   { background: transparent; color: var(--umb-tag-expert-color); border-color: var(--umb-tag-expert-color); }
+    [data-bs-theme="light"] .badge-standard,
+    [data-bs-theme="emerald"] .badge-standard { background: transparent; color: var(--umb-tag-standard-color); border-color: var(--umb-tag-standard-color); }
+    .text-bg-primary { background-color: var(--bs-primary) !important; color: #fff !important; }
+
+    /* --- ALERTS --- */
+    .alert { border-radius: 12px !important; padding: 10px 16px !important; font-size: 14px; display: flex !important; align-items: flex-start; gap: 10px; border: none !important; transition: background .25s, color .25s; }
+    .alert-primary   { background: var(--umb-alert-primary-bg);   color: var(--umb-alert-primary-color); }
+    .alert-secondary { background: var(--umb-alert-secondary-bg); color: var(--umb-alert-secondary-color); }
+    .alert-success   { background: var(--umb-alert-success-bg);   color: var(--umb-alert-success-color); }
+    .alert-danger    { background: var(--umb-alert-danger-bg);    color: var(--umb-alert-danger-color); }
+    .alert-warning   { background: var(--umb-alert-warning-bg);   color: var(--umb-alert-warning-color); }
+    .alert-info      { background: var(--umb-alert-info-bg);      color: var(--umb-alert-info-color); }
+    .alert-light     { background: var(--umb-alert-light-bg);     color: var(--umb-alert-light-color); }
+    .alert-dark      { background: var(--umb-alert-dark-bg);      color: var(--umb-alert-dark-color); }
+    .alert .alert-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+    .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+    /* --- FORMS --- */
+    /* ── FORM FIELDS ──────────────────────────────────────────────── */
+    .form-control, .form-select {
+      background: var(--umb-input-bg) !important; color: var(--bs-body-color) !important;
+      border: 2px solid var(--umb-input-border) !important; border-radius: 12px !important;
+      padding: 0 12px !important; font-size: 14px !important; font-family: inherit;
+      transition: border-color .15s; box-sizing: border-box;
+    }
+    /* Altura default (32px) — exclui textarea que tem altura livre */
+    .form-control:not(textarea), .form-select { height: 32px; }
+    /* Small: 24px / radius 12px */
+    .form-control-sm, .form-select-sm {
+      height: 24px !important; padding: 0 10px !important;
+      border-radius: 12px !important; font-size: 12px !important;
+    }
+    /* Large: 40px / radius 16px */
+    .form-control-lg, .form-select-lg {
+      height: 40px !important; padding: 0 16px !important;
+      border-radius: 16px !important; font-size: 14px !important;
+    }
+    /* Hover: borda primária (não aplica em disabled, readonly ou já focado) */
+    .form-control:hover:not(:disabled):not([readonly]):not(:focus),
+    .form-select:hover:not(:disabled):not(:focus) {
+      border-color: var(--bs-primary) !important;
+    }
+    /* Focus */
+    .form-control:focus, .form-select:focus {
+      border-color: var(--bs-primary) !important;
+      box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb),.18) !important; outline: none;
+    }
+    .form-control::placeholder { color: var(--umb-text-mid) !important; }
+    .form-control:disabled, .form-select:disabled { opacity: .5; }
+    /* Textarea — altura livre, sem height fixo */
+    textarea.form-control { height: auto !important; padding: 8px 12px !important; min-height: 80px; }
+
+    .form-label { font-size: 13px; font-weight: 400; color: var(--umb-text-primary); margin-bottom: 5px; margin-left: 0.5rem; }
+    .form-text  { font-size: 12px; color: var(--umb-text-mid); margin-top: 4px; }
+
+    /* Input group — wrapper recebe a borda; filhos sem borda própria (campo unificado) */
+    .input-group:has(.input-group-text) {
+      border: 2px solid var(--umb-input-border);
+      border-radius: 12px;       /* default: radius igual ao form-control padrão */
+      overflow: hidden;
+      flex-wrap: nowrap;
+    }
+    .input-group-lg:has(.input-group-text) {
+      border-radius: 16px;       /* lg: radius igual ao form-control-lg */
+    }
+    /* input-group-text: padding mínimo no lado interno, padding de borda no lado externo */
+    .input-group:has(.input-group-text) > .input-group-text {
+      background: var(--umb-input-bg) !important;
+      border: none !important; border-radius: 0 !important;
+      color: var(--umb-text-mid) !important;
+      font-size: 14px; padding: 0 4px;
+      display: inline-flex; align-items: center;
+    }
+    .input-group:has(.input-group-text) > .input-group-text:first-child  { padding-left: 12px; }
+    .input-group:has(.input-group-text) > .input-group-text:last-child   { padding-right: 12px; }
+    .input-group-lg:has(.input-group-text) > .input-group-text:first-child { padding-left: 16px; }
+    .input-group-lg:has(.input-group-text) > .input-group-text:last-child  { padding-right: 16px; }
+    /* form-control/select: padding mínimo interno, padding de borda nas extremidades */
+    .input-group:has(.input-group-text) > .form-control,
+    .input-group:has(.input-group-text) > .form-select {
+      border: none !important; border-radius: 0 !important;
+      background: var(--umb-input-bg) !important;
+      box-shadow: none !important;
+      padding-left: 4px !important; padding-right: 4px !important;
+    }
+    .input-group:has(.input-group-text) > .form-control:first-child,
+    .input-group:has(.input-group-text) > .form-select:first-child  { padding-left: 12px !important; }
+    .input-group:has(.input-group-text) > .form-control:last-child,
+    .input-group:has(.input-group-text) > .form-select:last-child   { padding-right: 12px !important; }
+    .input-group-lg:has(.input-group-text) > .form-control:first-child,
+    .input-group-lg:has(.input-group-text) > .form-select:first-child  { padding-left: 16px !important; }
+    .input-group-lg:has(.input-group-text) > .form-control:last-child,
+    .input-group-lg:has(.input-group-text) > .form-select:last-child   { padding-right: 16px !important; }
+    /* input-group-lg propaga tamanho lg para o form-control interno (mesmo sem a classe form-control-lg) */
+    .input-group-lg:has(.input-group-text) > .form-control:not(textarea),
+    .input-group-lg:has(.input-group-text) > .form-select { height: 40px !important; font-size: 14px !important; }
+    /* input-group-sm propaga tamanho sm para o form-control interno */
+    .input-group-sm:has(.input-group-text) > .form-control:not(textarea),
+    .input-group-sm:has(.input-group-text) > .form-select { height: 24px !important; font-size: 12px !important; }
+    .input-group-sm:has(.input-group-text) { border-radius: 12px; }
+    .input-group:has(.input-group-text):hover:not(:focus-within) {
+      border-color: var(--bs-primary);
+    }
+    .input-group:has(.input-group-text):focus-within {
+      border-color: var(--bs-primary);
+      box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), .15);
+    }
+    /* input-group sem input-group-text: mantém radius nos extremos dos form-controls */
+    .input-group:not(:has(.input-group-text)) .form-control:not(:first-child),
+    .input-group:not(:has(.input-group-text)) .form-select:not(:first-child) { border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; }
+    .input-group:not(:has(.input-group-text)) .form-control:not(:last-child),
+    .input-group:not(:has(.input-group-text)) .form-select:not(:last-child)  { border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important; }
+
+    /* Modifier: .input-group-flat — remove toda chrome visual do input-group (borda, fundo, radius, shadow).
+       Use quando o campo deve se fundir ao contêiner pai (ex: toolbar de busca, header inline).
+       O divisor visual deve vir do contêiner, não do campo. Mantém ícone + input semanticamente unificados. */
+    .input-group.input-group-flat:has(.input-group-text),
+    .input-group.input-group-flat:has(.input-group-text):hover:not(:focus-within),
+    .input-group.input-group-flat:has(.input-group-text):focus-within {
+      border: none !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      overflow: visible;
+    }
+    .input-group.input-group-flat:has(.input-group-text) > .input-group-text,
+    .input-group.input-group-flat:has(.input-group-text) > .form-control,
+    .input-group.input-group-flat:has(.input-group-text) > .form-select {
+      background: transparent !important;
+    }
+
+    .form-control.is-valid   { border-color: var(--bs-success) !important; }
+    .form-control.is-invalid { border-color: var(--bs-danger)  !important; }
+    .valid-feedback   { color: #6dbba1; font-size: 12px; }
+    .invalid-feedback { color: #c4827d; font-size: 12px; }
+
+    /* --- SWITCHES & CHECKS --- */
+    .form-check-input { background-color: var(--umb-input-border); border-color: var(--umb-border-strong); cursor: pointer; }
+    .form-check-input:checked { background-color: var(--bs-primary) !important; border-color: var(--bs-primary) !important; }
+    .form-check-input:focus { box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb),.18); border-color: var(--bs-primary); }
+    .form-switch .form-check-input { width: 36px; height: 20px; background-color: var(--umb-input-border); }
+    .form-switch .form-check-input:checked { background-color: var(--bs-primary) !important; }
+    .form-check-label { font-size: 14px; color: var(--bs-body-color); cursor: pointer; }
+
+    /* --- INSET CONTROL --- */
+    /* Switch Segmentado — inset-control */
+    .inset-control { display: inline-flex; background: var(--umb-inset-bg); border-radius: 30px; padding: 3px; gap: 2px; }
+    .inset-control .btn {
+      background: transparent !important; color: var(--umb-text-mid);
+      border: none !important; font-size: 13px;
+      height: 28px; padding: 0 14px !important;
+      border-radius: 30px !important; font-weight: 500;
+      display: inline-flex; align-items: center; box-sizing: border-box;
+    }
+    .inset-control .btn.active,
+    .inset-control .btn:focus { background: var(--bs-primary) !important; color: #fff; font-weight: 600; }
+    /* Sm — 24px total (botão 18px + 3px padding × 2) */
+    .inset-control-sm .btn { height: 18px !important; padding: 0 10px !important; font-size: 12px !important; }
+    /* Lg — 40px total (botão 34px + 3px padding × 2) */
+    .inset-control-lg .btn { height: 34px !important; padding: 0 18px !important; font-size: 13px !important; }
+
+    /* --- PROGRESS --- */
+    .progress { background: var(--umb-progress-track); border-radius: 30px !important; height: 8px; }
+    .progress-bar { border-radius: 30px !important; }
+    .progress-bar.bg-primary { background: var(--bs-primary)  !important; }
+    .progress-bar.bg-success { background: var(--bs-success)  !important; }
+    .progress-bar.bg-danger  { background: var(--bs-danger)   !important; }
+    .progress-bar.bg-warning { background: var(--bs-warning)  !important; }
+    .progress-bar.bg-info    { background: var(--bs-info)     !important; }
+    .progress-lg { height: 14px; }
+    .progress-sm { height: 4px; }
+
+    /* --- ACCORDION --- */
+    [accordion-button] { background: var(--umb-hover-bg); color: var(--bs-body-color); padding: 12px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; width: 100%; border: none; text-align: left; font-size: 14px; font-family: inherit; transition: background .15s; border-bottom: 1px solid var(--umb-border); }
+    [accordion-button]:hover { background: var(--umb-inset-bg); }
+    [accordion-body] { padding: 14px 16px; font-size: 14px; color: var(--bs-body-color); border-bottom: 1px solid var(--umb-border); }
+    .accordion-umb { border: 1px solid var(--umb-border); border-radius: 12px; overflow: hidden; }
+
+    /* --- TABS --- */
+    .nav-tabs { border-bottom: 1px solid var(--umb-border); gap: 4px; }
+    .nav-tabs .nav-link { color: var(--umb-text-mid); border: none; border-bottom: 2px solid transparent; border-radius: 0; padding: 8px 16px; font-size: 14px; font-weight: 500; background: transparent; transition: all .15s; }
+    .nav-tabs .nav-link:hover { color: var(--umb-text-primary); border-bottom-color: var(--umb-text-mid); }
+    .nav-tabs .nav-link.active { color: var(--bs-primary); border-bottom-color: var(--bs-primary); font-weight: 600; }
+    .nav-pills .nav-link { color: var(--umb-text-mid); border-radius: 30px; padding: 6px 16px; font-size: 14px; font-weight: 500; transition: all .15s; }
+    .nav-pills .nav-link:hover { color: var(--umb-text-primary); background: var(--umb-hover-bg); }
+    .nav-pills .nav-link.active { background: var(--bs-primary); color: #fff; font-weight: 600; }
+    .tab-content { padding: 16px 0; }
+
+    /* --- STEPS --- */
+    /* Horizontal (default): todos os steps com mesma largura (flex:1 1 0) e responsivos */
+    .steps-container { display: flex; align-items: flex-start; gap: 0; width: 100%; }
+    .step-item {
+      flex: 1 1 0; min-width: 0;
+      display: flex; flex-direction: column; align-items: center;
+      position: relative; padding: 6px 6px; border-radius: 10px;
+      transition: background .12s;
+    }
+    /* Trilha de conexão (passa pelo centro do dot) */
+    .step-item:not(:last-child)::after {
+      content: ''; position: absolute;
+      top: calc(6px + 14px);                          /* padding-top + metade do dot (28/2) */
+      left: calc(50% + 18px); right: calc(-50% + 18px);
+      height: 1px; background: var(--umb-step-track); z-index: 0;
+    }
+    .step-item.done::after   { background: var(--bs-primary); }
+    .step-item.active::after { background: linear-gradient(to right, var(--bs-primary), var(--umb-step-track)); }
+    /* Dot */
+    .step-circle {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600; z-index: 1;
+      border: 1px solid var(--umb-step-track);
+      background: var(--umb-step-bg);
+      color: var(--umb-text-mid);
+      flex-shrink: 0;
+      transition: background .12s, border-color .12s, color .12s;
+    }
+    .step-item.done  .step-circle { border-color: var(--umb-step-track); background: var(--umb-step-bg); color: var(--bs-primary); }
+    .step-item.active .step-circle { border-color: var(--bs-primary); background: var(--bs-primary); color: #fff; }
+    /* Label */
+    .step-label {
+      font-size: 12px; color: var(--umb-text-mid);
+      margin-top: 6px; text-align: center;
+      max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .step-item.done  .step-label { color: var(--bs-primary); font-weight: 500; }
+    .step-item.active .step-label { color: var(--bs-primary); font-weight: 600; }
+    /* Chip de hover/seleção —
+       Por convenção, qualquer step .done é clicável (usuário pode voltar).
+       O modifier .clickable no container habilita cursor+hover em TODOS os steps. */
+    .step-item.done,
+    .steps-container.clickable .step-item { cursor: pointer; }
+    .step-item.done:hover,
+    .steps-container.clickable .step-item:hover,
+    .step-item.hover-active { background: var(--umb-hover-bg); }
+    /* Variante: Points only — esconde labels (uso em mobile e espaços compactos) */
+    .steps-container.points-only .step-label { display: none; }
+    /* Variante: Vertical */
+    .steps-container.vertical { flex-direction: column; align-items: stretch; width: auto; }
+    .steps-container.vertical .step-item {
+      flex: 0 0 auto; flex-direction: row; align-items: center;
+      padding: 6px 8px; gap: 10px;
+    }
+    .steps-container.vertical .step-item:not(:last-child)::after {
+      top: calc(6px + 28px); bottom: calc(-6px);
+      left: calc(8px + 14px - 0.5px); right: auto;
+      width: 1px; height: auto;
+    }
+    .steps-container.vertical .step-label { margin-top: 0; text-align: left; }
+    .steps-container.vertical.points-only .step-item { justify-content: flex-start; }
+
+    /* --- BREADCRUMB --- */
+    .breadcrumb { background: transparent; padding: 0; margin: 0; font-size: 14px; }
+    .breadcrumb-item a { color: var(--bs-primary); text-decoration: none; }
+    .breadcrumb-item.active { color: var(--umb-text-mid); }
+    .breadcrumb-item + .breadcrumb-item::before { color: var(--umb-text-dim); content: '/'; }
+
+    /* --- DROPDOWN --- */
+    .dropdown-menu { background: var(--umb-dropdown-bg); border: 1px solid var(--umb-border); border-radius: 12px; padding: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+    .dropdown-item { color: var(--bs-body-color); border-radius: 8px; padding: 7px 12px; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: background .12s; }
+    .dropdown-item:hover { background: rgba(var(--bs-primary-rgb),.1); color: var(--bs-primary); }
+    .dropdown-item.active { background: var(--bs-primary); color: #fff; }
+    .dropdown-divider { border-color: var(--umb-border); margin: 4px 0; }
+
+    /* --- PROFILE --- */
+    .profile-avatar { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #fff; background: var(--umb-avatar-bg); flex-shrink: 0; font-size: 14px; overflow: hidden; }
+    .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-card-umb { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: background .15s; }
+    .profile-card-umb:hover { background: var(--umb-profile-hover); }
+    .profile-card-umb .name { font-size: 14px; font-weight: 600; color: var(--umb-text-primary); }
+    .profile-card-umb .sub  { font-size: 12px; color: var(--umb-text-mid); }
+    .placeholder-avatar { background: linear-gradient(90deg, var(--umb-placeholder-bg) 25%, var(--umb-placeholder-sh) 50%, var(--umb-placeholder-bg) 75%); background-size: 200%; animation: shimmer 1.4s infinite; border-radius: 50%; }
+    .placeholder-text   { height: 12px; background: linear-gradient(90deg, var(--umb-placeholder-bg) 25%, var(--umb-placeholder-sh) 50%, var(--umb-placeholder-bg) 75%); background-size: 200%; animation: shimmer 1.4s infinite; border-radius: 6px; }
+    @keyframes shimmer { 0%{background-position:200%} 100%{background-position:-200%} }
+
+    /* --- EMPTY STATE --- */
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; text-align: center; gap: 12px; }
+    .empty-state-icon { font-size: 48px; color: var(--umb-text-dim); margin-bottom: 4px; }
+    .empty-state-title { font-size: 16px; font-weight: 600; color: var(--umb-text-primary); margin: 0; }
+    .empty-state-sub   { font-size: 14px; color: var(--umb-text-mid); margin: 0; max-width: 280px; }
+
+    /* --- COPY FIELD --- */
+    .copy-field { display: flex; align-items: center; background: var(--umb-input-bg); border: 1px solid var(--umb-input-border); border-radius: 10px; overflow: hidden; }
+    .copy-field input { flex: 1; background: transparent; border: none; color: var(--bs-body-color); padding: 8px 12px; font-size: 14px; outline: none; font-family: monospace; }
+    .copy-field .copy-btn { background: var(--umb-copy-btn-bg); border: none; border-left: 1px solid var(--umb-input-border); color: var(--umb-text-mid); padding: 8px 12px; cursor: pointer; transition: all .15s; font-size: 16px; }
+    .copy-field .copy-btn:hover { background: var(--umb-copy-btn-hover); color: var(--bs-primary); }
+    .copy-field-btn { border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; }
+
+    /* --- CODE BLOCK --- */
+    .code-block { background: var(--umb-code-bg); border-radius: 10px; padding: 14px 18px; font-family: 'Fira Code', 'Courier New', monospace; font-size: 13px; color: var(--umb-code-color); overflow-x: auto; border: 1px solid var(--umb-code-border); line-height: 1.7; }
+    .code-block .kw  { color: #c792ea; }
+    .code-block .str { color: #c3e88d; }
+    .code-block .tag { color: #89ddff; }
+    .code-block .atr { color: #ffcb6b; }
+    .code-block .cm  { color: #546e7a; }
+
+    /* --- NOTIFICATION BADGE --- */
+    .notif-badge { position: relative; display: inline-block; }
+    .notif-badge .count { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; border-radius: 9px; background: var(--bs-danger); color: #fff; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 2px solid var(--umb-card-bg); }
+
+    /* --- TOOLTIP --- */
+    .umb-tooltip-demo { position: relative; display: inline-block; }
+    .umb-tooltip-demo .tooltip-box { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #080808; color: #f0f0f8; border-radius: 6px; padding: 6px 10px; font-size: 12px; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,.3); z-index: 99; }
+    .umb-tooltip-demo:hover .tooltip-box { display: block; }
+    /* Botão fechar — adapta ao tema */
+    .btn-close { filter: none; }
+    [data-bs-theme="dark"]         .btn-close,
+    [data-bs-theme="dark-emerald"] .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+    @media (prefers-color-scheme: dark) {
+      [data-bs-theme="auto"] .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+    }
+    /* Bootstrap tooltip — força mesma cor em todos os temas */
+    .tooltip { --bs-tooltip-bg: #080808; --bs-tooltip-color: #f0f0f8; }
+    .tooltip .tooltip-inner { background-color: #080808; color: #f0f0f8; }
+    .tooltip .tooltip-arrow::before { border-color: transparent; }
+    .bs-tooltip-top    .tooltip-arrow::before { border-top-color:    #080808 !important; }
+    .bs-tooltip-bottom .tooltip-arrow::before { border-bottom-color: #080808 !important; }
+    .bs-tooltip-start  .tooltip-arrow::before { border-left-color:   #080808 !important; }
+    .bs-tooltip-end    .tooltip-arrow::before { border-right-color:  #080808 !important; }
+
+    /* --- LOADER --- */
+    .umb-loader { width: 36px; height: 36px; border: 3px solid rgba(var(--bs-primary-rgb),.2); border-top-color: var(--bs-primary); border-radius: 50%; animation: spin .8s linear infinite; }
+    .umb-loader-sm { width: 20px; height: 20px; border-width: 2px; }
+    .umb-loader-lg { width: 56px; height: 56px; border-width: 4px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* --- HEALTH DOTS --- */
+    .health-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .health-dot.hot  { background: #22c55e; box-shadow: 0 0 6px #22c55e; animation: pulse-hot 1.5s infinite; }
+    .health-dot.warm { background: #f59e0b; }
+    .health-dot.cold { background: #ef4444; }
+    @keyframes pulse-hot { 0%,100%{box-shadow:0 0 4px #22c55e} 50%{box-shadow:0 0 10px #22c55e} }
+
+    /* --- MISC UTILS --- */
+    .text-primary-umb { color: var(--umb-text-primary); }
+    .text-mid { color: var(--umb-text-mid); }
+    .text-dim  { color: var(--umb-text-dim); }
+    .surface-1 { background: var(--umb-surface-1); border-radius: 12px; }
+    .tag-pill { display: inline-flex; align-items: center; gap: 5px; background: rgba(var(--bs-primary-rgb),.12); color: var(--bs-primary); border-radius: 30px; padding: 3px 10px; font-size: 12px; font-weight: 600; }
+    .tag-pill .remove { cursor: pointer; color: var(--bs-primary); font-size: 14px; line-height: 1; }
+    .timestamp-rel { font-size: 13px; color: var(--umb-text-mid); cursor: default; border-bottom: 1px dashed var(--umb-text-dim); }
+    .media-player { background: var(--umb-media-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--umb-border); }
+    .range-input { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 30px; background: var(--umb-progress-track); outline: none; }
+    .range-input::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--bs-primary); cursor: pointer; }
+    .kbd-key { background: var(--umb-kbd-bg); border: 1px solid var(--umb-border-strong); border-bottom-width: 2px; border-radius: 5px; padding: 2px 7px; font-size: 12px; font-family: monospace; color: var(--umb-text-primary); }
+    .chart-container { position: relative; height: 220px; }
+    .offcanvas { background: var(--umb-offcanvas-bg) !important; border-left: 1px solid var(--umb-border) !important; }
+    .offcanvas-end { width: 500px !important; }
+    @media (max-width: 576px) { .offcanvas-end { width: 100vw !important; } }
+    .offcanvas-header { border-bottom: none; padding-left: 24px; padding-right: 24px; justify-content: flex-start; gap: 12px; }
+    .offcanvas-header .btn-close { order: -1; margin: 0; flex-shrink: 0; }
+    .offcanvas-body { padding-left: 24px; padding-right: 24px; padding-bottom: 0; }
+    .offcanvas-footer { padding: 24px; border-top: none; }
+    .modal-content { background: var(--umb-modal-bg); border: 1px solid var(--umb-border); border-radius: 16px; }
+    .modal-header { border-bottom: none; }
+    .modal-footer { border-top: none; }
+    .list-group-item { background: var(--umb-card-bg); border-color: var(--umb-border); color: var(--bs-body-color); padding: 10px 14px; font-size: 14px; }
+    .list-group-item.active { background: rgba(var(--bs-primary-rgb),.12); border-color: var(--bs-primary); color: var(--bs-primary); }
+    .table { color: var(--bs-body-color); font-size: 14px; }
+    .table > :not(caption) > * > * { background: transparent; border-bottom-color: var(--umb-border); padding: 10px 14px; }
+    .table thead th { color: var(--umb-text-mid); font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--umb-border) !important; }
+    .table tbody tr { cursor: pointer; transition: background .12s; }
+    .table tbody tr:hover > td { background: var(--umb-table-hover) !important; }
+    .table tbody tr.selected > td { background: var(--umb-table-row-active) !important; }
+    .table-contact-name { font-size: 13px; font-weight: 600; color: var(--umb-text-primary); }
+    .table-time { font-size: 13px; color: var(--umb-text-mid) !important; }
+    .table > :not(caption) > * > * { vertical-align: middle; }
+    /* Checkbox tamanho Lg */
+    .form-check-input-lg { width: 18px !important; height: 18px !important; cursor: pointer; flex-shrink: 0; }
+
+
+/* ── DS DEMO UTILITIES ──────────────────────────────────────────── */
+.ds-swatch-item    { text-align: center; }
+.ds-color-name     { font-size: 11px; color: var(--umb-text-mid); }
+.ds-color-hex      { font-size: 11px; color: var(--umb-text-dim); }
+.ds-swatch         { width: 72px; height: 72px; border-radius: 12px; margin: 0 auto 6px; }
+.ds-swatch-bg      { width: 80px; height: 50px; border-radius: 10px; border: 1px solid var(--umb-border); margin: 0 auto 6px; }
+.ds-divider-v      { width: 1px; background: var(--umb-border); margin: 0 8px; align-self: stretch; flex-shrink: 0; }
+.ds-size-label     { font-size: 11px; color: var(--umb-text-mid); margin-top: 4px; }
+.ds-grid-col-label { font-size: 11px; color: var(--umb-text-mid); text-align: center; }
+.ds-grid-row-label { font-size: 11px; color: var(--umb-text-dim); }
+.ds-stack          { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+/* ── BEST PRACTICES PANEL ──────────────────────────────────────── */
+.comp-practices {
+  background: var(--umb-inset-bg); border: 1px solid var(--umb-border);
+  border-radius: 10px; padding: 16px 20px; margin-top: 24px; margin-bottom: 8px;
+}
+.comp-practices-title {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--umb-text-mid); margin: 0 0 10px;
+}
+.comp-practices ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--umb-text-primary); line-height: 1.75; }
+.comp-practices li + li { margin-top: 2px; }
+
+/* ── CODE BLOCK ─────────────────────────────────────────────────── */
+.comp-code-wrap {
+  background: var(--umb-code-bg); border: 1px solid var(--umb-code-border);
+  border-radius: 10px; margin-top: 16px; overflow: hidden;
+}
+.comp-code-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 14px; border-bottom: 1px solid var(--umb-code-border);
+}
+.comp-code-header span { font-size: 11px; font-weight: 600; color: var(--umb-text-dim); text-transform: uppercase; letter-spacing: .06em; }
+.comp-code-copy {
+  background: var(--umb-copy-btn-bg); border: none; border-radius: 6px;
+  color: var(--umb-text-mid); font-size: 12px; padding: 3px 10px;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.comp-code-copy:hover { background: var(--umb-copy-btn-hover); color: var(--umb-text-primary); }
+.comp-code-pre {
+  margin: 0; padding: 0 !important; font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 12px; overflow-x: auto; line-height: 1.6; background: transparent !important;
+}
+.comp-code-pre code.hljs {
+  background: transparent !important;
+  padding: 14px 16px;
+  font-size: 12px;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  line-height: 1.6;
+  display: block;
+}
+
+
+
+/* ── DS DEMO UTILITIES ──────────────────────────────────────────── */
+.ds-swatch-item    { text-align: center; }
+.ds-color-name     { font-size: 11px; color: var(--umb-text-mid); }
+.ds-color-hex      { font-size: 11px; color: var(--umb-text-dim); }
+.ds-swatch         { width: 72px; height: 72px; border-radius: 12px; margin: 0 auto 6px; }
+.ds-swatch-bg      { width: 80px; height: 50px; border-radius: 10px; border: 1px solid var(--umb-border); margin: 0 auto 6px; }
+.ds-divider-v      { width: 1px; background: var(--umb-border); margin: 0 8px; align-self: stretch; flex-shrink: 0; }
+.ds-size-label     { font-size: 11px; color: var(--umb-text-mid); margin-top: 4px; }
+.ds-grid-col-label { font-size: 11px; color: var(--umb-text-mid); text-align: center; }
+.ds-grid-row-label { font-size: 11px; color: var(--umb-text-dim); }
+.ds-stack          { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+/* ── FONT NAME — muda com o tema ────────────────────────────────── */
+.umb-font-poppins  { display: inline; }
+.umb-font-jakarta  { display: none; }
+[data-bs-theme="emerald"]      .umb-font-poppins,
+[data-bs-theme="dark-emerald"] .umb-font-poppins { display: none; }
+[data-bs-theme="emerald"]      .umb-font-jakarta,
+[data-bs-theme="dark-emerald"] .umb-font-jakarta { display: inline; }
+
+    /* ============================================================
+       APP SHELL — Templates de página do Umbler Talk
+    ============================================================ */
+
+    /* Preview container — usa content-bg (light: #EEF2FE, dark: body) */
+    .tpl-preview {
+      border: 1px solid var(--umb-border);
+      border-radius: 10px;
+      overflow: hidden;
+      height: 560px;
+      display: flex;
+      flex-direction: column;
+      background: var(--umb-content-bg, var(--bs-body-bg));
+      position: relative;
+    }
+    .tpl-preview.tpl-preview-tall { height: 640px; }
+    .tpl-preview-label { font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: .09em; color: var(--umb-text-dim); margin-bottom: 8px; }
+    /* Mobile preview frame */
+    .tpl-mobile-frame {
+      width: 390px; max-width: 100%;
+      border: 1px solid var(--umb-border);
+      border-radius: 12px;
+      overflow: hidden;
+      height: 640px;
+      display: flex;
+      flex-direction: column;
+      background: var(--umb-content-bg, var(--bs-body-bg));
+    }
+
+    /* ── App Shell ── */
+    .umb-shell { display: flex; height: 100%; overflow: hidden; }
+
+    /* Sidebar icon strip */
+    .umb-shell-sidebar {
+      width: 52px; min-width: 52px;
+      background: var(--umb-sidebar-bg);
+      border-right: 1px solid var(--umb-sidebar-border);
+      display: flex; flex-direction: column; align-items: center;
+      padding: 10px 0;
+    }
+    .umb-shell-logo {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px; flex-shrink: 0;
+    }
+    .umb-shell-logo svg { width: 24px; height: auto; }
+    /* Brand wordmark in header */
+    .umb-shell-brand {
+      white-space: nowrap; margin-right: 8px; flex-shrink: 0;
+      display: flex; align-items: center;
+    }
+    /* Logo: altura fixa, cor via filter */
+    .umb-brand-logo { width: 110px; height: 16px; display: block; object-fit: contain; }
+    /* Dark (default): logo clara */
+    :root .umb-brand-logo,
+    [data-bs-theme="dark"] .umb-brand-logo { filter: brightness(0) invert(1); }
+    /* Light: logo no cinza escuro original */
+    [data-bs-theme="light"] .umb-brand-logo { filter: none; }
+    /* Bravia e Esmeralda: ocultar brand inteiro */
+    [data-bs-theme="dark-emerald"] .umb-shell-brand,
+    [data-bs-theme="emerald"]      .umb-shell-brand { display: none !important; }
+    .umb-shell-nav {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; gap: 2px; width: 100%; padding: 0 8px;
+    }
+    .umb-shell-bottom {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 2px; width: 100%; padding: 0 8px;
+    }
+    .umb-si {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--umb-nav-color); font-size: 19px; cursor: pointer;
+      transition: all .15s;
+    }
+    .umb-si:hover { color: var(--umb-nav-hover-color); background: var(--umb-nav-hover-bg); }
+    .umb-si.active { color: var(--umb-nav-active-color); background: var(--umb-nav-active-bg); }
+    .umb-si-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--umb-avatar-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; color: var(--umb-brand-color); cursor: pointer;
+    }
+
+    /* --- AVATAR MENU (Theme Switcher + Logout) ---
+       Abre ao clicar no .umb-si-avatar da sidebar; lista os 5 temas do DS
+       (Auto/Claro/Escuro/Esmeralda/Bravia) + link de logout.
+       Usa Bootstrap dropdown (dropend) — o setTheme() global reaproveitado. */
+    .umb-avatar-menu { position: relative; display: flex; }
+    .umb-avatar-menu .umb-si-avatar {
+      border: 0; padding: 0; outline: 0; font-family: inherit;
+      transition: box-shadow .12s;
+    }
+    .umb-avatar-menu .umb-si-avatar:focus-visible,
+    .umb-avatar-menu .umb-si-avatar[aria-expanded="true"] {
+      box-shadow: 0 0 0 2px var(--umb-brand-color);
+    }
+    .umb-avatar-dropdown { min-width: 220px; padding: 12px !important; }
+    .umb-avatar-menu-label {
+      font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--umb-text-dim); margin: 2px 4px 8px;
+    }
+    .umb-avatar-theme-options { display: flex; flex-direction: column; gap: 2px; }
+    /* Sobrescreve as cores do .theme-option dentro do dropdown do avatar —
+       o default usa tokens de sidebar (branco em temas Claro/Esmeralda),
+       que ficam invisíveis no dropdown (fundo branco). Aqui usamos tokens de conteúdo. */
+    .umb-avatar-dropdown .theme-option { color: var(--umb-text-primary); }
+    .umb-avatar-dropdown .theme-option:hover {
+      color: var(--bs-primary);
+      background: rgba(var(--bs-primary-rgb), .08);
+    }
+    .umb-avatar-dropdown .theme-option.active {
+      color: var(--bs-primary);
+      background: rgba(var(--bs-primary-rgb), .12);
+    }
+    .umb-avatar-logout {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; width: 100%; text-align: left;
+      border: 0; background: transparent; border-radius: 8px;
+      font-size: 13px; font-weight: 500; font-family: inherit;
+      color: var(--umb-alert-danger-color); cursor: pointer;
+      transition: background .12s;
+    }
+    .umb-avatar-logout:hover { background: var(--umb-alert-danger-bg); }
+    .umb-avatar-logout i { font-size: 15px; flex-shrink: 0; }
+    /* Permite que o dropdown do avatar extrapole containers de preview com overflow:hidden */
+    .tpl-preview:has(.dropdown-menu.show),
+    .tpl-mobile-frame:has(.dropdown-menu.show) { overflow: visible; }
+
+    /* Main area (header + content) */
+    .umb-shell-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* Topbar / Header */
+    .umb-shell-header {
+      height: 48px; min-height: 48px;
+      background: var(--umb-shell-header-bg, var(--umb-sidebar-bg));
+      border-bottom: 1px solid var(--umb-sidebar-border);
+      display: flex; align-items: center; padding: 0 20px; gap: 8px;
+    }
+    .umb-shell-header-logo {
+      font-size: 15px; font-weight: 600; color: var(--umb-brand-color);
+      letter-spacing: -.02em; display: none;
+    }
+    .umb-shell-hamburger {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: none; align-items: center; justify-content: center;
+      color: var(--umb-text-mid); font-size: 18px; cursor: pointer;
+    }
+    .umb-breadcrumb {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; flex: 1; min-width: 0;
+    }
+    .umb-bc-item { color: var(--umb-text-mid); white-space: nowrap; }
+    .umb-bc-item.active { color: var(--umb-text-primary); font-weight: 500; }
+    .umb-bc-sep { color: var(--umb-text-dim); font-size: 10px; }
+    .umb-shell-header-right {
+      display: flex; align-items: center; gap: 8px;
+      margin-left: auto; flex-shrink: 0;
+    }
+    .umb-credits {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 13px; font-weight: 600; color: var(--umb-text-primary);
+    }
+    .umb-credits i { color: var(--umb-text-mid); font-size: 16px; }
+
+    /* Scrollable content */
+    .umb-shell-content {
+      flex: 1; overflow-y: auto; padding: 24px;
+      background: var(--umb-content-bg, var(--bs-body-bg));
+    }
+    /* Wrapper interno com largura máxima — usado em todos os templates */
+    .umb-page-inner { max-width: 1300px; margin: 0 auto; width: 100%; }
+
+    /* Page header block — botão de voltar usa o padrão DS "btn btn-icon btn-text btn-lg".
+       Layout em grid 2 colunas: o botão fica SEMPRE alinhado verticalmente ao título
+       (linha 1), independente de existir ou não um subtítulo (linha 2).
+       .umb-pg-back é apenas uma classe marcadora (sem visual próprio). */
+    .umb-pg-header {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .umb-pg-back {
+      grid-column: 1; grid-row: 1;
+      align-self: center;
+      margin-right: 12px; flex-shrink: 0;
+    }
+    /* Achata o wrapper interno (<div> com título + subtítulo) para que cada elemento
+       participe diretamente do grid. */
+    .umb-pg-header > div { display: contents; }
+    .umb-pg-header .umb-pg-title {
+      grid-column: 2; grid-row: 1;
+      align-self: center;
+      font-size: 20px; font-weight: 600; color: var(--umb-text-primary);
+      margin: 0;
+    }
+    .umb-pg-header .umb-pg-sub {
+      grid-column: 2; grid-row: 2;
+      font-size: 12px; color: var(--umb-text-mid);
+      margin: 4px 0 0;
+    }
+
+    /* Toolbar row (search + CTA) */
+    .umb-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .umb-toolbar-left { display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap; }
+    .umb-toolbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+    /* Counter bar */
+    .umb-counter-bar {
+      background: var(--umb-card-bg); border: 1px solid var(--umb-border);
+      border-radius: 10px; padding: 10px 16px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; font-size: 13px; color: var(--umb-text-mid);
+      margin-bottom: 14px; text-align: center;
+    }
+    .umb-counter-bar strong { color: var(--umb-text-primary); }
+
+    /* Choice cards (new item wizard) */
+    .umb-choice-grid { display: flex; gap: 16px; }
+    .umb-choice-card {
+      flex: 1; background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border); border-radius: 12px;
+      padding: 24px 20px;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; cursor: pointer; transition: all .2s;
+      position: relative;
+    }
+    .umb-choice-card:hover { border-color: var(--bs-primary); background: rgba(85,124,242,.04); }
+    .umb-choice-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--umb-hover-bg);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px; overflow: hidden;
+    }
+    .umb-choice-avatar-standard { background: linear-gradient(135deg, #4CAF50, #81C784); }
+    .umb-choice-avatar-expert   { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+    .umb-choice-avatar i { font-size: 28px; color: rgba(255,255,255,.9); }
+    .umb-choice-title { font-size: 17px; font-weight: 600; color: var(--umb-text-primary); margin-bottom: 6px; }
+    .umb-choice-desc  { font-size: 12px; color: var(--umb-text-mid); margin-bottom: 12px; }
+    .umb-choice-list  { list-style: none; padding: 0; margin: 0 0 14px; text-align: left; width: 100%; }
+    .umb-choice-list li { font-size: 12px; color: var(--umb-text-mid); padding: 3px 0;
+      display: flex; align-items: center; gap: 7px; }
+    .umb-choice-list li i { color: var(--bs-success); font-size: 14px; flex-shrink: 0; }
+    .umb-choice-price { font-size: 12px; color: var(--umb-text-dim); margin-bottom: 14px; }
+    .umb-recommended {
+      position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+      background: var(--umb-ai-purple); color: #fff;
+      font-size: 10px; font-weight: 600; padding: 2px 10px;
+      border-radius: 20px; white-space: nowrap;
+    }
+
+    /* Edit page tabs */
+    .umb-page-tabs {
+      display: flex; border-bottom: 1px solid var(--umb-border);
+      margin-bottom: 20px; overflow-x: auto; flex-shrink: 0;
+    }
+    .umb-page-tabs::-webkit-scrollbar { display: none; }
+    .umb-page-tab {
+      font-size: 13px; font-weight: 500; color: var(--umb-text-mid);
+      padding: 9px 14px; cursor: pointer;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: all .15s; white-space: nowrap;
+    }
+    .umb-page-tab:hover  { color: var(--umb-text-primary); }
+    .umb-page-tab.active { color: var(--bs-primary); border-bottom-color: var(--bs-primary); font-weight: 600; }
+
+    /* Settings list */
+    .umb-settings-list { list-style: none; padding: 0; margin: 0;
+      background: var(--umb-card-bg); border: 1px solid var(--umb-border);
+      border-radius: 10px; overflow: hidden; }
+    .umb-settings-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px; cursor: pointer;
+      border-bottom: 1px solid var(--umb-border); transition: background .15s;
+    }
+    .umb-settings-item:last-child { border-bottom: none; }
+    .umb-settings-item:hover { background: var(--umb-table-hover); }
+    .umb-settings-ico {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--umb-hover-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: var(--umb-text-mid); flex-shrink: 0;
+    }
+    .umb-settings-text { flex: 1; min-width: 0; }
+    .umb-settings-name { font-size: 14px; font-weight: 600; color: var(--umb-text-primary); margin: 0 0 2px; }
+    .umb-settings-desc { font-size: 12px; color: var(--umb-text-mid); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .umb-settings-caret { color: var(--umb-text-dim); font-size: 16px; }
+
+    /* Edit form with sticky save bar */
+    .umb-edit-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--umb-content-bg, var(--bs-body-bg)); }
+    .umb-edit-scroll { flex: 1; overflow-y: auto; padding: 20px 24px 0; }
+    .umb-edit-footer {
+      padding: 12px 24px;
+      background: var(--umb-card-bg);
+      border-top: 1px solid var(--umb-border);
+      flex-shrink: 0;
+    }
+
+    /* Mobile shell (no sidebar, bottom nav) */
+    .umb-mobile-shell { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+
+    /* --- MOBILE HEADER (componente) ---
+       Usa a mesma cor da sidebar desktop (var(--umb-sidebar-bg)).
+       Três variantes:
+         - data-variant="home"    → hamburger (esquerda) + logo U (esquerda) + bell + avatar (direita)
+         - data-variant="subpage" → back arrow (esquerda) + bell + avatar (direita)
+         - data-variant="chat"    → back arrow (esquerda) + avatar + nome do contato + tags + phone + menu (direita)
+       Nos variants home/subpage nunca há título de página — o título fica no corpo da tela.
+       O variant "chat" é EXCLUSIVO do template de chat (§21 rules.md), pois o espaço
+       onde ficaria o logo é usado para mostrar o contato em conversa.
+       Componente renderizado via <template id="umb-tpl-mobile-header"> + data-umb-c="mobile-header". */
+    .umb-mobile-header {
+      height: 56px; min-height: 56px;
+      background: var(--umb-sidebar-bg);
+      border-bottom: 1px solid var(--umb-sidebar-border);
+      display: flex; align-items: center; padding: 0 12px; gap: 8px;
+    }
+    .umb-mh-icon-btn {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 0; background: transparent;
+      color: var(--umb-nav-color);
+      font-size: 20px; cursor: pointer; padding: 0; flex-shrink: 0;
+      transition: background .12s, color .12s;
+    }
+    .umb-mh-icon-btn:hover { color: var(--umb-nav-hover-color); background: var(--umb-nav-hover-bg); }
+    .umb-mh-icon-btn i { display: inline-flex; }
+
+    /* Brand à esquerda — só aparece no variant="home", logo após o hamburger */
+    .umb-mh-brand {
+      display: flex; align-items: center;
+      margin-left: 2px; flex-shrink: 0;
+    }
+    .umb-mh-logo { height: 24px; width: auto; }
+
+    /* Spacer empurra as ações da direita para o canto */
+    .umb-mh-spacer { flex: 1; min-width: 0; }
+
+    /* Right cluster: bell + avatar */
+    .umb-mh-right { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+    .umb-mh-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--umb-avatar-bg);
+      color: var(--umb-brand-color);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600;
+      border: 0; padding: 0; cursor: pointer; flex-shrink: 0;
+      transition: box-shadow .12s;
+    }
+    .umb-mh-avatar:focus-visible { outline: 0; box-shadow: 0 0 0 2px var(--umb-brand-color); }
+    .umb-mobile-content { flex: 1; overflow-y: auto; padding: 16px; background: var(--umb-content-bg, var(--bs-body-bg)); }
+    /* Mobile bottom nav — bg = card central, ícones/texto em cor primária,
+       somente borda superior (1px). Sem sombra, sem demais bordas. */
+    .umb-mobile-bottom-nav {
+      height: 56px; min-height: 56px;
+      background: var(--umb-card-bg);
+      border: 0;
+      border-top: 1px solid var(--umb-border);
+      border-radius: 0;
+      box-shadow: none;
+      display: flex; align-items: center; justify-content: space-around; padding: 0 8px;
+    }
+    .umb-mobile-nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      color: var(--bs-primary); font-size: 20px; cursor: pointer;
+      padding: 4px 10px; border-radius: 8px;
+    }
+    .umb-mobile-nav-item.active { color: var(--bs-primary); }
+    .umb-mobile-nav-item span { font-size: 9px; font-weight: 600; margin-top: 1px; color: var(--bs-primary); }
+
+    /* AI agent avatar */
+    .umb-agent-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--umb-ai-purple), #a78bfa);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: rgba(255,255,255,.9); flex-shrink: 0; position: relative;
+    }
+    .umb-agent-avatar.standard {
+      background: linear-gradient(135deg, #4CAF50, #81C784);
+    }
+    .umb-agent-ai-dot {
+      position: absolute; bottom: -2px; right: -2px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--umb-ai-purple);
+      border: 2px solid var(--umb-card-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 6px; color: #fff; font-weight: 600;
+    }
+
+    /* Template section code block */
+    .tpl-code-wrap {
+      background: var(--umb-code-bg);
+      border: 1px solid var(--umb-code-border);
+      border-radius: 8px;
+      overflow: hidden;
+      font-size: 0;
+    }
+    /* Wizard steps indicator */
+    .umb-wizard-steps {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; margin-bottom: 24px; overflow-x: auto; padding: 4px 0;
+    }
+    .umb-wizard-steps::-webkit-scrollbar { display: none; }
+    .umb-wstep {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      position: relative; flex-shrink: 0;
+    }
+    .umb-wstep:not(:last-child)::after {
+      content: ''; position: absolute; top: 14px; left: calc(50% + 14px);
+      width: calc(100% - 28px); height: 1px;
+      background: var(--umb-border); z-index: 0;
+    }
+    .umb-wstep.done::after { background: var(--bs-primary); }
+    .umb-wstep-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1.5px solid var(--umb-border);
+      background: var(--umb-card-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; color: var(--umb-text-dim);
+      position: relative; z-index: 1; flex-shrink: 0;
+    }
+    .umb-wstep.active .umb-wstep-num {
+      background: var(--bs-primary); border-color: var(--bs-primary);
+      color: #fff;
+    }
+    .umb-wstep.done .umb-wstep-num {
+      background: var(--bs-primary); border-color: var(--bs-primary);
+      color: #fff;
+    }
+    .umb-wstep-label {
+      font-size: 10px; font-weight: 500; color: var(--umb-text-dim);
+      white-space: nowrap; margin-top: 2px;
+    }
+    .umb-wstep.active .umb-wstep-label { color: var(--bs-primary); font-weight: 600; }
+    .umb-wstep-gap { width: 48px; height: 1px; background: var(--umb-border); flex-shrink: 0; margin-top: -10px; }
+    .umb-wstep-gap.done { background: var(--bs-primary); }
+    /* Agent function cards */
+    .umb-fn-card {
+      flex: 1; background: var(--umb-card-bg);
+      border: 1.5px solid var(--umb-border); border-radius: 10px;
+      padding: 12px 14px; cursor: pointer; transition: all .15s;
+    }
+    .umb-fn-card:hover { border-color: var(--bs-primary); }
+    .umb-fn-card.selected { border-color: var(--bs-primary); background: rgba(var(--bs-primary-rgb),.05); }
+    .umb-fn-card-title { font-size: 13px; font-weight: 600; color: var(--umb-text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .umb-fn-card-desc { font-size: 11px; color: var(--umb-text-mid); margin-bottom: 4px; }
+    .umb-fn-card-ideal { font-size: 10px; color: var(--umb-text-dim); }
+    .umb-fn-card-ideal strong { color: var(--umb-text-mid); }
+    /* Wizard footer */
+    .umb-wizard-footer {
+      display: flex; align-items: center; justify-content: flex-end;
+      gap: 8px; padding: 12px 24px;
+      background: var(--umb-card-bg);
+      border-top: 1px solid var(--umb-border);
+      flex-shrink: 0;
+    }
+    .umb-wizard-footer .btn-save {
+      margin-right: auto;
+    }
+    /* Agent avatar upload */
+    .umb-avatar-upload {
+      position: relative; width: 80px; height: 80px;
+      border-radius: 50%; background: var(--umb-hover-bg);
+      border: 2px dashed var(--umb-border); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .umb-avatar-upload i { font-size: 32px; color: var(--umb-text-dim); }
+    .umb-avatar-cam {
+      position: absolute; bottom: 0; right: 0;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--umb-surface-raised); border: 2px solid var(--umb-card-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: var(--umb-text-mid);
+    }
+
+    /* ============================================================
+       CHAT TEMPLATE (§21 rules.md) — tela de atendimento
+       Lista de conversas (coluna 1) + detalhe do chat (coluna 2).
+       Mantém shell desktop SEM header superior (§21.1): a barra lateral
+       esquerda continua visível, mas o espaço superior é do chat.
+       ============================================================ */
+
+    /* Tokens default — DARK (fallback) */
+    :root, [data-bs-theme="dark"] {
+      --umb-chat-bubble-in-bg:     #2a2d35;
+      --umb-chat-bubble-in-color:  #D3D6DD;
+      --umb-chat-bubble-out-bg:    #557CF2;
+      --umb-chat-bubble-out-color: #ffffff;
+      --umb-chat-list-hover:       rgba(255,255,255,.04);
+      --umb-chat-list-active:      rgba(85,124,242,.12);
+      --umb-chat-sep-bg:           rgba(255,255,255,.08);
+      --umb-chat-pinned-bg:        rgba(255,214,10,.08);
+      --umb-chat-pinned-color:     #e8d588;
+      --umb-chat-pinned-accent:    #FFD60A;
+      --umb-conv-tag-blue-bg:      rgba(85,124,242,.16);  --umb-conv-tag-blue-color:   #a1b3f2;
+      --umb-conv-tag-green-bg:     rgba(56,158,13,.18);   --umb-conv-tag-green-color:  #8ad27a;
+      --umb-conv-tag-amber-bg:     rgba(250,173,20,.18);  --umb-conv-tag-amber-color:  #f0c878;
+      --umb-conv-tag-red-bg:       rgba(218,96,110,.18);  --umb-conv-tag-red-color:    #f5a8b1;
+      --umb-conv-tag-violet-bg:    rgba(124,58,237,.20);  --umb-conv-tag-violet-color: #c4a8f5;
+    }
+    [data-bs-theme="light"] {
+      --umb-chat-bubble-in-bg:     #ffffff;
+      --umb-chat-bubble-in-color:  #1a1d2b;
+      --umb-chat-bubble-out-bg:    #557CF2;
+      --umb-chat-bubble-out-color: #ffffff;
+      --umb-chat-list-hover:       rgba(0,0,0,.03);
+      --umb-chat-list-active:      rgba(85,124,242,.10);
+      --umb-chat-sep-bg:           rgba(0,0,0,.06);
+      --umb-chat-pinned-bg:        #FFF8DD;
+      --umb-chat-pinned-color:     #8A6D00;
+      --umb-chat-pinned-accent:    #F0A30A;
+      --umb-conv-tag-blue-bg:      #E2E9FE; --umb-conv-tag-blue-color:   #223261;
+      --umb-conv-tag-green-bg:     #E4F6D9; --umb-conv-tag-green-color:  #135200;
+      --umb-conv-tag-amber-bg:     #FFF3C2; --umb-conv-tag-amber-color:  #614700;
+      --umb-conv-tag-red-bg:       #FDE2E5; --umb-conv-tag-red-color:    #7A1F2A;
+      --umb-conv-tag-violet-bg:    #EADDFB; --umb-conv-tag-violet-color: #4A2574;
+    }
+    [data-bs-theme="emerald"] {
+      --umb-chat-bubble-in-bg:     #ffffff;
+      --umb-chat-bubble-in-color:  #1a1d2b;
+      --umb-chat-bubble-out-bg:    #29958D;
+      --umb-chat-bubble-out-color: #ffffff;
+      --umb-chat-list-hover:       rgba(0,0,0,.03);
+      --umb-chat-list-active:      rgba(41,149,141,.10);
+      --umb-chat-sep-bg:           rgba(0,0,0,.06);
+      --umb-chat-pinned-bg:        #FFF8DD;
+      --umb-chat-pinned-color:     #8A6D00;
+      --umb-chat-pinned-accent:    #F0A30A;
+      --umb-conv-tag-blue-bg:      #D6E4FF; --umb-conv-tag-blue-color:   #1d39c4;
+      --umb-conv-tag-green-bg:     #D4EFDC; --umb-conv-tag-green-color:  #0C8E63;
+      --umb-conv-tag-amber-bg:     #FFF3C2; --umb-conv-tag-amber-color:  #614700;
+      --umb-conv-tag-red-bg:       #FDE2E5; --umb-conv-tag-red-color:    #7A1F2A;
+      --umb-conv-tag-violet-bg:    #EADDFB; --umb-conv-tag-violet-color: #4A2574;
+    }
+    [data-bs-theme="dark-emerald"] {
+      --umb-chat-bubble-in-bg:     #11282C;
+      --umb-chat-bubble-in-color:  #D3D6DD;
+      --umb-chat-bubble-out-bg:    #2B897F;
+      --umb-chat-bubble-out-color: #ffffff;
+      --umb-chat-list-hover:       rgba(255,255,255,.04);
+      --umb-chat-list-active:      rgba(43,137,127,.16);
+      --umb-chat-sep-bg:           rgba(255,255,255,.07);
+      --umb-chat-pinned-bg:        rgba(255,214,10,.08);
+      --umb-chat-pinned-color:     #e8d588;
+      --umb-chat-pinned-accent:    #FFD60A;
+      --umb-conv-tag-blue-bg:      rgba(85,124,242,.16);  --umb-conv-tag-blue-color:   #a1b3f2;
+      --umb-conv-tag-green-bg:     rgba(56,158,13,.18);   --umb-conv-tag-green-color:  #8ad27a;
+      --umb-conv-tag-amber-bg:     rgba(250,173,20,.18);  --umb-conv-tag-amber-color:  #f0c878;
+      --umb-conv-tag-red-bg:       rgba(218,96,110,.18);  --umb-conv-tag-red-color:    #f5a8b1;
+      --umb-conv-tag-violet-bg:    rgba(124,58,237,.22);  --umb-conv-tag-violet-color: #c4a8f5;
+    }
+
+    /* ---- Chat shell: duas colunas (list + detail), sem header superior ---- */
+    .umb-chat-shell {
+      display: flex; flex: 1; min-height: 0; overflow: hidden;
+      background: var(--umb-content-bg, var(--bs-body-bg));
+    }
+
+    /* ============ COLUNA 1: Lista de conversas ============ */
+    .umb-conv-list {
+      width: 360px; min-width: 360px;
+      background: var(--umb-card-bg);
+      border-right: 1px solid var(--umb-border);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    /* Topbar (56px): 5 btn-icon btn-text btn-lg + spacer + 1 btn-primary btn-icon btn-lg.
+       Altura deve bater 1:1 com .umb-chat-header para o divisor alinhar pixel-perfect. */
+    .umb-conv-topbar {
+      height: 56px; min-height: 56px;
+      padding: 8px 12px; display: flex; align-items: center; gap: 2px;
+      border-bottom: 1px solid var(--umb-border);
+      background: var(--umb-card-bg);
+    }
+    .umb-conv-topbar-spacer { flex: 1 1 auto; }
+    /* Toolbar de busca + filtro — campo de busca sem chrome (flat, via .input-group-flat).
+       Divisor inferior 100% da largura, separa busca do segmented. */
+    .umb-conv-toolbar {
+      padding: 10px 12px; display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid var(--umb-border);
+    }
+    .umb-conv-toolbar .form-control { height: 34px; font-size: 13px; }
+    /* Wrapper do Segmented. Top padding (12px) = bottom padding (10px) + scroll top (2px),
+       garantindo respiro simétrico entre divisor↔segmented e segmented↔1º card. */
+    .umb-conv-segmented {
+      padding: 12px 12px 10px;
+    }
+    .umb-conv-segmented .inset-control {
+      display: flex; width: 100%;
+    }
+    .umb-conv-segmented .inset-control .btn { flex: 1; }
+    .umb-conv-segmented .inset-control .btn .umb-seg-count {
+      display: inline-block; margin-left: 6px;
+      font-size: 11px; font-weight: 600; opacity: .8;
+    }
+    .umb-conv-segmented .inset-control .btn.active .umb-seg-count { opacity: 1; }
+    /* Compat: classes antigas de abas mantidas pra não quebrar telas já geradas,
+       mas o padrão é .umb-conv-segmented + .inset-control-lg. */
+    .umb-conv-tabs {
+      display: flex; gap: 4px; padding: 6px 8px;
+      border-bottom: 1px solid var(--umb-border);
+    }
+    .umb-conv-tab {
+      flex: 1; text-align: center; font-size: 13px; font-weight: 600;
+      color: var(--umb-text-mid); padding: 8px 10px; border-radius: 8px;
+      cursor: pointer; transition: background .15s, color .15s;
+      border: 0; background: transparent;
+    }
+    .umb-conv-tab:hover { color: var(--umb-text-primary); background: var(--umb-hover-bg); }
+    .umb-conv-tab.active {
+      color: var(--bs-primary);
+      background: rgba(var(--bs-primary-rgb), .10);
+    }
+    .umb-conv-tab-count {
+      display: inline-block; margin-left: 4px;
+      font-size: 11px; font-weight: 600; opacity: .75;
+    }
+    .umb-conv-scroll { flex: 1; overflow-y: auto; padding: 2px 0; }
+    .umb-conv-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--umb-border);
+      cursor: pointer; transition: background .12s;
+      position: relative;
+    }
+    .umb-conv-item:hover { background: var(--umb-chat-list-hover); }
+    .umb-conv-item.active {
+      background: var(--umb-bg-active);
+      box-shadow: inset 3px 0 0 var(--bs-primary);
+    }
+    .umb-conv-avatar {
+      width: 52px; height: 52px;
+      flex-shrink: 0;
+      position: relative;
+      color: var(--umb-brand-color);
+      font-size: 14px; font-weight: 600;
+    }
+    .umb-conv-avatar > img {
+      width: 100%; height: 100%; border-radius: 50%;
+      object-fit: cover; display: block;
+    }
+    /* Fallback de iniciais (span SEM classe de badge) — nao afeta o .umb-conv-avatar-ch */
+    .umb-conv-avatar > span:not(.umb-conv-avatar-ch) {
+      width: 100%; height: 100%; border-radius: 50%;
+      background: var(--umb-avatar-bg);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    /* Badge de canal — canto INFERIOR ESQUERDO. Proporcao ~38% do avatar.
+       Especificidade maior com .umb-conv-avatar > para nao perder de regras genericas. */
+    .umb-conv-avatar > .umb-conv-avatar-ch {
+      position: absolute; bottom: 0; left: 0;
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid var(--umb-card-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; line-height: 1; color: #fff;
+      box-sizing: border-box;
+    }
+    .umb-conv-avatar > .umb-conv-avatar-ch i { font-size: 10px; }
+    /* Canais canonicos (novos) */
+    .umb-conv-avatar-ch.whatsapp-starter { background: #7c3aed; } /* Starter = roxo */
+    .umb-conv-avatar-ch.whatsapp-api     { background: #25D366; } /* Business API = verde */
+    .umb-conv-avatar-ch.livechat         { background: #ff6b35; } /* Live chat = laranja */
+    /* Aliases legados (mantidos para retrocompat) */
+    .umb-conv-avatar-ch.whatsapp  { background: #25D366; }
+    .umb-conv-avatar-ch.instagram { background: linear-gradient(45deg,#F58529,#DD2A7B,#8134AF); }
+    .umb-conv-avatar-ch.email     { background: #546E7A; }
+    .umb-conv-avatar-ch.widget    { background: var(--bs-primary); }
+    .umb-conv-avatar-ch.telegram  { background: #229ED9; }
+
+    .umb-conv-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .umb-conv-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .umb-conv-name {
+      font-size: 15px; font-weight: 400; color: var(--umb-text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      min-width: 0; flex: 1;
+    }
+    /* Conversa selecionada — unico item com nome em destaque (600). */
+    .umb-conv-item.active .umb-conv-name { font-weight: 600; }
+    .umb-conv-head-right {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11.5px; color: var(--umb-text-mid);
+      flex-shrink: 0;
+    }
+    .umb-conv-head-right i { font-size: 14px; }
+    .umb-conv-head-event { display: inline-flex; align-items: center; gap: 3px; }
+    .umb-conv-head-mute { color: var(--umb-text-mid); }
+    .umb-conv-time { font-size: 11.5px; color: var(--umb-text-mid); flex-shrink: 0; }
+
+    /* Linha do preview: mensagem à esquerda; avatar do responsável + badge pending à direita */
+    .umb-conv-preview-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      min-width: 0;
+    }
+    .umb-conv-preview-end {
+      display: flex; align-items: center; gap: 6px;
+      flex-shrink: 0;
+    }
+    .umb-conv-preview {
+      flex: 1; min-width: 0;
+      font-size: 13px; color: var(--umb-text-mid); line-height: 1.35;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin: 0;
+    }
+    .umb-conv-preview i {
+      font-size: 13px; color: var(--umb-text-dim); vertical-align: -1px; margin-right: 3px;
+    }
+
+    .umb-conv-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; margin-top: 2px;
+    }
+    .umb-conv-meta-left, .umb-conv-meta-right {
+      display: flex; align-items: center; gap: 6px; min-width: 0;
+    }
+    .umb-conv-meta-left { flex: 1; min-width: 0; }
+
+    /* Tag de contato (pill colorida) */
+    .umb-conv-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 100px; line-height: 1.4;
+      white-space: nowrap; color: #fff;
+    }
+    .umb-conv-tag i { font-size: 13px; }
+    .umb-conv-tag.blue    { background: var(--umb-conv-tag-blue-bg);   color: var(--umb-conv-tag-blue-color); }
+    .umb-conv-tag.green   { background: var(--umb-conv-tag-green-bg);  color: var(--umb-conv-tag-green-color); }
+    .umb-conv-tag.amber   { background: var(--umb-conv-tag-amber-bg);  color: var(--umb-conv-tag-amber-color); }
+    .umb-conv-tag.red     { background: var(--umb-conv-tag-red-bg);    color: var(--umb-conv-tag-red-color); }
+    .umb-conv-tag.violet  { background: var(--umb-conv-tag-violet-bg); color: var(--umb-conv-tag-violet-color); }
+    .umb-conv-tag.pink    { background: #D9348A; color: #fff; }
+
+    /* Tag "+N" — pill outline com contador de tags adicionais */
+    .umb-conv-tag-more {
+      display: inline-flex; align-items: center;
+      font-size: 11px; font-weight: 600;
+      padding: 2px 10px; border-radius: 100px; line-height: 1.4;
+      color: var(--umb-text-mid);
+      background: transparent;
+      border: 1px solid var(--umb-border-strong);
+      white-space: nowrap;
+    }
+
+    /* Avatar do responsavel (mini) */
+    .umb-conv-assignee {
+      width: 22px; height: 22px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+      background: var(--umb-avatar-bg);
+    }
+
+    /* Badge numerica circular (mensagens pendentes) */
+    .umb-conv-pending {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 22px; height: 22px; padding: 0 6px;
+      border-radius: 100px;
+      background: var(--bs-success); color: #fff;
+      font-size: 11px; font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* Setor — pill outline (nao mais filled) */
+    .umb-conv-sector {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 500;
+      padding: 2px 10px; border-radius: 100px; line-height: 1.4;
+      color: var(--umb-text-mid);
+      background: transparent;
+      border: 1px solid var(--umb-border-strong);
+      white-space: nowrap;
+    }
+    .umb-conv-sector i { font-size: 11px; }
+
+    /* Legado (retrocompat): antigo .umb-conv-right ainda existe em alguns lugares.
+       Mantem-se, mas o padrao agora e meta-left + meta-right. */
+    .umb-conv-right {
+      display: flex; flex-direction: column; align-items: flex-end;
+      gap: 4px; flex-shrink: 0;
+    }
+    .umb-conv-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px;
+      background: var(--bs-primary); color: #fff;
+      font-size: 11px; font-weight: 600;
+    }
+
+    /* ============ COLUNA 2: Detalhe do chat ============ */
+    .umb-chat-detail {
+      flex: 1; display: flex; flex-direction: column; min-width: 0;
+      background: var(--umb-bg-primary, var(--bs-body-bg));
+    }
+    .umb-chat-header {
+      height: 56px; min-height: 56px;
+      background: var(--umb-bg-primary, var(--bs-body-bg));
+      border-bottom: 1px solid var(--umb-border);
+      display: flex; align-items: center; gap: 12px; padding: 0 16px;
+    }
+    .umb-chat-header-contact {
+      display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;
+    }
+    .umb-chat-header-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--umb-avatar-bg); color: var(--umb-brand-color);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600; flex-shrink: 0; overflow: hidden;
+    }
+    .umb-chat-header-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .umb-chat-header-info { min-width: 0; display: flex; flex-direction: column; }
+    .umb-chat-header-name {
+      font-size: 14px; font-weight: 600; color: var(--umb-text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .umb-chat-header-meta {
+      display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-top: 1px;
+    }
+    .umb-chat-header-actions {
+      display: flex; align-items: center; gap: 2px; flex-shrink: 0;
+    }
+    /* Ações do header: padrão "btn btn-icon btn-text btn-lg" (40×40) com tooltip no hover.
+       Mesmo estilo da topbar da conv-list pra manter coerência visual entre as 2 colunas. */
+    .umb-chat-header-actions .btn-icon { color: var(--umb-text-mid); }
+
+    /* Pinned message bar (logo abaixo do header do chat) */
+    /* Pinned message — card flutuante usando o componente Alert (warning) do DS.
+       Estrutura: <div class="umb-chat-pinned alert alert-warning">. As cores de
+       fundo/texto vem de var(--umb-alert-warning-*) (por tema). O unico pedaco
+       proprio aqui e a margem externa, o layout flex e o botao de fechar. */
+    .umb-chat-pinned {
+      margin: 12px 16px 0;
+      align-items: center !important;
+      gap: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .umb-chat-pinned-icon {
+      font-size: 16px; flex-shrink: 0;
+      color: var(--umb-chat-pinned-accent);
+    }
+    .umb-chat-pinned-text {
+      flex: 1; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      color: inherit;
+    }
+    .umb-chat-pinned-text strong { font-weight: 600; margin-right: 4px; }
+    .umb-chat-pinned-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      color: inherit; text-decoration: none;
+      font-weight: 600; flex-shrink: 0; font-size: 13px;
+    }
+    .umb-chat-pinned-link:hover { text-decoration: underline; }
+    .umb-chat-pinned-link i { font-size: 15px; }
+    .umb-chat-pinned-close {
+      flex-shrink: 0;
+      background: transparent; border: 0; padding: 2px; margin: 0;
+      color: inherit; opacity: .6; cursor: pointer;
+      font-size: 18px; line-height: 1;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: opacity .12s;
+    }
+    .umb-chat-pinned-close:hover { opacity: 1; }
+
+    /* Mensagens (area rolável) */
+    .umb-chat-body {
+      flex: 1; overflow-y: auto; padding: 18px 24px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .umb-chat-date-sep {
+      display: flex; align-items: center; justify-content: center;
+      margin: 14px 0 6px; gap: 10px;
+    }
+    .umb-chat-date-sep::before,
+    .umb-chat-date-sep::after {
+      content: ''; flex: 1; height: 1px; background: var(--umb-chat-sep-bg); max-width: 140px;
+    }
+    .umb-chat-date-sep span {
+      font-size: 11px; font-weight: 600; color: var(--umb-text-mid);
+      text-transform: uppercase; letter-spacing: .04em;
+    }
+
+    .umb-msg { display: flex; gap: 10px; max-width: 72%; }
+    .umb-msg.out { align-self: flex-end; flex-direction: row-reverse; }
+    .umb-msg.in  { align-self: flex-start; }
+    .umb-msg-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--umb-avatar-bg);
+      color: var(--umb-brand-color);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; flex-shrink: 0; overflow: hidden;
+    }
+    .umb-msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .umb-msg-content { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .umb-msg.out .umb-msg-content { align-items: flex-end; }
+    .umb-msg-author {
+      font-size: 11px; font-weight: 600; color: var(--umb-text-mid); padding: 0 4px;
+    }
+    .umb-msg-bubble {
+      padding: 9px 12px; border-radius: 12px;
+      font-size: 13.5px; line-height: 1.45;
+      background: var(--umb-chat-bubble-in-bg);
+      color: var(--umb-chat-bubble-in-color);
+      border: 1px solid var(--umb-border);
+      word-wrap: break-word; white-space: pre-wrap;
+      max-width: 100%;
+    }
+    .umb-msg.out .umb-msg-bubble {
+      background: var(--umb-chat-bubble-out-bg);
+      color: var(--umb-chat-bubble-out-color);
+      border-color: transparent;
+    }
+    .umb-msg.in  .umb-msg-bubble { border-top-left-radius: 3px; }
+    .umb-msg.out .umb-msg-bubble { border-top-right-radius: 3px; }
+    .umb-msg-meta {
+      display: flex; align-items: center; gap: 4px; padding: 0 4px;
+      font-size: 10.5px; color: var(--umb-text-mid);
+    }
+    .umb-msg-meta i { font-size: 12px; }
+    .umb-msg-meta .umb-msg-status-read { color: #33A8FF; }
+
+    /* Variantes de conteúdo dentro do bubble */
+    .umb-msg-image {
+      max-width: 280px; border-radius: 10px; overflow: hidden;
+      background: var(--umb-media-bg); display: block;
+    }
+    .umb-msg-image img { display: block; width: 100%; height: auto; }
+
+    .umb-msg-file {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      background: var(--umb-chat-bubble-in-bg); border: 1px solid var(--umb-border);
+      min-width: 220px;
+    }
+    .umb-msg.out .umb-msg-file {
+      background: rgba(255,255,255,.14);
+      border-color: rgba(255,255,255,.16); color: #fff;
+    }
+    .umb-msg-file-ico {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--umb-hover-bg); color: var(--umb-text-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .umb-msg.out .umb-msg-file-ico { background: rgba(255,255,255,.18); color: #fff; }
+    .umb-msg-file-body { min-width: 0; flex: 1; }
+    .umb-msg-file-name {
+      font-size: 13px; font-weight: 600; color: inherit;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .umb-msg-file-sub { font-size: 11px; color: var(--umb-text-mid); }
+    .umb-msg.out .umb-msg-file-sub { color: rgba(255,255,255,.8); }
+
+    .umb-msg-audio {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; border-radius: 24px;
+      background: var(--umb-chat-bubble-in-bg); border: 1px solid var(--umb-border);
+      min-width: 240px;
+    }
+    .umb-msg.out .umb-msg-audio {
+      background: rgba(255,255,255,.14);
+      border-color: rgba(255,255,255,.16); color: #fff;
+    }
+    .umb-msg-audio-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--bs-primary); color: #fff; border: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .umb-msg.out .umb-msg-audio-btn { background: #fff; color: var(--bs-primary); }
+    .umb-msg-audio-wave {
+      flex: 1; height: 22px;
+      background: repeating-linear-gradient(to right,
+        var(--umb-text-dim) 0 2px, transparent 2px 5px);
+      border-radius: 2px; opacity: .55;
+    }
+    .umb-msg.out .umb-msg-audio-wave {
+      background: repeating-linear-gradient(to right,
+        rgba(255,255,255,.8) 0 2px, transparent 2px 5px);
+      opacity: .7;
+    }
+    .umb-msg-audio-time { font-size: 11px; color: var(--umb-text-mid); flex-shrink: 0; }
+    .umb-msg.out .umb-msg-audio-time { color: rgba(255,255,255,.8); }
+
+    /* Mensagem do sistema (transferência, automação, etc) */
+    .umb-msg-system {
+      align-self: center; max-width: 80%;
+      padding: 6px 14px; border-radius: 100px;
+      font-size: 11.5px; color: var(--umb-text-mid);
+      background: var(--umb-hover-bg);
+      display: flex; align-items: center; gap: 6px;
+      text-align: center;
+    }
+    .umb-msg-system i { font-size: 13px; color: var(--umb-text-dim); }
+
+    /* Composer — card flutuante ancorado no rodapé do chat-detail.
+       Usa componentes canônicos: .inset-control (Segmented), form-switch, .btn padrão. */
+    .umb-chat-composer {
+      flex-shrink: 0;
+      margin: 12px 16px 16px;
+      background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      display: flex; flex-direction: column;
+    }
+    .umb-chat-composer-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 10px 12px 6px;
+    }
+    .umb-chat-composer-assignee {
+      display: flex; align-items: center; gap: 8px; min-width: 0;
+    }
+    .umb-chat-composer-assignee .form-check { margin: 0; padding-left: 2.5em; min-height: auto; }
+    .umb-chat-composer-assignee-name {
+      font-size: 13px; font-weight: 600; color: var(--umb-text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .umb-chat-composer-input { padding: 2px 14px 4px; }
+    .umb-chat-composer-input textarea {
+      width: 100%; min-height: 60px; max-height: 180px; resize: none;
+      border: 0; background: transparent; color: var(--umb-text-primary);
+      padding: 8px 0; font-family: inherit; font-size: 13.5px; line-height: 1.5;
+    }
+    .umb-chat-composer-input textarea:focus { outline: 0; box-shadow: none; }
+    .umb-chat-composer-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; padding: 6px 10px 10px;
+    }
+    .umb-chat-composer-toolbar-left,
+    .umb-chat-composer-toolbar-right {
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    /* Empty state — sem chat selecionado (apenas desktop) */
+    .umb-chat-empty {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px; text-align: center; color: var(--umb-text-mid);
+    }
+    .umb-chat-empty-ico {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--umb-hover-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; color: var(--umb-text-mid); margin-bottom: 16px;
+    }
+    .umb-chat-empty-title {
+      font-size: 16px; font-weight: 600; color: var(--umb-text-primary); margin-bottom: 4px;
+    }
+    .umb-chat-empty-sub {
+      font-size: 13px; color: var(--umb-text-mid); max-width: 340px; line-height: 1.45;
+    }
+
+    /* ---- Responsivo: mobile ---- */
+    @media (max-width: 767.98px) {
+      .umb-chat-body { padding: 14px 12px; }
+      .umb-msg { max-width: 86%; }
+      .umb-chat-pinned { padding: 8px 12px; font-size: 12px; }
+      .umb-chat-composer-input { padding: 8px 10px 4px; }
+      .umb-chat-composer-toolbar { padding: 4px 8px 8px; }
+    }
+
+    /* Variante "chat" do mobile-header — mostra contato em vez de logo/brand */
+    .umb-mobile-header[data-variant="chat"] { padding: 0 4px 0 0; gap: 6px; }
+    .umb-mh-chat {
+      display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;
+      padding: 4px 2px;
+    }
+    .umb-mh-chat-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--umb-avatar-bg); color: var(--umb-brand-color);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600; flex-shrink: 0; overflow: hidden;
+    }
+    .umb-mh-chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .umb-mh-chat-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .umb-mh-chat-name {
+      font-size: 14px; font-weight: 600; color: var(--umb-brand-color);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .umb-mh-chat-sub {
+      display: flex; align-items: center; gap: 4px; flex-wrap: nowrap;
+      margin-top: 2px; overflow: hidden;
+    }
+    .umb-mh-chat-sub .umb-conv-tag {
+      background: rgba(255,255,255,.2); color: var(--umb-brand-color);
+    }
+    /* Light theme (sidebar azul): mantém contraste */
+    [data-bs-theme="light"] .umb-mh-chat-sub .umb-conv-tag,
+    [data-bs-theme="emerald"] .umb-mh-chat-sub .umb-conv-tag {
+      background: rgba(255,255,255,.22); color: #ffffff;
+    }
+
+  </style>
+  <style>
+    html, body { height: 100vh; margin: 0; overflow: hidden; }
+    .umb-shell, .umb-mobile-shell { height: 100vh; }
+    @media (max-width: 767.98px) { }
+  </style>
+</head>
+<body>
+
+<div class="umb-shell d-none d-md-flex">
+  <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Conversas"></nav>
+
+  <div class="umb-chat-shell">
+    <aside class="umb-conv-list">
+      <div class="umb-conv-topbar">
+        <button class="btn btn-icon btn-text btn-lg" aria-label="Conversas com cliente" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Conversas com cliente"><i class="ph ph-chat"></i></button>
+        <button class="btn btn-icon btn-text btn-lg" aria-label="Conversas com a equipe" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Conversas com a equipe"><i class="ph ph-users-three"></i></button>
+        <button class="btn btn-icon btn-text btn-lg" aria-label="Conversas visíveis" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Conversas visíveis"><i class="ph ph-eye"></i></button>
+        <button class="btn btn-icon btn-text btn-lg" aria-label="Aplicar ação para múltiplas conversas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Aplicar ação para múltiplas conversas"><i class="ph ph-list-checks"></i></button>
+        <button class="btn btn-icon btn-text btn-lg" aria-label="Ordem da lista de conversas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ordem da lista de conversas"><i class="ph ph-sort-descending"></i></button>
+        <div class="umb-conv-topbar-spacer"></div>
+        <button class="btn btn-primary btn-icon btn-lg" aria-label="Iniciar nova conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar nova conversa"><i class="ph ph-plus"></i></button>
+      </div>
+      <div class="umb-conv-toolbar">
+        <button class="btn btn-icon btn-text btn-lg" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
+        <div class="input-group input-group-flat" style="flex:1">
+          <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
+          <input type="search" class="form-control" placeholder="Buscar por nome ou telefone">
+        </div>
+      </div>
+      <div class="umb-conv-segmented">
+        <div class="inset-control inset-control-lg">
+          <button class="btn active" type="button">Entrada<span class="umb-seg-count">12</span></button>
+          <button class="btn" type="button">Esperando<span class="umb-seg-count">3</span></button>
+          <button class="btn" type="button">Finalizados</button>
+        </div>
+      </div>
+      <div class="umb-conv-scroll">
+
+
+        <div class="umb-conv-item active">
+          <div class="umb-conv-avatar">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=faces" alt="Vitor">
+            <span class="umb-conv-avatar-ch whatsapp-starter"><i class="ph ph-whatsapp-logo"></i></span>
+          </div>
+          <div class="umb-conv-body">
+            <div class="umb-conv-head">
+              <span class="umb-conv-name">Vitor</span>
+              <div class="umb-conv-head-right"><span class="umb-conv-head-event"><i class="ph ph-calendar-blank"></i>1</span><i class="ph ph-speaker-slash umb-conv-head-mute"></i><span class="umb-conv-time">10 horas atras</span></div>
+            </div>
+            <div class="umb-conv-preview-row">
+              <p class="umb-conv-preview">Ola. Tudo bem?</p>
+              <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1507081323647-4d250478b919?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"><span class="umb-conv-pending">3</span></div>
+            </div>
+            <div class="umb-conv-meta">
+              <div class="umb-conv-meta-left"><span class="umb-conv-tag pink"><i class="ph ph-user-circle"></i>Magenta</span><span class="umb-conv-tag-more">+3</span></div>
+              <div class="umb-conv-meta-right"><span class="umb-conv-sector">Comercial</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="umb-conv-item">
+          <div class="umb-conv-avatar">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces" alt="Maria Rocha">
+            <span class="umb-conv-avatar-ch whatsapp-api"><i class="ph ph-whatsapp-logo"></i></span>
+          </div>
+          <div class="umb-conv-body">
+            <div class="umb-conv-head">
+              <span class="umb-conv-name">Maria Rocha</span>
+              <div class="umb-conv-head-right"><span class="umb-conv-time">14:23</span></div>
+            </div>
+            <div class="umb-conv-preview-row">
+              <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
+              <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"></div>
+            </div>
+            <div class="umb-conv-meta">
+              <div class="umb-conv-meta-left"><span class="umb-conv-tag green"><i class="ph ph-user-circle"></i>Cliente</span></div>
+              <div class="umb-conv-meta-right"><span class="umb-conv-sector">Suporte</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="umb-conv-item">
+          <div class="umb-conv-avatar">
+            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=96&h=96&fit=crop&crop=faces" alt="Ricardo Farias">
+            <span class="umb-conv-avatar-ch whatsapp-starter"><i class="ph ph-whatsapp-logo"></i></span>
+          </div>
+          <div class="umb-conv-body">
+            <div class="umb-conv-head">
+              <span class="umb-conv-name">Ricardo Farias</span>
+              <div class="umb-conv-head-right"><span class="umb-conv-time">14:05</span></div>
+            </div>
+            <div class="umb-conv-preview-row">
+              <p class="umb-conv-preview">Consegue trocar o plano pro anual?</p>
+              <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1507081323647-4d250478b919?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"><span class="umb-conv-pending">2</span></div>
+            </div>
+            <div class="umb-conv-meta">
+              <div class="umb-conv-meta-left"><span class="umb-conv-tag amber"><i class="ph ph-user-circle"></i>Trial</span><span class="umb-conv-tag-more">+2</span></div>
+              <div class="umb-conv-meta-right"><span class="umb-conv-sector">Vendas</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="umb-conv-item">
+          <div class="umb-conv-avatar">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&crop=faces" alt="Joao P. (site)">
+            <span class="umb-conv-avatar-ch livechat"><i class="ph ph-chat-circle"></i></span>
+          </div>
+          <div class="umb-conv-body">
+            <div class="umb-conv-head">
+              <span class="umb-conv-name">Joao P. (site)</span>
+              <div class="umb-conv-head-right"><span class="umb-conv-time">13:55</span></div>
+            </div>
+            <div class="umb-conv-preview-row">
+              <p class="umb-conv-preview">Voces tem integracao com HubSpot?</p>
+            </div>
+            <div class="umb-conv-meta">
+              <div class="umb-conv-meta-left"><span class="umb-conv-tag blue"><i class="ph ph-user-circle"></i>Lead</span></div>
+              <div class="umb-conv-meta-right"><span class="umb-conv-sector">Vendas</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="umb-conv-item">
+          <div class="umb-conv-avatar">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=96&h=96&fit=crop&crop=faces" alt="Cannacare">
+            <span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span>
+          </div>
+          <div class="umb-conv-body">
+            <div class="umb-conv-head">
+              <span class="umb-conv-name">Cannacare</span>
+              <div class="umb-conv-head-right"><span class="umb-conv-time">13:40</span></div>
+            </div>
+            <div class="umb-conv-preview-row">
+              <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
+              <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"><span class="umb-conv-pending">1</span></div>
+            </div>
+            <div class="umb-conv-meta">
+              <div class="umb-conv-meta-left"><span class="umb-conv-tag violet"><i class="ph ph-user-circle"></i>Parceiro</span><span class="umb-conv-tag-more">+1</span></div>
+              <div class="umb-conv-meta-right"><span class="umb-conv-sector">Vendas</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="umb-conv-item">
+          <div class="umb-conv-avatar">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&crop=faces" alt="Laura Silva">
+            <span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span>
+          </div>
+          <div class="umb-conv-body">
+            <div class="umb-conv-head">
+              <span class="umb-conv-name">Laura Silva</span>
+              <div class="umb-conv-head-right"><span class="umb-conv-time">Ontem</span></div>
+            </div>
+            <div class="umb-conv-preview-row">
+              <p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p>
+            </div>
+            <div class="umb-conv-meta">
+              <div class="umb-conv-meta-left"><span class="umb-conv-tag red"><i class="ph ph-user-circle"></i>VIP</span></div>
+              <div class="umb-conv-meta-right"><span class="umb-conv-sector">Contas</span></div>
+            </div>
+          </div>
+        </div>
+      
+      
+
+      </div>
+    </aside>
+
+    <main class="umb-chat-detail">
+      <header class="umb-chat-header">
+        <div class="umb-chat-header-contact">
+          <div class="umb-chat-header-avatar">MR</div>
+          <div class="umb-chat-header-info">
+            <div class="umb-chat-header-name">Maria Rocha</div>
+            <div class="umb-chat-header-meta">
+              <span class="umb-conv-tag green">Cliente</span>
+              <span class="umb-conv-sector"><i class="ph ph-whatsapp-logo"></i>WhatsApp</span>
+              <span class="umb-conv-sector"><i class="ph ph-headset"></i>Suporte</span>
+            </div>
+          </div>
+        </div>
+        <div class="umb-chat-header-actions">
+          <button class="btn btn-icon btn-text btn-lg" aria-label="Detalhes do contato" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Detalhes do contato"><i class="ph ph-user"></i></button>
+          <button class="btn btn-icon btn-text btn-lg" aria-label="Detalhes da conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Detalhes da conversa"><i class="ph ph-article"></i></button>
+          <button class="btn btn-icon btn-text btn-lg" aria-label="Transferir conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Transferir conversa"><i class="ph ph-arrow-bend-up-right"></i></button>
+          <button class="btn btn-icon btn-text btn-lg" aria-label="Privar atendimento" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Privar atendimento"><i class="ph ph-lock-simple-open"></i></button>
+          <button class="btn btn-icon btn-text btn-lg" aria-label="Agendar envio de mensagem" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Agendar envio de mensagem"><i class="ph ph-calendar-blank"></i></button>
+          <button class="btn btn-icon btn-text btn-lg" aria-label="Finalizar conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Finalizar conversa"><i class="ph ph-check"></i></button>
+          <button class="btn btn-icon btn-text btn-lg" aria-label="Pesquisar mensagem" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pesquisar mensagem"><i class="ph ph-magnifying-glass"></i></button>
+          <button class="btn btn-icon btn-text btn-lg" aria-label="Ocultar essa janela" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ocultar essa janela"><i class="ph ph-x"></i></button>
+        </div>
+      </header>
+
+      <div class="umb-chat-pinned alert alert-warning" role="status">
+        <i class="ph ph-push-pin umb-chat-pinned-icon"></i>
+        <span class="umb-chat-pinned-text">É um cara legal</span>
+        <a href="#" class="umb-chat-pinned-link"><i class="ph ph-list-bullets"></i>(1)</a>
+        <button type="button" class="umb-chat-pinned-close" aria-label="Fechar anotação"><i class="ph ph-x"></i></button>
+      </div>
+
+      <div class="umb-chat-body">
+        <div class="umb-chat-date-sep"><span>Hoje</span></div>
+
+        <div class="umb-msg in">
+          <div class="umb-msg-avatar">MR</div>
+          <div class="umb-msg-content">
+            <div class="umb-msg-bubble">Oi, tudo bem? Tô com dúvida sobre a cobrança de hoje — apareceu um valor diferente.</div>
+            <div class="umb-msg-meta"><span>14:08</span></div>
+          </div>
+        </div>
+
+        <div class="umb-msg out">
+          <div class="umb-msg-avatar">PR</div>
+          <div class="umb-msg-content">
+            <div class="umb-msg-bubble">Oi Maria! Tudo ótimo. Já olhei aqui, o acréscimo veio do upgrade do agente de IA que você fez semana passada. Segue o detalhamento:</div>
+            <div class="umb-msg-meta"><span>14:10</span><i class="ph ph-checks umb-msg-status-read"></i></div>
+          </div>
+        </div>
+
+        <div class="umb-msg out">
+          <div class="umb-msg-avatar">PR</div>
+          <div class="umb-msg-content">
+            <div class="umb-msg-bubble" style="padding:4px;background:transparent;border:0">
+              <div class="umb-msg-image">
+                <div style="height:150px;background:linear-gradient(135deg,#557CF2,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600">fatura-abr26.png</div>
+              </div>
+            </div>
+            <div class="umb-msg-meta"><span>14:10</span><i class="ph ph-checks umb-msg-status-read"></i></div>
+          </div>
+        </div>
+
+        <div class="umb-msg-system">
+          <i class="ph ph-arrows-left-right"></i>
+          Chat transferido de <strong>Atendimento Inicial</strong> para <strong>Suporte</strong>
+        </div>
+
+        <div class="umb-msg in">
+          <div class="umb-msg-avatar">MR</div>
+          <div class="umb-msg-content">
+            <div class="umb-msg-bubble" style="padding:4px 6px;background:transparent;border:0">
+              <div class="umb-msg-audio">
+                <button class="umb-msg-audio-btn"><i class="ph ph-play-fill"></i></button>
+                <div class="umb-msg-audio-wave"></div>
+                <span class="umb-msg-audio-time">0:23</span>
+              </div>
+            </div>
+            <div class="umb-msg-meta"><span>14:18</span></div>
+          </div>
+        </div>
+
+        <div class="umb-msg in">
+          <div class="umb-msg-avatar">MR</div>
+          <div class="umb-msg-content">
+            <div class="umb-msg-bubble" style="padding:4px;background:transparent;border:0">
+              <div class="umb-msg-file">
+                <div class="umb-msg-file-ico"><i class="ph ph-file-pdf"></i></div>
+                <div class="umb-msg-file-body">
+                  <div class="umb-msg-file-name">comprovante-abril.pdf</div>
+                  <div class="umb-msg-file-sub">142 KB · PDF</div>
+                </div>
+              </div>
+            </div>
+            <div class="umb-msg-meta"><span>14:20</span></div>
+          </div>
+        </div>
+
+        <div class="umb-msg in">
+          <div class="umb-msg-avatar">MR</div>
+          <div class="umb-msg-content">
+            <div class="umb-msg-bubble">Obrigada! Vou conferir aqui e te aviso.</div>
+            <div class="umb-msg-meta"><span>14:23</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="umb-chat-composer">
+        <div class="umb-chat-composer-topbar">
+          <div class="umb-chat-composer-assignee">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="composer-online" checked>
+            </div>
+            <span class="umb-chat-composer-assignee-name">Paulo Ricardo</span>
+            <button class="btn btn-icon btn-text" aria-label="Trocar atendente" data-bs-toggle="tooltip" data-bs-placement="top" title="Trocar atendente"><i class="ph ph-pencil-simple"></i></button>
+          </div>
+          <div class="inset-control">
+            <button class="btn active" type="button"><i class="ph ph-chat-circle me-1"></i>Mensagem</button>
+            <button class="btn" type="button"><i class="ph ph-note me-1"></i>Notas</button>
+          </div>
+        </div>
+        <div class="umb-chat-composer-input">
+          <textarea placeholder="Digite sua mensagem ou arraste um arquivo..."></textarea>
+        </div>
+        <div class="umb-chat-composer-toolbar">
+          <div class="umb-chat-composer-toolbar-left">
+            <button class="btn btn-icon btn-text" aria-label="Anexar arquivo" data-bs-toggle="tooltip" data-bs-placement="top" title="Anexar arquivo"><i class="ph ph-paperclip"></i></button>
+            <button class="btn btn-icon btn-text" aria-label="Teclado emoji" data-bs-toggle="tooltip" data-bs-placement="top" title="Teclado emoji"><i class="ph ph-smiley"></i></button>
+            <button class="btn btn-icon btn-text" aria-label="Respostas rapidas" data-bs-toggle="tooltip" data-bs-placement="top" title="Respostas rapidas"><i class="ph ph-chat-centered-dots"></i></button>
+            <button class="btn btn-icon btn-text" aria-label="Templates" data-bs-toggle="tooltip" data-bs-placement="top" title="Templates"><i class="ph ph-quotes"></i></button>
+            <button class="btn btn-icon btn-text" aria-label="Chatbot" data-bs-toggle="tooltip" data-bs-placement="top" title="Chatbot"><i class="ph ph-robot"></i></button>
+            <button class="btn btn-icon btn-text" aria-label="Figurinhas" data-bs-toggle="tooltip" data-bs-placement="top" title="Figurinhas"><i class="ph ph-sticker"></i></button>
+            <button class="btn btn-icon btn-text" aria-label="Editar atalhos" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar atalhos"><i class="ph ph-pencil-simple"></i></button>
+          </div>
+          <div class="umb-chat-composer-toolbar-right">
+            <button class="btn btn-icon btn-text" aria-label="Agendar envio" data-bs-toggle="tooltip" data-bs-placement="top" title="Agendar envio"><i class="ph ph-clock"></i></button>
+            <button type="button" class="btn btn-primary btn-icon" aria-label="Gravar audio" data-bs-toggle="tooltip" data-bs-placement="top" title="Gravar audio"><i class="ph ph-microphone"></i></button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<div class="umb-mobile-shell d-md-none">
+  <header class="umb-mobile-header"
+          data-umb-c="mobile-header"
+          data-variant="chat"
+          data-contact-name="Maria Rocha"
+          data-contact-avatar-text="MR"
+          data-contact-tags="Cliente:green"
+          data-contact-sub="+55 51 9 9123-4567"></header>
+
+  <main class="umb-mobile-content" style="padding: 0; display: flex; flex-direction: column;">
+    <div class="umb-chat-body" style="flex:1">
+      <div class="umb-chat-date-sep"><span>Hoje</span></div>
+
+      <div class="umb-msg in">
+        <div class="umb-msg-avatar">MR</div>
+        <div class="umb-msg-content">
+          <div class="umb-msg-bubble">Oi, tudo bem? Tô com dúvida sobre a cobrança de hoje.</div>
+          <div class="umb-msg-meta"><span>14:08</span></div>
+        </div>
+      </div>
+
+      <div class="umb-msg out">
+        <div class="umb-msg-avatar">PR</div>
+        <div class="umb-msg-content">
+          <div class="umb-msg-bubble">Oi Maria! Tudo ótimo. Já olhei aqui, o acréscimo veio do upgrade do agente de IA. Segue o detalhamento:</div>
+          <div class="umb-msg-meta"><span>14:10</span><i class="ph ph-checks umb-msg-status-read"></i></div>
+        </div>
+      </div>
+
+      <div class="umb-msg in">
+        <div class="umb-msg-avatar">MR</div>
+        <div class="umb-msg-content">
+          <div class="umb-msg-bubble">Obrigada! Vou conferir aqui e te aviso.</div>
+          <div class="umb-msg-meta"><span>14:23</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="umb-chat-composer" style="flex-shrink:0">
+      <div class="umb-chat-composer-topbar">
+        <div class="umb-chat-composer-assignee">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="composer-online-m" checked>
+          </div>
+          <span class="umb-chat-composer-assignee-name">Paulo Ricardo</span>
+        </div>
+        <div class="inset-control inset-control-sm">
+          <button class="btn active" type="button">Mensagem</button>
+          <button class="btn" type="button">Notas</button>
+        </div>
+      </div>
+      <div class="umb-chat-composer-input">
+        <textarea placeholder="Digite sua mensagem ou arraste um arquivo..."></textarea>
+      </div>
+      <div class="umb-chat-composer-toolbar">
+        <div class="umb-chat-composer-toolbar-left">
+          <button class="btn btn-icon btn-text" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
+          <button class="btn btn-icon btn-text" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
+          <button class="btn btn-icon btn-text" aria-label="Templates"><i class="ph ph-chat-teardrop-text"></i></button>
+        </div>
+        <div class="umb-chat-composer-toolbar-right">
+          <button class="btn btn-icon btn-text" aria-label="Agendar"><i class="ph ph-clock"></i></button>
+          <button type="button" class="btn btn-primary btn-icon" aria-label="Gravar audio"><i class="ph ph-microphone"></i></button>
+        </div>
+      </div>
+    </div>
+      <div class="umb-chat-composer-toolbar">
+        <div class="umb-chat-composer-toolbar-left">
+          <button class="btn btn-icon btn-text" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
+          <button class="btn btn-icon btn-text" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
+          <button class="btn btn-icon btn-text" aria-label="Áudio"><i class="ph ph-microphone"></i></button>
+        </div>
+        <div class="umb-chat-composer-toolbar-right">
+          <button type="button" class="btn btn-primary btn-icon" aria-label="Enviar"><i class="ph ph-paper-plane-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<template id="umb-tpl-sidebar">
+  <div class="umb-shell-logo">
+    <svg width="30" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M17.8431 11.4306C17.5608 12.1241 17.0622 12.7081 16.4214 13.0955C15.7807 13.483 15.032 13.6533 14.2867 13.5811C13.5414 13.5089 12.8393 13.1981 12.2848 12.6949C11.7303 12.1916 11.353 11.5229 11.2091 10.7881C11.1772 10.6216 11.1579 10.453 11.1514 10.2836C11.1452 10.0614 11.0627 9.84803 10.9178 9.67944C10.7728 9.51085 10.5742 9.39731 10.3554 9.3579L8.70067 9.06865C8.54463 9.0399 8.3842 9.04543 8.2305 9.08485C8.07681 9.12427 7.93352 9.19663 7.81058 9.29694C7.68763 9.39725 7.58798 9.52309 7.51851 9.66574C7.44904 9.8084 7.41142 9.96445 7.40826 10.1231C7.40826 10.1338 7.40826 10.1445 7.40826 10.1566C7.42419 11.847 8.03278 13.4782 9.12796 14.766C10.2231 16.0537 11.7355 16.9163 13.4014 17.2035C15.0673 17.4907 16.7811 17.1842 18.2442 16.3374C19.7073 15.4906 20.8269 14.1573 21.4079 12.5698C21.4594 12.4203 21.4777 12.2613 21.4614 12.104C21.4451 11.9467 21.3946 11.7949 21.3135 11.6591C21.2325 11.5233 21.1227 11.4069 20.992 11.3179C20.8612 11.2289 20.7126 11.1696 20.5566 11.144L18.9009 10.8544C18.6852 10.8152 18.4627 10.851 18.2703 10.9559C18.0779 11.0607 17.9271 11.2282 17.8431 11.4306Z" fill="#FCD7DB"/><path d="M24.5813 5.73039C24.2777 5.83957 24.0225 6.0527 23.861 6.33201C23.6994 6.61132 23.642 6.93879 23.6988 7.25641C23.8133 7.90652 23.8707 8.5654 23.8704 9.22552C23.8704 14.9103 19.6751 19.5185 14.5001 19.5185C9.32508 19.5185 5.12978 14.9103 5.12978 9.22552C5.12128 7.24122 5.65073 5.2917 6.66183 3.5843C6.8199 3.32329 6.88567 3.01673 6.84859 2.71385C6.81151 2.41097 6.67374 2.12934 6.45738 1.91416L4.93136 0.400874C4.78362 0.254338 4.60471 0.143047 4.40796 0.0753028C4.21122 0.00755899 4.00171 -0.0148896 3.79508 0.0096306C3.58845 0.0341508 3.39002 0.105006 3.21459 0.216914C3.03916 0.328822 2.89126 0.478896 2.78192 0.655938C1.22576 3.24258 0.409783 6.20688 0.42301 9.22552C0.42301 17.7656 6.72417 24.6888 14.5001 24.6888C22.276 24.6888 28.5771 17.7656 28.5771 9.22552C28.5777 8.17556 28.4809 7.1278 28.2879 6.09572C28.251 5.89904 28.1719 5.71273 28.0559 5.54968C27.9399 5.38663 27.7898 5.25075 27.6161 5.15144C27.4424 5.05214 27.2492 4.99178 27.0498 4.97455C26.8505 4.95732 26.6497 4.98364 26.4616 5.05167L24.5813 5.73039Z" fill="white"/></svg>
+  </div>
+  <div class="umb-shell-nav">
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Conversas"><i class="ph ph-chat"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Contatos"><i class="ph ph-user"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Board"><i class="ph ph-kanban"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Chatbots"><i class="ph ph-robot"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Agentes de IA"><i class="ph ph-sparkle"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Envios de campanhas"><i class="ph ph-paper-plane-tilt"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Relatórios"><i class="ph ph-chart-pie-slice"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Configurações"><i class="ph ph-gear"></i></div>
+  </div>
+  <div class="umb-shell-bottom">
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Notificações"><i class="ph ph-bell"></i></div>
+    <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Suporte"><i class="ph ph-question"></i></div>
+    <div class="umb-avatar-menu dropdown dropend">
+      <button type="button" class="umb-si-avatar" data-bs-toggle="dropdown" aria-expanded="false" title="Perfil">RC</button>
+      <div class="dropdown-menu umb-avatar-dropdown">
+        <p class="umb-avatar-menu-label">Tema</p>
+        <div class="umb-avatar-theme-options">
+          <button class="theme-option" data-theme="auto" onclick="setTheme('auto')"><i class="ph ph-arrows-clockwise"></i> Auto</button>
+          <button class="theme-option" data-theme="light" onclick="setTheme('light')"><i class="ph ph-sun"></i> Claro</button>
+          <button class="theme-option" data-theme="dark" onclick="setTheme('dark')"><i class="ph ph-moon"></i> Escuro</button>
+          <button class="theme-option" data-theme="emerald" onclick="setTheme('emerald')"><i class="ph ph-leaf"></i> Esmeralda</button>
+          <button class="theme-option" data-theme="dark-emerald" onclick="setTheme('dark-emerald')"><i class="ph ph-circles-four"></i> Bravia</button>
+        </div>
+        <hr class="dropdown-divider my-2">
+        <button type="button" class="umb-avatar-logout"><i class="ph ph-sign-out"></i> Sair</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="umb-tpl-header">
+  <div class="umb-shell-brand" data-umb-part="brand"><img class="umb-brand-logo" src="https://assets.umbler.com/utalk/assets/umblertalk.svg" alt="Umbler Talk"></div>
+  <div class="umb-breadcrumb" data-umb-part="breadcrumb"></div>
+  <div class="umb-shell-header-right" data-umb-part="actions">
+    <div class="umb-credits"><i class="ph ph-coins"></i><span>3.206,92</span></div>
+    <button class="btn btn-sm btn-outline-primary" style="font-size:12px;color:var(--umb-brand-color);border-color:var(--umb-sidebar-border)">Comprar créditos</button>
+  </div>
+</template>
+
+<template id="umb-tpl-mobile-header">
+  <!-- Left slot: hamburger (home) OU back arrow (subpage|chat) -->
+  <button type="button" class="umb-mh-icon-btn" data-umb-part="left" aria-label="">
+    <i class="ph" data-umb-part="left-icon"></i>
+  </button>
+  <!-- Brand: aparece somente no variant="home"; centralizado -->
+  <div class="umb-mh-brand" data-umb-part="brand">
+    <svg class="umb-mh-logo" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M17.8431 11.4306C17.5608 12.1241 17.0622 12.7081 16.4214 13.0955C15.7807 13.483 15.032 13.6533 14.2867 13.5811C13.5414 13.5089 12.8393 13.1981 12.2848 12.6949C11.7303 12.1916 11.353 11.5229 11.2091 10.7881C11.1772 10.6216 11.1579 10.453 11.1514 10.2836C11.1452 10.0614 11.0627 9.84803 10.9178 9.67944C10.7728 9.51085 10.5742 9.39731 10.3554 9.3579L8.70067 9.06865C8.54463 9.0399 8.3842 9.04543 8.2305 9.08485C8.07681 9.12427 7.93352 9.19663 7.81058 9.29694C7.68763 9.39725 7.58798 9.52309 7.51851 9.66574C7.44904 9.8084 7.41142 9.96445 7.40826 10.1231C7.40826 10.1338 7.40826 10.1445 7.40826 10.1566C7.42419 11.847 8.03278 13.4782 9.12796 14.766C10.2231 16.0537 11.7355 16.9163 13.4014 17.2035C15.0673 17.4907 16.7811 17.1842 18.2442 16.3374C19.7073 15.4906 20.8269 14.1573 21.4079 12.5698C21.4594 12.4203 21.4777 12.2613 21.4614 12.104C21.4451 11.9467 21.3946 11.7949 21.3135 11.6591C21.2325 11.5233 21.1227 11.4069 20.992 11.3179C20.8612 11.2289 20.7126 11.1696 20.5566 11.144L18.9009 10.8544C18.6852 10.8152 18.4627 10.851 18.2703 10.9559C18.0779 11.0607 17.9271 11.2282 17.8431 11.4306Z" fill="#FCD7DB"/><path d="M24.5813 5.73039C24.2777 5.83957 24.0225 6.0527 23.861 6.33201C23.6994 6.61132 23.642 6.93879 23.6988 7.25641C23.8133 7.90652 23.8707 8.5654 23.8704 9.22552C23.8704 14.9103 19.6751 19.5185 14.5001 19.5185C9.32508 19.5185 5.12978 14.9103 5.12978 9.22552C5.12128 7.24122 5.65073 5.2917 6.66183 3.5843C6.8199 3.32329 6.88567 3.01673 6.84859 2.71385C6.81151 2.41097 6.67374 2.12934 6.45738 1.91416L4.93136 0.400874C4.78362 0.254338 4.60471 0.143047 4.40796 0.0753028C4.21122 0.00755899 4.00171 -0.0148896 3.79508 0.0096306C3.58845 0.0341508 3.39002 0.105006 3.21459 0.216914C3.03916 0.328822 2.89126 0.478896 2.78192 0.655938C1.22576 3.24258 0.409783 6.20688 0.42301 9.22552C0.42301 17.7656 6.72417 24.6888 14.5001 24.6888C22.276 24.6888 28.5771 17.7656 28.5771 9.22552C28.5777 8.17556 28.4809 7.1278 28.2879 6.09572C28.251 5.89904 28.1719 5.71273 28.0559 5.54968C27.9399 5.38663 27.7898 5.25075 27.6161 5.15144C27.4424 5.05214 27.2492 4.99178 27.0498 4.97455C26.8505 4.95732 26.6497 4.98364 26.4616 5.05167L24.5813 5.73039Z" fill="white"/></svg>
+  </div>
+  <!-- Chat info block: somente no variant="chat" -->
+  <div class="umb-mh-chat" data-umb-part="chat">
+    <div class="umb-mh-chat-avatar" data-umb-part="chat-avatar"></div>
+    <div class="umb-mh-chat-info">
+      <div class="umb-mh-chat-name" data-umb-part="chat-name"></div>
+      <div class="umb-mh-chat-sub" data-umb-part="chat-sub"></div>
+    </div>
+  </div>
+  <!-- Spacer: ocupa o espaço entre o slot esquerdo e as ações à direita -->
+  <div class="umb-mh-spacer"></div>
+  <!-- Right actions: bell + avatar (home/subpage) OU phone + menu (chat) -->
+  <div class="umb-mh-right" data-umb-part="actions">
+    <button type="button" class="umb-mh-icon-btn" aria-label="Notificações" data-umb-part="bell"><i class="ph ph-bell"></i></button>
+    <button type="button" class="umb-mh-avatar" data-umb-part="avatar" aria-label="Perfil">RC</button>
+  </div>
+</template>
+<script>
+/* Renderiza sidebar, header desktop e header mobile a partir dos <template> acima.
+     Uso:
+       <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Conversas"></nav>
+       <header class="umb-shell-header" data-umb-c="header"
+               data-breadcrumb="Configurações / Agentes de IA"
+               data-brand="true" data-actions="credits"></header>
+       <header class="umb-mobile-header" data-umb-c="mobile-header" data-variant="home"></header>
+       <header class="umb-mobile-header" data-umb-c="mobile-header" data-variant="subpage"></header>
+     Atributos:
+       data-active          — sidebar: título exato do item ativo (ex: "Agentes de IA")
+       data-breadcrumb      — header: caminho separado por " / "; o último é marcado .active
+       data-brand           — header: "true" (default) mostra a brand; "false" oculta
+       data-actions         — header / mobile-header: "credits|default" (default) ou "none"
+       data-variant         — mobile-header: "home" (default) | "subpage" | "chat"
+       data-avatar          — mobile-header: iniciais do avatar (default "RC")
+       data-contact-name    — mobile-header (variant=chat): nome do contato
+       data-contact-avatar  — mobile-header (variant=chat): URL da foto (opcional; cai para iniciais)
+       data-contact-tags    — mobile-header (variant=chat): tags separadas por vírgula, formato "Label:cor"
+       data-contact-sub     — mobile-header (variant=chat): texto livre (ex: telefone) */
+  (function(){
+    function renderSidebars() {
+      const tpl = document.getElementById('umb-tpl-sidebar');
+      if (!tpl) return;
+      document.querySelectorAll('[data-umb-c="sidebar"]').forEach(el => {
+        el.innerHTML = tpl.innerHTML;
+        const active = el.dataset.active;
+        if (active) {
+          el.querySelectorAll('.umb-si.active').forEach(x => x.classList.remove('active'));
+          const target = el.querySelector('.umb-si[title="' + CSS.escape(active) + '"]');
+          if (target) target.classList.add('active');
+        }
+      });
+    }
+    function renderHeaders() {
+      const tpl = document.getElementById('umb-tpl-header');
+      if (!tpl) return;
+      document.querySelectorAll('[data-umb-c="header"]').forEach(el => {
+        el.innerHTML = tpl.innerHTML;
+        if (el.dataset.brand === 'false') {
+          const brand = el.querySelector('[data-umb-part="brand"]');
+          if (brand) brand.remove();
+        }
+        const bc = el.querySelector('[data-umb-part="breadcrumb"]');
+        if (bc) {
+          const raw = el.dataset.breadcrumb || '';
+          const items = raw.split('/').map(s => s.trim()).filter(Boolean);
+          bc.innerHTML = items.map((txt, i) => {
+            const isLast = i === items.length - 1;
+            const sep = i > 0 ? '<span class="umb-bc-sep"><i class="ph ph-caret-right"></i></span>' : '';
+            const cls = 'umb-bc-item' + (isLast ? ' active' : '');
+            return sep + '<span class="' + cls + '">' + txt + '</span>';
+          }).join('');
+        }
+        if (el.dataset.actions === 'none') {
+          const right = el.querySelector('[data-umb-part="actions"]');
+          if (right) right.remove();
+        }
+      });
+    }
+    function renderMobileHeaders() {
+      const tpl = document.getElementById('umb-tpl-mobile-header');
+      if (!tpl) return;
+      document.querySelectorAll('[data-umb-c="mobile-header"]').forEach(el => {
+        const variant = el.dataset.variant || 'home';
+        el.setAttribute('data-variant', variant);
+        el.innerHTML = tpl.innerHTML;
+
+        // Left slot: hamburger (home) ou back arrow (subpage|chat)
+        const leftBtn  = el.querySelector('[data-umb-part="left"]');
+        const leftIco  = el.querySelector('[data-umb-part="left-icon"]');
+        if (leftBtn && leftIco) {
+          if (variant === 'subpage' || variant === 'chat') {
+            leftIco.classList.add('ph-caret-left');
+            leftBtn.setAttribute('aria-label', 'Voltar');
+          } else {
+            leftIco.classList.add('ph-list');
+            leftBtn.setAttribute('aria-label', 'Abrir menu');
+          }
+        }
+
+        // Brand: só no variant="home"
+        if (variant !== 'home') {
+          const brand = el.querySelector('[data-umb-part="brand"]');
+          if (brand) brand.remove();
+        }
+
+        // Chat info block: só no variant="chat"
+        const chatBlock = el.querySelector('[data-umb-part="chat"]');
+        if (variant === 'chat' && chatBlock) {
+          const avatar = el.querySelector('[data-umb-part="chat-avatar"]');
+          const nameEl = el.querySelector('[data-umb-part="chat-name"]');
+          const subEl  = el.querySelector('[data-umb-part="chat-sub"]');
+          const photo  = el.dataset.contactAvatar; // URL opcional de imagem
+          const name   = el.dataset.contactName   || 'Contato';
+          const tags   = (el.dataset.contactTags  || '').split(',').map(s => s.trim()).filter(Boolean);
+          const sub    = el.dataset.contactSub;    // texto livre (ex: telefone)
+
+          if (avatar) {
+            if (photo) {
+              avatar.innerHTML = '<img src="' + photo + '" alt="">';
+            } else {
+              // Iniciais a partir do nome
+              const ini = name.split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0].toUpperCase()).join('') || '?';
+              avatar.textContent = ini;
+            }
+          }
+          if (nameEl) nameEl.textContent = name;
+          if (subEl) {
+            subEl.innerHTML = '';
+            if (sub) {
+              const s = document.createElement('span');
+              s.style.fontSize = '11px';
+              s.style.opacity = '.8';
+              s.style.color = 'var(--umb-brand-sub)';
+              s.style.whiteSpace = 'nowrap';
+              s.style.overflow = 'hidden';
+              s.style.textOverflow = 'ellipsis';
+              s.textContent = sub;
+              subEl.appendChild(s);
+            }
+            tags.forEach(t => {
+              // Formato: "texto:cor" (ex: "Expert:violet"); default blue
+              const [txt, color] = t.split(':');
+              const span = document.createElement('span');
+              span.className = 'umb-conv-tag ' + (color || 'blue');
+              span.textContent = txt;
+              subEl.appendChild(span);
+            });
+          }
+        } else if (chatBlock) {
+          chatBlock.remove();
+        }
+
+        // Avatar initials
+        const av = el.querySelector('[data-umb-part="avatar"]');
+        if (av) av.textContent = el.dataset.avatar || 'RC';
+
+        // Right actions — variante "chat": substitui bell+avatar por phone+menu
+        if (variant === 'chat') {
+          const right = el.querySelector('[data-umb-part="actions"]');
+          if (right) {
+            right.innerHTML =
+              '<button type="button" class="umb-mh-icon-btn" aria-label="Ligar"><i class="ph ph-phone"></i></button>' +
+              '<button type="button" class="umb-mh-icon-btn" aria-label="Mais opções"><i class="ph ph-dots-three-vertical"></i></button>';
+          }
+        }
+
+        // Right actions off
+        if (el.dataset.actions === 'none') {
+          const right = el.querySelector('[data-umb-part="actions"]');
+          if (right) right.remove();
+        }
+      });
+    }
+    function initComponentTooltips() {
+      if (!window.bootstrap) return;
+      // Tooltips nos itens da sidebar e avatar (o avatar usa data-bs-toggle="dropdown",
+      // por isso precisa ser inicializado manualmente aqui).
+      document.querySelectorAll('[data-umb-c="sidebar"] [data-bs-toggle="tooltip"]').forEach(el => {
+        if (!bootstrap.Tooltip.getInstance(el)) new bootstrap.Tooltip(el, { trigger: 'hover', placement: 'right' });
+      });
+      document.querySelectorAll('.umb-avatar-menu .umb-si-avatar[title]').forEach(el => {
+        if (!bootstrap.Tooltip.getInstance(el)) new bootstrap.Tooltip(el, { trigger: 'hover', placement: 'right' });
+      });
+    }
+    // Render imediato — os <template> acima já estão no DOM quando este script roda.
+    renderSidebars();
+    renderHeaders();
+    renderMobileHeaders();
+    // Tooltips: a lib Bootstrap é carregada antes deste bloco; se ainda não estiver
+    // disponível (defer/async), caímos para DOMContentLoaded.
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initComponentTooltips);
+    } else {
+      initComponentTooltips();
+    }
+    // Expor para possíveis re-renders manuais.
+    window.umbRenderShell = function(){ renderSidebars(); renderHeaders(); renderMobileHeaders(); initComponentTooltips(); };
+  })();
+</script>
+
+<script>
+  // setTheme precisa ser global — o template do avatar-menu usa onclick="setTheme('x')"
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-bs-theme', theme);
+    try { localStorage.setItem('umb-theme', theme); } catch(e) {}
+    document.querySelectorAll('.theme-option').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === theme);
+    });
+  }
+  // Restaura tema salvo e marca botão ativo
+  (function(){
+    var saved = 'dark';
+    try { saved = localStorage.getItem('umb-theme') || 'dark'; } catch(e) {}
+    document.documentElement.setAttribute('data-bs-theme', saved);
+    document.addEventListener('DOMContentLoaded', function(){
+      document.querySelectorAll('.theme-option').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === saved);
+      });
+    });
+  })();
+  // Tooltips
+    // Pinned message close — remove o alerta ao clicar no X (§21.X)
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.umb-chat-pinned-close');
+    if (btn) {
+      var pinned = btn.closest('.umb-chat-pinned');
+      if (pinned) pinned.remove();
+    }
+  });
+
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+    try { new bootstrap.Tooltip(el); } catch(e) {}
+  });
+
+  // Garantia de close-on-outside-click para o avatar-menu (§12 do rules.md).
+  // O Bootstrap dropdown já faz isso por padrão, mas mantemos um handler
+  // defensivo para garantir o comportamento mesmo em contextos onde o
+  // data-api pode falhar (elementos criados via <template>, overflow:hidden
+  // em containers, etc.). Qualquer clique fora de um .umb-avatar-menu
+  // aberto dispara .hide() na instância do Bootstrap Dropdown.
+  document.addEventListener('click', function(e) {
+    document.querySelectorAll('.umb-avatar-menu.show, .umb-avatar-menu .dropdown-menu.show').forEach(function(openEl) {
+      var menu = openEl.closest('.umb-avatar-menu') || openEl;
+      if (!menu.contains(e.target)) {
+        var trigger = menu.querySelector('[data-bs-toggle="dropdown"]');
+        if (trigger && window.bootstrap) {
+          var inst = bootstrap.Dropdown.getOrCreateInstance(trigger);
+          inst.hide();
+        }
+      }
+    });
+  });
+
+  // Tecla ESC também fecha o dropdown (acessibilidade padrão do DS).
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('.umb-avatar-menu .dropdown-menu.show').forEach(function(menu) {
+      var trigger = menu.closest('.umb-avatar-menu').querySelector('[data-bs-toggle="dropdown"]');
+      if (trigger && window.bootstrap) bootstrap.Dropdown.getOrCreateInstance(trigger).hide();
+    });
+  });
+  // Scroll inicial do chat para o fim
+  document.querySelectorAll('.umb-chat-body').forEach(el => el.scrollTop = el.scrollHeight);
+</script>
+
+</body>
+</html>

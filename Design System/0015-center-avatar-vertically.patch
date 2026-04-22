@@ -1,0 +1,27 @@
+From 64ed9ddd7a91d56ec368fd14006d14aab1b38b68 Mon Sep 17 00:00:00 2001
+From: Paulo Ricardo <paulo@umbler.com>
+Date: Tue, 21 Apr 2026 18:40:28 +0000
+Subject: [PATCH] fix(chat): centraliza avatar verticalmente no .umb-conv-item
+
+Adiciona align-items: center no .umb-conv-item para que o avatar
+fique alinhado verticalmente ao centro do card, em vez de grudado
+no topo (comportamento padrao de stretch do flexbox).
+---
+ umbootstrap-design-system.html | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/umbootstrap-design-system.html b/umbootstrap-design-system.html
+index a4116a8..7ec629c 100644
+--- a/umbootstrap-design-system.html
++++ b/umbootstrap-design-system.html
+@@ -1619,6 +1619,7 @@
+     .umb-conv-scroll { flex: 1; overflow-y: auto; padding: 2px 0; }
+     .umb-conv-item {
+       display: flex;
++      align-items: center;
+       gap: 12px;
+       padding: 14px 16px;
+       border-bottom: 1px solid var(--umb-border);
+-- 
+2.34.1
+

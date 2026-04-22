@@ -1,0 +1,566 @@
+From 70c987a296f72db6f37036053acac2e24dd7dde5 Mon Sep 17 00:00:00 2001
+From: Paulo Ricardo <paulo@umbler.com>
+Date: Tue, 21 Apr 2026 18:21:19 +0000
+Subject: [PATCH] =?UTF-8?q?feat(chat):=20rebuild=20.umb-conv-item=20com=20?=
+ =?UTF-8?q?estrutura=20de=20produ=C3=A7=C3=A3o?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Card da lista de conversas reestruturado para espelhar o app em
+produção. Componentes canônicos reusados — nada custom fora do DS.
+
+CSS:
+- .umb-conv-avatar passa de 42x42 para 48x48.
+- .umb-conv-avatar-ch (badge do canal) agora no canto INFERIOR
+  ESQUERDO do avatar (antes: inferior direito), 22x22 com borda de
+  2px em --umb-card-bg.
+- 3 novos badges canônicos de canal:
+    .whatsapp-starter  #7c3aed (roxo)      ph-whatsapp-logo
+    .whatsapp-api      #25D366 (verde)     ph-whatsapp-logo
+    .livechat          #ff6b35 (laranja)   ph-chat-circle
+  Legados mantidos como alias: .whatsapp -> .whatsapp-api.
+- Nova linha de head à direita (.umb-conv-head-right): calendário +
+  contador de eventos agendados (.umb-conv-head-event), ícone
+  speaker-slash (.umb-conv-head-mute) quando a conversa está muda,
+  e .umb-conv-time com formato relativo ('10 horas atrás').
+- Linha 3 (.umb-conv-meta) dividida em meta-left (tags) e
+  meta-right (assignee + pending + setor).
+- Novas variantes:
+    .umb-conv-tag.pink — tag rosa/magenta
+    .umb-conv-tag-more — pill outline '+N' (contador de tags extras)
+    .umb-conv-assignee — mini avatar 22x22 do responsável
+    .umb-conv-pending — badge numérica circular 22x22 verde
+    .umb-conv-sector — agora é pill OUTLINE (antes: filled)
+
+Markup:
+- 6 items canônicos no DS e chat.html cobrindo os canais novos e as
+  6 cores de tag (blue/green/amber/red/violet/pink).
+
+rules.md:
+- §21.2 totalmente reescrita: anatomia completa, tabela de elementos,
+  tabela de badges de canal, regras de uso.
+---
+ references/rules.md            | 107 ++++++++++---
+ umbootstrap-design-system.html | 285 +++++++++++++++++++++++----------
+ 2 files changed, 278 insertions(+), 114 deletions(-)
+
+diff --git a/references/rules.md b/references/rules.md
+index 0b738c1..91c6c5d 100644
+--- a/references/rules.md
++++ b/references/rules.md
+@@ -600,32 +600,87 @@ O `umb-chat-shell` é um container `display:flex` que ocupa altura total e divid
+ 
+ ### 21.2 Coluna 1 — Lista de conversas (`.umb-conv-list`)
+ 
+-Largura fixa **360px** em desktop. Componentes internos, **nesta ordem vertical**:
+-
+-1. **`.umb-conv-topbar`** (56px de altura fixa — pixel-perfect aligned com `.umb-chat-header` da coluna 2). Contém exatamente **6 botões icon-only** com tooltip no hover (`data-bs-toggle="tooltip" data-bs-placement="bottom" title="…"`):
+-   - `ph-chat` — "Conversas com cliente" — `btn btn-icon btn-text btn-lg`
+-   - `ph-users-three` — "Conversas com a equipe" — `btn btn-icon btn-text btn-lg`
+-   - `ph-eye` — "Conversas visíveis" — `btn btn-icon btn-text btn-lg`
+-   - `ph-list-checks` — "Aplicar ação para múltiplas conversas" — `btn btn-icon btn-text btn-lg`
+-   - `ph-sort-descending` — "Ordem da lista de conversas" — `btn btn-icon btn-text btn-lg`
+-   - `.umb-conv-topbar-spacer` (`flex: 1`)
+-   - `ph-plus` — "Iniciar nova conversa" — `btn btn-primary btn-icon btn-lg` (o **único** botão primário/sólido do topbar)
+-2. **`.umb-conv-toolbar`** (busca + filtros) — `input-group` com placeholder "Buscar por nome ou telefone" + `btn btn-icon btn-text btn-sm` "Filtros" (`ph-funnel`) com tooltip.
+-3. **`.umb-conv-segmented`** — wrapper do Segmented. **Substitui o antigo `.umb-conv-tabs`**. Usa `inset-control inset-control-lg` (§ Segmented). Os 3 segmentos são:
+-   - "Entrada" com contador `<span class="umb-seg-count">12</span>` — `.active` por default
+-   - "Esperando" com contador `<span class="umb-seg-count">3</span>`
+-   - "Finalizados" (sem contador)
+-   Única `.btn.active` por vez. O `.umb-seg-count` aparece à direita do label, inline, fonte menor (11px) e opacidade 0.8.
+-4. **`.umb-conv-scroll`** → lista de **`.umb-conv-item`**.
+-
+-**`.umb-conv-item`** é um grid de 3 colunas `auto 1fr auto`:
+-1. **Avatar** (`.umb-conv-avatar`, 42×42) com indicador de canal no canto inferior direito (`.umb-conv-avatar-ch.{whatsapp|instagram|email|widget|telegram}`). O avatar renderiza uma `<img>` **ou** iniciais em `<span>`.
+-2. **Body** (`.umb-conv-body`): nome + hora na mesma linha, preview da última mensagem (1 linha truncada), e linha de meta com **tags** (`.umb-conv-tag.{blue|green|amber|red|violet}`) + **setor** (`.umb-conv-sector` com ícone Phosphor).
+-3. **Right** (`.umb-conv-right`): hora e opcional **badge de não-lidas** (`.umb-conv-badge`).
+-
+-Estados: `:hover` usa `var(--umb-chat-list-hover)`; `.active` usa `var(--umb-chat-list-active)` + barra azul `inset 3px 0 0 var(--bs-primary)` à esquerda (indicando o chat selecionado).
+-
+-**Preview com mídia**: o preview aceita ícone Phosphor antes do texto para indicar tipo não-texto: `<i class="ph ph-image"></i>Foto`, `<i class="ph ph-microphone"></i>Áudio (0:18)`, `<i class="ph ph-paperclip"></i>nome.pdf`, `<i class="ph ph-file-pdf"></i>`, etc.
++Largura fixa **360px** no desktop. Estrutura vertical:
++
++1. **Topbar** (`.umb-conv-topbar`, 56px — bate com `.umb-chat-header`): 5 `btn-icon btn-text btn-lg` + spacer + 1 `btn-primary btn-icon btn-lg` (ph-plus).
++2. **Toolbar** (`.umb-conv-toolbar`): busca + botão filtros.
++3. **Segmented** (`.umb-conv-segmented > .inset-control.inset-control-lg`): Entrada / Esperando / Finalizados.
++4. **Scroll** (`.umb-conv-scroll`) com a lista de `.umb-conv-item`.
++
++#### Anatomia de um `.umb-conv-item`
++
++```html
++<div class="umb-conv-item">
++  <!-- Avatar 48×48 com badge do canal no canto INFERIOR ESQUERDO -->
++  <div class="umb-conv-avatar">
++    <img src="..." alt="Vitor">
++    <span class="umb-conv-avatar-ch whatsapp-starter"><i class="ph ph-whatsapp-logo"></i></span>
++  </div>
++  <div class="umb-conv-body">
++    <!-- Linha 1: nome + ações/meta à direita -->
++    <div class="umb-conv-head">
++      <span class="umb-conv-name">Vitor</span>
++      <div class="umb-conv-head-right">
++        <span class="umb-conv-head-event"><i class="ph ph-calendar-blank"></i>1</span>
++        <i class="ph ph-speaker-slash umb-conv-head-mute"></i>
++        <span class="umb-conv-time">10 horas atrás</span>
++      </div>
++    </div>
++    <!-- Linha 2: preview -->
++    <p class="umb-conv-preview">Olá. Tudo bem?</p>
++    <!-- Linha 3: tags à esquerda, assignee+pending+setor à direita -->
++    <div class="umb-conv-meta">
++      <div class="umb-conv-meta-left">
++        <span class="umb-conv-tag pink"><i class="ph ph-user-circle"></i>Magenta</span>
++        <span class="umb-conv-tag-more">+3</span>
++      </div>
++      <div class="umb-conv-meta-right">
++        <img class="umb-conv-assignee" src="..." alt="Responsável">
++        <span class="umb-conv-pending">3</span>
++        <span class="umb-conv-sector">Comercial</span>
++      </div>
++    </div>
++  </div>
++</div>
++```
++
++#### Elementos
++
++| Elemento | Descrição |
++|---|---|
++| `.umb-conv-avatar` | 48×48, circular. Aceita `<img>` (foto) ou `<span>` (iniciais). |
++| `.umb-conv-avatar-ch` | Badge do canal — **canto inferior esquerdo**, 22×22, borda de 2px na cor `--umb-card-bg`. |
++| `.umb-conv-name` | 15px, peso 600, `text-primary`. |
++| `.umb-conv-head-right` | Container à direita da linha 1. Abriga `head-event` (calendário + N eventos), `head-mute` (ícone speaker-slash quando mudo) e `.umb-conv-time` (texto). |
++| `.umb-conv-preview` | 13px, `text-mid`, 1 linha com ellipsis. Aceita ícone Phosphor inline para sinalizar tipo de mídia (áudio, anexo, etc.). |
++| `.umb-conv-tag` | Pill colorida com ícone + label. Cores canônicas: `blue`, `green`, `amber`, `red`, `violet`, `pink`. Todas com fundo sólido + texto branco/escuro contrastante. |
++| `.umb-conv-tag-more` | Pill **outline** "+N" — conta de tags adicionais não exibidas. |
++| `.umb-conv-assignee` | Mini avatar 22×22 do atendente responsável. |
++| `.umb-conv-pending` | Badge numérica circular 22×22 com fundo `--bs-success` (verde) — mensagens pendentes. |
++| `.umb-conv-sector` | Pill **outline** do setor (Comercial, Suporte, Vendas, Contas). |
++
++#### Badges de canal (`.umb-conv-avatar-ch`)
++
++Canais canônicos com cor fixa (não dependem do tema):
++
++| Classe | Canal | Cor | Ícone |
++|---|---|---|---|
++| `.whatsapp-starter` | WhatsApp (Starter) | `#7c3aed` (roxo) | `ph-whatsapp-logo` |
++| `.whatsapp-api` | WhatsApp Business API | `#25D366` (verde) | `ph-whatsapp-logo` |
++| `.livechat` | Live chat (widget do site) | `#ff6b35` (laranja) | `ph-chat-circle` |
++| `.instagram` | Instagram | gradient oficial IG | `ph-instagram-logo` |
++| `.email` | Email | `#546E7A` | `ph-envelope` |
++| `.telegram` | Telegram | `#229ED9` | `ph-telegram-logo` |
++
++**Nota**: `.whatsapp` (sem sufixo) é alias legado de `.whatsapp-api` (verde) — use o nome canônico em código novo.
++
++#### Regras
++
++- Use `.umb-conv-meta-left` + `.umb-conv-meta-right` na linha 3; **não** use mais o padrão antigo `.umb-conv-right` fora do `.umb-conv-body`.
++- Nunca posicione o badge de canal em outro canto do avatar — é sempre o inferior esquerdo.
++- O `.umb-conv-sector` é **sempre** outline (sem fundo sólido). Cores de setor não variam.
++- A `.umb-conv-tag` é **sempre** filled com cor forte — representa uma tag de contato definida pelo usuário. Se não souber a cor, use `violet` como fallback neutro.
++- Quando há mais de 1 tag, mostre a primeira + `.umb-conv-tag-more` com o contador `+N` das demais.
+ 
+ ### 21.3 Coluna 2 — Detalhe do chat (`.umb-chat-detail`)
+ 
+diff --git a/umbootstrap-design-system.html b/umbootstrap-design-system.html
+index 6c1b84f..082a382 100644
+--- a/umbootstrap-design-system.html
++++ b/umbootstrap-design-system.html
+@@ -1618,10 +1618,10 @@
+     }
+     .umb-conv-scroll { flex: 1; overflow-y: auto; padding: 2px 0; }
+     .umb-conv-item {
+-      display: grid;
+-      grid-template-columns: auto 1fr auto;
+-      gap: 10px;
+-      padding: 12px 14px; border-bottom: 1px solid var(--umb-border);
++      display: flex;
++      gap: 12px;
++      padding: 14px 16px;
++      border-bottom: 1px solid var(--umb-border);
+       cursor: pointer; transition: background .12s;
+       position: relative;
+     }
+@@ -1631,72 +1631,135 @@
+       box-shadow: inset 3px 0 0 var(--bs-primary);
+     }
+     .umb-conv-avatar {
+-      width: 42px; height: 42px; border-radius: 50%;
+-      background: var(--umb-avatar-bg);
++      width: 48px; height: 48px;
++      flex-shrink: 0;
++      position: relative;
+       color: var(--umb-brand-color);
+-      display: flex; align-items: center; justify-content: center;
+-      font-size: 14px; font-weight: 600; flex-shrink: 0; position: relative;
+-      overflow: visible;
++      font-size: 14px; font-weight: 600;
++    }
++    .umb-conv-avatar > img {
++      width: 100%; height: 100%; border-radius: 50%;
++      object-fit: cover; display: block;
+     }
+-    .umb-conv-avatar > img,
+     .umb-conv-avatar > span {
+       width: 100%; height: 100%; border-radius: 50%;
++      background: var(--umb-avatar-bg);
+       display: flex; align-items: center; justify-content: center;
+-      overflow: hidden; object-fit: cover;
++      overflow: hidden;
+     }
++    /* Badge de canal — canto INFERIOR ESQUERDO */
+     .umb-conv-avatar-ch {
+-      position: absolute; bottom: -1px; right: -1px;
+-      width: 18px; height: 18px; border-radius: 50%;
++      position: absolute; bottom: -2px; left: -2px;
++      width: 22px; height: 22px; border-radius: 50%;
+       border: 2px solid var(--umb-card-bg);
+       display: flex; align-items: center; justify-content: center;
+-      font-size: 9px; color: #fff;
++      font-size: 11px; color: #fff;
+     }
++    /* Canais canonicos (novos) */
++    .umb-conv-avatar-ch.whatsapp-starter { background: #7c3aed; } /* Starter = roxo */
++    .umb-conv-avatar-ch.whatsapp-api     { background: #25D366; } /* Business API = verde */
++    .umb-conv-avatar-ch.livechat         { background: #ff6b35; } /* Live chat = laranja */
++    /* Aliases legados (mantidos para retrocompat) */
+     .umb-conv-avatar-ch.whatsapp  { background: #25D366; }
+     .umb-conv-avatar-ch.instagram { background: linear-gradient(45deg,#F58529,#DD2A7B,#8134AF); }
+     .umb-conv-avatar-ch.email     { background: #546E7A; }
+     .umb-conv-avatar-ch.widget    { background: var(--bs-primary); }
+     .umb-conv-avatar-ch.telegram  { background: #229ED9; }
+ 
+-    .umb-conv-body { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
++    .umb-conv-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+     .umb-conv-head {
+-      display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
++      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+     }
+     .umb-conv-name {
+-      font-size: 14px; font-weight: 600; color: var(--umb-text-primary);
+-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1;
++      font-size: 15px; font-weight: 600; color: var(--umb-text-primary);
++      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
++      min-width: 0; flex: 1;
++    }
++    .umb-conv-head-right {
++      display: flex; align-items: center; gap: 8px;
++      font-size: 11.5px; color: var(--umb-text-mid);
++      flex-shrink: 0;
+     }
+-    .umb-conv-time { font-size: 11px; color: var(--umb-text-mid); flex-shrink: 0; }
++    .umb-conv-head-right i { font-size: 14px; }
++    .umb-conv-head-event { display: inline-flex; align-items: center; gap: 3px; }
++    .umb-conv-head-mute { color: var(--umb-text-mid); }
++    .umb-conv-time { font-size: 11.5px; color: var(--umb-text-mid); flex-shrink: 0; }
++
+     .umb-conv-preview {
+-      font-size: 12.5px; color: var(--umb-text-mid); line-height: 1.35;
++      font-size: 13px; color: var(--umb-text-mid); line-height: 1.35;
+       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
++      margin: 0;
+     }
+     .umb-conv-preview i {
+       font-size: 13px; color: var(--umb-text-dim); vertical-align: -1px; margin-right: 3px;
+     }
++
+     .umb-conv-meta {
+-      display: flex; align-items: center; gap: 4px; margin-top: 4px; flex-wrap: wrap;
++      display: flex; align-items: center; justify-content: space-between;
++      gap: 8px; margin-top: 2px;
+     }
++    .umb-conv-meta-left, .umb-conv-meta-right {
++      display: flex; align-items: center; gap: 6px; min-width: 0;
++    }
++    .umb-conv-meta-left { flex: 1; min-width: 0; }
++
++    /* Tag de contato (pill colorida) */
+     .umb-conv-tag {
+       display: inline-flex; align-items: center; gap: 4px;
+-      font-size: 10.5px; font-weight: 600;
+-      padding: 2px 8px; border-radius: 100px; line-height: 1.4;
++      font-size: 11px; font-weight: 600;
++      padding: 3px 10px; border-radius: 100px; line-height: 1.4;
++      white-space: nowrap; color: #fff;
++    }
++    .umb-conv-tag i { font-size: 13px; }
++    .umb-conv-tag.blue    { background: var(--umb-conv-tag-blue-bg);   color: var(--umb-conv-tag-blue-color); }
++    .umb-conv-tag.green   { background: var(--umb-conv-tag-green-bg);  color: var(--umb-conv-tag-green-color); }
++    .umb-conv-tag.amber   { background: var(--umb-conv-tag-amber-bg);  color: var(--umb-conv-tag-amber-color); }
++    .umb-conv-tag.red     { background: var(--umb-conv-tag-red-bg);    color: var(--umb-conv-tag-red-color); }
++    .umb-conv-tag.violet  { background: var(--umb-conv-tag-violet-bg); color: var(--umb-conv-tag-violet-color); }
++    .umb-conv-tag.pink    { background: #D9348A; color: #fff; }
++
++    /* Tag "+N" — pill outline com contador de tags adicionais */
++    .umb-conv-tag-more {
++      display: inline-flex; align-items: center;
++      font-size: 11px; font-weight: 600;
++      padding: 2px 10px; border-radius: 100px; line-height: 1.4;
++      color: var(--umb-text-mid);
++      background: transparent;
++      border: 1px solid var(--umb-border-strong);
+       white-space: nowrap;
+     }
+-    .umb-conv-tag.blue   { background: var(--umb-conv-tag-blue-bg);   color: var(--umb-conv-tag-blue-color); }
+-    .umb-conv-tag.green  { background: var(--umb-conv-tag-green-bg);  color: var(--umb-conv-tag-green-color); }
+-    .umb-conv-tag.amber  { background: var(--umb-conv-tag-amber-bg);  color: var(--umb-conv-tag-amber-color); }
+-    .umb-conv-tag.red    { background: var(--umb-conv-tag-red-bg);    color: var(--umb-conv-tag-red-color); }
+-    .umb-conv-tag.violet { background: var(--umb-conv-tag-violet-bg); color: var(--umb-conv-tag-violet-color); }
+ 
++    /* Avatar do responsavel (mini) */
++    .umb-conv-assignee {
++      width: 22px; height: 22px; border-radius: 50%;
++      object-fit: cover; flex-shrink: 0;
++      background: var(--umb-avatar-bg);
++    }
++
++    /* Badge numerica circular (mensagens pendentes) */
++    .umb-conv-pending {
++      display: inline-flex; align-items: center; justify-content: center;
++      min-width: 22px; height: 22px; padding: 0 6px;
++      border-radius: 100px;
++      background: var(--bs-success); color: #fff;
++      font-size: 11px; font-weight: 600;
++      flex-shrink: 0;
++    }
++
++    /* Setor — pill outline (nao mais filled) */
+     .umb-conv-sector {
+       display: inline-flex; align-items: center; gap: 4px;
+-      font-size: 10.5px; font-weight: 500; color: var(--umb-text-mid);
+-      padding: 2px 8px; border-radius: 100px;
+-      background: var(--umb-hover-bg);
++      font-size: 11px; font-weight: 500;
++      padding: 2px 10px; border-radius: 100px; line-height: 1.4;
++      color: var(--umb-text-mid);
++      background: transparent;
++      border: 1px solid var(--umb-border-strong);
+       white-space: nowrap;
+     }
+     .umb-conv-sector i { font-size: 11px; }
+ 
++    /* Legado (retrocompat): antigo .umb-conv-right ainda existe em alguns lugares.
++       Mantem-se, mas o padrao agora e meta-left + meta-right. */
+     .umb-conv-right {
+       display: flex; flex-direction: column; align-items: flex-end;
+       gap: 4px; flex-shrink: 0;
+@@ -4707,112 +4770,158 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                       </div>
+                     </div>
+                     <div class="umb-conv-scroll">
+-                      <!-- Item ativo -->
++
++                      <!-- Items canonicos (§21.2) -->
+                       <div class="umb-conv-item active">
+-                        <div class="umb-conv-avatar"><span>MR</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
++                        <div class="umb-conv-avatar">
++                          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop" alt="Vitor">
++                          <span class="umb-conv-avatar-ch whatsapp-starter"><i class="ph ph-whatsapp-logo"></i></span>
++                        </div>
+                         <div class="umb-conv-body">
+                           <div class="umb-conv-head">
+-                            <span class="umb-conv-name">Maria Rocha</span>
+-                            <span class="umb-conv-time">14:23</span>
++                            <span class="umb-conv-name">Vitor</span>
++                            <div class="umb-conv-head-right">
++                            <span class="umb-conv-head-event"><i class="ph ph-calendar-blank"></i>1</span>
++                            <i class="ph ph-speaker-slash umb-conv-head-mute"></i>
++                            <span class="umb-conv-time">10 horas atras</span>
++                            </div>
+                           </div>
+-                          <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
++                          <p class="umb-conv-preview">Ola. Tudo bem?</p>
+                           <div class="umb-conv-meta">
+-                            <span class="umb-conv-tag green">Cliente</span>
+-                            <span class="umb-conv-sector"><i class="ph ph-headset"></i>Suporte</span>
++                            <div class="umb-conv-meta-left">
++                            <span class="umb-conv-tag pink"><i class="ph ph-user-circle"></i>Magenta</span>
++                            <span class="umb-conv-tag-more">+3</span>
++                            </div>
++                            <div class="umb-conv-meta-right">
++                            <img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1507081323647-4d250478b919?w=96&h=96&fit=crop" alt="Responsavel">
++                            <span class="umb-conv-pending">3</span>
++                            <span class="umb-conv-sector">Comercial</span>
++                            </div>
+                           </div>
+                         </div>
+-                        <div class="umb-conv-right">
+-                          <span class="umb-conv-time">&nbsp;</span>
+-                        </div>
+                       </div>
+-                      <!-- Outros items -->
+                       <div class="umb-conv-item">
+-                        <div class="umb-conv-avatar"><span>RF</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
++                        <div class="umb-conv-avatar">
++                          <span>MR</span>
++                          <span class="umb-conv-avatar-ch whatsapp-api"><i class="ph ph-whatsapp-logo"></i></span>
++                        </div>
+                         <div class="umb-conv-body">
+                           <div class="umb-conv-head">
+-                            <span class="umb-conv-name">Rafa Feltrim</span>
+-                            <span class="umb-conv-time">13:58</span>
++                            <span class="umb-conv-name">Maria Rocha</span>
++                            <div class="umb-conv-head-right">
++                            <span class="umb-conv-time">14:23</span>
++                            </div>
+                           </div>
+-                          <p class="umb-conv-preview"><i class="ph ph-image"></i>Foto</p>
++                          <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
+                           <div class="umb-conv-meta">
+-                            <span class="umb-conv-tag blue">Lead</span>
+-                            <span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span>
++                            <div class="umb-conv-meta-left">
++                            <span class="umb-conv-tag green"><i class="ph ph-user-circle"></i>Cliente</span>
++                            </div>
++                            <div class="umb-conv-meta-right">
++                            <img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop" alt="Responsavel">
++                            <span class="umb-conv-sector">Suporte</span>
++                            </div>
+                           </div>
+                         </div>
+-                        <div class="umb-conv-right">
+-                          <span class="umb-conv-time">&nbsp;</span>
+-                          <span class="umb-conv-badge">2</span>
+-                        </div>
+                       </div>
+                       <div class="umb-conv-item">
+-                        <div class="umb-conv-avatar"><span>CC</span><span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span></div>
++                        <div class="umb-conv-avatar">
++                          <span>RF</span>
++                          <span class="umb-conv-avatar-ch whatsapp-starter"><i class="ph ph-whatsapp-logo"></i></span>
++                        </div>
+                         <div class="umb-conv-body">
+                           <div class="umb-conv-head">
+-                            <span class="umb-conv-name">Cannacare</span>
+-                            <span class="umb-conv-time">13:40</span>
++                            <span class="umb-conv-name">Ricardo Farias</span>
++                            <div class="umb-conv-head-right">
++                            <span class="umb-conv-time">14:05</span>
++                            </div>
+                           </div>
+-                          <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
++                          <p class="umb-conv-preview">Consegue trocar o plano pro anual?</p>
+                           <div class="umb-conv-meta">
+-                            <span class="umb-conv-tag violet">Parceiro</span>
+-                            <span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span>
++                            <div class="umb-conv-meta-left">
++                            <span class="umb-conv-tag amber"><i class="ph ph-user-circle"></i>Trial</span>
++                            <span class="umb-conv-tag-more">+2</span>
++                            </div>
++                            <div class="umb-conv-meta-right">
++                            <img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1507081323647-4d250478b919?w=96&h=96&fit=crop" alt="Responsavel">
++                            <span class="umb-conv-pending">2</span>
++                            <span class="umb-conv-sector">Vendas</span>
++                            </div>
+                           </div>
+                         </div>
+-                        <div class="umb-conv-right">
+-                          <span class="umb-conv-time">&nbsp;</span>
+-                          <span class="umb-conv-badge">1</span>
+-                        </div>
+                       </div>
+                       <div class="umb-conv-item">
+-                        <div class="umb-conv-avatar"><span>FB</span><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
++                        <div class="umb-conv-avatar">
++                          <span>JP</span>
++                          <span class="umb-conv-avatar-ch livechat"><i class="ph ph-chat-circle"></i></span>
++                        </div>
+                         <div class="umb-conv-body">
+                           <div class="umb-conv-head">
+-                            <span class="umb-conv-name">Fernando B.</span>
+-                            <span class="umb-conv-time">12:12</span>
++                            <span class="umb-conv-name">Joao P. (site)</span>
++                            <div class="umb-conv-head-right">
++                            <span class="umb-conv-time">13:55</span>
++                            </div>
+                           </div>
+-                          <p class="umb-conv-preview"><i class="ph ph-microphone"></i>Áudio (0:18)</p>
++                          <p class="umb-conv-preview">Voces tem integracao com HubSpot?</p>
+                           <div class="umb-conv-meta">
+-                            <span class="umb-conv-tag amber">Trial</span>
+-                            <span class="umb-conv-sector"><i class="ph ph-headset"></i>Suporte</span>
++                            <div class="umb-conv-meta-left">
++                            <span class="umb-conv-tag blue"><i class="ph ph-user-circle"></i>Lead</span>
++                            </div>
++                            <div class="umb-conv-meta-right">
++                            <span class="umb-conv-sector">Vendas</span>
++                            </div>
+                           </div>
+                         </div>
+-                        <div class="umb-conv-right">
+-                          <span class="umb-conv-time">&nbsp;</span>
+-                        </div>
+                       </div>
+                       <div class="umb-conv-item">
+-                        <div class="umb-conv-avatar"><span>LS</span><span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span></div>
++                        <div class="umb-conv-avatar">
++                          <span>CC</span>
++                          <span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span>
++                        </div>
+                         <div class="umb-conv-body">
+                           <div class="umb-conv-head">
+-                            <span class="umb-conv-name">Laura Silva</span>
+-                            <span class="umb-conv-time">Ontem</span>
++                            <span class="umb-conv-name">Cannacare</span>
++                            <div class="umb-conv-head-right">
++                            <span class="umb-conv-time">13:40</span>
++                            </div>
+                           </div>
+-                          <p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p>
++                          <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
+                           <div class="umb-conv-meta">
+-                            <span class="umb-conv-tag red">VIP</span>
+-                            <span class="umb-conv-sector"><i class="ph ph-briefcase"></i>Contas</span>
++                            <div class="umb-conv-meta-left">
++                            <span class="umb-conv-tag violet"><i class="ph ph-user-circle"></i>Parceiro</span>
++                            <span class="umb-conv-tag-more">+1</span>
++                            </div>
++                            <div class="umb-conv-meta-right">
++                            <span class="umb-conv-pending">1</span>
++                            <span class="umb-conv-sector">Vendas</span>
++                            </div>
+                           </div>
+                         </div>
+-                        <div class="umb-conv-right">
+-                          <span class="umb-conv-time">&nbsp;</span>
+-                        </div>
+                       </div>
+                       <div class="umb-conv-item">
+-                        <div class="umb-conv-avatar"><span>JP</span><span class="umb-conv-avatar-ch widget"><i class="ph ph-chat-circle"></i></span></div>
++                        <div class="umb-conv-avatar">
++                          <span>LS</span>
++                          <span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span>
++                        </div>
+                         <div class="umb-conv-body">
+                           <div class="umb-conv-head">
+-                            <span class="umb-conv-name">João P. (site)</span>
++                            <span class="umb-conv-name">Laura Silva</span>
++                            <div class="umb-conv-head-right">
+                             <span class="umb-conv-time">Ontem</span>
++                            </div>
+                           </div>
+-                          <p class="umb-conv-preview">Vocês têm integração com HubSpot?</p>
++                          <p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p>
+                           <div class="umb-conv-meta">
+-                            <span class="umb-conv-tag blue">Lead</span>
+-                            <span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span>
++                            <div class="umb-conv-meta-left">
++                            <span class="umb-conv-tag red"><i class="ph ph-user-circle"></i>VIP</span>
++                            </div>
++                            <div class="umb-conv-meta-right">
++                            <span class="umb-conv-sector">Contas</span>
++                            </div>
+                           </div>
+                         </div>
+-                        <div class="umb-conv-right">
+-                          <span class="umb-conv-time">&nbsp;</span>
+-                        </div>
+                       </div>
++                    
+                     </div>
+                   </aside>
+ 
+-- 
+2.34.1
+

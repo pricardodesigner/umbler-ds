@@ -1,0 +1,126 @@
+From ee76d5152790cdfde11a43782dafbf4f93c2bb0c Mon Sep 17 00:00:00 2001
+From: Paulo Ricardo <paulo@umbler.com>
+Date: Tue, 21 Apr 2026 14:06:55 +0000
+Subject: [PATCH] =?UTF-8?q?fix(chat):=20composer=20usa=20btn-primary=20can?=
+ =?UTF-8?q?=C3=B4nico=20(pill)=20e=20tamanho=20Md?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- Remove CSS custom .umb-chat-send-btn (border-radius: 8px, tamanho
+  fora do padrão) — viola a regra de botões pill do DS.
+- Botão Enviar passa a usar <button class="btn btn-primary"> canônico,
+  herdando border-radius: 30px (pill) + tamanho Md (32px) + todos os
+  estilos padrão de botão (hover, focus-visible, active).
+- Botões icon-only da toolbar do composer (anexar/emoji/template/áudio/
+  agendar) deixam de usar btn-sm — padrão Md (32×32).
+- rules.md: §3 ganha regra inviolável 'todo .btn é pill'; §21.3 item 4
+  e §21.8 atualizadas para refletir .btn-primary; §20 reforço contra
+  border-radius custom em botão.
+---
+ references/rules.md            |  7 +++++--
+ umbootstrap-design-system.html | 31 ++++++++++---------------------
+ 2 files changed, 15 insertions(+), 23 deletions(-)
+
+diff --git a/references/rules.md b/references/rules.md
+index f032250..992cfca 100644
+--- a/references/rules.md
++++ b/references/rules.md
+@@ -71,6 +71,8 @@ O tamanho **Lg é o padrão** para telas e formulários. Sempre garanta compatib
+ | Painéis | 10px |
+ | Modais | 12px |
+ 
++**Regra inviolável para botões**: **todo** `.btn` do DS usa `border-radius: 30px` (pill) — independente do tamanho (Sm, Md, Lg), variante (`btn-primary`, `btn-outline-*`, `btn-text`) ou contexto (composer do chat, toolbar, modal, etc.). Nunca crie uma classe de botão customizada com raio diferente (ex.: `.umb-*-btn { border-radius: 8px }`). Se precisar de um CTA específico, use as variantes existentes (`btn-primary`, `btn-lg`, etc.) ou estenda via classe de utilidade que **preserve** o pill.
++
+ ## 4. Input-groups (wrapper approach)
+ 
+ Quando um campo tem um elemento interno (ícone, prefixo como "https://", sufixo), usar o pattern de **borda no wrapper**:
+@@ -562,6 +564,7 @@ Após gerar uma tela, redimensione a janela do browser cruzando os 768px e confi
+ - Nunca crie um token de fundo dedicado por tela — reuse `--umb-bg-primary` para canvas e `--umb-bg-active` para seleção
+ - Nunca crie um theme switcher novo (botão flutuante, barra extra, modal) — a troca de tema é **exclusivamente** pelo `.umb-avatar-menu` da sidebar (§12). Exceção: apenas quando o usuário pedir explicitamente um switcher adicional no prompt.
+ - Nunca use `font-weight` > 600 no DS (valores proibidos: `700`, `800`, `900`, `bold`, `bolder`). Se precisar reforçar hierarquia, aumente o `font-size` ou use `color` de contraste — nunca um peso mais pesado que 600 (ver §23).
++- Nunca crie classe custom de botão com `border-radius` diferente de 30px (pill). Todo `.btn` do DS é pill — sem exceção (§3).
+ - Nunca use `btn-outline-secondary` em ações — use `btn-outline-primary`
+ - Nunca use `font-weight: bold` em labels de formulário
+ - Nunca coloque borda nos filhos do input-group — a borda vai no wrapper
+@@ -646,7 +649,7 @@ Ocupa o espaço restante (`flex: 1`) e usa `var(--umb-bg-primary, var(--bs-body-
+ 4. **Composer** (`.umb-chat-composer`) — sempre no rodapé, `flex-shrink: 0`. Contém:
+    - Tabs (`.umb-chat-composer-tabs`): "Conversa / Nota interna / Resposta rápida" — única ativa por vez
+    - `<textarea>` auto-expansível (min 38px, max 140px) em `.umb-chat-composer-input`
+-   - Toolbar com ícones à esquerda (anexar, emoji, template, áudio, agendar — todos `btn btn-icon btn-text btn-sm`) e botão sólido **Enviar** à direita (`.umb-chat-send-btn`)
++   - Toolbar com ícones à esquerda (anexar, emoji, template, áudio, agendar — todos `btn btn-icon btn-text`, tamanho padrão Md) e botão **Enviar** à direita (`btn btn-primary` — pill padrão, 30px radius, §3)
+ 
+ **Empty state** (nenhum chat selecionado): substitua o conteúdo da coluna 2 por um `.umb-chat-empty` com ícone circular (`.umb-chat-empty-ico`) + título + subtítulo.
+ 
+@@ -747,7 +750,7 @@ O fundo da área de mensagens (`.umb-chat-detail`) usa `--umb-bg-primary` (ver 
+ - **Ações do header do chat**: sempre `btn btn-icon btn-text btn-lg` (§1), exatamente 8 botões na ordem canônica descrita em §21.3. Todos **obrigatoriamente** com tooltip (`data-bs-toggle="tooltip"`). Nunca use `btn-primary` sólido no header do chat — o único sólido desta tela está no topbar da coluna 1 (o "Iniciar nova conversa" `ph-plus`) e no botão Enviar do composer.
+ - **Topbar da lista de conversas** (`.umb-conv-topbar`): 5 `btn-icon btn-text btn-lg` + spacer + 1 `btn-primary btn-icon btn-lg` (ordem fixa: `ph-chat`, `ph-users-three`, `ph-eye`, `ph-list-checks`, `ph-sort-descending`, spacer, `ph-plus`). Todos com tooltip. Altura **56px** = altura do `.umb-chat-header`, de modo que o `border-bottom` das duas colunas fique alinhado pixel-perfect.
+ - **Filtros de lista**: use **Segmented** (`.umb-conv-segmented > .inset-control.inset-control-lg`) com 3 segmentos "Entrada / Esperando / Finalizados" e contadores via `<span class="umb-seg-count">`. Nunca use `.umb-conv-tabs` (deprecated — mantido apenas por retrocompatibilidade).
+-- **Botão Enviar** (`.umb-chat-send-btn`): é o único CTA sólido da tela. Disable quando o textarea estiver vazio (`:disabled` já estilizado).
++- **Botão Enviar**: é o único CTA sólido da tela. Use `btn btn-primary` canônico (pill padrão §3, tamanho Md). **Nunca** use classe custom com border-radius menor — todos os `.btn` do DS são pill (30px). Disable quando o textarea estiver vazio.
+ - **Badges de canal** (`.umb-conv-avatar-ch`): sempre usam as cores oficiais do canal (WhatsApp verde `#25D366`, Instagram gradient, etc.) — essas são as únicas cores hex permitidas na tela de chat, porque são brand dos canais (exceção à §20).
+ 
+ ## 22. Tokens de fundo — bgPrimary e bgActive
+diff --git a/umbootstrap-design-system.html b/umbootstrap-design-system.html
+index d2bbea6..92fa0c3 100644
+--- a/umbootstrap-design-system.html
++++ b/umbootstrap-design-system.html
+@@ -1938,17 +1938,6 @@
+     .umb-chat-composer-toolbar-right {
+       display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+     }
+-    .umb-chat-send-btn {
+-      height: 34px; padding: 0 16px; border-radius: 8px;
+-      background: var(--bs-primary); color: #fff; border: 0;
+-      font-size: 13px; font-weight: 600;
+-      display: inline-flex; align-items: center; gap: 6px;
+-      cursor: pointer; transition: filter .12s;
+-      font-family: inherit;
+-    }
+-    .umb-chat-send-btn:hover { filter: brightness(1.06); }
+-    .umb-chat-send-btn:disabled { opacity: .5; cursor: not-allowed; }
+-    .umb-chat-send-btn i { font-size: 15px; }
+ 
+     /* Empty state — sem chat selecionado (apenas desktop) */
+     .umb-chat-empty {
+@@ -4958,14 +4947,14 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                       </div>
+                       <div class="umb-chat-composer-toolbar">
+                         <div class="umb-chat-composer-toolbar-left">
+-                          <button class="btn btn-icon btn-text btn-sm" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
+-                          <button class="btn btn-icon btn-text btn-sm" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
+-                          <button class="btn btn-icon btn-text btn-sm" aria-label="Template"><i class="ph ph-file-text"></i></button>
+-                          <button class="btn btn-icon btn-text btn-sm" aria-label="Áudio"><i class="ph ph-microphone"></i></button>
+-                          <button class="btn btn-icon btn-text btn-sm" aria-label="Agendar"><i class="ph ph-clock"></i></button>
++                          <button class="btn btn-icon btn-text" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
++                          <button class="btn btn-icon btn-text" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
++                          <button class="btn btn-icon btn-text" aria-label="Template"><i class="ph ph-file-text"></i></button>
++                          <button class="btn btn-icon btn-text" aria-label="Áudio"><i class="ph ph-microphone"></i></button>
++                          <button class="btn btn-icon btn-text" aria-label="Agendar"><i class="ph ph-clock"></i></button>
+                         </div>
+                         <div class="umb-chat-composer-toolbar-right">
+-                          <button class="umb-chat-send-btn"><i class="ph ph-paper-plane-right"></i>Enviar</button>
++                          <button type="button" class="btn btn-primary"><i class="ph ph-paper-plane-right"></i>Enviar</button>
+                         </div>
+                       </div>
+                     </div>
+@@ -5214,12 +5203,12 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                   </div>
+                   <div class="umb-chat-composer-toolbar">
+                     <div class="umb-chat-composer-toolbar-left">
+-                      <button class="btn btn-icon btn-text btn-sm" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
+-                      <button class="btn btn-icon btn-text btn-sm" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
+-                      <button class="btn btn-icon btn-text btn-sm" aria-label="Áudio"><i class="ph ph-microphone"></i></button>
++                      <button class="btn btn-icon btn-text" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
++                      <button class="btn btn-icon btn-text" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
++                      <button class="btn btn-icon btn-text" aria-label="Áudio"><i class="ph ph-microphone"></i></button>
+                     </div>
+                     <div class="umb-chat-composer-toolbar-right">
+-                      <button class="umb-chat-send-btn"><i class="ph ph-paper-plane-right"></i></button>
++                      <button type="button" class="btn btn-primary btn-icon" aria-label="Enviar"><i class="ph ph-paper-plane-right"></i></button>
+                     </div>
+                   </div>
+                 </div>
+-- 
+2.34.1
+

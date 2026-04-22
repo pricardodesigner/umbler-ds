@@ -1,0 +1,70 @@
+From e4f475eec5760627a6d7295d557ce8d23e7e43ef Mon Sep 17 00:00:00 2001
+From: Paulo Ricardo <paulo@umbler.com>
+Date: Tue, 21 Apr 2026 18:48:09 +0000
+Subject: [PATCH] chore(ds): remove token orfao --umb-chat-list-active
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Token definido em 4 lugares (um por tema) mas com zero referencias
+no CSS desde que .umb-conv-item.active migrou para --umb-bg-active.
+Removido para manter a coerencia do DS (principio: evite variacoes
+desnecessarias).
+
+rules.md §20 reforcado com a regra.
+---
+ references/rules.md            | 1 +
+ umbootstrap-design-system.html | 4 ----
+ 2 files changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/references/rules.md b/references/rules.md
+index 8f041ca..2bb6057 100644
+--- a/references/rules.md
++++ b/references/rules.md
+@@ -561,6 +561,7 @@ Após gerar uma tela, redimensione a janela do browser cruzando os 768px e confi
+ 
+ - Nunca use cores hex hardcoded — sempre tokens via `var(--umb-*)`
+ - Nunca use `--umb-chat-canvas-bg` (removido): o fundo do chat **é** o `--umb-bg-primary` (ver §22)
++- Nunca use `--umb-chat-list-active` (removido): conversa selecionada usa `--umb-bg-active` (§22); era um token paralelo que violava a regra sistêmica de um único token semântico para seleção
+ - Nunca crie um token de fundo dedicado por tela — reuse `--umb-bg-primary` para canvas e `--umb-bg-active` para seleção
+ - Nunca crie um theme switcher novo (botão flutuante, barra extra, modal) — a troca de tema é **exclusivamente** pelo `.umb-avatar-menu` da sidebar (§12). Exceção: apenas quando o usuário pedir explicitamente um switcher adicional no prompt.
+ - Nunca use `font-weight` > 600 no DS (valores proibidos: `700`, `800`, `900`, `bold`, `bolder`). Se precisar reforçar hierarquia, aumente o `font-size` ou use `color` de contraste — nunca um peso mais pesado que 600 (ver §23).
+diff --git a/umbootstrap-design-system.html b/umbootstrap-design-system.html
+index ccb7487..be367ce 100644
+--- a/umbootstrap-design-system.html
++++ b/umbootstrap-design-system.html
+@@ -1492,7 +1492,6 @@
+       --umb-chat-bubble-out-bg:    #557CF2;
+       --umb-chat-bubble-out-color: #ffffff;
+       --umb-chat-list-hover:       rgba(255,255,255,.04);
+-      --umb-chat-list-active:      rgba(85,124,242,.12);
+       --umb-chat-sep-bg:           rgba(255,255,255,.08);
+       --umb-chat-pinned-bg:        rgba(255,214,10,.08);
+       --umb-chat-pinned-color:     #e8d588;
+@@ -1509,7 +1508,6 @@
+       --umb-chat-bubble-out-bg:    #557CF2;
+       --umb-chat-bubble-out-color: #ffffff;
+       --umb-chat-list-hover:       rgba(0,0,0,.03);
+-      --umb-chat-list-active:      rgba(85,124,242,.10);
+       --umb-chat-sep-bg:           rgba(0,0,0,.06);
+       --umb-chat-pinned-bg:        #FFF8DD;
+       --umb-chat-pinned-color:     #8A6D00;
+@@ -1526,7 +1524,6 @@
+       --umb-chat-bubble-out-bg:    #29958D;
+       --umb-chat-bubble-out-color: #ffffff;
+       --umb-chat-list-hover:       rgba(0,0,0,.03);
+-      --umb-chat-list-active:      rgba(41,149,141,.10);
+       --umb-chat-sep-bg:           rgba(0,0,0,.06);
+       --umb-chat-pinned-bg:        #FFF8DD;
+       --umb-chat-pinned-color:     #8A6D00;
+@@ -1543,7 +1540,6 @@
+       --umb-chat-bubble-out-bg:    #2B897F;
+       --umb-chat-bubble-out-color: #ffffff;
+       --umb-chat-list-hover:       rgba(255,255,255,.04);
+-      --umb-chat-list-active:      rgba(43,137,127,.16);
+       --umb-chat-sep-bg:           rgba(255,255,255,.07);
+       --umb-chat-pinned-bg:        rgba(255,214,10,.08);
+       --umb-chat-pinned-color:     #e8d588;
+-- 
+2.34.1
+

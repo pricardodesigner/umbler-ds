@@ -1,0 +1,104 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Paulo Ricardo <paulo@umbler.com>
+Date: Wed, 22 Apr 2026 01:40:00 +0000
+Subject: [PATCH] feat(chat-list): campo de busca flat + filtro btn-lg + respiro
+ simetrico
+
+Refatora a toolbar de busca da coluna de conversas (.umb-conv-list)
+para o padrao flat observado em producao.
+
+DS (reutilizavel):
+- Adiciona modifier .input-group-flat (Bootstrap pattern), que remove
+  toda chrome visual do input-group (border, radius, background,
+  shadow) sem quebrar a marcacao semantica (input-group + icon + input
+  unificados). Use sempre que o campo deve se fundir ao container pai
+  e o divisor visual vier do container, nao do campo.
+
+Aplicacao na lista de conversas:
+- .umb-conv-toolbar ganha border-bottom (100% da largura da coluna),
+  movendo o divisor visual da chrome do input para o container.
+- .umb-conv-segmented passa de padding 4px 12px 10px para
+  12px 12px 10px, igualando o respiro divisor->segmented (12px) ao
+  respiro segmented->1o card (12px = 10px segmented-bottom + 2px
+  scroll-top). Hierarquia vertical simetrica.
+- Botao "Filtros" reposicionado para a esquerda do campo de busca e
+  promovido para btn-lg, alinhando com os ícones da topbar imediatamente
+  acima (mesmo eixo visual de 40x40).
+- Markup do input recebe a classe .input-group-flat.
+
+Topbar (.umb-conv-topbar) mantem seu border-bottom: a coluna agora
+tem dois divisores (topbar/toolbar e toolbar/segmented), refletindo
+a estrutura de tres zonas funcionais.
+
+Antes/depois: campo deixa de ter pill com fundo e borda (estilo de
+campo isolado) e passa a ser texto+icone alinhados no fundo da coluna,
+com a unica chrome vindo da linha horizontal abaixo.
+---
+ chat.html | 26 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
+
+--- a/chat.html
++++ b/chat.html
+@@ -684,6 +684,24 @@
+     .input-group:not(:has(.input-group-text)) .form-control:not(:last-child),
+     .input-group:not(:has(.input-group-text)) .form-select:not(:last-child)  { border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important; }
+ 
++    /* Modifier: .input-group-flat — remove toda chrome visual do input-group (borda, fundo, radius, shadow).
++       Use quando o campo deve se fundir ao contêiner pai (ex: toolbar de busca, header inline).
++       O divisor visual deve vir do contêiner, não do campo. Mantém ícone + input semanticamente unificados. */
++    .input-group.input-group-flat:has(.input-group-text),
++    .input-group.input-group-flat:has(.input-group-text):hover:not(:focus-within),
++    .input-group.input-group-flat:has(.input-group-text):focus-within {
++      border: none !important;
++      border-radius: 0 !important;
++      background: transparent !important;
++      box-shadow: none !important;
++      overflow: visible;
++    }
++    .input-group.input-group-flat:has(.input-group-text) > .input-group-text,
++    .input-group.input-group-flat:has(.input-group-text) > .form-control,
++    .input-group.input-group-flat:has(.input-group-text) > .form-select {
++      background: transparent !important;
++    }
++
+     .form-control.is-valid   { border-color: var(--bs-success) !important; }
+     .form-control.is-invalid { border-color: var(--bs-danger)  !important; }
+     .valid-feedback   { color: #6dbba1; font-size: 12px; }
+@@ -1576,14 +1594,17 @@
+       background: var(--umb-card-bg);
+     }
+     .umb-conv-topbar-spacer { flex: 1 1 auto; }
+-    /* Toolbar de busca + filtro — sem border-bottom (o border é do topbar) */
++    /* Toolbar de busca + filtro — campo de busca sem chrome (flat, via .input-group-flat).
++       Divisor inferior 100% da largura, separa busca do segmented. */
+     .umb-conv-toolbar {
+       padding: 10px 12px; display: flex; align-items: center; gap: 8px;
++      border-bottom: 1px solid var(--umb-border);
+     }
+     .umb-conv-toolbar .form-control { height: 34px; font-size: 13px; }
+-    /* Wrapper do Segmented (substitui o antigo .umb-conv-tabs) */
++    /* Wrapper do Segmented. Top padding (12px) = bottom padding (10px) + scroll top (2px),
++       garantindo respiro simétrico entre divisor↔segmented e segmented↔1º card. */
+     .umb-conv-segmented {
+-      padding: 4px 12px 10px;
++      padding: 12px 12px 10px;
+     }
+     .umb-conv-segmented .inset-control {
+       display: flex; width: 100%;
+@@ -2115,11 +2136,11 @@
+         <button class="btn btn-primary btn-icon btn-lg" aria-label="Iniciar nova conversa" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar nova conversa"><i class="ph ph-plus"></i></button>
+       </div>
+       <div class="umb-conv-toolbar">
+-        <div class="input-group" style="flex:1">
++        <button class="btn btn-icon btn-text btn-lg" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
++        <div class="input-group input-group-flat" style="flex:1">
+           <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
+           <input type="search" class="form-control" placeholder="Buscar por nome ou telefone">
+         </div>
+-        <button class="btn btn-icon btn-text btn-sm" aria-label="Filtros" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Filtros"><i class="ph ph-funnel"></i></button>
+       </div>
+       <div class="umb-conv-segmented">
+         <div class="inset-control inset-control-lg">
+
+-- 
+2.43.0

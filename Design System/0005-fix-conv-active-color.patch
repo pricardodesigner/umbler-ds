@@ -1,0 +1,36 @@
+From 783d409e6ce3a711d6f22baa65e44fc0052dae87 Mon Sep 17 00:00:00 2001
+From: Paulo Ricardo <paulo@umbler.com>
+Date: Tue, 21 Apr 2026 13:59:03 +0000
+Subject: [PATCH] =?UTF-8?q?fix(chat):=20conversa=20ativa=20usa=20--umb-bg-?=
+ =?UTF-8?q?active=20(=C2=A722)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+.umb-conv-item.active passa a usar var(--umb-bg-active) em vez de
+var(--umb-chat-list-active). Seleção de conversa agora compartilha o
+mesmo fundo sólido de qualquer outro item selecionado do DS (linha de
+tabela, item de menu dropdown, card).
+
+Patch mínimo: 1 linha de CSS alterada. Nenhuma remoção de token,
+nenhuma alteração de JS.
+---
+ umbootstrap-design-system.html | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/umbootstrap-design-system.html b/umbootstrap-design-system.html
+index 93a3b60..201c1c6 100644
+--- a/umbootstrap-design-system.html
++++ b/umbootstrap-design-system.html
+@@ -1627,7 +1627,7 @@
+     }
+     .umb-conv-item:hover { background: var(--umb-chat-list-hover); }
+     .umb-conv-item.active {
+-      background: var(--umb-chat-list-active);
++      background: var(--umb-bg-active);
+       box-shadow: inset 3px 0 0 var(--bs-primary);
+     }
+     .umb-conv-avatar {
+-- 
+2.34.1
+

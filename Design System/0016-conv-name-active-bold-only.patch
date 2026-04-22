@@ -1,0 +1,58 @@
+From 76a944e7f1e5a520ca2c71945938e4f8036c5c6e Mon Sep 17 00:00:00 2001
+From: Paulo Ricardo <paulo@umbler.com>
+Date: Tue, 21 Apr 2026 18:41:48 +0000
+Subject: [PATCH] fix(chat): nome do contato com peso 400 por padrao; 600 so no
+ .active
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+O .umb-conv-name passa de peso 600 (Semibold em todos) para:
+- 400 (Normal) por padrao
+- 600 (Semibold) apenas em .umb-conv-item.active
+
+Isso mantem o destaque tipografico como sinal visual UNICO da
+conversa selecionada. Itens nao selecionados ficam mais leves, com
+hierarquia visual correta (bg-active + peso + inset-border sinalizam
+selecao juntos, sem redundancia de destaque em todos os cards).
+
+rules.md §21.2 atualizada com a regra.
+---
+ references/rules.md            | 2 +-
+ umbootstrap-design-system.html | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/references/rules.md b/references/rules.md
+index eae5829..8f041ca 100644
+--- a/references/rules.md
++++ b/references/rules.md
+@@ -654,7 +654,7 @@ Largura fixa **360px** no desktop. Estrutura vertical:
+ |---|---|
+ | `.umb-conv-avatar` | 52×52, circular. **Sempre** use `<img>` com a foto real do contato. `<span>` com iniciais é apenas fallback para quando a foto ainda não carregou ou o contato não tem foto cadastrada (raro em produção). |
+ | `.umb-conv-avatar-ch` | Badge do canal — **canto inferior esquerdo**, 20×20 com borda de 2px em `--umb-card-bg` (proporção ~38% do avatar). Ícone Phosphor inline com `font-size: 10px`. Posicionado em `bottom: 0; left: 0` (sem extrapolar para fora do avatar). |
+-| `.umb-conv-name` | 15px, peso 600, `text-primary`. |
++| `.umb-conv-name` | 15px, `text-primary`. Peso **400** (Normal) por padrão; **600** (Semibold) apenas quando o item está `.active`. O peso bold é sinal visual da conversa selecionada — o único card com destaque tipográfico na lista. |
+ | `.umb-conv-head-right` | Container à direita da linha 1. Abriga `head-event` (calendário + N eventos), `head-mute` (ícone speaker-slash quando mudo) e `.umb-conv-time` (texto). |
+ | `.umb-conv-preview` | 13px, `text-mid`, 1 linha com ellipsis. Vive dentro de `.umb-conv-preview-row` com `flex: 1`, para que o pending (se houver) fique encostado à direita. Aceita ícone Phosphor inline para sinalizar tipo de mídia (áudio, anexo, etc.). |
+ | `.umb-conv-tag` | Pill colorida com ícone + label. Cores canônicas: `blue`, `green`, `amber`, `red`, `violet`, `pink`. Todas com fundo sólido + texto branco/escuro contrastante. |
+diff --git a/umbootstrap-design-system.html b/umbootstrap-design-system.html
+index 7ec629c..ccb7487 100644
+--- a/umbootstrap-design-system.html
++++ b/umbootstrap-design-system.html
+@@ -1676,10 +1676,12 @@
+       display: flex; align-items: center; justify-content: space-between; gap: 8px;
+     }
+     .umb-conv-name {
+-      font-size: 15px; font-weight: 600; color: var(--umb-text-primary);
++      font-size: 15px; font-weight: 400; color: var(--umb-text-primary);
+       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+       min-width: 0; flex: 1;
+     }
++    /* Conversa selecionada — unico item com nome em destaque (600). */
++    .umb-conv-item.active .umb-conv-name { font-weight: 600; }
+     .umb-conv-head-right {
+       display: flex; align-items: center; gap: 8px;
+       font-size: 11.5px; color: var(--umb-text-mid);
+-- 
+2.34.1
+

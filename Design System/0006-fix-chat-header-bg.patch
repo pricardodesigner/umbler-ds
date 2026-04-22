@@ -1,0 +1,37 @@
+From 0816be8d38b22e00855b7042f3e8f43bad49419d Mon Sep 17 00:00:00 2001
+From: Paulo Ricardo <paulo@umbler.com>
+Date: Tue, 21 Apr 2026 14:01:08 +0000
+Subject: [PATCH] fix(chat): header da coluna 2 usa --umb-bg-primary, alinhado
+ ao canvas
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+.umb-chat-header passa a usar var(--umb-bg-primary) no lugar de
+var(--umb-card-bg). O header da coluna direita (ações + contato) agora
+compartilha o mesmo fundo da área de mensagens (.umb-chat-body), o que
+elimina a 'linha visual' entre header e canvas e dá continuidade à
+tela. O border-bottom de 1px segue como único delimitador.
+
+A coluna 1 (.umb-conv-list) continua com --umb-card-bg, mantendo o
+contraste lateral com o canvas.
+---
+ umbootstrap-design-system.html | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/umbootstrap-design-system.html b/umbootstrap-design-system.html
+index 201c1c6..d2bbea6 100644
+--- a/umbootstrap-design-system.html
++++ b/umbootstrap-design-system.html
+@@ -1715,7 +1715,7 @@
+     }
+     .umb-chat-header {
+       height: 56px; min-height: 56px;
+-      background: var(--umb-card-bg);
++      background: var(--umb-bg-primary, var(--bs-body-bg));
+       border-bottom: 1px solid var(--umb-border);
+       display: flex; align-items: center; gap: 12px; padding: 0 16px;
+     }
+-- 
+2.34.1
+

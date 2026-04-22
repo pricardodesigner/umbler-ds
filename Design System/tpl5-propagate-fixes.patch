@@ -1,0 +1,305 @@
+From 609aa31be7f3a442d4fd040aa33d1c44ef092fa2 Mon Sep 17 00:00:00 2001
+From: Paulo Ricardo <paulo@umbler.com>
+Date: Tue, 21 Apr 2026 18:54:08 +0000
+Subject: [PATCH] fix(tpl5): propaga ajustes para empty state, mobile lista e
+ mobile chat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+A fonte da verdade do DS e a secao Shell & Templates. Antes, varios
+blocos do Template 5 estavam com items e composers no formato antigo.
+
+Bloco 2 — Desktop empty state (sem chat selecionado):
+- Substitui os 3 items antigos (com .umb-conv-right, tags sem icone,
+  sem preview-end) pela mesma lista canonica de 5 items do bloco 1,
+  usando estrutura nova (.umb-conv-preview-row, meta-left/right,
+  avatares com foto, badges whatsapp-starter/api/livechat).
+
+Bloco 3 — Mobile Lista de conversas:
+- Mesma lista canonica de 5 items do bloco 1, mas com indent de
+  mobile-content. Todos com estrutura nova.
+
+Bloco 4 — Mobile Chat aberto:
+- Remove composer duplicado (residual do patch anterior). Sobrou o
+  composer novo (topbar + Segmented + toolbar canonica).
+---
+ umbootstrap-design-system.html | 217 +++++++++++++++++++++++++--------
+ 1 file changed, 167 insertions(+), 50 deletions(-)
+
+diff --git a/umbootstrap-design-system.html b/umbootstrap-design-system.html
+index ccb7487..85038e1 100644
+--- a/umbootstrap-design-system.html
++++ b/umbootstrap-design-system.html
+@@ -5095,33 +5095,105 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                       </div>
+                     </div>
+                     <div class="umb-conv-scroll">
++                      <div class="umb-conv-item active">
++                        <div class="umb-conv-avatar">
++                          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces" alt="Maria Rocha">
++                          <span class="umb-conv-avatar-ch whatsapp-api"><i class="ph ph-whatsapp-logo"></i></span>
++                        </div>
++                        <div class="umb-conv-body">
++                          <div class="umb-conv-head">
++                            <span class="umb-conv-name">Maria Rocha</span>
++                            <div class="umb-conv-head-right"><span class="umb-conv-time">14:23</span></div>
++                          </div>
++                          <div class="umb-conv-preview-row">
++                            <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
++                            <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"></div>
++                          </div>
++                          <div class="umb-conv-meta">
++                            <div class="umb-conv-meta-left"><span class="umb-conv-tag green"><i class="ph ph-user-circle"></i>Cliente</span></div>
++                            <div class="umb-conv-meta-right"><span class="umb-conv-sector">Suporte</span></div>
++                          </div>
++                        </div>
++                      </div>
+                       <div class="umb-conv-item">
+-                        <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces" alt="MR"><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
++                        <div class="umb-conv-avatar">
++                          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=96&h=96&fit=crop&crop=faces" alt="Ricardo Farias">
++                          <span class="umb-conv-avatar-ch whatsapp-starter"><i class="ph ph-whatsapp-logo"></i></span>
++                        </div>
+                         <div class="umb-conv-body">
+-                          <div class="umb-conv-head"><span class="umb-conv-name">Maria Rocha</span><span class="umb-conv-time">14:23</span></div>
+-                          <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
+-                          <div class="umb-conv-meta"><span class="umb-conv-tag green">Cliente</span><span class="umb-conv-sector"><i class="ph ph-headset"></i>Suporte</span></div>
++                          <div class="umb-conv-head">
++                            <span class="umb-conv-name">Ricardo Farias</span>
++                            <div class="umb-conv-head-right"><span class="umb-conv-time">14:05</span></div>
++                          </div>
++                          <div class="umb-conv-preview-row">
++                            <p class="umb-conv-preview">Consegue trocar o plano pro anual?</p>
++                            <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1507081323647-4d250478b919?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"><span class="umb-conv-pending">2</span></div>
++                          </div>
++                          <div class="umb-conv-meta">
++                            <div class="umb-conv-meta-left"><span class="umb-conv-tag amber"><i class="ph ph-user-circle"></i>Trial</span><span class="umb-conv-tag-more">+2</span></div>
++                            <div class="umb-conv-meta-right"><span class="umb-conv-sector">Vendas</span></div>
++                          </div>
+                         </div>
+-                        <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
+                       </div>
+                       <div class="umb-conv-item">
+-                        <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=96&h=96&fit=crop&crop=faces" alt="RF"><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
++                        <div class="umb-conv-avatar">
++                          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&crop=faces" alt="Joao P. (site)">
++                          <span class="umb-conv-avatar-ch livechat"><i class="ph ph-chat-circle"></i></span>
++                        </div>
+                         <div class="umb-conv-body">
+-                          <div class="umb-conv-head"><span class="umb-conv-name">Rafa Feltrim</span><span class="umb-conv-time">13:58</span></div>
+-                          <p class="umb-conv-preview"><i class="ph ph-image"></i>Foto</p>
+-                          <div class="umb-conv-meta"><span class="umb-conv-tag blue">Lead</span><span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span></div>
++                          <div class="umb-conv-head">
++                            <span class="umb-conv-name">Joao P. (site)</span>
++                            <div class="umb-conv-head-right"><span class="umb-conv-time">13:55</span></div>
++                          </div>
++                          <div class="umb-conv-preview-row">
++                            <p class="umb-conv-preview">Voces tem integracao com HubSpot?</p>
++                          </div>
++                          <div class="umb-conv-meta">
++                            <div class="umb-conv-meta-left"><span class="umb-conv-tag blue"><i class="ph ph-user-circle"></i>Lead</span></div>
++                            <div class="umb-conv-meta-right"><span class="umb-conv-sector">Vendas</span></div>
++                          </div>
+                         </div>
+-                        <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">2</span></div>
+                       </div>
+                       <div class="umb-conv-item">
+-                        <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=96&h=96&fit=crop&crop=faces" alt="CC"><span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span></div>
++                        <div class="umb-conv-avatar">
++                          <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=96&h=96&fit=crop&crop=faces" alt="Cannacare">
++                          <span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span>
++                        </div>
+                         <div class="umb-conv-body">
+-                          <div class="umb-conv-head"><span class="umb-conv-name">Cannacare</span><span class="umb-conv-time">13:40</span></div>
+-                          <div class="umb-conv-preview-row"><p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p></div>
+-                          <div class="umb-conv-meta"><span class="umb-conv-tag violet">Parceiro</span><span class="umb-conv-sector"><i class="ph ph-shopping-cart"></i>Vendas</span></div>
++                          <div class="umb-conv-head">
++                            <span class="umb-conv-name">Cannacare</span>
++                            <div class="umb-conv-head-right"><span class="umb-conv-time">13:40</span></div>
++                          </div>
++                          <div class="umb-conv-preview-row">
++                            <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
++                            <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"><span class="umb-conv-pending">1</span></div>
++                          </div>
++                          <div class="umb-conv-meta">
++                            <div class="umb-conv-meta-left"><span class="umb-conv-tag violet"><i class="ph ph-user-circle"></i>Parceiro</span><span class="umb-conv-tag-more">+1</span></div>
++                            <div class="umb-conv-meta-right"><span class="umb-conv-sector">Vendas</span></div>
++                          </div>
+                         </div>
+-                        <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">1</span></div>
+                       </div>
++                      <div class="umb-conv-item">
++                        <div class="umb-conv-avatar">
++                          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&crop=faces" alt="Laura Silva">
++                          <span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span>
++                        </div>
++                        <div class="umb-conv-body">
++                          <div class="umb-conv-head">
++                            <span class="umb-conv-name">Laura Silva</span>
++                            <div class="umb-conv-head-right"><span class="umb-conv-time">Ontem</span></div>
++                          </div>
++                          <div class="umb-conv-preview-row">
++                            <p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p>
++                          </div>
++                          <div class="umb-conv-meta">
++                            <div class="umb-conv-meta-left"><span class="umb-conv-tag red"><i class="ph ph-user-circle"></i>VIP</span></div>
++                            <div class="umb-conv-meta-right"><span class="umb-conv-sector">Contas</span></div>
++                          </div>
++                        </div>
++                      </div>
++                    
+                     </div>
+                   </aside>
+                   <main class="umb-chat-detail">
+@@ -5168,51 +5240,105 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                     </div>
+                   </div>
+                   <div class="umb-conv-scroll">
+-                    <div class="umb-conv-item">
+-                      <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces" alt="MR"><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
++                    <div class="umb-conv-item active">
++                      <div class="umb-conv-avatar">
++                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces" alt="Maria Rocha">
++                        <span class="umb-conv-avatar-ch whatsapp-api"><i class="ph ph-whatsapp-logo"></i></span>
++                      </div>
+                       <div class="umb-conv-body">
+-                        <div class="umb-conv-head"><span class="umb-conv-name">Maria Rocha</span><span class="umb-conv-time">14:23</span></div>
+-                        <p class="umb-conv-preview">Obrigada! Vou conferir aqui e te aviso.</p>
+-                        <div class="umb-conv-meta"><span class="umb-conv-tag green">Cliente</span></div>
++                        <div class="umb-conv-head">
++                          <span class="umb-conv-name">Maria Rocha</span>
++                          <div class="umb-conv-head-right"><span class="umb-conv-time">14:23</span></div>
++                        </div>
++                        <div class="umb-conv-preview-row">
++                          <p class="umb-conv-preview">Obrigada\! Vou conferir aqui e te aviso.</p>
++                          <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"></div>
++                        </div>
++                        <div class="umb-conv-meta">
++                          <div class="umb-conv-meta-left"><span class="umb-conv-tag green"><i class="ph ph-user-circle"></i>Cliente</span></div>
++                          <div class="umb-conv-meta-right"><span class="umb-conv-sector">Suporte</span></div>
++                        </div>
+                       </div>
+-                      <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
+                     </div>
+                     <div class="umb-conv-item">
+-                      <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=96&h=96&fit=crop&crop=faces" alt="RF"><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
++                      <div class="umb-conv-avatar">
++                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=96&h=96&fit=crop&crop=faces" alt="Ricardo Farias">
++                        <span class="umb-conv-avatar-ch whatsapp-starter"><i class="ph ph-whatsapp-logo"></i></span>
++                      </div>
+                       <div class="umb-conv-body">
+-                        <div class="umb-conv-head"><span class="umb-conv-name">Rafa Feltrim</span><span class="umb-conv-time">13:58</span></div>
+-                        <p class="umb-conv-preview"><i class="ph ph-image"></i>Foto</p>
+-                        <div class="umb-conv-meta"><span class="umb-conv-tag blue">Lead</span></div>
++                        <div class="umb-conv-head">
++                          <span class="umb-conv-name">Ricardo Farias</span>
++                          <div class="umb-conv-head-right"><span class="umb-conv-time">14:05</span></div>
++                        </div>
++                        <div class="umb-conv-preview-row">
++                          <p class="umb-conv-preview">Consegue trocar o plano pro anual?</p>
++                          <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1507081323647-4d250478b919?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"><span class="umb-conv-pending">2</span></div>
++                        </div>
++                        <div class="umb-conv-meta">
++                          <div class="umb-conv-meta-left"><span class="umb-conv-tag amber"><i class="ph ph-user-circle"></i>Trial</span><span class="umb-conv-tag-more">+2</span></div>
++                          <div class="umb-conv-meta-right"><span class="umb-conv-sector">Vendas</span></div>
++                        </div>
+                       </div>
+-                      <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">2</span></div>
+                     </div>
+                     <div class="umb-conv-item">
+-                      <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=96&h=96&fit=crop&crop=faces" alt="CC"><span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span></div>
++                      <div class="umb-conv-avatar">
++                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&crop=faces" alt="Joao P. (site)">
++                        <span class="umb-conv-avatar-ch livechat"><i class="ph ph-chat-circle"></i></span>
++                      </div>
+                       <div class="umb-conv-body">
+-                        <div class="umb-conv-head"><span class="umb-conv-name">Cannacare</span><span class="umb-conv-time">13:40</span></div>
+-                        <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
+-                        <div class="umb-conv-meta"><span class="umb-conv-tag violet">Parceiro</span></div>
++                        <div class="umb-conv-head">
++                          <span class="umb-conv-name">Joao P. (site)</span>
++                          <div class="umb-conv-head-right"><span class="umb-conv-time">13:55</span></div>
++                        </div>
++                        <div class="umb-conv-preview-row">
++                          <p class="umb-conv-preview">Voces tem integracao com HubSpot?</p>
++                        </div>
++                        <div class="umb-conv-meta">
++                          <div class="umb-conv-meta-left"><span class="umb-conv-tag blue"><i class="ph ph-user-circle"></i>Lead</span></div>
++                          <div class="umb-conv-meta-right"><span class="umb-conv-sector">Vendas</span></div>
++                        </div>
+                       </div>
+-                      <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span><span class="umb-conv-badge">1</span></div>
+                     </div>
+                     <div class="umb-conv-item">
+-                      <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=96&h=96&fit=crop&crop=faces" alt="FB"><span class="umb-conv-avatar-ch whatsapp"><i class="ph ph-whatsapp-logo"></i></span></div>
++                      <div class="umb-conv-avatar">
++                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=96&h=96&fit=crop&crop=faces" alt="Cannacare">
++                        <span class="umb-conv-avatar-ch instagram"><i class="ph ph-instagram-logo"></i></span>
++                      </div>
+                       <div class="umb-conv-body">
+-                        <div class="umb-conv-head"><span class="umb-conv-name">Fernando B.</span><span class="umb-conv-time">12:12</span></div>
+-                        <p class="umb-conv-preview"><i class="ph ph-microphone"></i>Áudio (0:18)</p>
+-                        <div class="umb-conv-meta"><span class="umb-conv-tag amber">Trial</span></div>
++                        <div class="umb-conv-head">
++                          <span class="umb-conv-name">Cannacare</span>
++                          <div class="umb-conv-head-right"><span class="umb-conv-time">13:40</span></div>
++                        </div>
++                        <div class="umb-conv-preview-row">
++                          <p class="umb-conv-preview">Podemos marcar a demo pra quinta?</p>
++                          <div class="umb-conv-preview-end"><img class="umb-conv-assignee" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=faces" alt="Responsavel"><span class="umb-conv-pending">1</span></div>
++                        </div>
++                        <div class="umb-conv-meta">
++                          <div class="umb-conv-meta-left"><span class="umb-conv-tag violet"><i class="ph ph-user-circle"></i>Parceiro</span><span class="umb-conv-tag-more">+1</span></div>
++                          <div class="umb-conv-meta-right"><span class="umb-conv-sector">Vendas</span></div>
++                        </div>
+                       </div>
+-                      <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
+                     </div>
+                     <div class="umb-conv-item">
+-                      <div class="umb-conv-avatar"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&crop=faces" alt="LS"><span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span></div>
++                      <div class="umb-conv-avatar">
++                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&crop=faces" alt="Laura Silva">
++                        <span class="umb-conv-avatar-ch email"><i class="ph ph-envelope"></i></span>
++                      </div>
+                       <div class="umb-conv-body">
+-                        <div class="umb-conv-head"><span class="umb-conv-name">Laura Silva</span><span class="umb-conv-time">Ontem</span></div>
+-                        <div class="umb-conv-preview-row"><p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p></div>
+-                        <div class="umb-conv-meta"><span class="umb-conv-tag red">VIP</span></div>
++                        <div class="umb-conv-head">
++                          <span class="umb-conv-name">Laura Silva</span>
++                          <div class="umb-conv-head-right"><span class="umb-conv-time">Ontem</span></div>
++                        </div>
++                        <div class="umb-conv-preview-row">
++                          <p class="umb-conv-preview"><i class="ph ph-paperclip"></i>proposta-2026.pdf</p>
++                        </div>
++                        <div class="umb-conv-meta">
++                          <div class="umb-conv-meta-left"><span class="umb-conv-tag red"><i class="ph ph-user-circle"></i>VIP</span></div>
++                          <div class="umb-conv-meta-right"><span class="umb-conv-sector">Contas</span></div>
++                        </div>
+                       </div>
+-                      <div class="umb-conv-right"><span class="umb-conv-time">&nbsp;</span></div>
+                     </div>
++                  
+                   </div>
+                 </div>
+                 <div class="umb-mobile-bottom-nav">
+@@ -5318,15 +5444,6 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                     </div>
+                   </div>
+                 </div>
+-                  <div class="umb-chat-composer-input">
+-                    <textarea placeholder="Digite..."></textarea>
+-                  </div>
+-                  <div class="umb-chat-composer-toolbar">
+-                    <div class="umb-chat-composer-toolbar-left">
+-                      <button class="btn btn-icon btn-text" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
+-                      <button class="btn btn-icon btn-text" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
+-                      <button class="btn btn-icon btn-text" aria-label="Áudio"><i class="ph ph-microphone"></i></button>
+-                    </div>
+                     <div class="umb-chat-composer-toolbar-right">
+                       <button type="button" class="btn btn-primary btn-icon" aria-label="Enviar"><i class="ph ph-paper-plane-right"></i></button>
+                     </div>
+-- 
+2.34.1
+
