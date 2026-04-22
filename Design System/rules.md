@@ -27,6 +27,7 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 21. Template de Chat (atendimento)
 22. Tokens de fundo — bgPrimary e bgActive
 23. Font weight — máximo 600
+24. Governança — fonte única da verdade
 
 ---
 
@@ -922,4 +923,43 @@ grep -rE 'font-weight="(700|800|900)"' .   # SVGs
 ### Exceção
 
 A única exceção são **elementos de marca externos** (ex: logos de canais — WhatsApp, Instagram) que trazem sua própria tipografia e não estão sob o escopo do DS.
+
+## 24. Governança — fonte única da verdade
+
+O `umbootstrap-design-system.html` é a **única fonte da verdade** do DS. Todas as outras telas do repo (`chat.html`, futuros exemplos, protótipos) são **consumidoras** — nunca fontes.
+
+### A regra
+
+Toda mudança de token, variável CSS ou regra de componente (hover, active, focus, variantes de botão, spacing, etc.) entra **primeiro** no `umbootstrap-design-system.html`. Só depois é replicada, se necessário, para telas de exemplo.
+
+Ordem inversa é proibida: não aplique um token novo direto em `chat.html` (ou qualquer tela) esperando propagar pro DS depois. Esse fluxo é a principal causa de divergência silenciosa entre o DS nominal e o DS real.
+
+### Por quê
+
+A skill `umbler-ds` clona este repo em toda execução e lê **exclusivamente** o `umbootstrap-design-system.html` pra gerar telas novas. Se uma mudança vive só em `chat.html`, ela é invisível pra skill — qualquer tela nova nasce com o estado antigo, mesmo que visualmente o `chat.html` esteja correto.
+
+Já aconteceu: os tokens `--umb-menu-item-hover-bg` / `--umb-menu-item-active-bg` (popup menu) foram adicionados em `chat.html` no patch 0018 e levaram o patch 0019 separado pra propagar ao DS-mestre. Telas geradas entre os dois patches nasceram com dropdown desatualizado.
+
+### Como aplicar
+
+Ao mudar qualquer coisa sistêmica (token, componente, regra de hover/active, variável de tema):
+
+1. Abra `umbootstrap-design-system.html` primeiro. Faça a alteração nele — nos **todos** os blocos de tema aplicáveis (`[data-bs-theme="dark"]`, `"light"`, `"emerald"`, `"dark-emerald"`) + os 2 blocos `@media (prefers-color-scheme)` do tema `auto`.
+2. Se a mudança afeta uma regra CSS de componente (`.dropdown-item`, `.btn`, etc.), edite a regra global — não replique só no escopo de uma tela.
+3. Depois, se `chat.html` (ou outra tela) precisar refletir a mudança visualmente, replique ali — mas com a consciência de que é cópia, não origem.
+4. Commit + push no GitHub. Sem push, a skill `umbler-ds` continua gerando com a versão antiga do repo remoto.
+
+### Checklist de propagação
+
+Antes de dar por encerrada uma mudança sistêmica:
+
+- [ ] Alterado no `umbootstrap-design-system.html` (todos os blocos de tema)
+- [ ] Regras CSS de componente atualizadas no escopo global, não no escopo de uma tela
+- [ ] `chat.html` e outras telas refletem a mudança (opcional, se o visual depender)
+- [ ] Commit no main + push pro `origin`
+- [ ] Validação: `git clone --depth 1` do repo num diretório limpo e `grep` confirma que a mudança chegou
+
+### Artefatos locais fora do repo
+
+`*.patch`, `*.diff` e outros arquivos de rascunho de trabalho **não** entram no Git. Use `.gitignore` pra mantê-los fora do `git status`. A história do DS é o `git log`, não um monte de patches soltos no working tree.
 

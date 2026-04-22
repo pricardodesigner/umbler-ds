@@ -1,0 +1,4 @@
+# Patches e diffs sao artefatos de trabalho local — nao entram no repo.
+# A historia do DS e o git log, nao arquivos .patch soltos no working tree.
+*.patch
+*.diff
