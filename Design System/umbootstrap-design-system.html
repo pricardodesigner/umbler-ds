@@ -6761,6 +6761,108 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         </div>
       </div>
 
+      <!-- ============================================================
+           Composer Mobile — documentação de estados
+           O botão primário do .umb-chat-composer-toolbar-right alterna
+           conforme o conteúdo do textarea:
+             • vazio        → microfone (ph-microphone)
+             • com conteúdo → enviar    (ph-paper-plane-right)
+           Só um dos dois existe por vez, nunca ambos simultaneamente.
+           ============================================================ -->
+      <div class="comp-group">
+        <p class="comp-label">Composer mobile — estados do botão primário</p>
+        <p style="font-size:13px;color:var(--umb-text-mid);margin:-4px 0 16px;max-width:720px;line-height:1.5">
+          No mobile, o botão primário do <code>.umb-chat-composer-toolbar-right</code> alterna conforme o conteúdo do textarea.
+          Quando vazio, o botão é o microfone (gravar áudio). Ao digitar, o microfone é substituído pelo paper-plane (enviar).
+          Só um dos dois existe por vez — o desktop mantém o microfone fixo porque conta com Enter do teclado para enviar.
+        </p>
+        <div class="row g-4">
+          <!-- Estado vazio (idle) — microfone -->
+          <div class="col-md-6">
+            <p class="tpl-preview-label">1. Vazio — botão de gravar áudio</p>
+            <div style="padding:16px;background:var(--umb-bg-primary);border:1px solid var(--umb-border);border-radius:12px">
+              <div class="umb-chat-composer" style="margin:0">
+                <div class="umb-chat-composer-topbar">
+                  <div class="umb-chat-composer-assignee">
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" id="composer-state-idle" checked>
+                    </div>
+                    <span class="umb-chat-composer-assignee-name">Paulo Ricardo</span>
+                  </div>
+                  <div class="inset-control inset-control-sm">
+                    <button class="btn active" type="button">Mensagem</button>
+                    <button class="btn" type="button">Notas</button>
+                  </div>
+                </div>
+                <div class="umb-chat-composer-input">
+                  <textarea placeholder="Digite sua mensagem ou arraste um arquivo..."></textarea>
+                </div>
+                <div class="umb-chat-composer-toolbar">
+                  <div class="umb-chat-composer-toolbar-left">
+                    <button class="btn btn-icon btn-text" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
+                    <button class="btn btn-icon btn-text" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
+                    <button class="btn btn-icon btn-text" aria-label="Templates"><i class="ph ph-chat-teardrop-text"></i></button>
+                  </div>
+                  <div class="umb-chat-composer-toolbar-right">
+                    <button class="btn btn-icon btn-text" aria-label="Agendar"><i class="ph ph-clock"></i></button>
+                    <button type="button" class="btn btn-primary btn-icon" aria-label="Gravar áudio"><i class="ph ph-microphone"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p style="font-size:12px;color:var(--umb-text-mid);margin-top:8px;line-height:1.5">
+              Sem texto no textarea: o botão primário é o microfone. Tocar inicia a gravação de áudio.
+            </p>
+          </div>
+
+          <!-- Estado digitando (typing) — paper-plane -->
+          <div class="col-md-6">
+            <p class="tpl-preview-label">2. Digitando — botão de enviar</p>
+            <div style="padding:16px;background:var(--umb-bg-primary);border:1px solid var(--umb-border);border-radius:12px">
+              <div class="umb-chat-composer" style="margin:0">
+                <div class="umb-chat-composer-topbar">
+                  <div class="umb-chat-composer-assignee">
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" id="composer-state-typing" checked>
+                    </div>
+                    <span class="umb-chat-composer-assignee-name">Paulo Ricardo</span>
+                  </div>
+                  <div class="inset-control inset-control-sm">
+                    <button class="btn active" type="button">Mensagem</button>
+                    <button class="btn" type="button">Notas</button>
+                  </div>
+                </div>
+                <div class="umb-chat-composer-input">
+                  <textarea placeholder="Digite sua mensagem ou arraste um arquivo...">Oi Maria, vou te mandar o recibo agora — fatura de abril</textarea>
+                </div>
+                <div class="umb-chat-composer-toolbar">
+                  <div class="umb-chat-composer-toolbar-left">
+                    <button class="btn btn-icon btn-text" aria-label="Anexar"><i class="ph ph-paperclip"></i></button>
+                    <button class="btn btn-icon btn-text" aria-label="Emoji"><i class="ph ph-smiley"></i></button>
+                    <button class="btn btn-icon btn-text" aria-label="Templates"><i class="ph ph-chat-teardrop-text"></i></button>
+                  </div>
+                  <div class="umb-chat-composer-toolbar-right">
+                    <button class="btn btn-icon btn-text" aria-label="Agendar"><i class="ph ph-clock"></i></button>
+                    <button type="button" class="btn btn-primary btn-icon" aria-label="Enviar"><i class="ph ph-paper-plane-right"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p style="font-size:12px;color:var(--umb-text-mid);margin-top:8px;line-height:1.5">
+              Com texto digitado: o microfone é substituído pelo paper-plane. Tocar envia a mensagem.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding:14px 16px;background:var(--umb-inset-bg);border-left:3px solid var(--bs-primary);border-radius:0 8px 8px 0">
+          <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--umb-text-mid);margin:0 0 6px">Regra de uso</p>
+          <p style="font-size:13px;color:var(--umb-text-primary);margin:0;line-height:1.6">
+            No mobile, o componente precisa reagir ao <code>input</code> do textarea: <code>value.length === 0</code> renderiza microfone, <code>value.length &gt; 0</code> renderiza paper-plane.
+            Nunca mostre os dois ao mesmo tempo — isso introduz decisão desnecessária. No desktop, mantenha o microfone fixo: Enter é o atalho canônico de envio.
+          </p>
+        </div>
+      </div>
+
     </section>
 
     <!-- RODAPÉ -->
