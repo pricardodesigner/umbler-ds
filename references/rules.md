@@ -199,7 +199,7 @@ Nos fluxos de criação e edição, os componentes `umb-page-tabs` e `steps-cont
 
 ## 9. Navegação mobile (bottom nav)
 
-A barra inferior mobile usa fundo `var(--umb-sidebar-bg)`. Os ícones devem usar tokens da sidebar, não do conteúdo:
+A barra inferior mobile é o componente `.umb-mobile-bottom-nav` (nome canônico — não confundir com `umb-bottom-nav`, que **não existe** no CSS). Fundo usa `var(--umb-sidebar-bg)`; os ícones devem usar tokens da sidebar, não do conteúdo:
 
 ```css
 .umb-mobile-nav-item       { color: var(--umb-nav-color); }
@@ -207,6 +207,23 @@ A barra inferior mobile usa fundo `var(--umb-sidebar-bg)`. Os ícones devem usar
 ```
 
 Isso garante contraste correto em todos os temas (inclusive no Claro onde o fundo é azul).
+
+### Markup canônico
+
+```html
+<nav class="umb-mobile-bottom-nav" data-umb-c="bottom-nav">
+  <div class="umb-mobile-nav-item active"><i class="ph ph-chat"></i><span>Conversas</span></div>
+  <div class="umb-mobile-nav-item"><i class="ph ph-user"></i><span>Contatos</span></div>
+  <!-- ... -->
+</nav>
+```
+
+### Regras
+
+- **Use `<div>` nos itens, nunca `<button>`.** O tag `<button>` introduz estilos default (background, borda, padding) que descaracterizam o visual flat e minimalista do bottom-nav. Em produção com framework, usar `<div role="button" tabindex="0">` para manter acessibilidade sem herdar os estilos default do button.
+- **Altura fixa 56px.** Não aumentar/diminuir.
+- **5 itens máximo.** Se precisar de mais, use um item "Mais" com dropdown — a area de toque fica inutilizável com 6+ itens em telas menores.
+- **Nunca posicionar via `position: fixed`** — o layout é garantido pelo flex-column do `.umb-mobile-shell` (ver §19).
 
 ## 10. Hover do btn-text por tema
 
@@ -510,7 +527,7 @@ Toda tela gerada deve ter **uma única marcação HTML** que se adapta ao redime
 
 Usamos o **breakpoint `md` do Bootstrap 5.3 (768px)** como divisor:
 
-- `< 768px` → **mobile** (phone/tablet pequeno) — usa `.umb-mobile-shell` + `umb-mobile-header` + `umb-bottom-nav`
+- `< 768px` → **mobile** (phone/tablet pequeno) — usa `.umb-mobile-shell` + `umb-mobile-header` + `umb-mobile-bottom-nav`
 - `≥ 768px` → **desktop** (tablet landscape/desktop) — usa `.umb-shell` com `umb-shell-sidebar` + `umb-shell-header`
 
 ### Markup canônico
@@ -531,7 +548,7 @@ Inclua **os dois shells** na mesma página e use `d-md-none` / `d-none d-md-flex
 <div class="umb-mobile-shell d-md-none">
   <header class="umb-mobile-header" data-umb-c="mobile-header" data-title="…"></header>
   <main class="umb-mobile-content">…conteúdo…</main>
-  <nav class="umb-bottom-nav" data-umb-c="bottom-nav" data-active="…"></nav>
+  <nav class="umb-mobile-bottom-nav" data-umb-c="bottom-nav" data-active="…"></nav>
 </div>
 ```
 
