@@ -803,6 +803,115 @@
       .umb-wiz-footer-right .btn { width: 100%; }
     }
 
+    /* === DROPZONE + FILE PILL (upload) =================================
+       Dupla de componentes para fluxos de upload de arquivo. O Dropzone é o
+       estado "vazio" (aguardando arquivo); a File Pill é o estado "arquivo
+       escolhido". A transição é feita trocando a visibilidade dos dois no
+       mesmo lugar da tela.
+
+       Usos típicos: importação de CSV, upload de avatar, anexo de mídia,
+       envio de documento.
+
+       Uso:
+         <!-- Estado 1: aguardando -->
+         <div class="umb-dropzone">
+           <div class="umb-dropzone-icon"><i class="ph ph-cloud-arrow-up"></i></div>
+           <p class="umb-dropzone-title">Arraste e solte seu arquivo</p>
+           <p class="umb-dropzone-sub">ou <a>procure no computador</a></p>
+         </div>
+         <!-- Estado 2: escolhido -->
+         <div class="umb-file-pill">
+           <div class="umb-file-ico"><i class="ph ph-file-csv"></i></div>
+           <div>
+             <div class="umb-file-name">contatos.csv</div>
+             <div class="umb-file-meta">1.247 linhas · 124 KB</div>
+           </div>
+         </div>
+    */
+    .umb-dropzone {
+      border: 2px dashed var(--umb-border-strong);
+      border-radius: 16px;
+      padding: 48px 24px;
+      text-align: center;
+      background: var(--umb-bg-primary);
+      transition: border-color .15s, background-color .15s;
+      cursor: pointer;
+    }
+    .umb-dropzone:hover,
+    .umb-dropzone.is-dragover {
+      border-color: var(--bs-primary);
+      background: var(--umb-hover-bg);
+    }
+    .umb-dropzone-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--bs-primary) 12%, transparent);
+      color: var(--bs-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+    .umb-dropzone-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--umb-text-primary);
+      margin: 0 0 6px;
+    }
+    .umb-dropzone-sub {
+      font-size: 13px;
+      color: var(--umb-text-mid);
+      margin: 0 0 16px;
+    }
+    .umb-dropzone-files {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .umb-file-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+    .umb-file-pill .umb-file-ico {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: color-mix(in srgb, var(--bs-primary) 15%, transparent);
+      color: var(--bs-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .umb-file-pill .umb-file-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--umb-text-primary);
+      line-height: 1.3;
+    }
+    .umb-file-pill .umb-file-meta {
+      font-size: 12px;
+      color: var(--umb-text-mid);
+      margin-top: 2px;
+    }
+    .umb-file-pill-body { flex: 1; min-width: 0; }
+
+    @media (max-width: 767.98px) {
+      .umb-dropzone { padding: 32px 16px; }
+      .umb-dropzone-icon { width: 56px; height: 56px; font-size: 26px; }
+    }
+
 
 
     [data-bs-theme="light"] .badge-expert,
@@ -2372,6 +2481,7 @@
     <a class="nav-link" href="#etiquetas"><i class="ph ph-bookmark-simple"></i> Etiquetas (Tags)</a>
     <a class="nav-link" href="#tag-popover"><i class="ph ph-list-checks"></i> Tag Popover</a>
     <a class="nav-link" href="#wizard"><i class="ph ph-path"></i> Wizard</a>
+    <a class="nav-link" href="#upload"><i class="ph ph-cloud-arrow-up"></i> Upload (Dropzone)</a>
     <a class="nav-link" href="#alertas"><i class="ph ph-warning-circle"></i> Alertas</a>
     <a class="nav-link" href="#cards"><i class="ph ph-cards"></i> Cards</a>
     <a class="nav-link" href="#accordion"><i class="ph ph-caret-down"></i> Accordion</a>
@@ -3458,6 +3568,113 @@
       &lt;/div&gt;
     &lt;/div&gt;
   &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+    </section>
+    <hr class="sec-divider">
+
+    <!-- ============================================================ UPLOAD (DROPZONE) -->
+    <section id="upload">
+      <p class="sec-title">Upload (Dropzone &amp; File Pill)</p>
+      <p class="sec-subtitle">UmbDropzone + UmbFilePill — dupla para fluxos de upload de arquivo.</p>
+
+      <div class="comp-group">
+        <p class="comp-label">Estados (clique para alternar)</p>
+        <div id="upload-demo" style="max-width:640px">
+          <!-- Estado 1: Dropzone (aguardando arquivo) -->
+          <div class="umb-dropzone" data-upload-state="empty" onclick="uploadDemoPick()">
+            <div class="umb-dropzone-icon"><i class="ph ph-cloud-arrow-up"></i></div>
+            <p class="umb-dropzone-title">Arraste e solte seu arquivo aqui</p>
+            <p class="umb-dropzone-sub">ou <a href="#" onclick="event.preventDefault();uploadDemoPick()" style="color:var(--bs-primary);text-decoration:none;font-weight:500">procure no seu computador</a></p>
+            <div class="umb-dropzone-files">
+              <span class="badge" style="background:var(--umb-bg-primary);color:var(--umb-text-mid);border:1px solid var(--umb-border);padding:6px 10px;border-radius:6px;font-weight:500">.CSV</span>
+              <span class="badge" style="background:var(--umb-bg-primary);color:var(--umb-text-mid);border:1px solid var(--umb-border);padding:6px 10px;border-radius:6px;font-weight:500">.VCF</span>
+              <span class="badge" style="background:var(--umb-bg-primary);color:var(--umb-text-mid);border:1px solid var(--umb-border);padding:6px 10px;border-radius:6px;font-weight:500">Até 10MB</span>
+            </div>
+          </div>
+
+          <!-- Estado 2: File Pill (arquivo escolhido) -->
+          <div class="umb-file-pill" data-upload-state="chosen" style="display:none;justify-content:space-between;width:100%">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="umb-file-ico"><i class="ph ph-file-csv"></i></div>
+              <div>
+                <div class="umb-file-name">contatos-campanha.csv</div>
+                <div class="umb-file-meta">1.247 linhas · 124 KB · UTF-8</div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-icon btn-text btn-lg" aria-label="Remover" onclick="uploadDemoClear()">
+              <i class="ph ph-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Demo-only: alterna entre dropzone e file pill
+        function uploadDemoPick() {
+          var root = document.getElementById('upload-demo');
+          root.querySelector('[data-upload-state="empty"]').style.display = 'none';
+          root.querySelector('[data-upload-state="chosen"]').style.display = 'flex';
+        }
+        function uploadDemoClear() {
+          var root = document.getElementById('upload-demo');
+          root.querySelector('[data-upload-state="empty"]').style.display = '';
+          root.querySelector('[data-upload-state="chosen"]').style.display = 'none';
+        }
+      </script>
+
+      <div class="comp-group">
+        <p class="comp-label">Dropzone — estado arrastando (simulação)</p>
+        <div class="umb-dropzone is-dragover" style="max-width:640px">
+          <div class="umb-dropzone-icon"><i class="ph ph-cloud-arrow-up"></i></div>
+          <p class="umb-dropzone-title">Solte o arquivo para importar</p>
+          <p class="umb-dropzone-sub">1 arquivo pronto para upload</p>
+        </div>
+        <p class="comp-note" style="font-size:12px;color:var(--umb-text-mid);margin-top:8px">Adicione a classe <code>.is-dragover</code> via JS durante o evento <code>dragover</code>.</p>
+      </div>
+
+    <div class="comp-practices">
+      <p class="comp-practices-title">Best Practices</p>
+      <ul>
+        <li><strong>Dois estados, uma posição.</strong> Dropzone (vazio) e File Pill (escolhido) ocupam o mesmo lugar da tela — alterne via <code>display</code>. Não deixe os dois visíveis simultaneamente.</li>
+        <li><strong>Hover = dragover.</strong> A mesma regra CSS (borda primary + bg hover) dispara tanto no <code>:hover</code> quanto em <code>.is-dragover</code>. Adicione/remova a classe via JS durante os eventos <code>dragover</code>/<code>dragleave</code>.</li>
+        <li><strong>Ícone do arquivo por tipo.</strong> Use <code>ph-file-csv</code>, <code>ph-file-pdf</code>, <code>ph-image</code>, <code>ph-file-doc</code> conforme o tipo detectado. Mantém a categoria visível antes do nome.</li>
+        <li><strong>Metadata relevante no meta.</strong> Linhas/tamanho/encoding para CSV; dimensões/tamanho para imagem; páginas/tamanho para PDF. Não polua — 2–3 campos máximo, separados por <code>·</code>.</li>
+        <li><strong>Botão remover sempre presente.</strong> File Pill com <code>.btn-icon.btn-text.btn-lg</code> + <code>ph-trash</code> à direita. Remove o arquivo e volta pro estado Dropzone.</li>
+        <li><strong>Pré-visualização fora do pill.</strong> Para mostrar as primeiras linhas do CSV ou preview da imagem, posicione abaixo do File Pill, com borda de 1px em <code>--umb-border</code> e radius 12px. Sem fundo colorido.</li>
+        <li><strong>Limites visíveis.</strong> Os chips embaixo do Dropzone (.CSV, .VCF, Até 10MB) comunicam aceites e limite. Não esconda — reduzem a ansiedade do usuário antes do upload.</li>
+      </ul>
+    </div>
+
+    <div class="comp-code-wrap">
+      <div class="comp-code-header">
+        <span>HTML</span>
+        <button class="comp-code-copy" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre class="comp-code-pre"><code class="language-html">&lt;!-- Estado 1: Dropzone vazio --&gt;
+&lt;div class="umb-dropzone"&gt;
+  &lt;div class="umb-dropzone-icon"&gt;&lt;i class="ph ph-cloud-arrow-up"&gt;&lt;/i&gt;&lt;/div&gt;
+  &lt;p class="umb-dropzone-title"&gt;Arraste e solte seu arquivo&lt;/p&gt;
+  &lt;p class="umb-dropzone-sub"&gt;
+    ou &lt;a href="#"&gt;procure no computador&lt;/a&gt;
+  &lt;/p&gt;
+  &lt;div class="umb-dropzone-files"&gt;
+    &lt;span class="badge"&gt;.CSV&lt;/span&gt;
+    &lt;span class="badge"&gt;.VCF&lt;/span&gt;
+    &lt;span class="badge"&gt;Até 10MB&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Estado 2: File Pill (arquivo escolhido) --&gt;
+&lt;div class="umb-file-pill"&gt;
+  &lt;div class="umb-file-ico"&gt;&lt;i class="ph ph-file-csv"&gt;&lt;/i&gt;&lt;/div&gt;
+  &lt;div&gt;
+    &lt;div class="umb-file-name"&gt;contatos.csv&lt;/div&gt;
+    &lt;div class="umb-file-meta"&gt;1.247 linhas · 124 KB · UTF-8&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;button class="btn btn-icon btn-text btn-lg" aria-label="Remover"&gt;
+    &lt;i class="ph ph-trash"&gt;&lt;/i&gt;
+  &lt;/button&gt;
 &lt;/div&gt;</code></pre>
     </div>
     </section>
