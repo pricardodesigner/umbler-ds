@@ -30,6 +30,7 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 24. Etiquetas (Tags) — paleta e botão X
 25. Tag Popover — seleção multi-item
 26. Wizard — fluxos multi-etapa
+27. Upload — Dropzone + File Pill
 
 ---
 
@@ -1228,3 +1229,93 @@ Tudo via media query — sem overrides manuais necessários na maioria dos casos
 ### Avisos e feedback dentro do wizard
 
 Para banners informativos ou de erro **dentro de um passo**, use `.alert .alert-{variant}` (§B.3 da auditoria). Nunca crie hero banners custom ou cards coloridos — mata a consistência entre telas.
+
+## 27. Upload — Dropzone + File Pill
+
+Dupla canônica para fluxos de upload de arquivo. Dois componentes irmãos que ocupam o mesmo lugar da tela e alternam por estado.
+
+- **`.umb-dropzone`** — estado "vazio", aguardando arquivo. Área tracejada grande com ícone, título, call-to-action e chips de limites/formatos.
+- **`.umb-file-pill`** — estado "escolhido". Chip horizontal com ícone tipado + nome + metadados + botão remover.
+
+### Estados, uma posição
+
+Nunca mostre os dois simultaneamente. Alterne via `display`:
+
+```html
+<div class="umb-dropzone" data-upload-state="empty">...</div>
+<div class="umb-file-pill" data-upload-state="chosen" style="display:none">...</div>
+```
+
+```js
+// Quando usuário escolhe arquivo
+dropzone.style.display = 'none';
+filePill.style.display = 'flex';
+// Botão remover
+filePill.style.display = 'none';
+dropzone.style.display = '';
+```
+
+### Dropzone — dragover
+
+A regra CSS `:hover` também vale para `.is-dragover` — mesma feedback visual. No JS:
+
+```js
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('is-dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('is-dragover'));
+dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('is-dragover'); handleFile(e.dataTransfer.files[0]); });
+```
+
+### Ícone por tipo de arquivo
+
+Use ícones Phosphor específicos para comunicar o tipo antes do nome:
+
+| Tipo | Ícone |
+|---|---|
+| CSV | `ph-file-csv` |
+| VCF | `ph-file-text` |
+| PDF | `ph-file-pdf` |
+| DOC/DOCX | `ph-file-doc` |
+| XLS/XLSX | `ph-file-xls` |
+| Imagem | `ph-image` ou `ph-file-image` |
+| ZIP/RAR | `ph-file-zip` |
+| Genérico | `ph-file` |
+
+### Metadata no meta
+
+A linha inferior do File Pill deve ter 2–3 campos relevantes, separados por `·`:
+
+- **CSV**: linhas · tamanho · encoding (ex: `1.247 linhas · 124 KB · UTF-8`)
+- **Imagem**: dimensões · tamanho (ex: `1920×1080 · 2,1 MB`)
+- **PDF**: páginas · tamanho (ex: `24 páginas · 3,4 MB`)
+
+Nunca mais que 3 campos — vira ruído.
+
+### Limites visíveis
+
+Os chips dentro de `.umb-dropzone-files` (ex: `.CSV`, `.VCF`, `Até 10MB`) comunicam aceites e limite de tamanho antes do usuário tentar o upload. **Sempre inclua** esses chips — reduzem ansiedade e erros.
+
+### Pré-visualização
+
+Se o fluxo precisa mostrar preview do conteúdo (primeiras linhas do CSV, thumb da imagem, capa do PDF), posicione **abaixo** do File Pill em um container separado com:
+
+- Borda `1px solid var(--umb-border)`
+- `border-radius: 12px`
+- **Sem** fundo colorido (usa o fundo do canvas)
+
+Não coloque preview dentro do File Pill — ele vira um card vazio em arquivos sem preview.
+
+### Botão remover
+
+Sempre presente no canto direito do File Pill:
+
+```html
+<button class="btn btn-icon btn-text btn-lg" aria-label="Remover">
+  <i class="ph ph-trash"></i>
+</button>
+```
+
+Ao clicar: remove o arquivo do estado e volta ao Dropzone. Em formulários com múltiplos arquivos, `ph-trash` no lugar da coluna de ações.
+
+### Responsividade mobile
+
+Abaixo de 768px: padding do Dropzone reduz (48px → 32px), ícone circular diminui (72px → 56px). O File Pill é responsivo naturalmente via flex — não precisa de overrides.
