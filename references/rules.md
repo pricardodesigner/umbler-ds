@@ -32,6 +32,7 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 26. Wizard — fluxos multi-etapa
 27. Upload — Dropzone + File Pill
 28. Cards de Decisão — Origin e Path
+29. Dados — Stat Card, Map Row, Table Pagination
 
 ---
 
@@ -1386,3 +1387,114 @@ Pill pequena ao lado do título que destaca um caminho sugerido. Adiciona també
 ### Responsividade mobile
 
 Abaixo de 768px, ambos reduzem padding (20px → 16px) e o `.umb-path-icon` diminui (32px → 28px). Layout flex com `align-items: flex-start` mantém os elementos empilháveis se o título quebrar em múltiplas linhas.
+
+## 29. Dados — Stat Card, Map Row, Table Pagination
+
+Três componentes especializados para telas com **dados tabulares** (listas, importações, dashboards). Os três apareceram no fluxo de validação da importação e são reutilizáveis em qualquer tela com volume de dados.
+
+### `.umb-stat-card` — filtro rápido + mini-dashboard
+
+Card pequeno com ícone + número + label, clicável, com estado `.active`. Usado como **filtro acima de tabelas** (ex: clicar em "Com erro" filtra a tabela) ou como **mini-dashboard** em páginas de visão geral.
+
+```html
+<div class="umb-stat-grid">
+  <div class="umb-stat-card active">
+    <div class="umb-stat-icon total"><i class="ph ph-users"></i></div>
+    <div>
+      <div class="umb-stat-num">1.247</div>
+      <div class="umb-stat-label">Total</div>
+    </div>
+  </div>
+  <!-- ... mais cards ... -->
+</div>
+```
+
+Variantes de cor do ícone:
+
+| Classe | Uso |
+|---|---|
+| `.total` | Contagem geral / agregado |
+| `.valid` | Registros válidos / OK |
+| `.warn` | Avisos / atenção |
+| `.error` | Erros |
+
+**Grid responsivo:** `.umb-stat-grid` usa 4 colunas em desktop e 2 em mobile automaticamente. Não altere.
+
+**Regra crítica:** Stat Card é **filtro/indicador**, não CTA. Se o card dispara uma ação (criar, enviar), use botão ou Path Card.
+
+### `.umb-map-row` — de-para origem → destino
+
+Linha para mapeamento entre duas fontes: origem à esquerda (coluna do arquivo, campo de API, etc.), seta, destino à direita (select com opções).
+
+```html
+<div class="umb-map-row">
+  <div class="umb-map-source">
+    <div>
+      <div class="umb-map-source-col">nome</div>
+      <div class="umb-map-source-sample">Ex: "Ana Paula"</div>
+    </div>
+  </div>
+  <i class="ph ph-arrow-right umb-map-arrow"></i>
+  <div style="display:flex;gap:6px">
+    <select class="form-select form-select-lg">
+      <option selected>Nome</option>
+      <option>— Não importar —</option>
+      <option style="color:var(--bs-primary)">+ Criar campo…</option>
+    </select>
+    <span class="umb-map-auto"><i class="ph ph-magic-wand"></i>Auto</span>
+  </div>
+</div>
+```
+
+- **Origem é imutável** — mostra o nome da coluna/campo na fonte e um sample do valor. Nunca edita aqui.
+- **Destino é select.** Sempre inclua 3 grupos de opções:
+  1. Campos existentes no destino (ex: Nome, Telefone, Email)
+  2. "— Não importar —" (opt-out explícito)
+  3. "+ Criar novo campo" (criar na hora, sem sair da tela)
+- **Chip `.umb-map-auto`** (verde) marca casamentos automáticos — ajuda o usuário a saber o que foi resolvido sem intervenção.
+- **Responsivo mobile:** 3 colunas viram 1 (a seta é escondida) — origem empilha sobre destino.
+
+### `.umb-ct-pagination` — footer inline da tabela
+
+Paginação fina no rodapé de tabelas. Sem fundo colorido — deixa a tabela respirar.
+
+```html
+<div style="border:1px solid var(--umb-border);border-radius:12px;overflow:hidden">
+  <table class="table umb-ct-table">...</table>
+  <div class="umb-ct-pagination">
+    <span>Mostrando 1–10 de 1.235 contatos</span>
+    <div style="display:flex;align-items:center;gap:4px">
+      <button class="btn btn-icon btn-text btn-lg" disabled>
+        <i class="ph ph-caret-left"></i>
+      </button>
+      <span>1 / 124</span>
+      <button class="btn btn-icon btn-text btn-lg">
+        <i class="ph ph-caret-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+```
+
+**Convenção de texto:**
+
+- Contador sempre "Mostrando X–Y de Z tipo" (ex: "Mostrando 1–10 de 1.235 contatos"). Use a mesma estrutura em todas as tabelas pra consistência.
+- Indicador central sempre "atual / total" (ex: "1 / 124") — não use "Pág. 1" ou "1 de 124".
+- Botões laterais com `disabled` quando não há mais páginas na direção.
+
+**Regra:** a Pagination fica **dentro** do container com borda da tabela (não fora). O `border-top` da regra já cria a separação visual — não precisa de borda extra.
+
+### Grandes volumes (>10 linhas de mapeamento)
+
+Se o arquivo de origem tem muitas colunas, agrupe por categoria e use `<details>` HTML para colapsar — evita scroll-rola-rola em wizards de importação. Ex:
+
+```html
+<details open>
+  <summary>Campos obrigatórios (3)</summary>
+  <div class="umb-map-row">...</div>
+</details>
+<details>
+  <summary>Campos opcionais (12)</summary>
+  ...
+</details>
+```
