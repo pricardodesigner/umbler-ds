@@ -31,6 +31,7 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 25. Tag Popover — seleção multi-item
 26. Wizard — fluxos multi-etapa
 27. Upload — Dropzone + File Pill
+28. Cards de Decisão — Origin e Path
 
 ---
 
@@ -1319,3 +1320,69 @@ Ao clicar: remove o arquivo do estado e volta ao Dropzone. Em formulários com m
 ### Responsividade mobile
 
 Abaixo de 768px: padding do Dropzone reduz (48px → 32px), ícone circular diminui (72px → 56px). O File Pill é responsivo naturalmente via flex — não precisa de overrides.
+
+## 28. Cards de Decisão — Origin e Path
+
+Dois cards irmãos para telas de escolha de caminho (onboarding, seleção de tipo, decisão estratégica dentro de fluxo). A diferença entre os dois é **deliberada** — um convida, o outro informa.
+
+### `.umb-origin-card` — primeira tela de fluxo
+
+Ícone dentro de caixa colorida 48×48. Visual "landing", convidativo. Usado na **primeira tela** de um fluxo, quando o usuário ainda não tem contexto e precisa escolher a direção do caminho.
+
+```html
+<div class="umb-origin-card">
+  <div class="umb-origin-icon"><i class="ph ph-users"></i></div>
+  <div style="flex:1">
+    <p class="umb-origin-title">Enviar para meus contatos</p>
+    <p class="umb-origin-sub">Envie para toda a lista.</p>
+  </div>
+  <i class="ph ph-caret-right"></i>
+</div>
+```
+
+Tipicamente em: "Qual a origem dos dados?", "Que tipo de canal?", "Como quer começar?".
+
+### `.umb-path-card` — decisão dentro do fluxo
+
+Ícone **sem** caixa — só a cor e um tamanho maior (32px). Visual mais sóbrio, informativo. Usado dentro de fluxos para apresentar **decisões estratégicas** quando o usuário já tem contexto (ex: "O que quer fazer com os 12 contatos com erro?").
+
+```html
+<div class="umb-path-card recommended">
+  <div class="umb-path-icon primary"><i class="ph ph-pencil-simple"></i></div>
+  <div style="flex:1">
+    <p class="umb-path-title">
+      Revisar e corrigir
+      <span class="umb-path-badge">Recomendado</span>
+    </p>
+    <p class="umb-path-sub">Edite os campos diretamente.</p>
+  </div>
+  <i class="ph ph-caret-right"></i>
+</div>
+```
+
+Três variantes de cor do ícone — comunicam o caráter da ação:
+
+| Classe | Uso |
+|---|---|
+| `.primary` | Ação padrão / caminho principal |
+| `.success` | Confirmação / aprovação |
+| `.neutral` | Pular / ignorar / opção secundária |
+
+**Não use `.danger`.** Ações destrutivas (remover tudo, cancelar em massa) merecem confirmação modal, não card.
+
+### Badge "Recomendado"
+
+Pill pequena ao lado do título que destaca um caminho sugerido. Adiciona também `.recommended` no card, o que traz borda primary + box-shadow halo.
+
+**Regra crítica**: no máximo 1 card recomendado por tela. Se tudo é recomendado, nada é.
+
+### Regras comuns
+
+- **Máximo 3 opções por tela.** Mais que isso vira lista e perde o peso de "decisão estratégica" — use Radio ou Select.
+- **Subtítulo obrigatório.** O título sozinho não carrega contexto suficiente. Sempre explique em 1 linha o que acontece ao clicar.
+- **Caret right no fim.** Sempre presente — comunica "clique para seguir". Padrão visual que o usuário já aprendeu no Umbler Talk.
+- **Card inteiro clicável.** O card todo é o target de click, não só o caret ou o título. Usa `cursor: pointer` + `:hover` que acende a borda primary.
+
+### Responsividade mobile
+
+Abaixo de 768px, ambos reduzem padding (20px → 16px) e o `.umb-path-icon` diminui (32px → 28px). Layout flex com `align-items: flex-start` mantém os elementos empilháveis se o título quebrar em múltiplas linhas.
