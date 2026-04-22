@@ -1022,6 +1022,132 @@
       .umb-path-icon { font-size: 28px; }
     }
 
+    /* === STAT CARD (filtro rápido + mini-dashboard) =====================
+       Card pequeno com ícone + número + label, clicável, com estado .active.
+       Usado como filtro em cima de tabelas (ex: "Total · Válidos · Avisos ·
+       Erros" na validação de import) ou como mini-dashboard em páginas
+       de visão geral. 4 variantes de cor do ícone: total, valid, warn, error. */
+    .umb-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 767.98px) {
+      .umb-stat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .umb-stat-card {
+      background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: border-color .15s, background-color .15s;
+    }
+    .umb-stat-card:hover { border-color: var(--bs-primary); }
+    .umb-stat-card.active {
+      border-color: var(--bs-primary);
+      background: color-mix(in srgb, var(--bs-primary) 6%, var(--umb-card-bg));
+    }
+    .umb-stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .umb-stat-icon.total { background: color-mix(in srgb, var(--bs-primary) 12%, transparent); color: var(--bs-primary); }
+    .umb-stat-icon.valid { background: color-mix(in srgb, var(--bs-success) 15%, transparent); color: var(--bs-success); }
+    .umb-stat-icon.warn  { background: color-mix(in srgb, #f5a623 18%, transparent); color: #b87800; }
+    [data-bs-theme="dark"] .umb-stat-icon.warn,
+    [data-bs-theme="dark-emerald"] .umb-stat-icon.warn { color: #ffc55c; }
+    .umb-stat-icon.error { background: color-mix(in srgb, var(--bs-danger) 15%, transparent); color: var(--bs-danger); }
+    .umb-stat-num {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--umb-text-primary);
+      line-height: 1;
+    }
+    .umb-stat-label {
+      font-size: 12px;
+      color: var(--umb-text-mid);
+      margin-top: 2px;
+    }
+
+    /* === MAP ROW (de-para origem → destino) =============================
+       Linha para mapeamento entre duas fontes (ex: colunas CSV → campos do
+       app na importação, campos de origem → campos de destino num sync).
+       3 colunas desktop (origem | seta | destino), 1 coluna em mobile. */
+    .umb-map-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--umb-border);
+    }
+    .umb-map-row:last-child { border-bottom: 0; }
+    .umb-map-source {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--umb-bg-primary);
+      border: 1px solid var(--umb-border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      min-height: 56px;
+    }
+    .umb-map-source-col {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--umb-text-primary);
+    }
+    .umb-map-source-sample {
+      font-size: 11px;
+      color: var(--umb-text-mid);
+      margin-top: 1px;
+    }
+    .umb-map-arrow {
+      color: var(--umb-text-mid);
+      font-size: 16px;
+    }
+    .umb-map-auto {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: color-mix(in srgb, var(--bs-success) 15%, transparent);
+      color: var(--bs-success);
+      margin-left: 6px;
+    }
+    @media (max-width: 767.98px) {
+      .umb-map-row { grid-template-columns: 1fr; gap: 8px; }
+      .umb-map-arrow { display: none; }
+    }
+
+    /* === TABLE PAGINATION INLINE (footer) ================================
+       Paginação fina no rodapé da tabela: contador à esquerda, caret left/
+       right + indicador X/N à direita. Sem fundo colorido, SEM border do
+       table (assume container com borda externa). */
+    .umb-ct-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-top: 1px solid var(--umb-border);
+      background: transparent;
+      font-size: 12px;
+      color: var(--umb-text-mid);
+    }
+
 
 
     [data-bs-theme="light"] .badge-expert,
@@ -2593,6 +2719,7 @@
     <a class="nav-link" href="#wizard"><i class="ph ph-path"></i> Wizard</a>
     <a class="nav-link" href="#upload"><i class="ph ph-cloud-arrow-up"></i> Upload (Dropzone)</a>
     <a class="nav-link" href="#decision-cards"><i class="ph ph-signpost"></i> Cards de Decisão</a>
+    <a class="nav-link" href="#data-components"><i class="ph ph-chart-bar"></i> Dados (Stat, Map, Pag.)</a>
     <a class="nav-link" href="#alertas"><i class="ph ph-warning-circle"></i> Alertas</a>
     <a class="nav-link" href="#cards"><i class="ph ph-cards"></i> Cards</a>
     <a class="nav-link" href="#accordion"><i class="ph ph-caret-down"></i> Accordion</a>
@@ -3889,6 +4016,148 @@
     &lt;p class="umb-path-sub"&gt;Edite os campos diretamente.&lt;/p&gt;
   &lt;/div&gt;
   &lt;i class="ph ph-caret-right"&gt;&lt;/i&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+    </section>
+    <hr class="sec-divider">
+
+    <!-- ============================================================ DATA COMPONENTS -->
+    <section id="data-components">
+      <p class="sec-title">Dados (Stat, Map, Pagination)</p>
+      <p class="sec-subtitle">Três componentes especializados para telas com tabelas e dados tabulares.</p>
+
+      <div class="comp-group">
+        <p class="comp-label">Stat Cards — filtro rápido (clique para ativar)</p>
+        <div class="umb-stat-grid" id="stat-demo" style="max-width:720px">
+          <div class="umb-stat-card active" onclick="statDemoPick(this)">
+            <div class="umb-stat-icon total"><i class="ph ph-users"></i></div>
+            <div><div class="umb-stat-num">1.247</div><div class="umb-stat-label">Total</div></div>
+          </div>
+          <div class="umb-stat-card" onclick="statDemoPick(this)">
+            <div class="umb-stat-icon valid"><i class="ph ph-check-circle"></i></div>
+            <div><div class="umb-stat-num">1.216</div><div class="umb-stat-label">Válidos</div></div>
+          </div>
+          <div class="umb-stat-card" onclick="statDemoPick(this)">
+            <div class="umb-stat-icon warn"><i class="ph ph-warning"></i></div>
+            <div><div class="umb-stat-num">19</div><div class="umb-stat-label">Avisos</div></div>
+          </div>
+          <div class="umb-stat-card" onclick="statDemoPick(this)">
+            <div class="umb-stat-icon error"><i class="ph ph-x-circle"></i></div>
+            <div><div class="umb-stat-num">12</div><div class="umb-stat-label">Erros</div></div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function statDemoPick(el) {
+          el.parentElement.querySelectorAll('.umb-stat-card').forEach(function(c){ c.classList.remove('active'); });
+          el.classList.add('active');
+        }
+      </script>
+
+      <div class="comp-group">
+        <p class="comp-label">Map Row — de-para entre origem e destino</p>
+        <div style="max-width:720px">
+          <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;padding:10px 0;font-size:11px;text-transform:uppercase;color:var(--umb-text-mid);letter-spacing:.3px;font-weight:500">
+            <div>Coluna do arquivo</div><div></div><div>Campo no Umbler Talk</div>
+          </div>
+          <div class="umb-map-row">
+            <div class="umb-map-source">
+              <div><div class="umb-map-source-col">nome</div><div class="umb-map-source-sample">Ex: "Ana Paula Ribeiro"</div></div>
+            </div>
+            <i class="ph ph-arrow-right umb-map-arrow"></i>
+            <div style="display:flex;align-items:center;gap:6px">
+              <select class="form-select form-select-lg"><option selected>Nome</option><option>Telefone</option><option>Email</option><option>— Não importar —</option></select>
+              <span class="umb-map-auto"><i class="ph ph-magic-wand" style="font-size:10px"></i>Auto</span>
+            </div>
+          </div>
+          <div class="umb-map-row">
+            <div class="umb-map-source">
+              <div><div class="umb-map-source-col">telefone</div><div class="umb-map-source-sample">Ex: "+55 11 98765-4321"</div></div>
+            </div>
+            <i class="ph ph-arrow-right umb-map-arrow"></i>
+            <div style="display:flex;align-items:center;gap:6px">
+              <select class="form-select form-select-lg"><option>Nome</option><option selected>Telefone</option><option>Email</option><option>— Não importar —</option></select>
+              <span class="umb-map-auto"><i class="ph ph-magic-wand" style="font-size:10px"></i>Auto</span>
+            </div>
+          </div>
+          <div class="umb-map-row">
+            <div class="umb-map-source">
+              <div><div class="umb-map-source-col">empresa</div><div class="umb-map-source-sample">Ex: "Acme Ltda"</div></div>
+            </div>
+            <i class="ph ph-arrow-right umb-map-arrow"></i>
+            <div>
+              <select class="form-select form-select-lg" style="border-color:color-mix(in srgb,#f5a623 60%, var(--umb-input-border))">
+                <option selected>Selecione um campo…</option><option>Nome</option><option>Telefone</option>
+                <option style="color:var(--bs-primary)">+ Criar campo "Empresa"</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-group">
+        <p class="comp-label">Table Pagination — footer inline</p>
+        <div style="max-width:720px;border:1px solid var(--umb-border);border-radius:12px;overflow:hidden">
+          <div style="padding:40px 16px;text-align:center;color:var(--umb-text-mid);font-size:13px">[ tabela aqui ]</div>
+          <div class="umb-ct-pagination">
+            <span>Mostrando 1–10 de 1.235 contatos</span>
+            <div style="display:flex;align-items:center;gap:4px">
+              <button type="button" class="btn btn-icon btn-text btn-lg" disabled><i class="ph ph-caret-left"></i></button>
+              <span style="padding:0 8px">1 / 124</span>
+              <button type="button" class="btn btn-icon btn-text btn-lg"><i class="ph ph-caret-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="comp-practices">
+      <p class="comp-practices-title">Best Practices</p>
+      <ul>
+        <li><strong>Stat Card:</strong> ideal para filtros rápidos acima de tabelas. 4 variantes (<code>.total</code>, <code>.valid</code>, <code>.warn</code>, <code>.error</code>) comunicam semântica. Máximo 4 em desktop; 2 colunas em mobile via <code>.umb-stat-grid</code>.</li>
+        <li><strong>Map Row:</strong> origem à esquerda (imutável), destino à direita (select com opções + "Não importar" + "Criar novo campo"). Chip <code>.umb-map-auto</code> indica casamento automático.</li>
+        <li><strong>Pagination:</strong> contador "Mostrando X–Y de Z tipo" à esquerda; caret left/right + "atual / total" à direita. Sem fundo colorido.</li>
+        <li><strong>Nunca use Stat Card como botão de ação.</strong> Ele é filtro/indicador, não CTA. Se dispara ação, use botão ou Path Card.</li>
+        <li><strong>Map Row em arquivo grande:</strong> se há mais de 8–10 colunas, agrupe por categoria e use <code>&lt;details&gt;</code> pra colapsar.</li>
+      </ul>
+    </div>
+
+    <div class="comp-code-wrap">
+      <div class="comp-code-header">
+        <span>HTML</span>
+        <button class="comp-code-copy" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre class="comp-code-pre"><code class="language-html">&lt;!-- Stat Card grid (4 colunas desktop, 2 em mobile) --&gt;
+&lt;div class="umb-stat-grid"&gt;
+  &lt;div class="umb-stat-card active"&gt;
+    &lt;div class="umb-stat-icon total"&gt;&lt;i class="ph ph-users"&gt;&lt;/i&gt;&lt;/div&gt;
+    &lt;div&gt;
+      &lt;div class="umb-stat-num"&gt;1.247&lt;/div&gt;
+      &lt;div class="umb-stat-label"&gt;Total&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;!-- variantes: .valid | .warn | .error --&gt;
+&lt;/div&gt;
+
+&lt;!-- Map Row --&gt;
+&lt;div class="umb-map-row"&gt;
+  &lt;div class="umb-map-source"&gt;
+    &lt;div&gt;&lt;div class="umb-map-source-col"&gt;nome&lt;/div&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;i class="ph ph-arrow-right umb-map-arrow"&gt;&lt;/i&gt;
+  &lt;div style="display:flex;gap:6px"&gt;
+    &lt;select class="form-select form-select-lg"&gt;...&lt;/select&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Table Pagination (dentro de container com border) --&gt;
+&lt;div class="umb-ct-pagination"&gt;
+  &lt;span&gt;Mostrando 1–10 de 1.235&lt;/span&gt;
+  &lt;div&gt;
+    &lt;button class="btn btn-icon btn-text btn-lg" disabled&gt;&lt;i class="ph ph-caret-left"&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;span&gt;1 / 124&lt;/span&gt;
+    &lt;button class="btn btn-icon btn-text btn-lg"&gt;&lt;i class="ph ph-caret-right"&gt;&lt;/i&gt;&lt;/button&gt;
+  &lt;/div&gt;
 &lt;/div&gt;</code></pre>
     </div>
     </section>
