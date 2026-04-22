@@ -873,7 +873,7 @@
 
     /* --- TOOLTIP --- */
     .umb-tooltip-demo { position: relative; display: inline-block; }
-    .umb-tooltip-demo .tooltip-box { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--umb-tooltip-bg); color: var(--umb-text-primary); border-radius: 6px; padding: 6px 10px; font-size: 12px; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,.3); z-index: 99; }
+    .umb-tooltip-demo .tooltip-box { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--umb-tooltip-bg); color: var(--umb-tooltip-color, #fff); border-radius: 6px; padding: 6px 10px; font-size: 12px; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,.3); z-index: 99; }
     .umb-tooltip-demo:hover .tooltip-box { display: block; }
     /* Botão fechar — adapta ao tema */
     .btn-close { filter: none; }
@@ -883,8 +883,8 @@
       [data-bs-theme="auto"] .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
     }
     /* Bootstrap tooltip — força mesma cor em todos os temas */
-    .tooltip { --bs-tooltip-bg: var(--umb-tooltip-bg); --bs-tooltip-color: var(--umb-text-primary); }
-    .tooltip .tooltip-inner { background-color: var(--umb-tooltip-bg); color: var(--umb-text-primary); }
+    .tooltip { --bs-tooltip-bg: var(--umb-tooltip-bg); --bs-tooltip-color: var(--umb-tooltip-color, #fff); }
+    .tooltip .tooltip-inner { background-color: var(--umb-tooltip-bg); color: var(--umb-tooltip-color, #fff); }
     .tooltip .tooltip-arrow::before { border-color: transparent; }
     .bs-tooltip-top    .tooltip-arrow::before { border-top-color:    var(--umb-tooltip-bg) !important; }
     .bs-tooltip-bottom .tooltip-arrow::before { border-bottom-color: var(--umb-tooltip-bg) !important; }
