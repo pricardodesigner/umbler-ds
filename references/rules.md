@@ -27,6 +27,7 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 21. Template de Chat (atendimento)
 22. Tokens de fundo — bgPrimary e bgActive
 23. Font weight — máximo 600
+24. Etiquetas (Tags) — paleta e botão X
 
 ---
 
@@ -930,3 +931,80 @@ grep -rE 'font-weight="(700|800|900)"' .   # SVGs
 
 A única exceção são **elementos de marca externos** (ex: logos de canais — WhatsApp, Instagram) que trazem sua própria tipografia e não estão sob o escopo do DS.
 
+## 24. Etiquetas (Tags) — paleta e botão X
+
+O componente **`.umb-tag`** é a pill colorida usada para categorizar contatos, conversas ou qualquer entidade no produto. Diferente dos Badges (`.badge.bg-*`) — que representam **estado semântico** (sucesso, erro, aviso) —, as Tags representam **categorização definida pelo usuário** (ex: "Cliente ativo", "Lead quente", "Campanha VIPs").
+
+### Paleta canônica
+
+8 cores fixas, declaradas uma vez como tokens (não mudam por tema, pois são cores brand de categorização):
+
+| Classe | Token | Hex |
+|---|---|---|
+| `.tag-geekblue` | `--umb-tag-geekblue-bg` | `#2F54EB` |
+| `.tag-volcano`  | `--umb-tag-volcano-bg`  | `#FA541C` |
+| `.tag-green`    | `--umb-tag-green-bg`    | `#52C41A` |
+| `.tag-magenta`  | `--umb-tag-magenta-bg`  | `#EB2F96` |
+| `.tag-orange`   | `--umb-tag-orange-bg`   | `#FA8C16` |
+| `.tag-red`      | `--umb-tag-red-bg`      | `#F5222D` |
+| `.tag-cyan`     | `--umb-tag-cyan-bg`     | `#13C2C2` |
+| `.tag-purple`   | `--umb-tag-purple-bg`   | `#722ED1` |
+
+Nomenclatura inspirada no Ant Design. Texto é sempre branco (`#fff`).
+
+### Markup canônico
+
+```html
+<span class="umb-tag tag-geekblue">
+  <i class="ph ph-user-circle"></i>Campanha VIPs
+</span>
+```
+
+### Botão X — hover sem reflow
+
+O `.umb-tag-close` é **injetado automaticamente** pelo JS `window.umbInitTags()` e aparece só no `:hover` da tag.
+
+- `position: absolute; right: 4px` — não empurra a largura da pill nem reposiciona etiquetas adjacentes no hover.
+- Mesmo bg da tag via `--tag-bg` (declarada em cada variante) + `box-shadow: 0 0 0 2px var(--tag-bg)` para criar um halo que "mascara" as últimas letras do texto.
+- Hover do X escurece em 20% via `color-mix(in srgb, var(--tag-bg) 80%, black)`.
+
+Para opt-out (ex.: tags dentro de `.umb-tag-pop-item` onde o controle é via checkbox, ou tags read-only em cards):
+
+```html
+<span class="umb-tag tag-green" data-no-close="true">Read-only</span>
+```
+
+### Evento `umb:tag-remove`
+
+O click no X dispara um `CustomEvent('umb:tag-remove', { bubbles: true, cancelable: true, detail: { tag } })` na própria tag. Se nenhum handler externo chamar `event.preventDefault()`, a tag é removida do DOM automaticamente.
+
+Útil para interceptar a remoção e sincronizar com estado externo (ex: desmarcar um checkbox correspondente num popover de seleção):
+
+```js
+document.addEventListener('umb:tag-remove', function(e) {
+  const tagKey = e.detail.tag.dataset.tagKey;
+  if (tagKey === 'vips') {
+    e.preventDefault(); // impede o DS de remover
+    // ...minha lógica customizada
+  }
+});
+```
+
+### Init dinâmico
+
+Em páginas onde as tags são criadas dinamicamente (após resposta de API, render de componente, etc.), chamar manualmente:
+
+```js
+window.umbInitTags();                    // todo o document
+window.umbInitTags(containerElement);    // apenas dentro de um container
+```
+
+A função é idempotente — pode ser chamada várias vezes sem duplicar botões.
+
+### Best practices
+
+- Use Tags para **categorização**, Badges para **status semântico**, Alertas para **feedback de sistema**. Não misture.
+- **Máximo 3–4 cores diferentes** por tela — mais que isso vira ruído visual e quebra a escaneabilidade.
+- Convencione significados fixos por cor na sua organização (ex: Volcano = sempre Lead, Green = sempre Cliente ativo). O DS fornece a paleta; o significado é do produto.
+- Não adicione cores novas à paleta sem consenso — o valor do componente é ter **poucas opções com significado forte**. Se precisar de uma cor nova, documente o significado em `rules.md`.
+- Nunca use Tag para representar ação (ex: "Editar", "Remover") — use botão ou dropdown.
