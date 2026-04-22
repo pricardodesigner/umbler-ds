@@ -28,6 +28,7 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 22. Tokens de fundo — bgPrimary e bgActive
 23. Font weight — máximo 600
 24. Etiquetas (Tags) — paleta e botão X
+25. Tag Popover — seleção multi-item
 
 ---
 
@@ -1008,3 +1009,88 @@ A função é idempotente — pode ser chamada várias vezes sem duplicar botõe
 - Convencione significados fixos por cor na sua organização (ex: Volcano = sempre Lead, Green = sempre Cliente ativo). O DS fornece a paleta; o significado é do produto.
 - Não adicione cores novas à paleta sem consenso — o valor do componente é ter **poucas opções com significado forte**. Se precisar de uma cor nova, documente o significado em `rules.md`.
 - Nunca use Tag para representar ação (ex: "Editar", "Remover") — use botão ou dropdown.
+
+## 25. Tag Popover — seleção multi-item
+
+O **`.umb-tag-popover`** é um popover de seleção multi-item que abre a partir de um `.dropdown` do Bootstrap. É o companheiro natural do componente Tag (§24) e o padrão canônico do DS para qualquer pick list em volume (filtros de conversa, atribuição de setor, seleção de agentes, etc.).
+
+### Estrutura mínima
+
+```html
+<div class="dropdown">
+  <button type="button" class="btn btn-outline-primary btn-lg"
+          data-bs-toggle="dropdown" data-bs-auto-close="outside">
+    <i class="ph ph-plus me-1"></i>Adicionar etiqueta
+  </button>
+  <div class="dropdown-menu umb-tag-popover">
+    <!-- Header -->
+    <div class="umb-tag-pop-head">
+      <div class="umb-tag-pop-title">Etiquetas</div>
+      <div style="display:flex;gap:4px">
+        <button class="btn btn-text btn-lg"><i class="ph ph-plus me-1"></i>Criar</button>
+        <button class="btn btn-icon btn-text btn-lg" aria-label="Fechar"><i class="ph ph-x"></i></button>
+      </div>
+    </div>
+    <!-- (Opcional) Segmented full-width -->
+    <div class="inset-control inset-control--block">
+      <button class="btn active">Contato</button>
+      <button class="btn">Conversa</button>
+    </div>
+    <!-- (Opcional) Busca -->
+    <div class="input-group">
+      <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
+      <input type="text" class="form-control" placeholder="Pesquisar">
+    </div>
+    <!-- (Opcional, dinâmica) Selecionadas (N) -->
+    <div class="umb-tag-pop-section-label">Selecionadas (2)</div>
+    <div class="umb-tag-pop-item selected">
+      <span class="umb-tag tag-green" data-no-close="true">Cliente ativo</span>
+      <input type="checkbox" class="form-check-input" checked>
+    </div>
+    <!-- Todas -->
+    <div class="umb-tag-pop-section-label">Todas</div>
+    <div class="umb-tag-pop-item">
+      <span class="umb-tag tag-green" data-no-close="true">Cliente ativo</span>
+      <input type="checkbox" class="form-check-input" checked>
+    </div>
+    <!-- ...mais itens -->
+  </div>
+</div>
+```
+
+### Regras de comportamento
+
+- **Trigger precisa de `data-bs-auto-close="outside"`.** Sem isso, o Bootstrap fecha o popover ao primeiro clique em um item — impede a seleção múltipla. Essa configuração é **obrigatória**.
+- **Botão X no header fecha manualmente.** O popover não auto-fecha em cliques internos por causa do `auto-close="outside"`, então precisa de um `<button aria-label="Fechar">` no `.umb-tag-pop-head`. O DS tem handler delegado que detecta esse botão e chama `bootstrap.Dropdown.getOrCreateInstance(trigger).hide()`.
+- **Clique na linha toggle o checkbox.** Qualquer ponto de `.umb-tag-pop-item` (exceto o próprio input/label) alterna o estado. Init automático pelo DS.
+- **Seção "Selecionadas (N)" é dinâmica.** Renderize via JS — apareça só quando há ≥1 item marcado. Não deixe a seção vazia visível.
+- **Use `data-no-close="true"` nas tags internas.** As tags dentro de `.umb-tag-pop-item` são apenas visuais — o controle é via checkbox. Sem o opt-out, o helper de X das etiquetas injeta botão de remover.
+- **Largura fixa 320px.** Calibrada para 6–8 itens sem scroll excessivo em desktop. Mobile: cobre quase toda a viewport naturalmente.
+
+### `.inset-control--block`
+
+Modificador do Segmented para ocupar 100% da largura — usado em popovers, drawers e formulários:
+
+```css
+.inset-control--block { display: flex !important; width: 100%; }
+.inset-control--block .btn { flex: 1; justify-content: center; }
+```
+
+Use sempre com `.inset-control` base. Não aplicável ao Segmented em toolbars/filtros (onde ele deve ter largura auto).
+
+### Padrão de uso: bulk + personalização
+
+Quando um popover alimenta múltiplas entidades ao mesmo tempo (ex: aplicar etiquetas a todos os contatos de uma importação):
+
+1. Mantenha **um único popover "bulk"** visível por padrão
+2. Exponha um caminho "personalizar" que abre **um popover por linha** na tabela de detalhes
+3. Linhas não tocadas herdam o estado bulk; linhas editadas recebem `dataset.pcTouched = "true"` e deixam de ser sobrescritas quando o bulk muda
+4. Banner `.alert.alert-info` no topo da tela de personalização mostra o estado bulk atual
+
+Esse padrão é reutilizável em qualquer fluxo que misture configuração em massa + exceções individuais (ver padrão implementado em `importar-contatos-envio-massa.html`).
+
+### Quando NÃO usar
+
+- **Lista de 2–3 opções mutuamente exclusivas** → use Radio ou Segmented.
+- **Ação única disparada** (não seleção persistente) → use Dropdown padrão (`.dropdown-menu` com `.dropdown-item`).
+- **Muitas opções (>20) sem busca estruturada** → use um modal ou offcanvas com filtros, não o popover (320px fica curto).
