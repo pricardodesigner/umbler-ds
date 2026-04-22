@@ -472,10 +472,14 @@
     .ds-wrapper { display: flex; min-height: 100vh; }
     .ds-sidebar {
       width: 260px; min-width: 260px; background: var(--umb-sidebar-bg);
-      padding: 20px 12px; position: sticky; top: 0;
+      padding: 20px 12px;
+      /* fixed em vez de sticky: evita o "clamp" do sticky ao containing block,
+         que fazia a sidebar ser empurrada para cima ao rolar até o fim da página */
+      position: fixed; top: 0; left: 0;
       height: 100vh; overflow-y: auto; flex-shrink: 0;
       border-right: 1px solid var(--umb-sidebar-border);
       transition: background .25s, border-color .25s;
+      z-index: 10;
     }
     .ds-sidebar .brand { display: flex; align-items: center; gap: 8px; padding: 0 8px 20px; border-bottom: 1px solid var(--umb-sidebar-border); margin-bottom: 16px; }
     .ds-sidebar .brand span { font-weight: 600; font-size: 15px; color: var(--umb-brand-color); }
@@ -484,7 +488,7 @@
     .ds-sidebar .nav-link { color: var(--umb-nav-color); font-size: 13px; font-weight: 500; padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px; transition: all .15s; }
     .ds-sidebar .nav-link:hover { color: var(--umb-nav-hover-color); background: var(--umb-nav-hover-bg); }
     .ds-sidebar .nav-link.active { color: var(--umb-nav-active-color); background: var(--umb-nav-active-bg); font-weight: 600; }
-    .ds-content { flex: 1; padding: 40px 48px; max-width: 1100px; }
+    .ds-content { flex: 1; padding: 40px 48px; max-width: 1100px; margin-left: 260px; /* compensa a sidebar fixed */ }
 
     /* --- THEME SWITCHER --- */
     .theme-switcher { padding: 0 8px 16px; margin-bottom: 16px; border-bottom: 1px solid var(--umb-sidebar-border); }
