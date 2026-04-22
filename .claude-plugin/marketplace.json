@@ -1,0 +1,32 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "umbler-ds-marketplace",
+  "description": "Plugins internos da Umbler para Claude Code e Cowork: Design System, Talk API, e utilitarios de produto.",
+  "owner": {
+    "name": "Umbler",
+    "email": "paulo@umbler.com"
+  },
+  "homepage": "https://github.com/pricardodesigner/umbler-ds",
+  "plugins": [
+    {
+      "name": "umbler-design",
+      "description": "Gera telas e fluxos HTML usando o Umbootstrap Design System + MCP server do Umbler Talk API.",
+      "category": "design",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/pricardodesigner/umbler-ds.git",
+        "path": "umbler-talk-plugin"
+      },
+      "homepage": "https://github.com/pricardodesigner/umbler-ds",
+      "keywords": [
+        "umbler",
+        "umbler-talk",
+        "design-system",
+        "umbootstrap",
+        "bootstrap",
+        "prototyping",
+        "html"
+      ]
+    }
+  ]
+}
