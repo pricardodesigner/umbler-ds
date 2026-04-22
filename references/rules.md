@@ -29,6 +29,7 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 23. Font weight — máximo 600
 24. Etiquetas (Tags) — paleta e botão X
 25. Tag Popover — seleção multi-item
+26. Wizard — fluxos multi-etapa
 
 ---
 
@@ -1094,3 +1095,136 @@ Esse padrão é reutilizável em qualquer fluxo que misture configuração em ma
 - **Lista de 2–3 opções mutuamente exclusivas** → use Radio ou Segmented.
 - **Ação única disparada** (não seleção persistente) → use Dropdown padrão (`.dropdown-menu` com `.dropdown-item`).
 - **Muitas opções (>20) sem busca estruturada** → use um modal ou offcanvas com filtros, não o popover (320px fica curto).
+
+## 26. Wizard — fluxos multi-etapa
+
+O **`.umb-wiz`** é o card canônico para fluxos de criação/configuração/onboarding em múltiplas etapas. Integra com o `.steps-container` já existente (§18) — o Wizard fornece a moldura (header, footer, responsividade) e o Steps fornece a navegação visual dos passos.
+
+### Estrutura canônica
+
+```html
+<div class="umb-wiz">
+  <button class="btn btn-icon btn-text btn-lg umb-wiz-close" aria-label="Fechar">
+    <i class="ph ph-x"></i>
+  </button>
+
+  <!-- Steps (escondidos no 1º passo se for escolha de origem) -->
+  <div class="my-4">
+    <div class="steps-container clickable">
+      <!-- ...n passos (§18) -->
+    </div>
+  </div>
+
+  <div class="umb-wiz-screen" data-wiz-screen="1">
+    <div class="umb-wiz-header">
+      <h2 class="umb-wiz-title">Título do passo</h2>
+      <p class="umb-wiz-sub">Descrição curta</p>
+    </div>
+
+    <!-- ...conteúdo da tela... -->
+
+    <div class="umb-wiz-footer">
+      <div class="umb-wiz-footer-left">
+        <button class="btn btn-text btn-lg"><i class="ph ph-caret-left me-1"></i>Voltar</button>
+      </div>
+      <div class="umb-wiz-footer-right">
+        <button class="btn btn-primary btn-lg">Avançar<i class="ph ph-caret-right ms-1"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### Regras do footer
+
+- **SEM `border-top`.** A separação visual entre conteúdo e footer vem do `margin-top: 32px` (24px em mobile). Diferente do `.offcanvas-footer` do DS — lá tem borda. Aqui não.
+- **Hierarquia Voltar/Avançar é fixa:**
+  - **Voltar** — sempre `btn btn-text btn-lg` com ícone `ph-caret-left` à esquerda do texto
+  - **Avançar** — sempre `btn btn-primary btn-lg` com ícone `ph-caret-right` à direita do texto
+- **Exceção explícita à §1.** A §1 (Hierarquia de botões) diz que `btn-primary` sólido é apenas para CTAs de ação imediata destacada. No Wizard, o Avançar sólido é o **padrão recorrente** — essa exceção está formalizada aqui para evitar ambiguidade com quem lê a §1 de forma estrita.
+
+### Primeira tela sem steps
+
+Quando a primeira tela do wizard é uma **escolha que determina o caminho** (ex: "Enviar para contatos do Talk" vs "Importar arquivo"), o `.steps-container` **não** aparece.
+
+- Esconda o wrapper dos steps com `style="display:none"` ou JS.
+- Os steps aparecem a partir do 2º passo, renderizados conforme o caminho escolhido.
+- **Uma única navegação de passos por tela** — sem "sub-steps pills" dentro do card. Se o fluxo precisa de muitos passos, todos aparecem no `.steps-container` principal (mesmo que fiquem 8+ — use `points-only` em mobile, ver §18).
+
+### Steps dinâmicos e variáveis por caminho
+
+Fluxos diferentes podem ter números/nomes de passos diferentes. Render via JS:
+
+```js
+const FLOWS = {
+  file: [
+    { key: 'upload',    label: 'Arquivo' },
+    { key: 'mapping',   label: 'Mapeamento' },
+    { key: 'validation',label: 'Validação' },
+    // ...
+  ],
+  talk: [
+    { key: 'select',    label: 'Contatos' },
+    { key: 'channel',   label: 'Canal' },
+    // ...
+  ]
+};
+```
+
+A tela escolhida determina qual `FLOWS[path]` renderizar no `.steps-container`. Uma única base de markup — sem duplicação.
+
+### Sub-views dentro de um passo
+
+Quando um passo tem um **estado informativo inicial + um estado detalhado opcional** (ex: resumo dos erros → tabela de edição), **não crie um step extra**. Use `[data-subview]` no mesmo `.umb-wiz-screen`:
+
+```html
+<div class="umb-wiz-screen" data-wiz-screen="validation">
+  <div data-subview="summary"> <!-- default --> ... </div>
+  <div data-subview="detail" style="display:none"> ... </div>
+</div>
+```
+
+Isso mantém o Steps limpo (`Validação` é um passo só na visão do usuário) e permite o fluxo `summary ↔ detail` via JS sem poluir a navegação.
+
+### Shell único e responsivo
+
+Em produtos onde o wizard precisa funcionar igual em desktop e mobile, **não duplique o markup** dentro de dois shells. Crie o wizard fora dos shells e mova-o entre hosts via JS no `resize`:
+
+```html
+<div class="umb-shell d-none d-md-flex">
+  <div id="wiz-host-desktop"></div>
+</div>
+<div class="umb-mobile-shell d-md-none">
+  <main id="wiz-host-mobile"></main>
+</div>
+<div id="wiz-main">...wizard...</div>
+```
+
+```js
+function placeWizard() {
+  var wiz = document.getElementById('wiz-main');
+  var target = matchMedia('(max-width: 767.98px)').matches
+    ? document.getElementById('wiz-host-mobile')
+    : document.getElementById('wiz-host-desktop');
+  if (wiz.parentElement !== target) target.appendChild(wiz);
+}
+window.addEventListener('resize', placeWizard);
+document.addEventListener('DOMContentLoaded', placeWizard);
+```
+
+Mesmos handlers/seletores funcionam idênticos em ambos breakpoints — zero duplicação.
+
+### Responsividade mobile (automática)
+
+Abaixo de 768px, o wizard:
+
+- Reduz padding (32px → 20px 16px) e border-radius (16px → 12px).
+- Título diminui (20px → 18px).
+- Steps ganham scroll horizontal controlado — use `points-only` (§18) para fluxos com 6+ passos.
+- Footer empilha vertical: Avançar vira botão de largura total em baixo, Voltar em cima centralizado.
+
+Tudo via media query — sem overrides manuais necessários na maioria dos casos.
+
+### Avisos e feedback dentro do wizard
+
+Para banners informativos ou de erro **dentro de um passo**, use `.alert .alert-{variant}` (§B.3 da auditoria). Nunca crie hero banners custom ou cards coloridos — mata a consistência entre telas.
