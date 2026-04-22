@@ -655,6 +655,74 @@
     }
     .umb-tag:hover .umb-tag-close { display: inline-flex; }
 
+    /* === TAG POPOVER (seleção multi-item) ===============================
+       Popover que vive dentro de um .dropdown do Bootstrap (use data-bs-auto-close="outside"
+       no trigger para não fechar ao clicar nos itens — o fechamento é manual via botão X).
+       Estrutura:
+         .umb-tag-popover
+           .umb-tag-pop-head        — título + ações (Criar, Fechar)
+           .inset-control           — (opcional) segmented full-width
+           .input-group             — (opcional) campo de busca
+           .umb-tag-pop-section-label "Selecionadas (N)"
+           .umb-tag-pop-item[s]     — renderizados dinamicamente
+           .umb-tag-pop-section-label "Todas"
+           .umb-tag-pop-item[s]     — lista completa */
+    .umb-tag-popover {
+      width: 320px;
+      background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    }
+    [data-bs-theme="dark"] .umb-tag-popover,
+    [data-bs-theme="dark-emerald"] .umb-tag-popover {
+      box-shadow: 0 12px 32px rgba(0,0,0,.5);
+    }
+    .umb-tag-pop-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .umb-tag-pop-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--umb-text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .umb-tag-pop-section-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--umb-text-primary);
+      margin: 12px 0 8px;
+    }
+    .umb-tag-pop-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color .15s;
+    }
+    .umb-tag-pop-item:hover,
+    .umb-tag-pop-item.selected { background: var(--umb-bg-active); }
+    .umb-tag-pop-item .form-check-input { margin: 0; cursor: pointer; flex-shrink: 0; }
+
+    /* Modificador .inset-control--block — segmented ocupando 100% da largura.
+       Usado em popovers/drawers onde o segmented precisa alinhar com o container. */
+    .inset-control--block {
+      display: flex !important;
+      width: 100%;
+    }
+    .inset-control--block .btn { flex: 1; justify-content: center; }
+
+
     [data-bs-theme="light"] .badge-expert,
     [data-bs-theme="emerald"] .badge-expert   { background: transparent; color: var(--umb-tag-expert-color); border-color: var(--umb-tag-expert-color); }
     [data-bs-theme="light"] .badge-standard,
@@ -2220,6 +2288,7 @@
     <a class="nav-link" href="#switches"><i class="ph ph-toggle-right"></i> Checkbox & Switch</a>
     <a class="nav-link" href="#badges"><i class="ph ph-tag"></i> Badges</a>
     <a class="nav-link" href="#etiquetas"><i class="ph ph-bookmark-simple"></i> Etiquetas (Tags)</a>
+    <a class="nav-link" href="#tag-popover"><i class="ph ph-list-checks"></i> Tag Popover</a>
     <a class="nav-link" href="#alertas"><i class="ph ph-warning-circle"></i> Alertas</a>
     <a class="nav-link" href="#cards"><i class="ph ph-cards"></i> Cards</a>
     <a class="nav-link" href="#accordion"><i class="ph ph-caret-down"></i> Accordion</a>
@@ -3044,6 +3113,105 @@
 
 &lt;!-- Init (auto-chamado no DS, necessário em apps terceiros) --&gt;
 &lt;script&gt;window.umbInitTags();&lt;/script&gt;</code></pre>
+    </div>
+    </section>
+    <hr class="sec-divider">
+
+    <!-- ============================================================ TAG POPOVER -->
+    <section id="tag-popover">
+      <p class="sec-title">Tag Popover</p>
+      <p class="sec-subtitle">UmbTagPopover — seleção multi-item dentro de dropdown. Busca, segmented opcional, seção "Selecionadas" dinâmica.</p>
+
+      <div class="comp-group">
+        <p class="comp-label">Exemplo interativo</p>
+        <div class="comp-row" style="gap:16px;align-items:flex-start;flex-wrap:wrap">
+          <div class="dropdown" id="demo-tag-popover-host">
+            <button type="button" class="btn btn-outline-primary btn-lg" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+              <i class="ph ph-plus me-1"></i>Adicionar etiqueta
+            </button>
+            <div class="dropdown-menu umb-tag-popover">
+              <div class="umb-tag-pop-head">
+                <div class="umb-tag-pop-title">
+                  Etiquetas
+                  <i class="ph ph-question" style="color:var(--bs-primary);font-size:14px;cursor:help" title="Etiquetas ajudam a segmentar seus contatos"></i>
+                </div>
+                <div style="display:flex;align-items:center;gap:4px">
+                  <button type="button" class="btn btn-text btn-lg" style="color:var(--bs-primary)"><i class="ph ph-plus me-1"></i>Criar</button>
+                  <button type="button" class="btn btn-icon btn-text btn-lg" aria-label="Fechar"><i class="ph ph-x"></i></button>
+                </div>
+              </div>
+              <div class="inset-control inset-control--block" style="margin-bottom:12px">
+                <button type="button" class="btn active"><i class="ph ph-user me-1"></i>Contato</button>
+                <button type="button" class="btn"><i class="ph ph-chat me-1"></i>Conversa</button>
+              </div>
+              <div class="input-group" style="margin-bottom:12px">
+                <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
+                <input type="text" class="form-control" placeholder="Pesquisar">
+                <span class="input-group-text" style="cursor:pointer"><i class="ph ph-arrows-down-up"></i></span>
+              </div>
+              <div class="umb-tag-pop-section-label">Todas</div>
+              <div class="umb-tag-pop-item"><span class="umb-tag tag-geekblue" data-no-close="true"><i class="ph ph-user-circle"></i>Campanha VIPs</span><input type="checkbox" class="form-check-input" aria-label="Selecionar"></div>
+              <div class="umb-tag-pop-item"><span class="umb-tag tag-volcano" data-no-close="true"><i class="ph ph-user-circle"></i>Lead quente</span><input type="checkbox" class="form-check-input" aria-label="Selecionar"></div>
+              <div class="umb-tag-pop-item"><span class="umb-tag tag-green" data-no-close="true"><i class="ph ph-user-circle"></i>Cliente ativo</span><input type="checkbox" class="form-check-input" aria-label="Selecionar"></div>
+              <div class="umb-tag-pop-item"><span class="umb-tag tag-magenta" data-no-close="true"><i class="ph ph-user-circle"></i>Parceiro</span><input type="checkbox" class="form-check-input" aria-label="Selecionar"></div>
+              <div class="umb-tag-pop-item"><span class="umb-tag tag-orange" data-no-close="true"><i class="ph ph-user-circle"></i>Trial</span><input type="checkbox" class="form-check-input" aria-label="Selecionar"></div>
+              <div class="umb-tag-pop-item"><span class="umb-tag tag-red" data-no-close="true"><i class="ph ph-user-circle"></i>Urgente</span><input type="checkbox" class="form-check-input" aria-label="Selecionar"></div>
+            </div>
+          </div>
+          <p class="comp-note" style="font-size:13px;color:var(--umb-text-mid);max-width:400px">Clique no botão à esquerda pra abrir o popover. Clique em qualquer ponto de uma linha pra selecionar/desmarcar — o checkbox acompanha. O botão X fecha o popover (o clique fora também fecha, pelo Bootstrap).</p>
+        </div>
+      </div>
+
+    <div class="comp-practices">
+      <p class="comp-practices-title">Best Practices</p>
+      <ul>
+        <li>Trigger deve ter <code>data-bs-auto-close="outside"</code> — impede que cliques nos itens fechem o popover. Sem isso, o Bootstrap fecha ao primeiro clique e o usuário não consegue marcar múltiplos items.</li>
+        <li>O botão X do header usa <code>aria-label="Fechar"</code> — o handler delegado do DS fecha o dropdown manualmente quando detecta esse botão.</li>
+        <li>Clique em qualquer ponto de <code>.umb-tag-pop-item</code> toggle o checkbox. Isso é init automático pelo DS (delegação no document).</li>
+        <li>A seção <code>"Selecionadas (N)"</code> é <strong>opcional</strong> e deve ser renderizada dinamicamente — só aparece quando há ≥1 item marcado. Não deixe a seção vazia visível.</li>
+        <li>Use <code>data-no-close="true"</code> nas tags dentro do popover — evita que o helper de X das etiquetas injete botão de remover em tags que são apenas visual.</li>
+        <li>Largura fixa 320px. Não altere — foi calibrada para 6-8 itens sem scroll excessivo em desktop.</li>
+      </ul>
+    </div>
+
+    <div class="comp-code-wrap">
+      <div class="comp-code-header">
+        <span>HTML</span>
+        <button class="comp-code-copy" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre class="comp-code-pre"><code class="language-html">&lt;div class="dropdown"&gt;
+  &lt;button type="button" class="btn btn-outline-primary btn-lg"
+          data-bs-toggle="dropdown" data-bs-auto-close="outside"&gt;
+    &lt;i class="ph ph-plus me-1"&gt;&lt;/i&gt;Adicionar etiqueta
+  &lt;/button&gt;
+  &lt;div class="dropdown-menu umb-tag-popover"&gt;
+    &lt;div class="umb-tag-pop-head"&gt;
+      &lt;div class="umb-tag-pop-title"&gt;Etiquetas&lt;/div&gt;
+      &lt;div style="display:flex;gap:4px"&gt;
+        &lt;button class="btn btn-text btn-lg"&gt;&lt;i class="ph ph-plus me-1"&gt;&lt;/i&gt;Criar&lt;/button&gt;
+        &lt;button class="btn btn-icon btn-text btn-lg" aria-label="Fechar"&gt;&lt;i class="ph ph-x"&gt;&lt;/i&gt;&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!-- Segmented full-width (opcional) --&gt;
+    &lt;div class="inset-control inset-control--block"&gt;
+      &lt;button class="btn active"&gt;&lt;i class="ph ph-user me-1"&gt;&lt;/i&gt;Contato&lt;/button&gt;
+      &lt;button class="btn"&gt;&lt;i class="ph ph-chat me-1"&gt;&lt;/i&gt;Conversa&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;!-- Busca --&gt;
+    &lt;div class="input-group"&gt;
+      &lt;span class="input-group-text"&gt;&lt;i class="ph ph-magnifying-glass"&gt;&lt;/i&gt;&lt;/span&gt;
+      &lt;input type="text" class="form-control" placeholder="Pesquisar"&gt;
+    &lt;/div&gt;
+    &lt;!-- Seção "Todas" --&gt;
+    &lt;div class="umb-tag-pop-section-label"&gt;Todas&lt;/div&gt;
+    &lt;div class="umb-tag-pop-item"&gt;
+      &lt;span class="umb-tag tag-green" data-no-close="true"&gt;
+        &lt;i class="ph ph-user-circle"&gt;&lt;/i&gt;Cliente ativo
+      &lt;/span&gt;
+      &lt;input type="checkbox" class="form-check-input"&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
     </div>
     </section>
     <hr class="sec-divider">
@@ -6149,6 +6317,46 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     } else {
       window.umbInitTags();
     }
+  })();
+</script>
+
+<script>
+  /* umbInitTagPopover — ativa comportamentos do .umb-tag-popover:
+       1) Clique em qualquer ponto de .umb-tag-pop-item toggle o checkbox interno
+          (exceto quando o alvo já é o próprio input/label — evita duplo toggle)
+       2) Botão [aria-label="Fechar"] dentro de .umb-tag-pop-head fecha o dropdown
+          pai manualmente via bootstrap.Dropdown.hide() — necessário porque o
+          popover usa data-bs-auto-close="outside" para não fechar em cliques internos.
+     Os dois handlers são delegados no document — funcionam para popovers
+     adicionados dinamicamente. Chamar uma vez (auto-chamado no DS). */
+  (function(){
+    if (window.__umbTagPopoverInited) return;
+    window.__umbTagPopoverInited = true;
+
+    // (1) Toggle do checkbox ao clicar na linha
+    document.addEventListener('click', function(e) {
+      var item = e.target.closest('.umb-tag-pop-item');
+      if (!item) return;
+      if (e.target.closest('input, label')) return; // evento nativo cuida
+      var cb = item.querySelector('.form-check-input');
+      if (!cb) return;
+      cb.checked = !cb.checked;
+      cb.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    // (2) Botão X do header fecha o dropdown
+    document.addEventListener('click', function(e) {
+      var closeBtn = e.target.closest('.umb-tag-pop-head [aria-label="Fechar"]');
+      if (!closeBtn) return;
+      var menu = closeBtn.closest('.dropdown-menu');
+      if (!menu) return;
+      var trigger = menu.parentElement.querySelector('[data-bs-toggle="dropdown"]');
+      if (trigger && window.bootstrap) {
+        bootstrap.Dropdown.getOrCreateInstance(trigger).hide();
+      }
+    });
+
+    window.umbInitTagPopover = function(){}; // exposto para symmetry; init é automático
   })();
 </script>
 </body>
