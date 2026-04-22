@@ -145,7 +145,7 @@
       --umb-text-primary:    #1a1d2b;
       --umb-text-mid:        #6c757d;
       --umb-text-dim:        #adb5bd;
-      --umb-border:          #F0F0F0;
+      --umb-border:          #D9D9D9;
       --umb-border-strong:   #d9d9d9;
       --umb-input-bg:        #ffffff;
       --umb-input-border:    #DFDFDF;
@@ -326,7 +326,7 @@
         --umb-surface-raised:#ffffff; --umb-hover-bg:rgba(0,0,0,.04); --umb-inset-bg:rgba(0,0,0,.07);
         --umb-header-bg:rgba(0,0,0,.02); --umb-header-border:rgba(0,0,0,.06); --umb-preview-bg:#f8f9fa;
         --umb-text-primary:#1a1d2b; --umb-text-mid:#6c757d; --umb-text-dim:#adb5bd;
-        --umb-border:#F0F0F0; --umb-border-primary:#DFDFDF; --umb-border-strong:#d9d9d9; --umb-input-bg:#ffffff; --umb-input-border:#DFDFDF;
+        --umb-border:#D9D9D9; --umb-border-primary:#DFDFDF; --umb-border-strong:#d9d9d9; --umb-input-bg:#ffffff; --umb-input-border:#DFDFDF;
         --umb-input-group-bg:#f8f9fa; --umb-progress-track:#e9ecef; --umb-code-bg:#eef1fb;
         --umb-code-border:#d0d9f8; --umb-code-color:#4a5568; --umb-nav-color:rgba(255,255,255,.78);
         --umb-nav-hover-color:#ffffff; --umb-nav-hover-bg:rgba(119,153,253,.3);
@@ -6992,18 +6992,18 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   hljs.highlightAll();
 
   /* ──────────────────────────────────────────────────────────────
-     enhance-comp-cards
+     enhance-ds-display
      Injeta header (label + chip + âncora) em cada .comp-group.
-     Zero mudança no HTML dos componentes — todo DS existente e todo
-     novo comp-group herda o tratamento automaticamente.
+     Label vira título, chip mostra categoria, botão de link copia
+     URL com hash pro componente. Zero mudança no HTML do componente.
 
-     Categorização via seção pai (section[id]). Chip indica o tipo:
+     Categorização via mapa section[id] → categoria:
        • foundation — tokens, base (cores, tipografia)
        • atomic     — elemento UI indivisível (botão, input, badge)
        • composite  — combinação de atomics (card, modal, dropdown)
        • pattern    — layout/template (shell, páginas canônicas)
      ────────────────────────────────────────────────────────────── */
-  (function enhanceCompCards() {
+  (function enhanceDSDisplay() {
     const CATEGORY_MAP = {
       cores: 'foundation', tipografia: 'foundation',
       botoes: 'atomic', formularios: 'atomic', busca: 'atomic',
@@ -7035,76 +7035,76 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         .replace(/\s+/g, '-');
     }
 
-    document.querySelectorAll('.comp-group').forEach(group => {
-      // Só processa groups que têm label DIRETO (evita conflito com sub-labels aninhados)
-      const label = group.querySelector(':scope > .comp-label');
-      if (!label) return;
-      // Se já foi enhanced, pula (idempotente)
-      if (group.querySelector(':scope > .comp-card-header')) return;
+    function enhanceCompCards() {
+      document.querySelectorAll('.comp-group').forEach(group => {
+        // Só processa groups que têm label DIRETO (evita conflito com sub-labels aninhados)
+        const label = group.querySelector(':scope > .comp-label');
+        if (!label) return;
+        // Idempotente
+        if (group.querySelector(':scope > .comp-card-header')) return;
 
-      const section = group.closest('section[id]');
-      const sectionId = section ? section.id : 'c';
-      const baseSlug = slugify(label.textContent);
-      if (!baseSlug) return;
+        const section = group.closest('section[id]');
+        const sectionId = section ? section.id : 'c';
+        const baseSlug = slugify(label.textContent);
+        if (!baseSlug) return;
 
-      // Gera ID único (resolve colisão adicionando sufixo numérico)
-      let id = sectionId + '-' + baseSlug;
-      let suffix = 1;
-      while (document.getElementById(id)) {
-        suffix++;
-        id = sectionId + '-' + baseSlug + '-' + suffix;
-      }
-      group.id = id;
+        // ID único (resolve colisão adicionando sufixo)
+        let id = sectionId + '-' + baseSlug;
+        let suffix = 1;
+        while (document.getElementById(id)) {
+          suffix++;
+          id = sectionId + '-' + baseSlug + '-' + suffix;
+        }
+        group.id = id;
 
-      // Monta header
-      const header = document.createElement('div');
-      header.className = 'comp-card-header';
+        const header = document.createElement('div');
+        header.className = 'comp-card-header';
+        header.appendChild(label); // move o label pro header
 
-      // Move o label pro header (não clona — preserva event listeners se houver)
-      header.appendChild(label);
+        // Chip de categoria
+        const category = CATEGORY_MAP[sectionId];
+        if (category && CATEGORY_LABELS[category]) {
+          const chip = document.createElement('span');
+          chip.className = 'comp-chip';
+          chip.setAttribute('data-type', category);
+          chip.textContent = CATEGORY_LABELS[category];
+          header.appendChild(chip);
+        }
 
-      // Chip de categoria
-      const category = CATEGORY_MAP[sectionId];
-      if (category && CATEGORY_LABELS[category]) {
-        const chip = document.createElement('span');
-        chip.className = 'comp-chip';
-        chip.setAttribute('data-type', category);
-        chip.textContent = CATEGORY_LABELS[category];
-        header.appendChild(chip);
-      }
-
-      // Botão copiar link
-      const anchor = document.createElement('button');
-      anchor.className = 'comp-anchor-btn';
-      anchor.type = 'button';
-      anchor.setAttribute('aria-label', 'Copiar link para este componente');
-      anchor.setAttribute('title', 'Copiar link');
-      anchor.innerHTML = '<i class="ph ph-link"></i>';
-      anchor.addEventListener('click', () => {
-        const url = window.location.origin + window.location.pathname + '#' + id;
-        const done = () => {
-          anchor.classList.add('copied');
-          anchor.innerHTML = '<i class="ph-bold ph-check"></i>';
-          setTimeout(() => {
-            anchor.classList.remove('copied');
-            anchor.innerHTML = '<i class="ph ph-link"></i>';
-          }, 1500);
-        };
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(url).then(done).catch(() => {
+        // Botão copiar link
+        const anchor = document.createElement('button');
+        anchor.className = 'comp-anchor-btn';
+        anchor.type = 'button';
+        anchor.setAttribute('aria-label', 'Copiar link para este componente');
+        anchor.setAttribute('title', 'Copiar link');
+        anchor.innerHTML = '<i class="ph ph-link"></i>';
+        anchor.addEventListener('click', () => {
+          const url = window.location.origin + window.location.pathname + '#' + id;
+          const done = () => {
+            anchor.classList.add('copied');
+            anchor.innerHTML = '<i class="ph-bold ph-check"></i>';
+            setTimeout(() => {
+              anchor.classList.remove('copied');
+              anchor.innerHTML = '<i class="ph ph-link"></i>';
+            }, 1500);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(done).catch(() => {
+              window.history.replaceState(null, '', '#' + id);
+              done();
+            });
+          } else {
             window.history.replaceState(null, '', '#' + id);
             done();
-          });
-        } else {
-          window.history.replaceState(null, '', '#' + id);
-          done();
-        }
-      });
-      header.appendChild(anchor);
+          }
+        });
+        header.appendChild(anchor);
 
-      // Insere header como primeiro filho do group
-      group.insertBefore(header, group.firstChild);
-    });
+        group.insertBefore(header, group.firstChild);
+      });
+    }
+
+    enhanceCompCards();
   })();
 
   function setBtnSize(size) {
