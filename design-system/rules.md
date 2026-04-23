@@ -145,7 +145,7 @@ Isso significa que o padrão correto em templates é:
 
 ```css
 .form-label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;     /* Normal, NÃO bold */
   color: var(--umb-text-primary);
   margin-bottom: 5px;
