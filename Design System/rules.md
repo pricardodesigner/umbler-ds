@@ -589,6 +589,15 @@ Alternativamente, se o conteúdo interno for idêntico em estrutura e só muda n
 
 Na página do Design System (`umbootstrap-design-system.html`), os templates são exibidos em **dois frames lado a lado** (`.tpl-preview` com largura fixa) apenas como referência visual — isso é um artefato do catálogo, **não** é como a tela deve ser entregue ao produto. A tela final entregue deve ter os dois shells no mesmo HTML com o comportamento de media query descrito acima.
 
+### Standalone files (arquivos `template-N-*.html`)
+
+Cada tela da seção "Shell & Templates" tem versões standalone pra abrir em nova aba:
+
+- **`template-N-desktop.html`** — contém **ambos os shells** (desktop + mobile) com classes Bootstrap (`d-none d-md-flex` e `d-md-none`). Em browser grande mostra desktop; ao redimensionar pra `<768px` automaticamente alterna pro shell mobile. **Esse arquivo é a referência de como a tela funciona no produto real** — breakpoint funcional, mesmo HTML cobre ambos viewports.
+- **`template-N-mobile.html`** — contém **apenas o mobile shell** dentro de um `.device-frame` (simulando celular no browser desktop). Serve pra inspeção isolada da versão mobile sem ter que redimensionar o browser. Em viewport real `<768px`, o frame some e o mobile ocupa fullscreen.
+
+**Regra imutável:** ao criar uma tela nova no DS, o standalone desktop tem que nascer com o breakpoint funcional (ambos shells embutidos, classes Bootstrap no root de cada). Gerar só a versão desktop sem o shell mobile é considerado incompleto — a responsividade faz parte do contrato da tela.
+
 ### Validação
 
 Após gerar uma tela, redimensione a janela do browser cruzando os 768px e confirme:
@@ -1130,19 +1139,19 @@ A única exceção são **elementos de marca externos** (ex: logos de canais —
 
 ## 25. Governança — fonte única da verdade
 
-O `umbootstrap-design-system.html` é a **única fonte da verdade** do DS. Todas as outras telas do repo (`chat.html`, futuros exemplos, protótipos) são **consumidoras** — nunca fontes.
+O `umbootstrap-design-system.html` é a **única fonte da verdade** do DS. Todas as outras telas do repo (`template-5-desktop.html`, futuros exemplos, protótipos) são **consumidoras** — nunca fontes.
 
 ### A regra
 
 Toda mudança de token, variável CSS ou regra de componente (hover, active, focus, variantes de botão, spacing, etc.) entra **primeiro** no `umbootstrap-design-system.html`. Só depois é replicada, se necessário, para telas de exemplo.
 
-Ordem inversa é proibida: não aplique um token novo direto em `chat.html` (ou qualquer tela) esperando propagar pro DS depois. Esse fluxo é a principal causa de divergência silenciosa entre o DS nominal e o DS real.
+Ordem inversa é proibida: não aplique um token novo direto em `template-5-desktop.html` (ou qualquer tela) esperando propagar pro DS depois. Esse fluxo é a principal causa de divergência silenciosa entre o DS nominal e o DS real.
 
 ### Por quê
 
-A skill `umbler-ds` clona este repo em toda execução e lê **exclusivamente** o `umbootstrap-design-system.html` pra gerar telas novas. Se uma mudança vive só em `chat.html`, ela é invisível pra skill — qualquer tela nova nasce com o estado antigo, mesmo que visualmente o `chat.html` esteja correto.
+A skill `umbler-ds` clona este repo em toda execução e lê **exclusivamente** o `umbootstrap-design-system.html` pra gerar telas novas. Se uma mudança vive só em `template-5-desktop.html`, ela é invisível pra skill — qualquer tela nova nasce com o estado antigo, mesmo que visualmente o `template-5-desktop.html` esteja correto.
 
-Já aconteceu: os tokens `--umb-menu-item-hover-bg` / `--umb-menu-item-active-bg` (popup menu) foram adicionados em `chat.html` no patch 0018 e levaram o patch 0019 separado pra propagar ao DS-mestre. Telas geradas entre os dois patches nasceram com dropdown desatualizado.
+Já aconteceu: os tokens `--umb-menu-item-hover-bg` / `--umb-menu-item-active-bg` (popup menu) foram adicionados em `template-5-desktop.html` no patch 0018 e levaram o patch 0019 separado pra propagar ao DS-mestre. Telas geradas entre os dois patches nasceram com dropdown desatualizado.
 
 ### Como aplicar
 
@@ -1150,7 +1159,7 @@ Ao mudar qualquer coisa sistêmica (token, componente, regra de hover/active, va
 
 1. Abra `umbootstrap-design-system.html` primeiro. Faça a alteração nele — nos **todos** os blocos de tema aplicáveis (`[data-bs-theme="dark"]`, `"light"`, `"emerald"`, `"dark-emerald"`) + os 2 blocos `@media (prefers-color-scheme)` do tema `auto`.
 2. Se a mudança afeta uma regra CSS de componente (`.dropdown-item`, `.btn`, etc.), edite a regra global — não replique só no escopo de uma tela.
-3. Depois, se `chat.html` (ou outra tela) precisar refletir a mudança visualmente, replique ali — mas com a consciência de que é cópia, não origem.
+3. Depois, se `template-5-desktop.html` (ou outra tela) precisar refletir a mudança visualmente, replique ali — mas com a consciência de que é cópia, não origem.
 4. Commit + push no GitHub. Sem push, a skill `umbler-ds` continua gerando com a versão antiga do repo remoto.
 
 ### Checklist de propagação
@@ -1159,7 +1168,7 @@ Antes de dar por encerrada uma mudança sistêmica:
 
 - [ ] Alterado no `umbootstrap-design-system.html` (todos os blocos de tema)
 - [ ] Regras CSS de componente atualizadas no escopo global, não no escopo de uma tela
-- [ ] `chat.html` e outras telas refletem a mudança (opcional, se o visual depender)
+- [ ] `template-5-desktop.html` e outras telas refletem a mudança (opcional, se o visual depender)
 - [ ] Commit no main + push pro `origin`
 - [ ] Validação: `git clone --depth 1` do repo num diretório limpo e `grep` confirma que a mudança chegou
 

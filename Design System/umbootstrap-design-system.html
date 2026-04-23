@@ -1668,8 +1668,24 @@
       position: relative;
     }
     .tpl-preview.tpl-preview-tall { height: 640px; }
-    .tpl-preview-label { font-size: 11px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: .09em; color: var(--umb-text-dim); margin-bottom: 8px; }
+    .tpl-preview-label {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: .09em; color: var(--umb-text-dim); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    /* Link para versão standalone do template (abre em nova aba).
+       Inline no mesmo elemento do .tpl-preview-label — colado visualmente
+       ao título "Desktop"/"Mobile" pra não ser confundido com elementos
+       da tela renderizada no preview. */
+    .tpl-standalone-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 12px; font-weight: 500;
+      color: var(--bs-primary); text-decoration: none;
+      text-transform: none; letter-spacing: normal;  /* reset do uppercase do parent */
+      transition: opacity .15s;
+    }
+    .tpl-standalone-link:hover { opacity: .75; }
+    .tpl-standalone-link i { font-size: 14px; }
     /* Mobile preview frame */
     .tpl-mobile-frame {
       width: 390px; max-width: 100%;
@@ -1880,6 +1896,62 @@
       margin: 0 0 0 .25rem !important;
       transform: none !important;
     }
+    /* Bottom sheet — variante mobile do dropdown do avatar.
+       Ativada pelo CONTEXTO .umb-mobile-shell (não por media query) — assim funciona
+       tanto em viewport real mobile quanto dentro do .device-frame / .tpl-mobile-frame
+       (preview de celular em browser desktop). position: absolute relativo ao shell
+       mantém o sheet dentro da moldura simulada (em vez de vazar pro viewport inteiro). */
+    /* Reset: .umb-avatar-menu tem position:relative no default (pro dropdown lateral
+       ancorar nele no desktop). No mobile precisa SAIR desse escopo — o absolute do
+       sheet precisa ancorar no .umb-mobile-shell (relative), não no avatar-menu (~32px). */
+    .umb-mobile-shell .umb-avatar-menu {
+      position: static !important;
+    }
+    .umb-mobile-shell .umb-avatar-menu > .dropdown-menu {
+      position: absolute !important;
+      top: auto !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      margin: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      border-radius: 16px 16px 0 0 !important;
+      padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0px)) !important;
+      animation: umb-bottom-sheet-in .25s ease-out;
+      z-index: 1060;
+    }
+    /* Handle bar (indicador visual de bottom sheet arrastável) */
+    .umb-mobile-shell .umb-avatar-menu > .dropdown-menu::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--umb-text-dim);
+      opacity: .5;
+      margin: -4px auto 16px;
+    }
+    /* Backdrop — criado via ::after do shell quando qualquer trigger de dropdown
+       dentro do avatar-menu está aberto. Funciona tanto pro avatar da sidebar quanto
+       pro avatar do mobile-header (ambos usam data-bs-toggle="dropdown"). */
+    .umb-mobile-shell:has(.umb-avatar-menu [data-bs-toggle="dropdown"][aria-expanded="true"])::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .4);
+      z-index: 1050;
+      animation: umb-backdrop-in .2s ease-out;
+    }
+    @keyframes umb-bottom-sheet-in {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    @keyframes umb-backdrop-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
     .umb-avatar-menu-label {
       font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
       color: var(--umb-text-dim); margin: 2px 4px 8px;
@@ -2085,7 +2157,7 @@
     }
 
     /* Mobile shell (no sidebar, bottom nav) */
-    .umb-mobile-shell { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+    .umb-mobile-shell { display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative; }
 
     /* --- MOBILE HEADER (componente) ---
        Usa a mesma cor da sidebar desktop (var(--umb-sidebar-bg)).
@@ -5603,7 +5675,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         <div class="row g-4">
           <!-- Desktop -->
           <div class="col-12">
-            <p class="tpl-preview-label">Desktop</p>
+            <p class="tpl-preview-label">
+              Desktop
+              <a href="template-1-desktop.html" target="_blank" rel="noopener" class="tpl-standalone-link"><i class="ph ph-arrow-square-out"></i>Abrir em nova aba</a>
+            </p>
             <div class="tpl-preview">
               <div class="umb-shell">
                 <!-- Sidebar -->
@@ -5717,7 +5792,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
           <!-- Mobile -->
           <div class="col-12">
-            <p class="tpl-preview-label">Mobile (390px)</p>
+            <p class="tpl-preview-label">
+              Mobile (390px)
+              <a href="template-1-mobile.html" target="_blank" rel="noopener" class="tpl-standalone-link"><i class="ph ph-arrow-square-out"></i>Abrir em nova aba</a>
+            </p>
             <div class="tpl-mobile-frame">
               <div class="umb-mobile-shell">
                 <header class="umb-mobile-header" data-umb-c="mobile-header" data-variant="home"></header>
@@ -5790,7 +5868,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         <div class="row g-4">
           <!-- Desktop -->
           <div class="col-12">
-            <p class="tpl-preview-label">Desktop</p>
+            <p class="tpl-preview-label">
+              Desktop
+              <a href="template-2-desktop.html" target="_blank" rel="noopener" class="tpl-standalone-link"><i class="ph ph-arrow-square-out"></i>Abrir em nova aba</a>
+            </p>
             <div class="tpl-preview">
               <div class="umb-shell">
                 <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Agentes de IA"></nav>
@@ -5906,7 +5987,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
           <!-- Mobile -->
           <div class="col-12">
-            <p class="tpl-preview-label">Mobile (390px)</p>
+            <p class="tpl-preview-label">
+              Mobile (390px)
+              <a href="template-2-mobile.html" target="_blank" rel="noopener" class="tpl-standalone-link"><i class="ph ph-arrow-square-out"></i>Abrir em nova aba</a>
+            </p>
             <div class="tpl-mobile-frame" style="height:720px">
               <div class="umb-mobile-shell">
                 <!-- Mobile header: novo recurso → subpage (back + sino + avatar). Título vai no corpo. -->
@@ -5985,7 +6069,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         <div class="row g-4">
           <!-- Desktop -->
           <div class="col-12">
-            <p class="tpl-preview-label">Desktop</p>
+            <p class="tpl-preview-label">
+              Desktop
+              <a href="template-3-desktop.html" target="_blank" rel="noopener" class="tpl-standalone-link"><i class="ph ph-arrow-square-out"></i>Abrir em nova aba</a>
+            </p>
             <div class="tpl-preview tpl-preview-tall">
               <div class="umb-shell">
                 <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Agentes de IA"></nav>
@@ -6090,7 +6177,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
           <!-- Mobile -->
           <div class="col-12">
-            <p class="tpl-preview-label">Mobile (390px)</p>
+            <p class="tpl-preview-label">
+              Mobile (390px)
+              <a href="template-3-mobile.html" target="_blank" rel="noopener" class="tpl-standalone-link"><i class="ph ph-arrow-square-out"></i>Abrir em nova aba</a>
+            </p>
             <div class="tpl-mobile-frame" style="height:700px">
               <div class="umb-mobile-shell">
                 <!-- Mobile topbar: editar recurso → subpage (back + sino + avatar). Título vai no corpo. -->
@@ -6167,7 +6257,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         <div class="row g-4">
           <!-- Desktop -->
           <div class="col-12">
-            <p class="tpl-preview-label">Desktop</p>
+            <p class="tpl-preview-label">
+              Desktop
+              <a href="template-4-desktop.html" target="_blank" rel="noopener" class="tpl-standalone-link"><i class="ph ph-arrow-square-out"></i>Abrir em nova aba</a>
+            </p>
             <div class="tpl-preview">
               <div class="umb-shell">
                 <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Configurações"></nav>
@@ -6374,7 +6467,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
           <!-- Mobile -->
           <div class="col-12">
-            <p class="tpl-preview-label">Mobile (390px)</p>
+            <p class="tpl-preview-label">
+              Mobile (390px)
+              <a href="template-4-mobile.html" target="_blank" rel="noopener" class="tpl-standalone-link"><i class="ph ph-arrow-square-out"></i>Abrir em nova aba</a>
+            </p>
             <div class="tpl-mobile-frame">
               <div class="umb-mobile-shell">
                 <header class="umb-mobile-header" data-umb-c="mobile-header" data-variant="home"></header>
@@ -6492,7 +6588,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         <div class="row g-4">
           <!-- Desktop -->
           <div class="col-12">
-            <p class="tpl-preview-label">Desktop — com chat aberto</p>
+            <p class="tpl-preview-label">
+              Desktop — com chat aberto
+              <a href="template-5-desktop.html" target="_blank" rel="noopener" class="tpl-standalone-link"><i class="ph ph-arrow-square-out"></i>Abrir em nova aba</a>
+            </p>
             <div class="tpl-preview tpl-preview-tall">
               <div class="umb-shell">
                 <nav class="umb-shell-sidebar" data-umb-c="sidebar" data-active="Conversas"></nav>
@@ -7104,7 +7203,10 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
           <!-- Mobile — chat aberto -->
           <div class="col-md-6">
-            <p class="tpl-preview-label">Mobile (390px) — Chat aberto</p>
+            <p class="tpl-preview-label">
+              Mobile (390px) — Chat aberto
+              <a href="template-5-mobile.html" target="_blank" rel="noopener" class="tpl-standalone-link"><i class="ph ph-arrow-square-out"></i>Abrir em nova aba</a>
+            </p>
             <div class="tpl-mobile-frame" style="height:720px">
               <div class="umb-mobile-shell">
                 <!-- Variante "chat": back + avatar + nome + tags + phone + menu -->
@@ -7676,7 +7778,25 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   <!-- Right actions: bell + avatar (home/subpage) OU phone + menu (chat) -->
   <div class="umb-mh-right" data-umb-part="actions">
     <button type="button" class="umb-mh-icon-btn" aria-label="Notificações" data-umb-part="bell"><i class="ph ph-bell"></i></button>
-    <button type="button" class="umb-mh-avatar" data-umb-part="avatar" aria-label="Perfil">RC</button>
+    <!-- Avatar como trigger do avatar-menu (tema switcher + logout) — mesmo pattern
+         da sidebar desktop, mas no mobile o dropdown vira bottom sheet via CSS do
+         .umb-mobile-shell (ver §12 do rules.md). -->
+    <div class="umb-avatar-menu dropdown" style="flex-shrink:0">
+      <button type="button" class="umb-mh-avatar" data-umb-part="avatar" aria-label="Perfil"
+              data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">RC</button>
+      <div class="dropdown-menu umb-avatar-dropdown">
+        <p class="umb-avatar-menu-label">Tema</p>
+        <div class="umb-avatar-theme-options">
+          <button class="theme-option" data-theme="auto"          onclick="setTheme('auto')"><i class="ph ph-arrows-clockwise"></i> Auto</button>
+          <button class="theme-option" data-theme="light"         onclick="setTheme('light')"><i class="ph ph-sun"></i> Claro</button>
+          <button class="theme-option" data-theme="dark"          onclick="setTheme('dark')"><i class="ph ph-moon"></i> Escuro</button>
+          <button class="theme-option" data-theme="emerald"       onclick="setTheme('emerald')"><i class="ph ph-leaf"></i> Esmeralda</button>
+          <button class="theme-option" data-theme="dark-emerald"  onclick="setTheme('dark-emerald')"><i class="ph ph-circles-four"></i> Bravia</button>
+        </div>
+        <hr class="dropdown-divider my-2">
+        <button type="button" class="umb-avatar-logout"><i class="ph ph-sign-out"></i> Sair</button>
+      </div>
+    </div>
   </div>
 </template>
 
