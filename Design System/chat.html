@@ -35,7 +35,7 @@
       --umb-shell-header-bg: #141619;
       --umb-bg-primary:      #141619;  /* bgPrimary: fundo principal das telas (dark) */
       --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
-      --umb-hover-bg:        rgba(255,255,255,.03);  /* hover unificado: itens, linhas de tabela, dropdown-items, popovers, selects */
+      --umb-hover-bg:        rgba(255,255,255,.05);  /* hover unificado: itens, linhas de tabela, dropdown-items, popovers, selects */
       --umb-inset-bg:        rgba(255,255,255,.06);
       --umb-header-bg:       rgba(248,249,250,.03);
       --umb-header-border:   rgba(248,249,250,.06);
@@ -127,7 +127,7 @@
       --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
       --umb-card-bg:         #ffffff;
       --umb-surface-raised:  #ffffff;
-      --umb-hover-bg:        rgba(0,0,0,.025);  /* hover unificado: itens, linhas de tabela, dropdown-items, popovers, selects */
+      --umb-hover-bg:        rgba(0,0,0,.04);  /* hover unificado: itens, linhas de tabela, dropdown-items, popovers, selects */
       --umb-inset-bg:        rgba(0,0,0,.07);
       --umb-header-bg:       rgba(0,0,0,.02);
       --umb-header-border:   rgba(0,0,0,.06);
@@ -207,7 +207,7 @@
       --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
       --umb-card-bg:         #ffffff;
       --umb-surface-raised:  #ffffff;
-      --umb-hover-bg:        rgba(0,0,0,.025);  /* hover unificado: itens, linhas de tabela, dropdown-items, popovers, selects */
+      --umb-hover-bg:        rgba(0,0,0,.04);  /* hover unificado: itens, linhas de tabela, dropdown-items, popovers, selects */
       --umb-inset-bg:        rgba(0,0,0,.07);
       --umb-header-bg:       rgba(0,0,0,.02);
       --umb-header-border:   rgba(0,0,0,.06);
@@ -278,7 +278,7 @@
         --bs-body-bg:#141619; --bs-body-color:#f8f9fa; --bs-body-font-family:'Poppins',sans-serif; --bs-border-color:#2e3048; --bs-card-bg:#212529;
         --umb-bg-primary:#141619; --umb-content-bg:var(--umb-bg-primary);
         --umb-sidebar-bg:#222429; --umb-border-on-brand:#2e3048; --umb-card-bg:#212529;
-        --umb-surface-raised:#2a2d35; --umb-hover-bg:rgba(255,255,255,.03); --umb-inset-bg:rgba(255,255,255,.06);
+        --umb-surface-raised:#2a2d35; --umb-hover-bg:rgba(255,255,255,.05); --umb-inset-bg:rgba(255,255,255,.06);
         --umb-header-bg:rgba(248,249,250,.03); --umb-header-border:rgba(248,249,250,.06);
         --umb-preview-bg:rgba(255,255,255,.02); --umb-text-primary:#f0f0f8; --umb-text-mid:#9091a8; --umb-text-dim:#4a4b60;
         --umb-border:#3D4047; --umb-border-primary:#3D4047; --umb-border-strong:#424649; --umb-input-bg:#212529; --umb-input-border:#3D4047;
@@ -313,7 +313,7 @@
         --bs-body-bg:#EEF2FE; --bs-body-color:#212529; --bs-body-font-family:'Poppins',sans-serif; --bs-border-color:#d9d9d9; --bs-card-bg:#ffffff;
         --umb-bg-primary:#EEF2FE; --umb-content-bg:var(--umb-bg-primary);
         --umb-sidebar-bg:#557CF2; --umb-border-on-brand:rgba(255,255,255,.18); --umb-card-bg:#ffffff;
-        --umb-surface-raised:#ffffff; --umb-hover-bg:rgba(0,0,0,.025); --umb-inset-bg:rgba(0,0,0,.07);
+        --umb-surface-raised:#ffffff; --umb-hover-bg:rgba(0,0,0,.04); --umb-inset-bg:rgba(0,0,0,.07);
         --umb-header-bg:rgba(0,0,0,.02); --umb-header-border:rgba(0,0,0,.06); --umb-preview-bg:#f8f9fa;
         --umb-text-primary:#1a1d2b; --umb-text-mid:#6c757d; --umb-text-dim:#adb5bd;
         --umb-border:#D9D9D9; --umb-border-primary:#DFDFDF; --umb-border-strong:#d9d9d9; --umb-input-bg:#ffffff; --umb-input-border:#DFDFDF;
@@ -357,9 +357,10 @@
       --umb-bg-primary:      #000C0B;  /* bgPrimary: fundo principal das telas (Bravia) */
       --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
       --umb-sidebar-bg:      #000C0B; --umb-border-on-brand: #002B27;
+      --umb-shell-header-bg: var(--umb-sidebar-bg);  /* Bravia: header mesma cor da sidebar (igual ao Dark) */
       --umb-card-bg:         #011A18;
       --umb-surface-raised:  #172D2C;
-      --umb-hover-bg:        rgba(255,255,255,.025);  /* hover unificado: itens, linhas de tabela, dropdown-items, popovers, selects */
+      --umb-hover-bg:        rgba(255,255,255,.04);  /* hover unificado: itens, linhas de tabela, dropdown-items, popovers, selects */
       --umb-inset-bg:        rgba(255,255,255,.06);
       --umb-header-bg:       rgba(255,255,255,.025);
       --umb-header-border:   rgba(255,255,255,.05);
@@ -1093,7 +1094,7 @@
        aparecer/sumir ao lado do simbolo — sem salto vertical, transicao suave. */
     .umb-shell-head {
       width: 100%;
-      height: 73px; min-height: 73px;
+      height: 56px; min-height: 56px;
       display: flex; align-items: center; justify-content: center;
       gap: 8px; padding: 0;
       flex-shrink: 0;
@@ -1182,11 +1183,62 @@
     .umb-shell-sidebar.is-expanded .umb-si-label {
       display: inline-block; flex: 1; min-width: 0;
     }
+    /* Avatar (círculo com iniciais) — agora é um <span> interno do .umb-avatar-trigger,
+       não mais um <button> standalone. O trigger wrapper é quem recebe click e focus. */
     .umb-si-avatar {
-      width: 28px; height: 28px; border-radius: 50%;
+      width: 32px; height: 32px; border-radius: 50%;
       background: var(--umb-avatar-bg);
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 600; color: var(--umb-brand-color); cursor: pointer;
+      font-size: 12px; font-weight: 600; color: var(--umb-brand-color);
+      flex-shrink: 0;
+    }
+    /* Trigger wrapper — envolve avatar + info num único botão clicável. No collapsed,
+       cobre só o avatar (32×32). No expanded, vira uma linha full-width (avatar + nome
+       + email), garantindo que click em qualquer ponto abre o dropdown. */
+    .umb-avatar-trigger {
+      border: 0; padding: 0; outline: 0; background: transparent;
+      display: flex; align-items: center;
+      font-family: inherit; color: inherit;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: background .15s, box-shadow .12s;
+    }
+    .umb-avatar-trigger:focus-visible,
+    .umb-avatar-trigger[aria-expanded="true"] {
+      box-shadow: 0 0 0 2px var(--umb-brand-color);
+    }
+    /* Bloco de info (nome + email) ao lado do avatar — oculto no collapsed,
+       só aparece quando a sidebar está .is-expanded */
+    .umb-avatar-info {
+      display: none;
+      flex-direction: column;
+      flex: 1; min-width: 0;
+      text-align: left;
+      line-height: 1.2;
+    }
+    .umb-avatar-name {
+      font-size: 13px; font-weight: 500;
+      color: var(--umb-nav-color);  /* mesmo token dos itens de menu — contrasta com sidebar-bg em qualquer tema */
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .umb-avatar-email {
+      font-size: 11px;
+      color: var(--umb-nav-color);
+      opacity: .7;  /* hierarquia sobre o nome, compatível com qualquer tema (não depende de token paralelo) */
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    /* Expanded: trigger vira linha full-width com padding/gap alinhados aos .umb-si */
+    .umb-shell-sidebar.is-expanded .umb-avatar-trigger {
+      width: 100%;
+      gap: 12px;
+      padding: 4px 12px;
+      border-radius: 8px;
+    }
+    .umb-shell-sidebar.is-expanded .umb-avatar-trigger:hover {
+      background: var(--umb-nav-hover-bg);
+    }
+    .umb-shell-sidebar.is-expanded .umb-avatar-info {
+      display: flex;
     }
 
     /* --- AVATAR MENU (Theme Switcher + Logout) ---
@@ -1194,15 +1246,22 @@
        (Auto/Claro/Escuro/Esmeralda/Bravia) + link de logout.
        Usa Bootstrap dropdown (dropend) — o setTheme() global reaproveitado. */
     .umb-avatar-menu { position: relative; display: flex; }
-    .umb-avatar-menu .umb-si-avatar {
-      border: 0; padding: 0; outline: 0; font-family: inherit;
-      transition: box-shadow .12s;
-    }
-    .umb-avatar-menu .umb-si-avatar:focus-visible,
-    .umb-avatar-menu .umb-si-avatar[aria-expanded="true"] {
-      box-shadow: 0 0 0 2px var(--umb-brand-color);
-    }
     .umb-avatar-dropdown { min-width: 220px; padding: 12px !important; }
+    /* Posicionamento fixo do menu à direita do trigger + abrindo PRA CIMA (bottom: 0
+       alinha a base do menu com a base do avatar). O avatar vive no fundo da sidebar,
+       então abrir pra cima mantém o menu dentro do viewport. Combinado com o
+       data-bs-display="static" no trigger, desliga o Popper.js — zero cálculo
+       dinâmico, comportamento idêntico em toda abertura. !important é necessário
+       pra vencer o inline-style que o Bootstrap injeta. */
+    .umb-avatar-menu > .dropdown-menu {
+      position: absolute !important;
+      top: auto !important;
+      bottom: 0 !important;
+      right: auto !important;
+      left: 100% !important;
+      margin: 0 0 0 .25rem !important;
+      transform: none !important;
+    }
     .umb-avatar-menu-label {
       font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
       color: var(--umb-text-dim); margin: 2px 4px 8px;
@@ -1239,7 +1298,7 @@
 
     /* Topbar / Header */
     .umb-shell-header {
-      height: 48px; min-height: 48px;
+      height: 56px; min-height: 56px;
       background: var(--umb-shell-header-bg, var(--umb-sidebar-bg));
       border-bottom: 1px solid var(--umb-border);
       display: flex; align-items: center; padding: 0 20px; gap: 8px;
@@ -1372,22 +1431,23 @@
     .umb-page-tab:hover  { color: var(--umb-text-primary); }
     .umb-page-tab.active { color: var(--bs-primary); border-bottom-color: var(--bs-primary); font-weight: 600; }
 
-    /* Settings list */
-    .umb-settings-list { list-style: none; padding: 0; margin: 0;
-      background: var(--umb-card-bg); border: 1px solid var(--umb-border);
-      border-radius: 10px; overflow: hidden; }
-    .umb-settings-item {
-      display: flex; align-items: center; gap: 14px;
-      padding: 14px 16px; cursor: pointer;
-      border-bottom: 1px solid var(--umb-border); transition: background .15s;
+    /* Settings list — lista limpa de itens de menu (configurações, preferências).
+       Visual "próximo do .umb-path-card" mas sem borda individual em cada item
+       e sem divisores: apenas o hover pinta o background (igual .table tbody tr:hover).
+       Ícone sem caixa (font-size grande + cor neutra) — mesmo estilo do .umb-path-icon. */
+    .umb-settings-list {
+      list-style: none; padding: 0; margin: 0;
     }
-    .umb-settings-item:last-child { border-bottom: none; }
+    .umb-settings-item {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 16px; cursor: pointer;
+      border-radius: 10px;
+      transition: background-color .15s;
+    }
     .umb-settings-item:hover { background: var(--umb-hover-bg); }
     .umb-settings-ico {
-      width: 36px; height: 36px; border-radius: 8px;
-      background: var(--umb-hover-bg);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; color: var(--umb-text-mid); flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 28px; color: var(--umb-text-mid); flex-shrink: 0;
     }
     .umb-settings-text { flex: 1; min-width: 0; }
     .umb-settings-name { font-size: 14px; font-weight: 600; color: var(--umb-text-primary); margin: 0 0 2px; }
@@ -1683,10 +1743,11 @@
     /* Botao de toggle no header do chat — herda do padrao btn-icon btn-text btn-lg.
        Apenas garante cor neutra, consistente com .umb-chat-header-actions. */
     .umb-conv-toggle { color: var(--umb-text-mid); flex-shrink: 0; }
-    /* Topbar (73px): 5 btn-icon btn-text btn-lg + spacer + 1 btn-primary btn-icon btn-lg.
-       Altura deve bater 1:1 com .umb-chat-header para o divisor alinhar pixel-perfect. */
+    /* Topbar (56px): 5 btn-icon btn-text btn-lg + spacer + 1 btn-primary btn-icon btn-lg.
+       Altura 56px bate com .umb-chat-header E com .umb-shell-head da sidebar — eixo Y
+       único em todas as faixas do topo do app (ver §11.1 do rules.md). */
     .umb-conv-topbar {
-      height: 73px; min-height: 73px;
+      height: 56px; min-height: 56px;
       padding: 8px 12px; display: flex; align-items: center; gap: 2px;
       border-bottom: 1px solid var(--umb-border);
       background: var(--umb-card-bg);
@@ -1912,7 +1973,7 @@
       background: var(--umb-bg-primary, var(--bs-body-bg));
     }
     .umb-chat-header {
-      height: 73px; min-height: 73px;
+      height: 56px; min-height: 56px;
       background: var(--umb-bg-primary, var(--bs-body-bg));
       border-bottom: 1px solid var(--umb-border);
       display: flex; align-items: center; gap: 12px; padding: 0 16px;
@@ -2643,7 +2704,13 @@
     <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Notificações"><i class="ph ph-bell"></i><span class="umb-si-label">Notificações</span></div>
     <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Suporte"><i class="ph ph-question"></i><span class="umb-si-label">Suporte</span></div>
     <div class="umb-avatar-menu dropdown dropend">
-      <button type="button" class="umb-si-avatar" data-bs-toggle="dropdown" aria-expanded="false" title="Perfil">RC</button>
+      <button type="button" class="umb-avatar-trigger" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" title="Perfil">
+        <span class="umb-si-avatar">RC</span>
+        <span class="umb-avatar-info" aria-hidden="true">
+          <span class="umb-avatar-name">Rodrigo Costa</span>
+          <span class="umb-avatar-email">rodrigo@email.com</span>
+        </span>
+      </button>
       <div class="dropdown-menu umb-avatar-dropdown">
         <p class="umb-avatar-menu-label">Tema</p>
         <div class="umb-avatar-theme-options">
@@ -2861,7 +2928,7 @@
           if (!bootstrap.Tooltip.getInstance(el)) new bootstrap.Tooltip(el, { trigger: 'hover', placement: 'right' });
         });
       });
-      document.querySelectorAll('.umb-avatar-menu .umb-si-avatar[title]').forEach(el => {
+      document.querySelectorAll('.umb-avatar-menu .umb-avatar-trigger[title]').forEach(el => {
         if (!bootstrap.Tooltip.getInstance(el)) new bootstrap.Tooltip(el, { trigger: 'hover', placement: 'right' });
       });
     }

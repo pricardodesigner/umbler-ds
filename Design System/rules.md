@@ -14,7 +14,7 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 8. Logo no header
 9. Navegação mobile
 10. Hover do btn-text por tema
-11. Sidebar no tema Escuro
+11. Sidebar e Header — paridade de fundo por tema
 12. Avatar menu (theme switcher + logout)
 13. Sidebar e Header como componentes reutilizáveis
 14. Itens canônicos da sidebar
@@ -223,9 +223,31 @@ O hover do `btn-text` usa uma variável por tema para garantir contraste:
 
 Nos temas padrão (Escuro/Claro) o hover é **neutro** (sem tinta da cor primária), porque a primary é azul e ficaria destoante. Nos temas Esmeralda/Bravia o teal funciona bem como hover.
 
-## 11. Sidebar no tema Escuro
+## 11. Sidebar e Header — paridade de fundo por tema
 
-No tema Escuro, `--umb-sidebar-bg` é `#141619` — o mesmo valor de `--umb-shell-header-bg` — para que sidebar e header fiquem com o mesmo fundo. Nos demais temas são diferentes.
+Nos temas de **fundo escuro** (`dark` e `dark-emerald/Bravia`), `--umb-shell-header-bg` é idêntico a `--umb-sidebar-bg` (por referência ou por valor repetido) — sidebar e header formam uma faixa contínua. Nos temas de **fundo claro com sidebar colorida** (`light` com sidebar azul, `emerald` com sidebar verde), o header usa `#ffffff` explícito, destacando-se visualmente da sidebar colorida.
+
+| Tema | `--umb-sidebar-bg` | `--umb-shell-header-bg` | Relação |
+|---|---|---|---|
+| Escuro (`dark`) | `#141619` | `#141619` | iguais |
+| Claro (`light`) | `#557CF2` (azul) | `#ffffff` | diferentes (header branco) |
+| Esmeralda (`emerald`) | `#005C55` (verde) | `#ffffff` | diferentes (header branco) |
+| Bravia (`dark-emerald`) | `#000C0B` | `var(--umb-sidebar-bg)` | iguais |
+
+Ao criar um tema novo, decida cedo qual dos dois padrões seguir — não deixe `--umb-shell-header-bg` sem definir (herda do `:root` e quebra a identidade visual do tema).
+
+### 11.1 Altura unificada — 56px em todos os headers
+
+Para que o símbolo/wordmark da sidebar fique alinhado horizontalmente com o conteúdo do header em qualquer tela, **todos os elementos de "topo" do DS têm altura fixa 56px**:
+
+| Elemento | Onde aparece | Altura |
+|---|---|---|
+| `.umb-shell-head` | Topo da sidebar (.umb-shell-sidebar) — abriga logo + toggle | **56px** |
+| `.umb-shell-header` | Header padrão das telas (T1–T4: breadcrumb + créditos) | **56px** |
+| `.umb-conv-topbar` | Topbar da lista de conversas (T5 — chat) | **56px** |
+| `.umb-chat-header` | Header do detail do chat (T5 — chat) | **56px** |
+
+Como todas as faixas têm a mesma altura, o eixo Y central (28px) é o mesmo em qualquer tela — o símbolo "U" do canto superior esquerdo alinha com breadcrumb, créditos, ícones de topbar, avatar do contato, etc. Nunca crie um header novo com altura diferente de 56px no DS — se precisar de 2 linhas de informação, empilhe logicamente (ex: header + subheader stacked) mas mantenha o bloco do topo em 56px.
 
 ## 12. Avatar menu (theme switcher + logout)
 
@@ -235,7 +257,13 @@ O `.umb-si-avatar` no canto inferior da sidebar é **sempre** um trigger de drop
 
 ```html
 <div class="umb-avatar-menu dropdown dropend">
-  <button type="button" class="umb-si-avatar" data-bs-toggle="dropdown" aria-expanded="false" title="Perfil">RC</button>
+  <button type="button" class="umb-avatar-trigger" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" title="Perfil">
+    <span class="umb-si-avatar">RC</span>
+    <span class="umb-avatar-info" aria-hidden="true">
+      <span class="umb-avatar-name">Rodrigo Costa</span>
+      <span class="umb-avatar-email">rodrigo@email.com</span>
+    </span>
+  </button>
   <div class="dropdown-menu umb-avatar-dropdown">
     <p class="umb-avatar-menu-label">Tema</p>
     <div class="umb-avatar-theme-options">
@@ -255,8 +283,16 @@ O `.umb-si-avatar` no canto inferior da sidebar é **sempre** um trigger de drop
 
 - O `.umb-avatar-menu` é o **único componente válido** para troca de tema em toda a aplicação. **Nunca** crie um theme switcher paralelo (botões flutuantes, barra lateral extra, modal de configurações, etc.) — mesmo em prévias, templates de demo ou telas isoladas. Se o usuário não pedir explicitamente um switcher adicional no prompt, reutilize o existente na sidebar canônica (`data-umb-c="sidebar"`).
 - O dropdown do avatar **deve** fechar em três condições: (a) clique em um item do menu, (b) clique em qualquer ponto fora do `.umb-avatar-menu`, (c) tecla `Escape`. Esse é o comportamento padrão do Bootstrap 5 dropdown e é esperado pelo usuário — **nunca** modifique esse contrato (ex: `data-bs-auto-close="false"`, `stopPropagation()` no dropdown, `inside` ao invés de `true`) sem um pedido explícito do usuário. Em templates gerados que renderizam o avatar via `<template>`, garanta que o JS preserve o outside-click close: se o data-api do Bootstrap não disparar (overflow:hidden no container, elementos criados dinamicamente, etc.), adicione um handler defensivo com `bootstrap.Dropdown.getOrCreateInstance(trigger).hide()`.
-- O trigger **sempre** é um `<button>` com `.umb-si-avatar` (não `<div>`) — necessário pra Bootstrap dropdown e acessibilidade.
+- O trigger **sempre** é um `<button class="umb-avatar-trigger">` — não é o avatar sozinho, é um **wrapper** que envolve o avatar (`.umb-si-avatar`) e o bloco de info (`.umb-avatar-info`). Isso garante que qualquer click dentro do trigger (inclusive nos textos de nome/email no expanded) abre o dropdown, sem precisar de JS extra pra redirecionar. `<button>` é obrigatório pra Bootstrap dropdown reconhecer e pra acessibilidade.
+- O avatar tem **32×32px** com `font-size: 12px`. Esse tamanho equilibra a "massa visual" com os demais `.umb-si` (36×36) — avatar menor por convenção (identidade de "perfil", não "botão"), mas sem percepção de desalinhamento. Nunca use dimensões fora dessas duas: 32px avatar vs 36px botões.
+- **No estado `.is-expanded`**, ao lado do avatar aparece `.umb-avatar-info` com nome (`.umb-avatar-name`, 13px/500) e email (`.umb-avatar-email`, 11px/opacity .7), ambos com ellipsis se estourarem a largura. No collapsed esse bloco fica `display: none` — só o círculo do avatar aparece. O trigger wrapper (`.umb-avatar-trigger`) cresce pra cobrir avatar+info no expanded (`width: 100%`, `gap: 12px`, `padding: 4px 12px`) — mesma área clicável dos demais itens do menu.
+- **Cor do nome/email:** `var(--umb-nav-color)` — o mesmo token dos itens de menu. Isso garante contraste com `--umb-sidebar-bg` em qualquer tema (inclusive Claro/Esmeralda com sidebar colorida, onde `--umb-text-primary` / `--umb-text-mid` ficariam invisíveis). O email usa `opacity: .7` pra hierarquia sobre o nome, em vez de um token paralelo — funciona consistente em todos os temas sem casos especiais.
 - O container usa `dropend` (abre à direita da sidebar, que é estreita — 52px — e fica à esquerda da tela).
+- O trigger **obrigatoriamente** tem `data-bs-display="static"` **e** o CSS `.umb-avatar-menu > .dropdown-menu` força `position: absolute !important; left: 100% !important; bottom: 0 !important; top: auto !important; transform: none !important`. Os dois juntos garantem posicionamento fixo: o `data-bs-display="static"` desliga o Popper.js (sem cálculo dinâmico de posição entre aberturas), e o CSS com `!important` força o menu a ficar à direita do trigger, crescendo pra cima (`bottom: 0` alinha a base do menu com a base do avatar).
+
+  **Motivo do `bottom: 0` em vez de `top: 0`:** o avatar vive no **fundo da sidebar** — se o menu abrir pra baixo (top: 0), ele estoura o viewport e corta. Abrindo pra cima (bottom: 0), o menu expande dentro do espaço livre acima do avatar, cabendo naturalmente mesmo em viewports com altura menor.
+
+  **Motivo de desligar Popper:** com Popper ativo, o bug "primeira abertura OK, 2ª fecha, 3ª flipa pra baixo" reproduz mesmo com `flip` desabilitado via `popperConfig` — algum estado interno de Popper fica corrompido entre aberturas no contexto específico desse DS (sidebar estreita + trigger no fundo da viewport). Testei várias configurações de Popper e nenhuma resolveu de forma confiável. A solução cirúrgica é desligar Popper + fixar CSS. Trade-off: sem Popper, o menu não se ajusta dinamicamente se faltar espaço à direita. Como a sidebar vive na esquerda da tela (fixed, 52px) e o viewport mínimo de uso é >= 768px, sempre tem espaço — o trade-off não compromete o uso real.
 - Reaproveita a classe `.theme-option` já existente na sidebar de documentação do DS — o `setTheme()` global sincroniza o estado `active` em **todos** os theme-switchers do documento.
 - O separador entre temas e logout usa `hr.dropdown-divider.my-2` (8px acima e abaixo, padrão Bootstrap 5.3).
 - "Sair" usa `.umb-avatar-logout` — cor `var(--umb-alert-danger-color)`, hover `var(--umb-alert-danger-bg)`.
@@ -867,12 +903,14 @@ Aplique em **qualquer item interativo** em estado `:hover`:
 
 | Tema | Valor |
 |---|---|
-| Escuro (`dark`) | `rgba(255,255,255,.03)` |
-| Claro (`light`) | `rgba(0,0,0,.025)` |
-| Bravia (`dark-emerald`) | `rgba(255,255,255,.025)` |
-| Esmeralda (`emerald`) | `rgba(0,0,0,.025)` |
+| Escuro (`dark`) | `rgba(255,255,255,.05)` |
+| Claro (`light`) | `rgba(0,0,0,.04)` |
+| Bravia (`dark-emerald`) | `rgba(255,255,255,.04)` |
+| Esmeralda (`emerald`) | `rgba(0,0,0,.04)` |
 
 **Uso em CSS**: `background: var(--umb-hover-bg);`
+
+**Nota sobre escolha do alpha:** Valores mais sutis (`.03/.025`) produziam hover quase imperceptível quando o item estava sobre `--umb-card-bg` (surface já raised em relação ao body-bg), porque o mesmo delta de lightness é perceptualmente menor em superfícies mais claras. A escala `.05/.04` mantém o hover visível em ambos os contextos (tabela em body-bg e settings-item em card-bg) sem perder o caráter sutil.
 
 **Alias legados** (não usar em código novo — só existem para retrocompatibilidade):
 
@@ -971,7 +1009,7 @@ Pergunta: **"Esta superfície pode ficar com fundo saturado/colorido em algum te
 - **Não** (fundo sempre neutro — card, tabela, input, header do shell que é `#ffffff` nos temas coloridos) → `--umb-border`
 - **Sim** (fundo é `--umb-sidebar-bg` ou análogo que muda para cor de marca) → `--umb-border-on-brand`
 
-Nunca assuma "é da sidebar, então usa `border-on-brand`" — o que importa é a cor da superfície, não o componente. O header do shell vive no topo do layout ao lado da sidebar, mas tem fundo próprio (`--umb-shell-header-bg: #ffffff` em Bravia/Esmeralda), então usa `--umb-border`.
+Nunca assuma "é da sidebar, então usa `border-on-brand`" — o que importa é a cor da superfície, não o componente. O header do shell vive no topo do layout ao lado da sidebar, mas tem fundo próprio (`#ffffff` em Claro/Esmeralda; mesmo da sidebar em Escuro/Bravia — ver §11), então usa `--umb-border`.
 
 ### 23.4 Espessura de borda — 1px para divisores, 2px para elementos interativos
 
