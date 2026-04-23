@@ -568,6 +568,7 @@ Após gerar uma tela, redimensione a janela do browser cruzando os 768px e confi
 - Nunca crie um theme switcher novo (botão flutuante, barra extra, modal) — a troca de tema é **exclusivamente** pelo `.umb-avatar-menu` da sidebar (§12). Exceção: apenas quando o usuário pedir explicitamente um switcher adicional no prompt.
 - Nunca use `font-weight` > 600 no DS (valores proibidos: `700`, `800`, `900`, `bold`, `bolder`). Se precisar reforçar hierarquia, aumente o `font-size` ou use `color` de contraste — nunca um peso mais pesado que 600 (ver §24).
 - Nunca crie classe custom de botão com `border-radius` diferente de 30px (pill). Todo `.btn` do DS é pill — sem exceção (§3).
+- Nunca use `border-width` fora da escala 1px/2px. Valores proibidos: `1.5px`, `2.5px`, `3px` (ver §23.4). Divisores passivos = 1px; elementos interativos = 2px.
 - Nunca use tabs (`.umb-chat-composer-tab`) no composer do chat — foi removido do DS em favor do Segmented (`.inset-control`) Mensagem/Notas (§21.4).
 - Nunca use `btn-outline-secondary` em ações — use `btn-outline-primary`
 - Nunca use `font-weight: bold` em labels de formulário
@@ -971,6 +972,80 @@ Pergunta: **"Esta superfície pode ficar com fundo saturado/colorido em algum te
 - **Sim** (fundo é `--umb-sidebar-bg` ou análogo que muda para cor de marca) → `--umb-border-on-brand`
 
 Nunca assuma "é da sidebar, então usa `border-on-brand`" — o que importa é a cor da superfície, não o componente. O header do shell vive no topo do layout ao lado da sidebar, mas tem fundo próprio (`--umb-shell-header-bg: #ffffff` em Bravia/Esmeralda), então usa `--umb-border`.
+
+### 23.4 Espessura de borda — 1px para divisores, 2px para elementos interativos
+
+Os tokens `--umb-border` e `--umb-border-on-brand` definem a **cor** da borda. A **espessura** segue uma regra de intenção:
+
+| Espessura | Quando usar | Exemplos canônicos |
+|---|---|---|
+| `1px` | Divisores passivos, contornos de surface que **não capturam input do usuário** | Cards de conteúdo, tabelas, accordions fechados, page-tabs, divisores horizontais |
+| `2px` | Elementos interativos que **capturam escolha ou input do usuário** | `.btn` (todos), `.form-control`, `.form-select`, `.umb-path-card`, `.umb-choice-card`, `.umb-fn-card`, `.umb-stat-card` |
+
+Valores fora dessa escala são proibidos — incluindo `1.5px`, `2.5px`, `3px`. A escala binária 1/2 existe porque:
+
+- **Affordance:** 2px sinaliza "isso responde ao seu clique/input"; 1px sinaliza "isso é conteúdo". O cérebro humano percebe a diferença sem pensar.
+- **Hover previsível:** os elementos interativos já mudam `border-color` no hover para `var(--bs-primary)`. Com 2px, o salto de contraste é perceptível sem flash/shift de layout. Com 1.5px a diferença fica ambígua.
+- **Pixel snapping:** `1.5px` renderiza diferente em telas @1x vs @2x (borrado em @1x). `2px` é sempre crisp.
+
+#### Card selecionável — pattern canônico
+
+Qualquer card que represente uma escolha do usuário deve seguir este pattern:
+
+```css
+.meu-card-clicavel {
+  border: 2px solid var(--umb-border);
+  border-radius: X;                      /* X conforme §3 */
+  background: var(--umb-card-bg);
+  cursor: pointer;
+  transition: border-color .15s, background-color .15s;
+}
+.meu-card-clicavel:hover {
+  border-color: var(--bs-primary);
+  background: color-mix(in srgb, var(--bs-primary) 3%, var(--umb-card-bg));
+}
+.meu-card-clicavel.selected {  /* opcional, se o card tem estado persistente */
+  border-color: var(--bs-primary);
+  background: color-mix(in srgb, var(--bs-primary) 5%, var(--umb-card-bg));
+}
+```
+
+Exemplos no DS que seguem este pattern: `.umb-path-card`, `.umb-choice-card`, `.umb-fn-card`, `.umb-stat-card`. Ao criar um novo "card selecionável", reutilize uma dessas classes se a semântica bater — **não crie uma variante nova** só por cor de hover ou padding diferente (§20 não duplicar componentes).
+
+#### Cards de decisão (`.umb-path-card`) — regras de construção
+
+Regras específicas do `.umb-path-card` que vão além do CSS — afetam **como as telas devem ser construídas**. Aplicam-se ao planejar conteúdo e layout de qualquer fluxo de escolha (onboarding, primeiros passos, próximo passo).
+
+**Cor de ícone — regra dos 5**
+
+- **Cor default é `neutral`** (`var(--umb-text-mid)`). A maioria dos cards deve ficar neutral; é a cor sóbria que mantém o olho do usuário nas palavras, não nos ícones.
+- **Até 5 opções na tela:** modificadores (`.primary`, `.success`, `.warning`, `.danger`) podem ser aplicados individualmente quando há destaque semântico claro — primary para ação recomendada, success para aprovação, warning para aviso, etc.
+- **6 ou mais opções na tela:** todos os ícones ficam neutros. Muitas cores transformam a lista em ruído visual — o cérebro não consegue priorizar quando tudo brilha. Se precisa muito de hierarquia, use apenas o modificador `.recommended` no card pai pra destacar 1 opção via borda colorida.
+- Se a lista extrapola 5 opções com frequência, provavelmente o componente certo não é `.umb-path-card`. Considere um `.list-group` com Radio ou um Select — cards de decisão foram pensados para escolhas estratégicas curtas.
+
+**Paridade de comprimento entre cards**
+
+Todos os cards de uma mesma lista devem ter **a mesma quantidade de linhas** em título e subtítulo. Isso não é opcional — é o que mantém o peso visual equilibrado entre opções.
+
+| Viewport | Título | Subtítulo |
+|---|---|---|
+| Desktop (≥768px) | **1 linha** (obrigatório) | **1 linha** (obrigatório) |
+| Mobile (<768px) | mesma quantidade em todos os cards da lista | mesma quantidade em todos os cards da lista |
+
+**Como escrever o copy:**
+
+- No desktop, o container tem `max-width: 640px` (§21). Título e subtítulo precisam caber em 1 linha cada nesse espaço. Se não couber, o texto está longo demais — reescreva.
+- Ao migrar pra mobile, se um card quebra pra 2 linhas, todos os outros da mesma lista devem estar em 2 linhas também. O contrário também vale: se um card tem só 1 linha no mobile, os outros não devem ter 2.
+
+**Por quê (a razão, não só a regra):**
+
+Quando um card tem texto mais longo que os outros, o cérebro **interpreta o maior como mais importante** — é uma heurística automática e inconsciente. Isso cria uma falsa hierarquia de importância entre opções que, do ponto de vista da decisão real, são paralelas. O usuário pode escolher a opção mais "pesada" visualmente simplesmente porque o texto parecia mais denso, não porque é a melhor escolha.
+
+A paridade visual garante que a decisão aconteça no **conteúdo** (o que cada opção faz), não no **peso visual** (qual parece maior). Isso vale principalmente quando o `.umb-path-card.recommended` já existe na lista — ele é o único destaque legítimo, e não pode competir com um card vizinho que ficou grande só porque o copy saiu longo.
+
+**Enforcement:** não há CSS que force essa regra (ellipsis truncaria conteúdo real — pior que quebra visual). É regra editorial: quem escreve o copy é responsável por manter paridade. Ao revisar uma tela nova, conte linhas antes de aprovar.
+
+**Exceção ao stat-card:** o `.umb-stat-card` NÃO segue a regra dos 5 — cores nos ícones (`.total`, `.valid`, `.warn`, `.error`) são parte do seu contrato semântico (dashboard/filtros com código de cor fixo). A regra dos 5 e de paridade valem apenas para `.umb-path-card`.
 
 ## 24. Font weight — máximo 600
 

@@ -980,69 +980,33 @@
       .umb-dropzone-icon { width: 56px; height: 56px; font-size: 26px; }
     }
 
-    /* === PATH CARD + ORIGIN CARD (cards de decisão) ====================
-       Dois cards irmãos para telas de escolha de caminho (onboarding,
-       primeiros passos, seleção de tipo).
+    /* === PATH CARD (card de decisão) ===================================
+       Card clicável para telas de escolha/decisão (onboarding, primeiros
+       passos, seleção de tipo, próximo passo num fluxo). Ícone sem caixa
+       (só a cor do ícone), título + subtítulo, caret-right à direita.
+       Suporta badge opcional ("Recomendado", "Mais rápido") ao lado do
+       título via .umb-path-badge.
 
-       .umb-origin-card — ícone com CAIXA COLORIDA. Usado na PRIMEIRA tela
-         de um fluxo (ex: "Qual a origem dos contatos?"). Visual mais
-         "landing", convidativo. O caret à direita deixa explícito que
-         é uma escolha de próximo passo.
-
-       .umb-path-card  — ícone SEM caixa (só cor). Usado DENTRO de fluxos,
-         como decisão estratégica ("O que você quer fazer agora?"). Visual
-         mais sóbrio, informativo. Suporta badge opcional ("Recomendado",
-         "Mais rápido") ao lado do título.
-
-       A diferença é deliberada: o primeiro convida, o segundo informa. */
-
-    /* Base comum */
-    .umb-origin-card,
+       Cor do ícone — default NEUTRAL (var(--umb-text-mid)). Classes
+       modificadoras (.primary, .success, etc.) são OPCIONAIS e devem ser
+       usadas apenas quando há destaque semântico claro, seguindo a regra
+       dos 5 documentada em §24.8.1 do rules.md. */
     .umb-path-card {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 16px;
       padding: 20px;
-      border: 1px solid var(--umb-border);
+      border: 2px solid var(--umb-border);
       border-radius: 14px;
       cursor: pointer;
       background: var(--umb-card-bg);
       transition: border-color .15s, background-color .15s;
     }
-    .umb-origin-card + .umb-origin-card,
     .umb-path-card + .umb-path-card { margin-top: 10px; }
-    .umb-origin-card:hover,
     .umb-path-card:hover {
       border-color: var(--bs-primary);
       background: color-mix(in srgb, var(--bs-primary) 3%, var(--umb-card-bg));
     }
-
-    /* Origin Card — ícone em caixa colorida */
-    .umb-origin-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: color-mix(in srgb, var(--bs-primary) 15%, transparent);
-      color: var(--bs-primary);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-    .umb-origin-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--umb-text-primary);
-      margin: 0 0 4px;
-    }
-    .umb-origin-sub {
-      font-size: 13px;
-      color: var(--umb-text-mid);
-      margin: 0;
-    }
-
-    /* Path Card — ícone sem caixa, maior */
     .umb-path-card.recommended {
       border-color: var(--bs-primary);
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--bs-primary) 10%, transparent);
@@ -1052,11 +1016,15 @@
       align-items: center;
       justify-content: center;
       font-size: 32px;
+      color: var(--umb-text-mid);  /* default neutral */
       flex-shrink: 0;
-      padding-top: 4px;
     }
+    /* Modificadores de cor — usar apenas em listas com até 5 opções (ver rules.md) */
     .umb-path-icon.primary { color: var(--bs-primary); }
     .umb-path-icon.success { color: var(--bs-success); }
+    .umb-path-icon.danger  { color: var(--bs-danger); }
+    .umb-path-icon.warning { color: var(--bs-warning); }
+    /* Alias legado: .neutral agora é redundante (default já é neutral) — mantido pra retrocompat */
     .umb-path-icon.neutral { color: var(--umb-text-mid); }
     .umb-path-title {
       font-size: 15px;
@@ -1085,7 +1053,6 @@
     }
 
     @media (max-width: 767.98px) {
-      .umb-origin-card,
       .umb-path-card { padding: 16px; }
       .umb-path-icon { font-size: 28px; }
     }
@@ -1105,7 +1072,7 @@
     }
     .umb-stat-card {
       background: var(--umb-card-bg);
-      border: 1px solid var(--umb-border);
+      border: 2px solid var(--umb-border);
       border-radius: 12px;
       padding: 16px;
       display: flex;
@@ -1119,22 +1086,24 @@
       border-color: var(--bs-primary);
       background: color-mix(in srgb, var(--bs-primary) 6%, var(--umb-card-bg));
     }
+    /* Ícone sem caixa, mesmo estilo visual do .umb-path-icon — só a cor do ícone.
+       Default neutral; modificadores (.total, .valid, .warn, .error) aplicam cor semântica.
+       Diferente do path-card, no stat-card NÃO há regra de "máximo 5 coloridos" —
+       stat-cards são sempre dashboard/filtros com significado semântico por cor. */
     .umb-stat-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 32px;
+      color: var(--umb-text-mid);  /* default neutral */
       flex-shrink: 0;
     }
-    .umb-stat-icon.total { background: color-mix(in srgb, var(--bs-primary) 12%, transparent); color: var(--bs-primary); }
-    .umb-stat-icon.valid { background: color-mix(in srgb, var(--bs-success) 15%, transparent); color: var(--bs-success); }
-    .umb-stat-icon.warn  { background: color-mix(in srgb, #f5a623 18%, transparent); color: #b87800; }
+    .umb-stat-icon.total { color: var(--bs-primary); }
+    .umb-stat-icon.valid { color: var(--bs-success); }
+    .umb-stat-icon.warn  { color: #b87800; }
     [data-bs-theme="dark"] .umb-stat-icon.warn,
     [data-bs-theme="dark-emerald"] .umb-stat-icon.warn { color: #ffc55c; }
-    .umb-stat-icon.error { background: color-mix(in srgb, var(--bs-danger) 15%, transparent); color: var(--bs-danger); }
+    .umb-stat-icon.error { color: var(--bs-danger); }
     .umb-stat-num {
       font-size: 20px;
       font-weight: 600;
@@ -1887,7 +1856,7 @@
     .umb-choice-grid { display: flex; gap: 16px; }
     .umb-choice-card {
       flex: 1; background: var(--umb-card-bg);
-      border: 1px solid var(--umb-border); border-radius: 12px;
+      border: 2px solid var(--umb-border); border-radius: 12px;
       padding: 24px 20px;
       display: flex; flex-direction: column; align-items: center;
       text-align: center; cursor: pointer; transition: all .2s;
@@ -2081,7 +2050,7 @@
     .umb-wstep.done::after { background: var(--bs-primary); }
     .umb-wstep-num {
       width: 28px; height: 28px; border-radius: 50%;
-      border: 1.5px solid var(--umb-border);
+      border: 1px solid var(--umb-border);
       background: var(--umb-card-bg);
       display: flex; align-items: center; justify-content: center;
       font-size: 11px; font-weight: 600; color: var(--umb-text-dim);
@@ -2105,7 +2074,7 @@
     /* Agent function cards */
     .umb-fn-card {
       flex: 1; background: var(--umb-card-bg);
-      border: 1.5px solid var(--umb-border); border-radius: 10px;
+      border: 2px solid var(--umb-border); border-radius: 10px;
       padding: 12px 14px; cursor: pointer; transition: all .15s;
     }
     .umb-fn-card:hover { border-color: var(--bs-primary); }
@@ -3989,32 +3958,10 @@
     <!-- ============================================================ DECISION CARDS -->
     <section id="decision-cards">
       <p class="sec-title">Cards de Decisão</p>
-      <p class="sec-subtitle">UmbOriginCard + UmbPathCard — dois cards irmãos para telas de escolha de caminho.</p>
+      <p class="sec-subtitle">UmbPathCard — card clicável para telas de escolha, decisão ou próximo passo. Ícone neutro por padrão; cores por opção apenas em listas curtas (até 5 itens).</p>
 
       <div class="comp-group">
-        <p class="comp-label">Origin Card — primeira tela de fluxo (ícone em caixa colorida)</p>
-        <div style="max-width:640px">
-          <div class="umb-origin-card">
-            <div class="umb-origin-icon"><i class="ph ph-users"></i></div>
-            <div style="flex:1">
-              <p class="umb-origin-title">Enviar para meus contatos</p>
-              <p class="umb-origin-sub">Envie para toda a lista ou filtre e selecione contatos específicos.</p>
-            </div>
-            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px;margin-top:12px"></i>
-          </div>
-          <div class="umb-origin-card">
-            <div class="umb-origin-icon"><i class="ph ph-file-arrow-up"></i></div>
-            <div style="flex:1">
-              <p class="umb-origin-title">Enviar para contatos de um arquivo</p>
-              <p class="umb-origin-sub">Faça o upload de um .csv ou .vcf e revise os contatos antes de enviar.</p>
-            </div>
-            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px;margin-top:12px"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="comp-group">
-        <p class="comp-label">Path Card — decisão dentro do fluxo (ícone sem caixa)</p>
+        <p class="comp-label">Lista curta (até 5 opções) — cores destacam semanticamente</p>
         <div style="max-width:640px">
           <div class="umb-path-card recommended">
             <div class="umb-path-icon primary"><i class="ph ph-pencil-simple"></i></div>
@@ -4023,17 +3970,17 @@
                 Revisar e corrigir os 12 com erro
                 <span class="umb-path-badge">Recomendado</span>
               </p>
-              <p class="umb-path-sub">Edite telefones, nomes e outros campos diretamente para aproveitar ao máximo sua lista.</p>
+              <p class="umb-path-sub">Edite telefones, nomes e demais campos antes do envio.</p>
             </div>
-            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px;margin-top:14px"></i>
+            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px"></i>
           </div>
           <div class="umb-path-card">
-            <div class="umb-path-icon neutral"><i class="ph ph-fast-forward"></i></div>
+            <div class="umb-path-icon"><i class="ph ph-fast-forward"></i></div>
             <div style="flex:1">
               <p class="umb-path-title">Ignorar os com erro e continuar</p>
               <p class="umb-path-sub">Os contatos com problema serão removidos do envio.</p>
             </div>
-            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px;margin-top:14px"></i>
+            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px"></i>
           </div>
           <div class="umb-path-card">
             <div class="umb-path-icon success"><i class="ph ph-check-circle"></i></div>
@@ -4041,7 +3988,61 @@
               <p class="umb-path-title">Aprovar tudo como está</p>
               <p class="umb-path-sub">Aceita todos os contatos do arquivo, inclusive os com avisos.</p>
             </div>
-            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px;margin-top:14px"></i>
+            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-group">
+        <p class="comp-label">Lista longa (6+ opções) — todos os ícones ficam neutros para não virar ruído visual</p>
+        <div style="max-width:640px">
+          <div class="umb-path-card">
+            <div class="umb-path-icon"><i class="ph ph-users"></i></div>
+            <div style="flex:1">
+              <p class="umb-path-title">Enviar para meus contatos</p>
+              <p class="umb-path-sub">Toda a lista de contatos cadastrados.</p>
+            </div>
+            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px"></i>
+          </div>
+          <div class="umb-path-card">
+            <div class="umb-path-icon"><i class="ph ph-file-arrow-up"></i></div>
+            <div style="flex:1">
+              <p class="umb-path-title">Enviar para contatos de um arquivo</p>
+              <p class="umb-path-sub">Upload de .csv ou .vcf com revisão antes do envio.</p>
+            </div>
+            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px"></i>
+          </div>
+          <div class="umb-path-card">
+            <div class="umb-path-icon"><i class="ph ph-tag"></i></div>
+            <div style="flex:1">
+              <p class="umb-path-title">Enviar por etiqueta</p>
+              <p class="umb-path-sub">Segmento com base em tags aplicadas no contato.</p>
+            </div>
+            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px"></i>
+          </div>
+          <div class="umb-path-card">
+            <div class="umb-path-icon"><i class="ph ph-funnel"></i></div>
+            <div style="flex:1">
+              <p class="umb-path-title">Enviar por filtro salvo</p>
+              <p class="umb-path-sub">Reutiliza uma consulta salva previamente.</p>
+            </div>
+            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px"></i>
+          </div>
+          <div class="umb-path-card">
+            <div class="umb-path-icon"><i class="ph ph-calendar-blank"></i></div>
+            <div style="flex:1">
+              <p class="umb-path-title">Enviar para conversas recentes</p>
+              <p class="umb-path-sub">Contatos com quem houve interação nos últimos 7 dias.</p>
+            </div>
+            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px"></i>
+          </div>
+          <div class="umb-path-card">
+            <div class="umb-path-icon"><i class="ph ph-chats-circle"></i></div>
+            <div style="flex:1">
+              <p class="umb-path-title">Enviar para público personalizado</p>
+              <p class="umb-path-sub">Combine múltiplos critérios.</p>
+            </div>
+            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px"></i>
           </div>
         </div>
       </div>
@@ -4049,12 +4050,14 @@
     <div class="comp-practices">
       <p class="comp-practices-title">Best Practices</p>
       <ul>
-        <li><strong>Origin Card para entrada, Path Card para decisão.</strong> Origin tem ícone em caixa colorida — visual convidativo, usado na primeira tela do fluxo. Path tem ícone só com cor — visual sóbrio, usado dentro do fluxo para decisões estratégicas. Não intercambie.</li>
-        <li><strong>Máximo 3 opções por tela.</strong> Mais que isso vira uma lista e perde o peso de "decisão estratégica". Use Radio ou Select quando houver 4+ opções.</li>
+        <li><strong>Cor padrão do ícone: neutral.</strong> O default de <code>.umb-path-icon</code> é <code>var(--umb-text-mid)</code>. Não adicione classe modificadora (<code>.primary</code>, <code>.success</code>, <code>.danger</code>, <code>.warning</code>) a menos que haja destaque semântico claro.</li>
+        <li><strong>Regra dos 5 — cores nos ícones só em listas curtas.</strong> Em listas com <strong>até 5 opções</strong>, modificadores de cor podem destacar a semântica de cada card (<code>.primary</code> para ação recomendada, <code>.success</code> para aprovação, etc). Em listas com <strong>6+ opções</strong>, todos os ícones devem ficar neutros — muitas cores viram ruído visual e destroem a hierarquia.</li>
+        <li><strong>Ideal 3 opções, máximo 5 antes de virar lista.</strong> Cards de decisão têm peso visual — cada um ocupa espaço considerável na tela. Com 6+ opções, considere trocar por Radio ou Select (componente adequado pra listas longas de escolha única).</li>
         <li><strong>Badge "Recomendado" em no máximo 1 card.</strong> Se tudo é recomendado, nada é. Use <code>.umb-path-card.recommended</code> no card mais provável/seguro.</li>
-        <li><strong>Caret right no fim.</strong> Sempre presente — comunica "clique pra seguir". Pode ser omitido em cards que disparam ações inline (sem navegação), mas nesses casos geralmente Path Card não é o componente certo.</li>
-        <li><strong>Cor do Path icon comunica.</strong> <code>.primary</code> para ação padrão/ativa, <code>.success</code> para confirmação/aprovação, <code>.neutral</code> para pular/ignorar. Não use <code>.danger</code> — remoções destrutivas merecem confirmação modal, não card.</li>
+        <li><strong>Caret-right no fim.</strong> Sempre presente — comunica "clique pra seguir". Pode ser omitido em cards que disparam ações inline (sem navegação), mas nesses casos geralmente Path Card não é o componente certo.</li>
+        <li><strong>Cor do ícone comunica semântica.</strong> Quando usar modificador: <code>.primary</code> para ação padrão/ativa, <code>.success</code> para confirmação/aprovação, <code>.warning</code> para aviso. Evite <code>.danger</code> — remoções destrutivas merecem confirmação modal, não card.</li>
         <li><strong>Subtítulo é obrigatório.</strong> O título sozinho não carrega contexto suficiente. Sempre explique em 1 linha o que acontece ao clicar.</li>
+        <li><strong>Paridade de comprimento entre cards.</strong> No <strong>desktop</strong>, título e subtítulo de cada card devem ocupar <strong>no máximo 1 linha</strong> — se não couber em <code>max-width: 640px</code>, reescreva mais curto. No <strong>mobile</strong>, todos os cards da mesma lista devem ter a mesma quantidade de linhas em título e subtítulo (se um quebra pra 2 linhas, todos quebram). Texto mais longo cria falsa percepção de importância e distorce a decisão — a paridade mantém o peso visual equilibrado entre opções paralelas.</li>
       </ul>
     </div>
 
@@ -4063,17 +4066,7 @@
         <span>HTML</span>
         <button class="comp-code-copy" onclick="copyCode(this)">Copiar</button>
       </div>
-      <pre class="comp-code-pre"><code class="language-html">&lt;!-- Origin Card — primeira tela de fluxo --&gt;
-&lt;div class="umb-origin-card"&gt;
-  &lt;div class="umb-origin-icon"&gt;&lt;i class="ph ph-users"&gt;&lt;/i&gt;&lt;/div&gt;
-  &lt;div style="flex:1"&gt;
-    &lt;p class="umb-origin-title"&gt;Enviar para meus contatos&lt;/p&gt;
-    &lt;p class="umb-origin-sub"&gt;Envie para toda a lista.&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;i class="ph ph-caret-right"&gt;&lt;/i&gt;
-&lt;/div&gt;
-
-&lt;!-- Path Card — decisão dentro do fluxo --&gt;
+      <pre class="comp-code-pre"><code class="language-html">&lt;!-- Lista curta (até 5 opções) — cores destacam semanticamente --&gt;
 &lt;div class="umb-path-card recommended"&gt;
   &lt;div class="umb-path-icon primary"&gt;&lt;i class="ph ph-pencil-simple"&gt;&lt;/i&gt;&lt;/div&gt;
   &lt;div style="flex:1"&gt;
@@ -4082,6 +4075,16 @@
       &lt;span class="umb-path-badge"&gt;Recomendado&lt;/span&gt;
     &lt;/p&gt;
     &lt;p class="umb-path-sub"&gt;Edite os campos diretamente.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;i class="ph ph-caret-right"&gt;&lt;/i&gt;
+&lt;/div&gt;
+
+&lt;!-- Ícone neutro (default) — sem classe modificadora --&gt;
+&lt;div class="umb-path-card"&gt;
+  &lt;div class="umb-path-icon"&gt;&lt;i class="ph ph-fast-forward"&gt;&lt;/i&gt;&lt;/div&gt;
+  &lt;div style="flex:1"&gt;
+    &lt;p class="umb-path-title"&gt;Ignorar e continuar&lt;/p&gt;
+    &lt;p class="umb-path-sub"&gt;Os itens com erro serão removidos.&lt;/p&gt;
   &lt;/div&gt;
   &lt;i class="ph ph-caret-right"&gt;&lt;/i&gt;
 &lt;/div&gt;</code></pre>
