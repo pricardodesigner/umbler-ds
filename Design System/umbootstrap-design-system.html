@@ -30,13 +30,13 @@
       --bs-body-font-family: 'Plus Jakarta Sans', sans-serif;
       --bs-border-color:     #3D4047; --bs-card-bg:       #202326;
 
-      --umb-sidebar-bg:      #141619; --umb-sidebar-border: #3D4047;
+      --umb-sidebar-bg:      #141619; --umb-border-on-brand: #3D4047;
       --umb-card-bg:         #202326;
       --umb-surface-raised:  #2a2d35;
       --umb-shell-header-bg: #141619;
       --umb-bg-primary:      #141619;  /* bgPrimary: fundo principal das telas (dark) */
       --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
-      --umb-hover-bg:        rgba(255,255,255,.05);
+      --umb-hover-bg:        rgba(255,255,255,.03);  /* hover unificado: itens, linhas de tabela, dropdown-items, popovers, selects */
       --umb-inset-bg:        rgba(255,255,255,.06);
       --umb-header-bg:       rgba(248,249,250,.03);
       --umb-header-border:   rgba(248,249,250,.06);
@@ -58,9 +58,9 @@
       --umb-nav-hover-bg:    rgba(72,75,83,.3);
       --umb-nav-active-color:#ffffff;
       --umb-nav-active-bg:   #484B53;
-      /* Popup menu items (dropdowns, theme switcher, etc) */
-      --umb-menu-item-hover-bg:  #32343A;
-      --umb-menu-item-active-bg: #484B53;
+      /* Popup menu items (dropdowns, theme switcher, etc) — legacy aliases, use --umb-hover-bg / --umb-bg-active */
+      --umb-menu-item-hover-bg:  var(--umb-hover-bg);
+      --umb-menu-item-active-bg: var(--umb-bg-active);
       --umb-section-h:       #4a4b60;
       --umb-brand-color:     #D3D6DD;
       --umb-brand-sub:       #83858C;
@@ -75,7 +75,7 @@
       --umb-media-bg:        #2a2d35;
       --umb-copy-btn-bg:     #2e3048;
       --umb-copy-btn-hover:  #3a3d50;
-      --umb-table-hover:     rgba(255,255,255,.03);
+      --umb-table-hover:     var(--umb-hover-bg);  /* legacy alias — use --umb-hover-bg */
       --umb-bg-active:       #484B53;  /* bgActive: item selecionado (menus, tabela, cards, conversa) */
       --umb-table-row-active: var(--umb-bg-active);  /* legacy alias — use --umb-bg-active */
       --umb-step-track:      #2e3048;
@@ -131,13 +131,13 @@
       --bs-body-font-family: 'Poppins', sans-serif;
       --bs-border-color:     #d9d9d9; --bs-card-bg:       #ffffff;
 
-      --umb-sidebar-bg:      #557CF2; --umb-sidebar-border: rgba(255,255,255,.18);
+      --umb-sidebar-bg:      #557CF2; --umb-border-on-brand: rgba(255,255,255,.18);
       --umb-shell-header-bg: #ffffff;  /* Header is WHITE, separate from blue sidebar */
       --umb-bg-primary:      #EEF2FE;  /* bgPrimary: fundo principal das telas (light) */
       --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
       --umb-card-bg:         #ffffff;
       --umb-surface-raised:  #ffffff;
-      --umb-hover-bg:        rgba(0,0,0,.04);
+      --umb-hover-bg:        rgba(0,0,0,.025);  /* hover unificado: itens, linhas de tabela, dropdown-items, popovers, selects */
       --umb-inset-bg:        rgba(0,0,0,.07);
       --umb-header-bg:       rgba(0,0,0,.02);
       --umb-header-border:   rgba(0,0,0,.06);
@@ -159,9 +159,9 @@
       --umb-nav-hover-bg:    rgba(119,153,253,.3);
       --umb-nav-active-color:#ffffff;
       --umb-nav-active-bg:   #7799FD;
-      /* Popup menu items (dropdowns, theme switcher, etc) */
-      --umb-menu-item-hover-bg:  #FAFAFA;
-      --umb-menu-item-active-bg: #E2E9FE;
+      /* Popup menu items (dropdowns, theme switcher, etc) — legacy aliases, use --umb-hover-bg / --umb-bg-active */
+      --umb-menu-item-hover-bg:  var(--umb-hover-bg);
+      --umb-menu-item-active-bg: var(--umb-bg-active);
       --umb-section-h:       rgba(255,255,255,.52);
       --umb-brand-color:     #ffffff;
       --umb-brand-sub:       rgba(255,255,255,.72);
@@ -176,7 +176,7 @@
       --umb-media-bg:        #f8f9fa;
       --umb-copy-btn-bg:     #f0f4ff;
       --umb-copy-btn-hover:  #dce6ff;
-      --umb-table-hover:     rgba(0,0,0,.025);
+      --umb-table-hover:     var(--umb-hover-bg);  /* legacy alias — use --umb-hover-bg */
       --umb-bg-active:       #E2E9FE;  /* bgActive: item selecionado (menus, tabela, cards, conversa) */
       --umb-table-row-active: var(--umb-bg-active);  /* legacy alias — use --umb-bg-active */
       --umb-step-track:      #d0d9f8;
@@ -211,13 +211,13 @@
       --bs-body-font-family: 'Plus Jakarta Sans', sans-serif;
       --bs-border-color:     #d9d9d9; --bs-card-bg:       #ffffff;
 
-      --umb-sidebar-bg:      #005C55; --umb-sidebar-border: rgba(255,255,255,.18);
+      --umb-sidebar-bg:      #005C55; --umb-border-on-brand: rgba(255,255,255,.18);
       --umb-shell-header-bg: #ffffff;
       --umb-bg-primary:      #F6F7F7;  /* bgPrimary: fundo principal das telas (emerald) */
       --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
       --umb-card-bg:         #ffffff;
       --umb-surface-raised:  #ffffff;
-      --umb-hover-bg:        rgba(0,0,0,.04);
+      --umb-hover-bg:        rgba(0,0,0,.025);  /* hover unificado: itens, linhas de tabela, dropdown-items, popovers, selects */
       --umb-inset-bg:        rgba(0,0,0,.07);
       --umb-header-bg:       rgba(0,0,0,.02);
       --umb-header-border:   rgba(0,0,0,.06);
@@ -239,9 +239,9 @@
       --umb-nav-hover-bg:    rgba(41,149,141,.3);
       --umb-nav-active-color:#ffffff;
       --umb-nav-active-bg:   #29958D;
-      /* Popup menu items (dropdowns, theme switcher, etc) */
-      --umb-menu-item-hover-bg:  #EFF9F8;
-      --umb-menu-item-active-bg: #D3EFEC;
+      /* Popup menu items (dropdowns, theme switcher, etc) — legacy aliases, use --umb-hover-bg / --umb-bg-active */
+      --umb-menu-item-hover-bg:  var(--umb-hover-bg);
+      --umb-menu-item-active-bg: var(--umb-bg-active);
       --umb-section-h:       rgba(255,255,255,.52);
       --umb-brand-color:     #ffffff;
       --umb-brand-sub:       rgba(255,255,255,.72);
@@ -256,7 +256,7 @@
       --umb-media-bg:        #f4faf9;
       --umb-copy-btn-bg:     #edf7f6;
       --umb-copy-btn-hover:  #b2ddd9;
-      --umb-table-hover:     rgba(0,0,0,.025);
+      --umb-table-hover:     var(--umb-hover-bg);  /* legacy alias — use --umb-hover-bg */
       --umb-bg-active:       #D3EFEC;  /* bgActive: item selecionado (menus, tabela, cards, conversa) */
       --umb-table-row-active: var(--umb-bg-active);  /* legacy alias — use --umb-bg-active */
       --umb-step-track:      #b2ddd9;
@@ -287,8 +287,8 @@
         --bs-warning:#A6882E; --bs-warning-rgb:166,136,46; --bs-danger:#9C2F27; --bs-danger-rgb:156,47,39;
         --bs-body-bg:#141619; --bs-body-color:#f8f9fa; --bs-body-font-family:'Poppins',sans-serif; --bs-border-color:#2e3048; --bs-card-bg:#212529;
         --umb-bg-primary:#141619; --umb-content-bg:var(--umb-bg-primary);
-        --umb-sidebar-bg:#222429; --umb-sidebar-border:#2e3048; --umb-card-bg:#212529;
-        --umb-surface-raised:#2a2d35; --umb-hover-bg:rgba(255,255,255,.05); --umb-inset-bg:rgba(255,255,255,.06);
+        --umb-sidebar-bg:#222429; --umb-border-on-brand:#2e3048; --umb-card-bg:#212529;
+        --umb-surface-raised:#2a2d35; --umb-hover-bg:rgba(255,255,255,.03); --umb-inset-bg:rgba(255,255,255,.06);
         --umb-header-bg:rgba(248,249,250,.03); --umb-header-border:rgba(248,249,250,.06);
         --umb-preview-bg:rgba(255,255,255,.02); --umb-text-primary:#f0f0f8; --umb-text-mid:#9091a8; --umb-text-dim:#4a4b60;
         --umb-border:#3D4047; --umb-border-primary:#3D4047; --umb-border-strong:#424649; --umb-input-bg:#212529; --umb-input-border:#3D4047;
@@ -296,13 +296,13 @@
         --umb-code-border:#1f2030; --umb-code-color:#9091a8; --umb-nav-color:#9091a8;
         --umb-nav-hover-color:#f0f0f8; --umb-nav-hover-bg:rgba(72,75,83,.3);
         --umb-nav-active-color:#ffffff; --umb-nav-active-bg:#484B53;
-        --umb-menu-item-hover-bg:#32343A; --umb-menu-item-active-bg:#484B53;
+        --umb-menu-item-hover-bg:var(--umb-hover-bg); --umb-menu-item-active-bg:var(--umb-bg-active);
         --umb-section-h:#4a4b60; --umb-brand-color:#f0f0f8; --umb-brand-sub:#9091a8;
         --umb-avatar-bg:#111930; --umb-profile-hover:rgba(255,255,255,.05);
         --umb-placeholder-bg:#2e3048; --umb-placeholder-sh:#383b4d; --umb-kbd-bg:#2e3048;
         --umb-offcanvas-bg:#222429; --umb-modal-bg:#222429; --umb-dropdown-bg:#2a2d35;
         --umb-media-bg:#2a2d35; --umb-copy-btn-bg:#2e3048; --umb-copy-btn-hover:#3a3d50;
-        --umb-table-hover:rgba(255,255,255,.03); --umb-bg-active:#484B53; --umb-table-row-active:var(--umb-bg-active); --umb-step-track:#2e3048; --umb-step-bg:#212529;
+        --umb-table-hover:var(--umb-hover-bg); --umb-bg-active:#484B53; --umb-table-row-active:var(--umb-bg-active); --umb-step-track:#2e3048; --umb-step-bg:#212529;
         --umb-tooltip-bg:#080808; --umb-surface-1:#2a2d35; --umb-btn-secondary:#6c757d;
       }
 
@@ -322,8 +322,8 @@
         --bs-warning:#FAAD14; --bs-warning-rgb:250,173,20; --bs-danger:#DA606E; --bs-danger-rgb:218,96,110;
         --bs-body-bg:#EEF2FE; --bs-body-color:#212529; --bs-body-font-family:'Poppins',sans-serif; --bs-border-color:#d9d9d9; --bs-card-bg:#ffffff;
         --umb-bg-primary:#EEF2FE; --umb-content-bg:var(--umb-bg-primary);
-        --umb-sidebar-bg:#557CF2; --umb-sidebar-border:rgba(255,255,255,.18); --umb-card-bg:#ffffff;
-        --umb-surface-raised:#ffffff; --umb-hover-bg:rgba(0,0,0,.04); --umb-inset-bg:rgba(0,0,0,.07);
+        --umb-sidebar-bg:#557CF2; --umb-border-on-brand:rgba(255,255,255,.18); --umb-card-bg:#ffffff;
+        --umb-surface-raised:#ffffff; --umb-hover-bg:rgba(0,0,0,.025); --umb-inset-bg:rgba(0,0,0,.07);
         --umb-header-bg:rgba(0,0,0,.02); --umb-header-border:rgba(0,0,0,.06); --umb-preview-bg:#f8f9fa;
         --umb-text-primary:#1a1d2b; --umb-text-mid:#6c757d; --umb-text-dim:#adb5bd;
         --umb-border:#D9D9D9; --umb-border-primary:#DFDFDF; --umb-border-strong:#d9d9d9; --umb-input-bg:#ffffff; --umb-input-border:#DFDFDF;
@@ -331,13 +331,13 @@
         --umb-code-border:#d0d9f8; --umb-code-color:#4a5568; --umb-nav-color:rgba(255,255,255,.78);
         --umb-nav-hover-color:#ffffff; --umb-nav-hover-bg:rgba(119,153,253,.3);
         --umb-nav-active-color:#ffffff; --umb-nav-active-bg:#7799FD;
-        --umb-menu-item-hover-bg:#FAFAFA; --umb-menu-item-active-bg:#E2E9FE;
+        --umb-menu-item-hover-bg:var(--umb-hover-bg); --umb-menu-item-active-bg:var(--umb-bg-active);
         --umb-section-h:rgba(255,255,255,.52); --umb-brand-color:#ffffff; --umb-brand-sub:rgba(255,255,255,.72);
         --umb-avatar-bg:#dce6ff; --umb-profile-hover:rgba(0,0,0,.04);
         --umb-placeholder-bg:#e9ecef; --umb-placeholder-sh:#f8f9fa; --umb-kbd-bg:#e9ecef;
         --umb-offcanvas-bg:#ffffff; --umb-modal-bg:#ffffff; --umb-dropdown-bg:#ffffff;
         --umb-media-bg:#f8f9fa; --umb-copy-btn-bg:#f0f4ff; --umb-copy-btn-hover:#dce6ff;
-        --umb-table-hover:rgba(0,0,0,.025); --umb-bg-active:#E2E9FE; --umb-table-row-active:var(--umb-bg-active); --umb-step-track:#d0d9f8; --umb-step-bg:#ffffff;
+        --umb-table-hover:var(--umb-hover-bg); --umb-bg-active:#E2E9FE; --umb-table-row-active:var(--umb-bg-active); --umb-step-track:#d0d9f8; --umb-step-bg:#ffffff;
         --umb-tooltip-bg:#080808; --umb-surface-1:#ffffff; --umb-btn-secondary:#6c757d;
       }
 
@@ -366,10 +366,10 @@
 
       --umb-bg-primary:      #000C0B;  /* bgPrimary: fundo principal das telas (Bravia) */
       --umb-content-bg:      var(--umb-bg-primary);  /* legacy alias — use --umb-bg-primary */
-      --umb-sidebar-bg:      #000C0B; --umb-sidebar-border: #002B27;
+      --umb-sidebar-bg:      #000C0B; --umb-border-on-brand: #002B27;
       --umb-card-bg:         #011A18;
       --umb-surface-raised:  #172D2C;
-      --umb-hover-bg:        rgba(255,255,255,.04);
+      --umb-hover-bg:        rgba(255,255,255,.025);  /* hover unificado: itens, linhas de tabela, dropdown-items, popovers, selects */
       --umb-inset-bg:        rgba(255,255,255,.06);
       --umb-header-bg:       rgba(255,255,255,.025);
       --umb-header-border:   rgba(255,255,255,.05);
@@ -391,9 +391,9 @@
       --umb-nav-hover-bg:    rgba(23,86,81,.3);
       --umb-nav-active-color:#ffffff;
       --umb-nav-active-bg:   #175651;
-      /* Popup menu items (dropdowns, theme switcher, etc) */
-      --umb-menu-item-hover-bg:  #003530;
-      --umb-menu-item-active-bg: #175651;
+      /* Popup menu items (dropdowns, theme switcher, etc) — legacy aliases, use --umb-hover-bg / --umb-bg-active */
+      --umb-menu-item-hover-bg:  var(--umb-hover-bg);
+      --umb-menu-item-active-bg: var(--umb-bg-active);
       --umb-section-h:       #225E59;
       --umb-brand-color:     #D5E3E1;
       --umb-brand-sub:       #748180;
@@ -408,7 +408,7 @@
       --umb-media-bg:        #172D2C;
       --umb-copy-btn-bg:     #002B27;
       --umb-copy-btn-hover:  #004640;
-      --umb-table-hover:     rgba(255,255,255,.025);
+      --umb-table-hover:     var(--umb-hover-bg);  /* legacy alias — use --umb-hover-bg */
       --umb-bg-active:       #175651;  /* bgActive: item selecionado (menus, tabela, cards, conversa) */
       --umb-table-row-active: var(--umb-bg-active);  /* legacy alias — use --umb-bg-active */
       --umb-step-track:      #002B27;
@@ -477,11 +477,11 @@
          que fazia a sidebar ser empurrada para cima ao rolar até o fim da página */
       position: fixed; top: 0; left: 0;
       height: 100vh; overflow-y: auto; flex-shrink: 0;
-      border-right: 1px solid var(--umb-sidebar-border);
+      border-right: 1px solid var(--umb-border-on-brand);
       transition: background .25s, border-color .25s;
       z-index: 10;
     }
-    .ds-sidebar .brand { display: flex; align-items: center; gap: 8px; padding: 0 8px 20px; border-bottom: 1px solid var(--umb-sidebar-border); margin-bottom: 16px; }
+    .ds-sidebar .brand { display: flex; align-items: center; gap: 8px; padding: 0 8px 20px; border-bottom: 1px solid var(--umb-border-on-brand); margin-bottom: 16px; }
     .ds-sidebar .brand span { font-weight: 600; font-size: 15px; color: var(--umb-brand-color); }
     .ds-sidebar .brand small { font-size: 11px; color: var(--umb-brand-sub); }
     .ds-sidebar h6 { color: var(--umb-section-h); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin: 16px 0 4px 8px; }
@@ -491,7 +491,7 @@
     .ds-content { flex: 1; padding: 40px 48px; max-width: 1100px; margin-left: 260px; /* compensa a sidebar fixed */ }
 
     /* --- THEME SWITCHER --- */
-    .theme-switcher { padding: 0 8px 16px; margin-bottom: 16px; border-bottom: 1px solid var(--umb-sidebar-border); }
+    .theme-switcher { padding: 0 8px 16px; margin-bottom: 16px; border-bottom: 1px solid var(--umb-border-on-brand); }
     .theme-switcher label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--umb-section-h); display: block; margin-bottom: 6px; }
     .theme-switcher .theme-options { display: flex; flex-direction: column; gap: 2px; }
     .theme-option { display: flex; align-items: center; gap: 8px; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--umb-nav-color); transition: all .15s; border: none; background: transparent; width: 100%; text-align: left; }
@@ -777,8 +777,9 @@
       cursor: pointer;
       transition: background-color .15s;
     }
-    .umb-tag-pop-item:hover,
+    .umb-tag-pop-item:hover { background: var(--umb-hover-bg); }
     .umb-tag-pop-item.selected { background: var(--umb-bg-active); }
+    .umb-tag-pop-item.selected:hover { background: var(--umb-bg-active); }
     .umb-tag-pop-item .form-check-input { margin: 0; cursor: pointer; flex-shrink: 0; }
 
     /* Modificador .inset-control--block — segmented ocupando 100% da largura.
@@ -1476,9 +1477,9 @@
     /* Popup menu items — consomem --umb-menu-item-*-bg (por tema) e mantem
        texto/icone em --umb-text-primary independente do estado. */
     .dropdown-item { color: var(--umb-text-primary); border-radius: 8px; padding: 7px 12px; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: background .12s; }
-    .dropdown-item:hover { background: var(--umb-menu-item-hover-bg); color: var(--umb-text-primary); }
+    .dropdown-item:hover { background: var(--umb-hover-bg); color: var(--umb-text-primary); }
     .dropdown-item.active,
-    .dropdown-item:active { background: var(--umb-menu-item-active-bg); color: var(--umb-text-primary); }
+    .dropdown-item:active { background: var(--umb-bg-active); color: var(--umb-text-primary); }
     .dropdown-divider { border-color: var(--umb-border); margin: 4px 0; }
 
     /* --- PROFILE --- */
@@ -1579,8 +1580,8 @@
     .table > :not(caption) > * > * { background: transparent; border-bottom-color: var(--umb-border); padding: 10px 14px; }
     .table thead th { color: var(--umb-text-mid); font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--umb-border) !important; }
     .table tbody tr { cursor: pointer; transition: background .12s; }
-    .table tbody tr:hover > td { background: var(--umb-table-hover) !important; }
-    .table tbody tr.selected > td { background: var(--umb-table-row-active) !important; }
+    .table tbody tr:hover > td { background: var(--umb-hover-bg) !important; }
+    .table tbody tr.selected > td { background: var(--umb-bg-active) !important; }
     .table-contact-name { font-size: 13px; font-weight: 600; color: var(--umb-text-primary); }
     .table-time { font-size: 13px; color: var(--umb-text-mid) !important; }
     .table > :not(caption) > * > * { vertical-align: middle; }
@@ -1700,7 +1701,7 @@
     .umb-shell-sidebar {
       width: 52px; min-width: 52px;
       background: var(--umb-sidebar-bg);
-      border-right: 1px solid var(--umb-sidebar-border);
+      border-right: 1px solid var(--umb-border-on-brand);
       display: flex; flex-direction: column; align-items: center;
       padding: 10px 0;
     }
@@ -1773,11 +1774,11 @@
     .umb-avatar-dropdown .theme-option { color: var(--umb-text-primary); }
     .umb-avatar-dropdown .theme-option:hover {
       color: var(--umb-text-primary);
-      background: var(--umb-menu-item-hover-bg);
+      background: var(--umb-hover-bg);
     }
     .umb-avatar-dropdown .theme-option.active {
       color: var(--umb-text-primary);
-      background: var(--umb-menu-item-active-bg);
+      background: var(--umb-bg-active);
     }
     .umb-avatar-logout {
       display: flex; align-items: center; gap: 8px;
@@ -1800,7 +1801,7 @@
     .umb-shell-header {
       height: 48px; min-height: 48px;
       background: var(--umb-shell-header-bg, var(--umb-sidebar-bg));
-      border-bottom: 1px solid var(--umb-sidebar-border);
+      border-bottom: 1px solid var(--umb-border);
       display: flex; align-items: center; padding: 0 20px; gap: 8px;
     }
     .umb-shell-header-logo {
@@ -1941,7 +1942,7 @@
       border-bottom: 1px solid var(--umb-border); transition: background .15s;
     }
     .umb-settings-item:last-child { border-bottom: none; }
-    .umb-settings-item:hover { background: var(--umb-table-hover); }
+    .umb-settings-item:hover { background: var(--umb-hover-bg); }
     .umb-settings-ico {
       width: 36px; height: 36px; border-radius: 8px;
       background: var(--umb-hover-bg);
@@ -1979,7 +1980,7 @@
     .umb-mobile-header {
       height: 56px; min-height: 56px;
       background: var(--umb-sidebar-bg);
-      border-bottom: 1px solid var(--umb-sidebar-border);
+      border-bottom: 1px solid var(--umb-border-on-brand);
       display: flex; align-items: center; padding: 0 12px; gap: 8px;
     }
     .umb-mh-icon-btn {
@@ -7260,7 +7261,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   <div class="umb-breadcrumb" data-umb-part="breadcrumb"></div>
   <div class="umb-shell-header-right" data-umb-part="actions">
     <div class="umb-credits"><i class="ph ph-coins"></i><span>3.206,92</span></div>
-    <button class="btn btn-sm btn-outline-primary" style="font-size:12px;color:var(--umb-brand-color);border-color:var(--umb-sidebar-border)">Comprar créditos</button>
+    <button class="btn btn-sm btn-outline-primary" style="font-size:12px;color:var(--umb-brand-color);border-color:var(--umb-border-on-brand)">Comprar créditos</button>
   </div>
 </template>
 
@@ -7554,11 +7555,20 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
        2) Botão [aria-label="Fechar"] dentro de .umb-tag-pop-head fecha o dropdown
           pai manualmente via bootstrap.Dropdown.hide() — necessário porque o
           popover usa data-bs-auto-close="outside" para não fechar em cliques internos.
-     Os dois handlers são delegados no document — funcionam para popovers
+       3) Sincroniza a classe .selected no item com o estado do checkbox —
+          necessário pro CSS aplicar --umb-bg-active como fundo do item selecionado.
+     Os handlers são delegados no document — funcionam para popovers
      adicionados dinamicamente. Chamar uma vez (auto-chamado no DS). */
   (function(){
     if (window.__umbTagPopoverInited) return;
     window.__umbTagPopoverInited = true;
+
+    // Helper: sincroniza a classe .selected com o estado do checkbox
+    function syncSelected(item) {
+      if (!item) return;
+      var cb = item.querySelector('.form-check-input');
+      if (cb) item.classList.toggle('selected', !!cb.checked);
+    }
 
     // (1) Toggle do checkbox ao clicar na linha
     document.addEventListener('click', function(e) {
@@ -7583,7 +7593,24 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       }
     });
 
-    window.umbInitTagPopover = function(){}; // exposto para symmetry; init é automático
+    // (3) Sincroniza .selected com o estado do checkbox — cobre clique na linha,
+    //     clique direto no input e mutações programáticas que disparem 'change'
+    document.addEventListener('change', function(e) {
+      var cb = e.target;
+      if (!cb || !cb.matches || !cb.matches('.umb-tag-pop-item .form-check-input')) return;
+      syncSelected(cb.closest('.umb-tag-pop-item'));
+    });
+
+    // Sync inicial para items com checkbox pré-marcado no markup
+    function syncAll(root) {
+      (root || document).querySelectorAll('.umb-tag-pop-item').forEach(syncSelected);
+    }
+    syncAll();
+
+    // Expõe para apps que renderizam popovers dinamicamente:
+    // chamar umbInitTagPopover(rootElement) após inserir novos items
+    // sincroniza o estado .selected sem reexecutar os listeners.
+    window.umbInitTagPopover = syncAll;
   })();
 </script>
 </body>
