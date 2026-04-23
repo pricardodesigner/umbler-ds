@@ -1176,3 +1176,43 @@ Antes de dar por encerrada uma mudança sistêmica:
 
 `*.patch`, `*.diff` e outros arquivos de rascunho de trabalho **não** entram no Git. Use `.gitignore` pra mantê-los fora do `git status`. A história do DS é o `git log`, não um monte de patches soltos no working tree.
 
+## §20 — index.html como entry point do DS
+
+O arquivo `/index.html` na raiz do repositório é a **landing page pública do DS** servida pelo GitHub Pages. Funciona como índice visual dos arquivos com acesso individual e é a porta de entrada pros usuários externos (designers, PMs, devs de outras áreas).
+
+### §20.1 Regra de propagação — NOVA PÁGINA = NOVO CARD
+
+Toda vez que um arquivo HTML **com acesso individual** (standalone, navegável por URL própria) for adicionado, renomeado ou removido na pasta `design-system/`, o `/index.html` deve ser atualizado no mesmo commit:
+
+- **Arquivo novo** → adicionar card na seção correspondente (Templates, Utilitários, ou criar nova seção se o tipo não existir).
+- **Arquivo renomeado** → atualizar o `href` do card e, se aplicável, o título.
+- **Arquivo removido** → remover o card e atualizar o contador da seção.
+
+### §20.2 Estrutura de um card
+
+Cada card no index deve conter:
+
+- **Ícone Phosphor** (`.ph-*`) consistente com a natureza da tela — ex: `ph-chat-circle-dots` pra chat, `ph-gear-six` pra settings, `ph-swatches` pra previews de token.
+- **Título** igual ao usado no DS (evita dissonância entre contextos).
+- **Descrição** de 1 linha explicando o que aquele template demonstra.
+- **Links diretos** pra cada variante (Desktop / Mobile), sempre com `target="_blank" rel="noopener"`.
+
+### §20.3 Seções do index
+
+1. **Documentação** — 1 card principal (DS completo `umbootstrap-design-system.html`).
+2. **Shell & Templates** — 1 card por template numerado (T1–TN), cada um com botões Desktop e Mobile.
+3. **Utilitários** — previews de token, sandboxes, ferramentas auxiliares (ex: `preview-tokens-bg.html`).
+
+### §20.4 Quando NÃO adicionar card
+
+Arquivos que **não** devem virar card:
+
+- Patches `.patch` / `.diff` (artefatos de dev).
+- `rules.md` (documento interno, não página navegável).
+- `.gitignore` e similares.
+- Arquivos incluídos como *dependência* de outra página em vez de serem abertos diretamente.
+
+### §20.5 Impacto técnico — sincronização de tokens
+
+O `index.html` duplica um subset dos tokens `--umb-*` inline. Se um desses tokens mudar no DS (`umbootstrap-design-system.html`), propagar também no `index.html` — mesma regra de sync que já vale pros standalone files.
+
