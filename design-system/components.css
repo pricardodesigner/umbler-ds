@@ -1,0 +1,279 @@
+/* ============================================================
+   UMBOOTSTRAP DESIGN SYSTEM — COMPONENTS (subset)
+   Extraído verbatim do umbootstrap-design-system.html. Contém os
+   componentes usados tanto pelo DS principal quanto pela landing
+   pública (index.html).
+
+   ESCOPO ATUAL (v1 — abril/2026)
+   Apenas o subset que a landing consome:
+   - Buttons (.btn + variantes)
+   - Theme switcher (.theme-switcher + .theme-option)
+   - Shell header family (.umb-shell-header + relacionados)
+   - Path card family (.umb-path-card + .umb-path-icon + títulos)
+
+   FUTURO (v2)
+   Extração completa dos componentes do DS pra este arquivo (cards,
+   inputs, tables, etc.), transformando os HTMLs em consumers-only
+   do CSS compartilhado.
+
+   REGRAS
+   - Qualquer classe aqui deve existir IDÊNTICA no DS principal.
+   - Mudança de componente → editar AQUI + propagar pro DS main
+     (até a v2 fazer a inversão e só editar aqui).
+   - Componentes dependem apenas de tokens --bs-* e --umb-* (tokens.css).
+
+   USO
+   <link rel="stylesheet" href="tokens.css">
+   <link rel="stylesheet" href="components.css">
+
+   Ordem importa: tokens ANTES de components.
+   ============================================================ */
+
+
+/* ────────────────────────────────────────────────────────────
+   BUTTONS
+   Override do Bootstrap 5.3 .btn + variantes DS (text, link,
+   outline-*, icon, solid) + btn-sm/btn-lg + focus/active.
+   ──────────────────────────────────────────────────────────── */
+
+.btn {
+  border-radius: 30px !important; font-weight: 600; font-size: 13px;
+  height: 32px; padding: 0 18px; border-width: 2px !important; font-family: inherit;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background .15s, color .15s, border-color .15s, filter .15s, box-shadow .15s;
+  line-height: 1; box-sizing: border-box;
+}
+.btn-sm { font-size: 12px !important; height: 24px !important; padding: 0 14px !important; border-radius: 30px !important; }
+.btn-lg { font-size: 13px !important; height: 40px !important; padding: 0 24px !important; border-radius: 30px !important; }
+
+/* Focus ring usa a cor primária do tema */
+.btn:focus-visible {
+  outline: 3px solid rgba(var(--bs-primary-rgb), .35);
+  outline-offset: 2px; box-shadow: none !important;
+}
+/* Active / Pressed */
+.btn:not(:disabled):active { filter: brightness(.80) !important; }
+
+/* Solid — filled */
+.btn-primary   { background: var(--bs-primary) !important; border-color: var(--bs-primary) !important; color: #fff !important; }
+.btn-primary:hover:not(:disabled)   { filter: brightness(.88); }
+.btn-secondary { background: var(--umb-btn-secondary) !important; border-color: var(--umb-btn-secondary) !important; color: #fff !important; }
+.btn-secondary:hover:not(:disabled) { filter: brightness(.88); }
+.btn-success   { background: var(--bs-success) !important; border-color: var(--bs-success) !important; color: #fff !important; }
+.btn-success:hover:not(:disabled)   { filter: brightness(.88); }
+.btn-danger    { background: var(--bs-danger) !important;  border-color: var(--bs-danger) !important;  color: #fff !important; }
+.btn-danger:hover:not(:disabled)    { filter: brightness(.88); }
+.btn-warning   { background: var(--bs-warning) !important; border-color: var(--bs-warning) !important; color: #fff !important; }
+.btn-warning:hover:not(:disabled)   { filter: brightness(.88); }
+.btn-info      { background: var(--bs-info) !important;    border-color: var(--bs-info) !important;    color: #fff !important; }
+.btn-info:hover:not(:disabled)      { filter: brightness(.88); }
+.btn-light     { background: var(--umb-surface-raised) !important; border-color: var(--umb-border-strong) !important; color: var(--umb-text-primary) !important; }
+.btn-light:hover:not(:disabled)     { filter: brightness(.96); }
+.btn-dark      { background: var(--umb-tooltip-bg) !important; border-color: var(--umb-tooltip-bg) !important; color: #fff !important; }
+.btn-dark:hover:not(:disabled)      { filter: brightness(1.12); }
+
+/* Text variant — sem bg, sem borda, só texto colorido */
+.btn-text      { background: transparent !important; border-color: transparent !important; color: var(--umb-btn-outline-color) !important; }
+.btn-text:hover:not(:disabled)      { background: var(--umb-btn-text-hover) !important; color: var(--umb-btn-outline-color) !important; }
+.btn-text-danger  { background: transparent !important; border-color: transparent !important; color: var(--bs-danger) !important; }
+.btn-text-danger:hover:not(:disabled){ background: rgba(var(--bs-danger-rgb), .08) !important; }
+.btn-text-success { background: transparent !important; border-color: transparent !important; color: var(--bs-success) !important; }
+.btn-text-success:hover:not(:disabled){ background: rgba(var(--bs-success-rgb), .08) !important; }
+
+/* Link variant */
+.btn-link      { background: transparent !important; border-color: transparent !important; color: var(--bs-primary) !important; text-decoration: none; }
+.btn-link:hover:not(:disabled) { background: transparent !important; text-decoration: underline; }
+
+/* Outlined variants */
+/* primary outlined: borda e texto neutros por tema; hover troca texto para cor primária, borda inalterada */
+.btn-outline-primary   { background: transparent !important; border-color: var(--umb-border-primary) !important; color: var(--umb-btn-outline-color) !important; }
+.btn-outline-primary:hover:not(:disabled) { background: transparent !important; border-color: var(--umb-border-primary) !important; color: var(--bs-primary) !important; }
+/* demais outlined: hover mantém estética, rebaixa a cor ~20% sem fill */
+.btn-outline-secondary { background: transparent !important; border-color: var(--umb-btn-secondary) !important; color: var(--umb-text-mid) !important; }
+.btn-outline-secondary:hover:not(:disabled) { background: transparent !important; filter: brightness(.80); }
+.btn-outline-success   { background: transparent !important; border-color: var(--bs-success) !important; color: var(--bs-success) !important; }
+.btn-outline-success:hover:not(:disabled) { background: transparent !important; filter: brightness(.80); }
+.btn-outline-danger    { background: transparent !important; border-color: var(--bs-danger) !important; color: var(--bs-danger) !important; }
+.btn-outline-danger:hover:not(:disabled) { background: transparent !important; filter: brightness(.80); }
+.btn-outline-warning   { background: transparent !important; border-color: var(--bs-warning) !important; color: var(--bs-warning) !important; }
+.btn-outline-warning:hover:not(:disabled) { background: transparent !important; filter: brightness(.80); }
+.btn-outline-info      { background: transparent !important; border-color: var(--bs-info) !important; color: var(--bs-info) !important; }
+.btn-outline-info:hover:not(:disabled) { background: transparent !important; filter: brightness(.80); }
+.btn-icon { width: 32px !important; height: 32px !important; padding: 0 !important; display: inline-flex; align-items: center; justify-content: center; border-radius: 50% !important; font-size: 16px !important; }
+.btn-icon.btn-sm { width: 24px !important; height: 24px !important; font-size: 13px !important; }
+.btn-icon.btn-lg { width: 40px !important; height: 40px !important; font-size: 18px !important; }
+.btn-icon.dropdown-toggle::after { display: none !important; }
+.btn:disabled, .btn.disabled { opacity: .38 !important; cursor: not-allowed; pointer-events: all; }
+
+
+/* ────────────────────────────────────────────────────────────
+   INSET CONTROL (LabeledSwitch / Switch Segmentado)
+   Pill segmentado com seleção exclusiva — padrão oficial do DS
+   pra troca de temas, filtros de período, alternância de views.
+
+   Tamanhos: .inset-control-sm (24px) · default (34px, recomendado)
+             · .inset-control-lg (40px)
+   Modifier: .inset-control--block → preenche 100% da largura
+
+   Estrutura:
+     <div class="inset-control">
+       <button class="btn active">A</button>
+       <button class="btn">B</button>
+     </div>
+   ──────────────────────────────────────────────────────────── */
+
+.inset-control { display: inline-flex; background: var(--umb-inset-bg); border-radius: 30px; padding: 3px; gap: 2px; }
+.inset-control .btn {
+  background: transparent !important; color: var(--umb-text-mid);
+  border: none !important; font-size: 13px;
+  height: 28px; padding: 0 14px !important;
+  border-radius: 30px !important; font-weight: 500;
+  display: inline-flex; align-items: center; box-sizing: border-box;
+}
+.inset-control .btn.active,
+.inset-control .btn:focus { background: var(--bs-primary) !important; color: #fff; font-weight: 600; }
+/* Sm — 24px total (botão 18px + 3px padding × 2) */
+.inset-control-sm .btn { height: 18px !important; padding: 0 10px !important; font-size: 12px !important; }
+/* Lg — 40px total (botão 34px + 3px padding × 2) */
+.inset-control-lg .btn { height: 34px !important; padding: 0 18px !important; font-size: 13px !important; }
+/* Block modifier — preenche a largura do container */
+.inset-control--block { display: flex; }
+.inset-control--block .btn { flex: 1; justify-content: center; }
+
+
+/* ────────────────────────────────────────────────────────────
+   THEME SWITCHER (padrão sidebar do DS — vertical, full-width)
+   Usado no dropdown da sidebar e no menu de avatar. Classe
+   .theme-option também é reaproveitada standalone em outros
+   lugares (mas pra pill horizontal, prefira .inset-control).
+   ──────────────────────────────────────────────────────────── */
+
+.theme-switcher { padding: 0 8px 16px; margin-bottom: 16px; border-bottom: 1px solid var(--umb-border-on-brand); }
+.theme-switcher label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--umb-section-h); display: block; margin-bottom: 6px; }
+.theme-switcher .theme-options { display: flex; flex-direction: column; gap: 2px; }
+.theme-option { display: flex; align-items: center; gap: 8px; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--umb-nav-color); transition: all .15s; border: none; background: transparent; width: 100%; text-align: left; font-family: inherit; }
+.theme-option:hover { color: var(--umb-nav-hover-color); background: var(--umb-nav-hover-bg); }
+.theme-option.active { color: var(--umb-nav-active-color); background: var(--umb-nav-active-bg); font-weight: 600; }
+.theme-option i { font-size: 15px; flex-shrink: 0; }
+
+
+/* ────────────────────────────────────────────────────────────
+   SHELL HEADER FAMILY
+   Header canônico 56px usado em todos os templates do DS.
+   Consistência sistêmica: 1 altura de header em todas as telas.
+   ──────────────────────────────────────────────────────────── */
+
+.umb-shell-header {
+  height: 56px; min-height: 56px;
+  background: var(--umb-shell-header-bg, var(--umb-sidebar-bg));
+  border-bottom: 1px solid var(--umb-border);
+  display: flex; align-items: center; padding: 0 20px; gap: 8px;
+}
+.umb-shell-header-logo {
+  font-size: 15px; font-weight: 600; color: var(--umb-brand-color);
+  letter-spacing: -.02em; display: none;
+}
+.umb-shell-hamburger {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: none; align-items: center; justify-content: center;
+  color: var(--umb-text-mid); font-size: 18px; cursor: pointer;
+}
+.umb-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; flex: 1; min-width: 0;
+}
+.umb-bc-item { color: var(--umb-text-mid); white-space: nowrap; }
+.umb-bc-item.active { color: var(--umb-text-primary); font-weight: 500; }
+.umb-bc-sep { color: var(--umb-text-dim); font-size: 10px; }
+.umb-shell-header-right {
+  display: flex; align-items: center; gap: 8px;
+  margin-left: auto; flex-shrink: 0;
+}
+.umb-credits {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 13px; font-weight: 600; color: var(--umb-text-primary);
+}
+.umb-credits i { color: var(--umb-text-mid); font-size: 16px; }
+
+/* Scrollable content */
+.umb-shell-content {
+  flex: 1; overflow-y: auto; padding: 24px;
+  background: var(--umb-content-bg, var(--bs-body-bg));
+}
+/* Wrapper interno com largura máxima — usado em todos os templates */
+.umb-page-inner { max-width: 1300px; margin: 0 auto; width: 100%; }
+
+
+/* ────────────────────────────────────────────────────────────
+   PATH CARD
+   Card horizontal pra lista de opções de navegação/decisão.
+   Padrão: ícone + título + subtítulo, clicável (cursor:pointer).
+   Hover troca borda pra primary + leve tint no fundo.
+   Modifier .recommended adiciona glow primary.
+   ──────────────────────────────────────────────────────────── */
+
+.umb-path-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 2px solid var(--umb-border);
+  border-radius: 14px;
+  cursor: pointer;
+  background: var(--umb-card-bg);
+  transition: border-color .15s, background-color .15s;
+}
+.umb-path-card + .umb-path-card { margin-top: 10px; }
+.umb-path-card:hover {
+  border-color: var(--bs-primary);
+  background: color-mix(in srgb, var(--bs-primary) 3%, var(--umb-card-bg));
+}
+.umb-path-card.recommended {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--bs-primary) 10%, transparent);
+}
+.umb-path-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: var(--umb-text-mid);  /* default neutral */
+  flex-shrink: 0;
+}
+/* Modificadores de cor — usar apenas em listas com até 5 opções (ver rules.md) */
+.umb-path-icon.primary { color: var(--bs-primary); }
+.umb-path-icon.success { color: var(--bs-success); }
+.umb-path-icon.danger  { color: var(--bs-danger); }
+.umb-path-icon.warning { color: var(--bs-warning); }
+/* Alias legado: .neutral agora é redundante (default já é neutral) — mantido pra retrocompat */
+.umb-path-icon.neutral { color: var(--umb-text-mid); }
+.umb-path-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--umb-text-primary);
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.umb-path-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--bs-primary) 15%, transparent);
+  color: var(--bs-primary);
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+.umb-path-sub {
+  font-size: 13px;
+  color: var(--umb-text-mid);
+  margin: 0;
+}
+
+@media (max-width: 767.98px) {
+  .umb-path-card { padding: 16px; }
+  .umb-path-icon { font-size: 28px; }
+}

@@ -1212,7 +1212,104 @@ Arquivos que **não** devem virar card:
 - `.gitignore` e similares.
 - Arquivos incluídos como *dependência* de outra página em vez de serem abertos diretamente.
 
-### §20.5 Impacto técnico — sincronização de tokens
+### §20.5 Impacto técnico — tokens compartilhados
 
-O `index.html` duplica um subset dos tokens `--umb-*` inline. Se um desses tokens mudar no DS (`umbootstrap-design-system.html`), propagar também no `index.html` — mesma regra de sync que já vale pros standalone files.
+O `index.html` consome os tokens do DS via `<link rel="stylesheet" href="design-system/tokens.css">` (ver §21). Não duplica nada — mudança em `tokens.css` reflete imediatamente na landing.
+
+Componentes visuais da landing (`.lp-card`, `.lp-header`, `.lp-theme-switch`, etc.) são próprios, mas usam apenas tokens `--bs-*` e `--umb-*` nas declarações, nunca cores literais — garante que os 4 temas (Escuro, Claro, Esmeralda, Bravia) funcionem automaticamente.
+
+---
+
+## §21 — `tokens.css` como single source of truth dos tokens
+
+O arquivo `design-system/tokens.css` contém **todos** os tokens `--bs-*` e `--umb-*` de todos os temas do DS. É o único lugar onde esses valores são definidos.
+
+### §21.1 Regra fundamental — DRY de tokens
+
+É **proibido duplicar** blocos `:root` ou `[data-bs-theme="..."]` com tokens em qualquer outro arquivo HTML/CSS do projeto. Se aparecer um bloco desses fora do `tokens.css`, é bug.
+
+**Por quê:** antes da extração (abril/2026), os tokens eram replicados inline em 11 arquivos HTML. Mudança de um token exigia 11 edits sincronizados, e divergências silenciosas eram inevitáveis. Com `tokens.css`, 1 edit propaga pra todos.
+
+### §21.2 Como arquivos do DS carregam os tokens
+
+Toda página que usa o DS precisa importar `tokens.css` no `<head>`, **antes** de qualquer `<style>` inline:
+
+```html
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* component styles aqui — livres pra usar var(--umb-*) e var(--bs-*) */
+</style>
+```
+
+Para arquivos **dentro** de `design-system/` (os 11 HTMLs + index da pasta): path relativo `tokens.css`.
+Para arquivos **fora** de `design-system/` (raiz do repo, ex: `index.html`): path relativo `design-system/tokens.css`.
+
+### §21.3 Themes suportados
+
+`tokens.css` define 5 variantes via atributo `[data-bs-theme]` no `<html>`:
+
+- `dark` (default, referenciado como `:root`)
+- `light`
+- `emerald`
+- `dark-emerald` (aka "Bravia")
+- `auto` (segue `prefers-color-scheme` do SO)
+
+### §21.4 Como adicionar / editar tokens
+
+1. Editar **apenas** `design-system/tokens.css`.
+2. Adicionar o token nos 5 blocos de tema (dark, light, emerald, auto dark, auto light, dark-emerald) — se o valor não muda entre temas, definir só no bloco `:root, [data-bs-theme="dark"]` e ele é herdado.
+3. Documentar o propósito com comment inline, especialmente pra tokens semânticos (`--umb-chat-bubble-out-bg`, etc.).
+4. Testar em **pelo menos**: DS principal + 1 template standalone + `index.html` em cada tema.
+
+### §21.5 O que NÃO vai em `tokens.css`
+
+- **Estilos de componente** (`.umb-card`, `.umb-conv-list`, etc.) — vão em `components.css` (§21.7) ou, enquanto não extraídos, ficam nos `<style>` inline dos HTMLs.
+- **Seletores que usam tokens mas não definem nada** — ex: `[data-bs-theme="light"] .umb-brand-logo { filter: none; }` fica no HTML, não em `tokens.css`.
+- **Tokens específicos de um único componente que não variam por tema** — podem ser definidos localmente na classe do componente (ex: `--umb-card-padding: 20px` dentro de `.umb-card`).
+
+### §21.6 Trade-off aceito
+
+`tokens.css` adiciona 1 round-trip HTTP no carregamento inicial das páginas (file:// é instantâneo; HTTP, ~50-100ms de latência em cold cache). Em troca:
+
+- Eliminação de ~27KB duplicados por página × 11 arquivos = ~300KB removidos.
+- Consistência visual garantida por construção.
+- Mudança de token = 1 edit, não 11.
+
+O trade-off vale a pena. Se um dia precisarmos otimizar cold-start ao extremo, dá pra voltar ao modelo inline **via build script** (tokens.css continua sendo a fonte, mas é inlineado em cada HTML no build). Por enquanto, não precisa — as páginas são estáticas e servidas via GitHub Pages com CDN.
+
+### §21.7 `components.css` — componentes compartilhados
+
+Complementa `tokens.css`: contém os **estilos de componente** reutilizáveis entre DS e landing. Primeira versão (abril/2026) tem um **subset** focado no que a landing pública (`/index.html`) consome:
+
+- **Buttons** (`.btn` + variantes solid/outline/text/link/icon + sm/lg/focus/active)
+- **Theme switcher** (`.theme-switcher`, `.theme-option` + estados)
+- **Shell header family** (`.umb-shell-header`, `.umb-shell-header-right`, `.umb-breadcrumb`, `.umb-shell-content`, `.umb-page-inner`)
+- **Path card family** (`.umb-path-card`, `.umb-path-icon` + modifiers, `.umb-path-title`, `.umb-path-badge`, `.umb-path-sub`)
+
+**Regra de uso:**
+
+```html
+<!-- Ordem importa: tokens antes de components -->
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+```
+
+**Status da extração:**
+
+A v1 é **aditiva** — `components.css` é usado apenas pela landing. Os 11 HTMLs do DS (main + 10 standalones) **ainda têm esses componentes inline** no `<style>`. Portanto, durante a v1:
+
+- Se mudar `.umb-path-card` no DS main → também editar em `components.css`.
+- Se mudar em `components.css` → também propagar no DS main.
+
+**Phase 2 (a fazer):** extrair **todos** os componentes do DS pra `components.css` e transformar os 11 HTMLs em consumers-only. Quando isso for feito, a regra acima desaparece — `components.css` vira a única fonte. Abrir issue/PR separado quando o escopo do DS justificar.
+
+### §21.8 Onde fica o quê — resumo
+
+| Tipo | Vai em | Exemplo |
+|---|---|---|
+| Tokens (`--bs-*`, `--umb-*`) | `tokens.css` | `--umb-card-bg: #202326` |
+| Componentes reutilizáveis já extraídos | `components.css` | `.umb-path-card { ... }` |
+| Componentes do DS ainda não extraídos | `<style>` inline do HTML | `.umb-conv-list { ... }` |
+| Estilos específicos de uma página | `<style>` inline do HTML | `.lp-hero { ... }` na landing |
+| Overrides de tema em componente | `<style>` inline do HTML | `[data-bs-theme="light"] .umb-brand-logo { filter: none; }` |
 

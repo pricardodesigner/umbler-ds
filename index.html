@@ -1,525 +1,429 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="dark">
+<html lang="pt-BR" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Umbootstrap Design System — Umbler Talk</title>
-  <meta name="description" content="Design System proprietário da Umbler Talk — fonte da verdade dos tokens, componentes e templates.">
+  <title>Umbootstrap Design System — Umbler</title>
+  <meta name="description" content="Design System proprietário da Umbler — fonte da verdade dos tokens, componentes e templates compartilhados entre os produtos da empresa.">
 
-  <!-- Inter font -->
+  <!-- Fonts — mesmas do DS (Plus Jakarta Sans + Poppins) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3 base -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Phosphor icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/duotone/style.css">
+  <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" rel="stylesheet">
+  <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" rel="stylesheet">
+  <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css" rel="stylesheet">
 
-  <!-- Bootstrap 5.3 CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- DS — tokens + componentes compartilhados (single source of truth, rules.md §21) -->
+  <link rel="stylesheet" href="design-system/tokens.css">
+  <link rel="stylesheet" href="design-system/components.css">
 
   <style>
     /* ============================================================
-       TOKENS — aliados ao Umbootstrap DS (subset essencial)
-       ============================================================ */
-    :root[data-theme="dark"] {
-      --umb-bg:              #0b0c0f;
-      --umb-surface:         #15171c;
-      --umb-surface-raised:  #1a1d23;
-      --umb-text:            #e7eaf1;
-      --umb-text-muted:      #8a92a1;
-      --umb-text-subtle:     #5a6171;
-      --umb-border:          rgba(255,255,255,.08);
-      --umb-border-strong:   rgba(255,255,255,.14);
-      --umb-accent:          #22c88b;
-      --umb-accent-soft:     rgba(34,200,139,.14);
-      --umb-hover-bg:        rgba(255,255,255,.05);
-      --umb-shadow-card:     0 1px 2px rgba(0,0,0,.2), 0 8px 24px rgba(0,0,0,.25);
-    }
-    :root[data-theme="light"] {
-      --umb-bg:              #f6f7f9;
-      --umb-surface:         #ffffff;
-      --umb-surface-raised:  #ffffff;
-      --umb-text:            #0b0c0f;
-      --umb-text-muted:      #5a6171;
-      --umb-text-subtle:     #8a92a1;
-      --umb-border:          rgba(0,0,0,.08);
-      --umb-border-strong:   rgba(0,0,0,.14);
-      --umb-accent:          #0d9f6e;
-      --umb-accent-soft:     rgba(13,159,110,.10);
-      --umb-hover-bg:        rgba(0,0,0,.04);
-      --umb-shadow-card:     0 1px 2px rgba(16,24,40,.04), 0 6px 16px rgba(16,24,40,.06);
-    }
+       LANDING — usa componentes do DS (umb-shell-header, umb-path-card,
+       umb-path-icon, theme-option, btn + variantes). CSS local abaixo
+       cobre APENAS layout de página (hero, seções, footer) e 1
+       override horizontal do theme-switcher. Nenhum componente novo.
+    ============================================================ */
 
+    /* --- Reset básico (nos templates é feito via .umb-shell) --- */
     * { box-sizing: border-box; }
-
     html, body {
-      background: var(--umb-bg);
-      color: var(--umb-text);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-feature-settings: 'cv11', 'ss01', 'ss03';
+      background: var(--bs-body-bg);
+      color: var(--bs-body-color);
+      font-family: var(--bs-body-font-family, 'Plus Jakarta Sans', sans-serif);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       min-height: 100vh;
       margin: 0;
-    }
-
-    a { color: inherit; text-decoration: none; }
-
-    /* ============================================================
-       HEADER
-       ============================================================ */
-    .umb-landing-header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      height: 56px;
-      background: var(--umb-bg);
-      border-bottom: 1px solid var(--umb-border);
-      display: flex;
-      align-items: center;
-      padding: 0 24px;
-      backdrop-filter: saturate(180%) blur(8px);
-      -webkit-backdrop-filter: saturate(180%) blur(8px);
-    }
-    .umb-landing-header .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 600;
-      font-size: 15px;
-      letter-spacing: -0.01em;
-    }
-    .umb-landing-header .brand-mark {
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      background: linear-gradient(135deg, var(--umb-accent), #1a9f6f);
-      display: grid;
-      place-items: center;
-      color: white;
-      font-weight: 700;
-      font-size: 13px;
-    }
-    .umb-landing-header .brand-sub {
-      color: var(--umb-text-muted);
-      font-weight: 400;
-      margin-left: 4px;
-    }
-    .umb-theme-switch {
-      margin-left: auto;
-      display: flex;
-      gap: 4px;
-      padding: 3px;
-      background: var(--umb-surface);
-      border: 1px solid var(--umb-border);
-      border-radius: 8px;
-    }
-    .umb-theme-switch button {
-      all: unset;
-      cursor: pointer;
-      padding: 4px 10px;
-      border-radius: 5px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--umb-text-muted);
-      transition: background .15s ease, color .15s ease;
-    }
-    .umb-theme-switch button:hover { background: var(--umb-hover-bg); color: var(--umb-text); }
-    .umb-theme-switch button.is-active {
-      background: var(--umb-surface-raised);
-      color: var(--umb-text);
-      box-shadow: 0 1px 2px rgba(0,0,0,.15);
-    }
-
-    /* ============================================================
-       HERO
-       ============================================================ */
-    .umb-hero {
-      padding: 80px 24px 48px;
-      text-align: center;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-    .umb-hero .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      background: var(--umb-accent-soft);
-      color: var(--umb-accent);
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 500;
-      margin-bottom: 20px;
-    }
-    .umb-hero h1 {
-      font-size: 44px;
-      font-weight: 700;
-      letter-spacing: -0.025em;
-      line-height: 1.1;
-      margin: 0 0 16px;
-    }
-    .umb-hero p {
-      font-size: 17px;
-      line-height: 1.55;
-      color: var(--umb-text-muted);
-      margin: 0;
-    }
-
-    /* ============================================================
-       SEÇÃO + CARDS
-       ============================================================ */
-    .umb-section {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 32px 24px;
-    }
-    .umb-section-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--umb-border);
-    }
-    .umb-section-head h2 {
       font-size: 14px;
-      font-weight: 600;
-      color: var(--umb-text-muted);
+      transition: background .25s, color .25s;
+    }
+
+    /* Scrollbars theme-aware (mesma regra do DS) */
+    * { scrollbar-width: thin; scrollbar-color: var(--umb-border-strong) transparent; }
+    *::-webkit-scrollbar { width: 8px; height: 8px; }
+    *::-webkit-scrollbar-track { background: transparent; }
+    *::-webkit-scrollbar-thumb { background: var(--umb-border-strong); border-radius: 999px; border: 2px solid transparent; background-clip: padding-box; }
+    [data-bs-theme="light"] *::-webkit-scrollbar-thumb { background: rgba(0,0,0,.18); background-clip: padding-box; border: 2px solid transparent; }
+
+    /* --- Sticky wrapper pro .umb-shell-header do DS (no DS é position:static dentro do shell; na landing é sticky no topo) --- */
+    .umb-shell-header {
+      position: sticky; top: 0; z-index: 10;
+    }
+
+    /* --- Brand dentro do header.
+           Usa --umb-text-* (não --umb-brand-*) porque o shell-header da
+           landing tem bg variável (branco em Claro/Esmeralda, preto em
+           Dark/Bravia). --umb-brand-* é pro sidebar onde o bg é sempre
+           primary-colored. --- */
+    .lp-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 600; font-size: 15px;
+      color: var(--umb-text-primary);
+      letter-spacing: -0.02em;
+    }
+    .lp-brand-mark {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: var(--bs-primary);
+      display: grid; place-items: center;
+      color: #fff; font-weight: 700; font-size: 13px;
+    }
+    .lp-brand-sub {
+      color: var(--umb-text-mid);
+      font-weight: 400;
+    }
+
+    /* --- Theme switcher usa .inset-control do DS (LabeledSwitch).
+           Só escondemos o label em telas pequenas pra economizar espaço. --- */
+    @media (max-width: 720px) {
+      .inset-control .theme-label { display: none; }
+      .inset-control .btn { padding: 0 10px !important; }
+    }
+
+    /* --- Conteúdo principal (equivalente a .umb-shell-content + .umb-page-inner) --- */
+    .lp-content {
+      padding: 24px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* --- Hero (layout local, só tipografia via tokens) --- */
+    .lp-hero {
+      padding: 72px 0 40px;
+      text-align: center;
+    }
+    .lp-hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px;
+      background: rgba(var(--bs-primary-rgb), .12);
+      color: var(--bs-primary);
+      border-radius: 999px;
+      font-size: 12px; font-weight: 500;
+      margin-bottom: 20px;
+    }
+    .lp-hero h1 {
+      font-size: 40px; font-weight: 700;
+      letter-spacing: -0.025em; line-height: 1.1;
+      margin: 0 0 14px;
+      color: var(--umb-text-primary);
+    }
+    .lp-hero p {
+      font-size: 16px; line-height: 1.55;
+      color: var(--umb-text-mid);
+      margin: 0 auto; max-width: 640px;
+    }
+
+    /* --- Seções (título + lista vertical de path-cards do DS) --- */
+    .lp-section { margin-top: 40px; }
+    .lp-section-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--umb-border);
+    }
+    .lp-section-head h2 {
+      font-size: 12px; font-weight: 600;
+      color: var(--umb-text-mid);
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin: 0;
     }
-    .umb-section-head .count {
+    .lp-section-count {
       font-size: 12px;
-      color: var(--umb-text-subtle);
+      color: var(--umb-text-dim);
       font-variant-numeric: tabular-nums;
     }
 
-    .umb-card-grid {
+    /* Subheader por template — agrupamento visual SEM borda (respeita
+       a regra do DS: borda 2px só em elementos clicáveis).
+       Path-cards Desktop/Mobile ficam lado a lado (grid 2 colunas);
+       em viewport estreito colapsam pra coluna única. */
+    .lp-template-group {
+      margin-top: 20px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
-    .umb-card {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding: 20px;
-      background: var(--umb-surface);
-      border: 1px solid var(--umb-border);
-      border-radius: 10px;
-      transition: background .15s ease, border-color .15s ease, transform .15s ease;
-      min-height: 148px;
+    .lp-template-group:first-of-type { margin-top: 0; }
+    .lp-template-group-head {
+      grid-column: 1 / -1;  /* subheader ocupa a linha toda */
+      display: flex; align-items: baseline; gap: 10px;
+      margin-bottom: 0;
+      padding: 0 4px;
     }
-    .umb-card:hover {
-      background: var(--umb-surface-raised);
-      border-color: var(--umb-border-strong);
-    }
-    .umb-card-icon {
-      width: 32px;
-      height: 32px;
-      display: grid;
-      place-items: center;
-      font-size: 20px;
-      color: var(--umb-text);
-      background: var(--umb-hover-bg);
-      border-radius: 7px;
-    }
-    .umb-card-icon.accent {
-      color: var(--umb-accent);
-      background: var(--umb-accent-soft);
-    }
-    .umb-card-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--umb-text);
+    .lp-template-group-head h3 {
+      font-size: 14px; font-weight: 600;
+      color: var(--umb-text-primary);
       margin: 0;
-      letter-spacing: -0.01em;
     }
-    .umb-card-desc {
-      font-size: 13px;
-      color: var(--umb-text-muted);
-      line-height: 1.5;
-      margin: 0;
-      flex: 1;
-    }
-    .umb-card-links {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: auto;
-    }
-    .umb-card-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 10px;
-      background: transparent;
-      border: 1px solid var(--umb-border);
-      border-radius: 6px;
+    .lp-template-group-head p {
       font-size: 12px;
-      font-weight: 500;
-      color: var(--umb-text);
-      transition: background .15s ease, border-color .15s ease;
+      color: var(--umb-text-mid);
+      margin: 0;
     }
-    .umb-card-link:hover {
-      background: var(--umb-hover-bg);
-      border-color: var(--umb-border-strong);
-    }
-    .umb-card-link i { font-size: 13px; color: var(--umb-text-muted); }
-
-    /* card-primary = card único no topo (DS main) */
-    .umb-card-primary {
-      grid-column: 1 / -1;
-      flex-direction: row;
-      align-items: center;
-      gap: 20px;
-      min-height: 0;
-      padding: 24px;
-    }
-    .umb-card-primary .umb-card-icon {
-      width: 44px;
-      height: 44px;
-      font-size: 26px;
-      flex-shrink: 0;
-    }
-    .umb-card-primary .umb-card-body {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .umb-card-primary .umb-card-title { font-size: 17px; }
-    .umb-card-primary .umb-card-links { margin-top: 0; flex-shrink: 0; }
-
-    @media (max-width: 540px) {
-      .umb-hero { padding: 48px 20px 32px; }
-      .umb-hero h1 { font-size: 32px; }
-      .umb-hero p { font-size: 15px; }
-      .umb-section { padding: 24px 16px; }
-      .umb-card-primary { flex-direction: column; align-items: flex-start; }
-      .umb-card-primary .umb-card-links { width: 100%; }
+    /* Override do DS: .umb-path-card + .umb-path-card tem margin-top:10px
+       (pra lista vertical). No grid usamos gap, então zerar a margin. */
+    .lp-template-group .umb-path-card + .umb-path-card {
+      margin-top: 0;
     }
 
-    /* ============================================================
-       FOOTER
-       ============================================================ */
-    .umb-footer {
-      max-width: 1120px;
-      margin: 32px auto 0;
-      padding: 24px;
+    @media (max-width: 640px) {
+      .lp-hero { padding: 48px 0 32px; }
+      .lp-hero h1 { font-size: 28px; }
+      .lp-hero p { font-size: 14px; }
+      .lp-template-group { grid-template-columns: 1fr; }  /* colapsa pra coluna única */
+      .lp-template-group-head { flex-direction: column; gap: 2px; }
+    }
+
+    /* --- Footer --- */
+    .lp-footer {
+      margin-top: 40px;
+      padding: 24px 0;
       border-top: 1px solid var(--umb-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--umb-text-subtle);
-      gap: 16px;
-      flex-wrap: wrap;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 12px; color: var(--umb-text-dim);
+      gap: 16px; flex-wrap: wrap;
     }
-    .umb-footer a { color: var(--umb-text-muted); }
-    .umb-footer a:hover { color: var(--umb-text); }
+    .lp-footer a { color: var(--umb-text-mid); text-decoration: none; }
+    .lp-footer a:hover { color: var(--umb-text-primary); }
   </style>
 </head>
 <body>
 
   <!-- ============================================================
-       HEADER
+       HEADER — usa .umb-shell-header do DS (via components.css)
        ============================================================ -->
-  <header class="umb-landing-header">
-    <div class="brand">
-      <div class="brand-mark">U</div>
+  <header class="umb-shell-header">
+    <div class="lp-brand">
+      <div class="lp-brand-mark">U</div>
       <span>Umbootstrap DS</span>
-      <span class="brand-sub">· home</span>
+      <span class="lp-brand-sub">· home</span>
     </div>
-    <div class="umb-theme-switch" role="group" aria-label="Alternar tema">
-      <button data-theme-btn="dark" class="is-active" aria-label="Tema escuro">Dark</button>
-      <button data-theme-btn="light" aria-label="Tema claro">Light</button>
+    <div class="umb-shell-header-right">
+      <div class="inset-control" role="group" aria-label="Alternar tema">
+        <button class="btn" data-theme="dark"         title="Escuro"><i class="ph ph-moon me-1"></i><span class="theme-label">Escuro</span></button>
+        <button class="btn" data-theme="light"        title="Claro"><i class="ph ph-sun me-1"></i><span class="theme-label">Claro</span></button>
+        <button class="btn" data-theme="emerald"      title="Esmeralda"><i class="ph ph-leaf me-1"></i><span class="theme-label">Esmeralda</span></button>
+        <button class="btn" data-theme="dark-emerald" title="Bravia"><i class="ph ph-circles-four me-1"></i><span class="theme-label">Bravia</span></button>
+      </div>
     </div>
   </header>
 
   <!-- ============================================================
-       HERO
+       CONTEÚDO
        ============================================================ -->
-  <section class="umb-hero">
-    <span class="eyebrow"><i class="ph ph-sparkle"></i> v0.4 — standalone templates</span>
-    <h1>Umbootstrap Design System</h1>
-    <p>
-      Fonte da verdade do DS proprietário da Umbler Talk — tokens, componentes,
-      padrões e templates de referência para produto, design e engenharia.
-    </p>
-  </section>
+  <main class="lp-content">
 
-  <!-- ============================================================
-       DOCUMENTAÇÃO — Card principal (DS completo)
-       ============================================================ -->
-  <section class="umb-section">
-    <div class="umb-section-head">
-      <h2>Documentação</h2>
-      <span class="count">1 arquivo</span>
-    </div>
-    <div class="umb-card-grid">
-      <a href="design-system/umbootstrap-design-system.html" class="umb-card umb-card-primary">
-        <div class="umb-card-icon accent"><i class="ph-duotone ph-book-open-text"></i></div>
-        <div class="umb-card-body">
-          <h3 class="umb-card-title">Umbootstrap — DS Completo</h3>
-          <p class="umb-card-desc">
+    <!-- HERO -->
+    <section class="lp-hero">
+      <span class="lp-hero-eyebrow"><i class="ph ph-sparkle"></i> v0.6 — usando componentes do DS</span>
+      <h1>Umbootstrap Design System</h1>
+      <p>
+        Fonte da verdade do Design System da Umbler — tokens, componentes, padrões
+        e templates compartilhados entre os produtos da empresa, para times de produto,
+        design e engenharia.
+      </p>
+    </section>
+
+    <!-- DOCUMENTAÇÃO -->
+    <section class="lp-section">
+      <div class="lp-section-head">
+        <h2>Documentação</h2>
+        <span class="lp-section-count">1 arquivo</span>
+      </div>
+
+      <!-- Path card recommended (glow primary + borda primary) — link único -->
+      <a href="design-system/umbootstrap-design-system.html" class="umb-path-card recommended" style="text-decoration: none;">
+        <span class="umb-path-icon primary"><i class="ph-duotone ph-book-open-text"></i></span>
+        <div style="flex: 1; min-width: 0;">
+          <h3 class="umb-path-title">
+            Umbootstrap — DS Completo
+            <span class="umb-path-badge">recomendado</span>
+          </h3>
+          <p class="umb-path-sub">
             Documentação viva: foundations (cores, tipografia, spacing), componentes
             atômicos e compostos, padrões de uso e shell templates.
           </p>
         </div>
-        <div class="umb-card-links">
-          <span class="umb-card-link"><i class="ph ph-arrow-up-right"></i> Abrir</span>
-        </div>
       </a>
-    </div>
-  </section>
+    </section>
 
-  <!-- ============================================================
-       SHELL & TEMPLATES — 5 templates × 2 breakpoints
-       ============================================================ -->
-  <section class="umb-section">
-    <div class="umb-section-head">
-      <h2>Shell &amp; Templates</h2>
-      <span class="count">5 templates · 10 arquivos</span>
-    </div>
-    <div class="umb-card-grid">
+    <!-- SHELL & TEMPLATES -->
+    <section class="lp-section">
+      <div class="lp-section-head">
+        <h2>Shell &amp; Templates</h2>
+        <span class="lp-section-count">5 templates · 10 arquivos</span>
+      </div>
 
-      <!-- Template 1 -->
-      <div class="umb-card">
-        <div class="umb-card-icon"><i class="ph ph-squares-four"></i></div>
-        <h3 class="umb-card-title">Template 1</h3>
-        <p class="umb-card-desc">Shell base — sidebar + conteúdo principal.</p>
-        <div class="umb-card-links">
-          <a href="design-system/template-1-desktop.html" class="umb-card-link" target="_blank" rel="noopener">
-            <i class="ph ph-monitor"></i> Desktop
-          </a>
-          <a href="design-system/template-1-mobile.html" class="umb-card-link" target="_blank" rel="noopener">
-            <i class="ph ph-device-mobile"></i> Mobile
-          </a>
+      <!-- Template 1 — grupo visual (sem borda) + 2 path-cards clicáveis -->
+      <div class="lp-template-group">
+        <div class="lp-template-group-head">
+          <h3>Template 1</h3>
+          <p>Shell base — sidebar + conteúdo principal.</p>
         </div>
+        <a href="design-system/template-1-desktop.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
+          <span class="umb-path-icon"><i class="ph ph-monitor"></i></span>
+          <div style="flex: 1; min-width: 0;">
+            <h4 class="umb-path-title">Desktop</h4>
+            <p class="umb-path-sub">viewport ≥ 768px</p>
+          </div>
+        </a>
+        <a href="design-system/template-1-mobile.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
+          <span class="umb-path-icon"><i class="ph ph-device-mobile"></i></span>
+          <div style="flex: 1; min-width: 0;">
+            <h4 class="umb-path-title">Mobile</h4>
+            <p class="umb-path-sub">frame 390×844</p>
+          </div>
+        </a>
       </div>
 
       <!-- Template 2 -->
-      <div class="umb-card">
-        <div class="umb-card-icon"><i class="ph ph-kanban"></i></div>
-        <h3 class="umb-card-title">Template 2</h3>
-        <p class="umb-card-desc">Shell com lista + detalhe (two-panel).</p>
-        <div class="umb-card-links">
-          <a href="design-system/template-2-desktop.html" class="umb-card-link" target="_blank" rel="noopener">
-            <i class="ph ph-monitor"></i> Desktop
-          </a>
-          <a href="design-system/template-2-mobile.html" class="umb-card-link" target="_blank" rel="noopener">
-            <i class="ph ph-device-mobile"></i> Mobile
-          </a>
+      <div class="lp-template-group">
+        <div class="lp-template-group-head">
+          <h3>Template 2</h3>
+          <p>Shell com lista + detalhe (two-panel).</p>
         </div>
+        <a href="design-system/template-2-desktop.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
+          <span class="umb-path-icon"><i class="ph ph-monitor"></i></span>
+          <div style="flex: 1; min-width: 0;">
+            <h4 class="umb-path-title">Desktop</h4>
+            <p class="umb-path-sub">viewport ≥ 768px</p>
+          </div>
+        </a>
+        <a href="design-system/template-2-mobile.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
+          <span class="umb-path-icon"><i class="ph ph-device-mobile"></i></span>
+          <div style="flex: 1; min-width: 0;">
+            <h4 class="umb-path-title">Mobile</h4>
+            <p class="umb-path-sub">frame 390×844</p>
+          </div>
+        </a>
       </div>
 
       <!-- Template 3 -->
-      <div class="umb-card">
-        <div class="umb-card-icon"><i class="ph ph-table"></i></div>
-        <h3 class="umb-card-title">Template 3</h3>
-        <p class="umb-card-desc">Shell com tabela / lista densa.</p>
-        <div class="umb-card-links">
-          <a href="design-system/template-3-desktop.html" class="umb-card-link" target="_blank" rel="noopener">
-            <i class="ph ph-monitor"></i> Desktop
-          </a>
-          <a href="design-system/template-3-mobile.html" class="umb-card-link" target="_blank" rel="noopener">
-            <i class="ph ph-device-mobile"></i> Mobile
-          </a>
+      <div class="lp-template-group">
+        <div class="lp-template-group-head">
+          <h3>Template 3</h3>
+          <p>Shell com tabela / lista densa.</p>
         </div>
+        <a href="design-system/template-3-desktop.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
+          <span class="umb-path-icon"><i class="ph ph-monitor"></i></span>
+          <div style="flex: 1; min-width: 0;">
+            <h4 class="umb-path-title">Desktop</h4>
+            <p class="umb-path-sub">viewport ≥ 768px</p>
+          </div>
+        </a>
+        <a href="design-system/template-3-mobile.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
+          <span class="umb-path-icon"><i class="ph ph-device-mobile"></i></span>
+          <div style="flex: 1; min-width: 0;">
+            <h4 class="umb-path-title">Mobile</h4>
+            <p class="umb-path-sub">frame 390×844</p>
+          </div>
+        </a>
       </div>
 
       <!-- Template 4 -->
-      <div class="umb-card">
-        <div class="umb-card-icon"><i class="ph ph-gear-six"></i></div>
-        <h3 class="umb-card-title">Template 4 — Menu de Configurações</h3>
-        <p class="umb-card-desc">Menu de settings em card com 22 itens agrupados.</p>
-        <div class="umb-card-links">
-          <a href="design-system/template-4-desktop.html" class="umb-card-link" target="_blank" rel="noopener">
-            <i class="ph ph-monitor"></i> Desktop
-          </a>
-          <a href="design-system/template-4-mobile.html" class="umb-card-link" target="_blank" rel="noopener">
-            <i class="ph ph-device-mobile"></i> Mobile
-          </a>
+      <div class="lp-template-group">
+        <div class="lp-template-group-head">
+          <h3>Template 4 — Menu de Configurações</h3>
+          <p>Menu de settings em card com 22 itens agrupados.</p>
         </div>
+        <a href="design-system/template-4-desktop.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
+          <span class="umb-path-icon"><i class="ph ph-monitor"></i></span>
+          <div style="flex: 1; min-width: 0;">
+            <h4 class="umb-path-title">Desktop</h4>
+            <p class="umb-path-sub">viewport ≥ 768px</p>
+          </div>
+        </a>
+        <a href="design-system/template-4-mobile.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
+          <span class="umb-path-icon"><i class="ph ph-device-mobile"></i></span>
+          <div style="flex: 1; min-width: 0;">
+            <h4 class="umb-path-title">Mobile</h4>
+            <p class="umb-path-sub">frame 390×844</p>
+          </div>
+        </a>
       </div>
 
       <!-- Template 5 -->
-      <div class="umb-card">
-        <div class="umb-card-icon"><i class="ph ph-chat-circle-dots"></i></div>
-        <h3 class="umb-card-title">Template 5 — Chat</h3>
-        <p class="umb-card-desc">Shell de conversa — lista + área de mensagens + composer.</p>
-        <div class="umb-card-links">
-          <a href="design-system/template-5-desktop.html" class="umb-card-link" target="_blank" rel="noopener">
-            <i class="ph ph-monitor"></i> Desktop
-          </a>
-          <a href="design-system/template-5-mobile.html" class="umb-card-link" target="_blank" rel="noopener">
-            <i class="ph ph-device-mobile"></i> Mobile
-          </a>
+      <div class="lp-template-group">
+        <div class="lp-template-group-head">
+          <h3>Template 5 — Chat</h3>
+          <p>Shell de conversa — lista + área de mensagens + composer.</p>
         </div>
+        <a href="design-system/template-5-desktop.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
+          <span class="umb-path-icon"><i class="ph ph-monitor"></i></span>
+          <div style="flex: 1; min-width: 0;">
+            <h4 class="umb-path-title">Desktop</h4>
+            <p class="umb-path-sub">viewport ≥ 768px</p>
+          </div>
+        </a>
+        <a href="design-system/template-5-mobile.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
+          <span class="umb-path-icon"><i class="ph ph-device-mobile"></i></span>
+          <div style="flex: 1; min-width: 0;">
+            <h4 class="umb-path-title">Mobile</h4>
+            <p class="umb-path-sub">frame 390×844</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- UTILITÁRIOS -->
+    <section class="lp-section">
+      <div class="lp-section-head">
+        <h2>Utilitários</h2>
+        <span class="lp-section-count">1 arquivo</span>
       </div>
 
-    </div>
-  </section>
-
-  <!-- ============================================================
-       UTILITÁRIOS — previews & ferramentas auxiliares
-       ============================================================ -->
-  <section class="umb-section">
-    <div class="umb-section-head">
-      <h2>Utilitários</h2>
-      <span class="count">1 arquivo</span>
-    </div>
-    <div class="umb-card-grid">
-      <div class="umb-card">
-        <div class="umb-card-icon"><i class="ph ph-swatches"></i></div>
-        <h3 class="umb-card-title">Preview · Tokens de fundo</h3>
-        <p class="umb-card-desc">Visualização lado a lado dos tokens <code style="font-size:12px;">--umb-bg*</code> em cada tema.</p>
-        <div class="umb-card-links">
-          <a href="design-system/preview-tokens-bg.html" class="umb-card-link" target="_blank" rel="noopener">
-            <i class="ph ph-arrow-up-right"></i> Abrir
-          </a>
+      <a href="design-system/preview-tokens-bg.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
+        <span class="umb-path-icon"><i class="ph ph-swatches"></i></span>
+        <div style="flex: 1; min-width: 0;">
+          <h3 class="umb-path-title">Preview · Tokens de fundo</h3>
+          <p class="umb-path-sub">Visualização lado a lado dos tokens <code>--umb-bg*</code> em cada tema.</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       FOOTER
-       ============================================================ -->
-  <footer class="umb-footer">
-    <span>Umbler Talk · Design System</span>
-    <span>
-      <a href="https://github.com/pricardodesigner/umbler-ds" target="_blank" rel="noopener">
-        <i class="ph ph-github-logo"></i> github.com/pricardodesigner/umbler-ds
       </a>
-    </span>
-  </footer>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="lp-footer">
+      <span>Umbler · Design System</span>
+      <span>
+        <a href="https://github.com/pricardodesigner/umbler-ds" target="_blank" rel="noopener">
+          <i class="ph ph-github-logo"></i> github.com/pricardodesigner/umbler-ds
+        </a>
+      </span>
+    </footer>
+
+  </main>
+
+  <!-- Bootstrap JS (pra dropdowns/tooltips futuros — consistente com DS) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // Theme switch — persiste em localStorage
+    // setTheme — mesma chave e assinatura do DS (rules.md §21)
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme);
+      try { localStorage.setItem('umb-theme', theme); } catch (e) {}
+      document.querySelectorAll('.inset-control [data-theme]').forEach(function (btn) {
+        btn.classList.toggle('active', btn.dataset.theme === theme);
+      });
+    }
+
+    // Restore tema salvo (mesma chave 'umb-theme' do DS — persiste entre páginas)
     (function () {
-      var KEY = 'umb-landing-theme';
-      var root = document.documentElement;
-      var btns = document.querySelectorAll('[data-theme-btn]');
-
-      function applyTheme(theme) {
-        root.setAttribute('data-theme', theme);
-        btns.forEach(function (b) {
-          b.classList.toggle('is-active', b.dataset.themeBtn === theme);
+      var saved = 'dark';
+      try { saved = localStorage.getItem('umb-theme') || 'dark'; } catch (e) {}
+      document.documentElement.setAttribute('data-bs-theme', saved);
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.inset-control [data-theme]').forEach(function (btn) {
+          btn.classList.toggle('active', btn.dataset.theme === saved);
+          btn.addEventListener('click', function () { setTheme(btn.dataset.theme); });
         });
-        try { localStorage.setItem(KEY, theme); } catch (e) {}
-      }
-
-      var saved;
-      try { saved = localStorage.getItem(KEY); } catch (e) {}
-      if (saved === 'light' || saved === 'dark') applyTheme(saved);
-
-      btns.forEach(function (b) {
-        b.addEventListener('click', function () { applyTheme(b.dataset.themeBtn); });
       });
     })();
   </script>
