@@ -862,23 +862,6 @@
       .umb-map-arrow { display: none; }
     }
 
-    /* === TABLE PAGINATION INLINE (footer) ================================
-       Paginação fina no rodapé da tabela: contador à esquerda, caret left/
-       right + indicador X/N à direita. Sem fundo colorido, SEM border do
-       table (assume container com borda externa). */
-    .umb-ct-pagination {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 14px;
-      border-top: 1px solid var(--umb-border);
-      background: transparent;
-      font-size: 12px;
-      color: var(--umb-text-mid);
-    }
-
-
-
     [data-bs-theme="light"] .badge-expert,
     [data-bs-theme="emerald"] .badge-expert   { background: transparent; color: var(--umb-tag-expert-color); border-color: var(--umb-tag-expert-color); }
     [data-bs-theme="light"] .badge-standard,
@@ -4111,27 +4094,11 @@
         </div>
       </div>
 
-      <div class="comp-group">
-        <p class="comp-label">Table Pagination — footer inline</p>
-        <div style="max-width:720px;border:1px solid var(--umb-border);border-radius:12px;overflow:hidden">
-          <div style="padding:40px 16px;text-align:center;color:var(--umb-text-mid);font-size:13px">[ tabela aqui ]</div>
-          <div class="umb-ct-pagination">
-            <span>Mostrando 1–10 de 1.235 contatos</span>
-            <div style="display:flex;align-items:center;gap:4px">
-              <button type="button" class="btn btn-icon btn-text btn-lg" disabled><i class="ph ph-caret-left"></i></button>
-              <span style="padding:0 8px">1 / 124</span>
-              <button type="button" class="btn btn-icon btn-text btn-lg"><i class="ph ph-caret-right"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
     <div class="comp-practices">
       <p class="comp-practices-title">Best Practices</p>
       <ul>
         <li><strong>Stat Card:</strong> ideal para filtros rápidos acima de tabelas. 4 variantes (<code>.total</code>, <code>.valid</code>, <code>.warn</code>, <code>.error</code>) comunicam semântica. Máximo 4 em desktop; 2 colunas em mobile via <code>.umb-stat-grid</code>.</li>
         <li><strong>Map Row:</strong> origem à esquerda (imutável), destino à direita (select com opções + "Não importar" + "Criar novo campo"). Chip <code>.umb-map-auto</code> indica casamento automático.</li>
-        <li><strong>Pagination:</strong> contador "Mostrando X–Y de Z tipo" à esquerda; caret left/right + "atual / total" à direita. Sem fundo colorido.</li>
         <li><strong>Nunca use Stat Card como botão de ação.</strong> Ele é filtro/indicador, não CTA. Se dispara ação, use botão ou Path Card.</li>
         <li><strong>Map Row em arquivo grande:</strong> se há mais de 8–10 colunas, agrupe por categoria e use <code>&lt;details&gt;</code> pra colapsar.</li>
       </ul>
@@ -4164,16 +4131,7 @@
     &lt;select class="form-select form-select-lg"&gt;...&lt;/select&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-
-&lt;!-- Table Pagination (dentro de container com border) --&gt;
-&lt;div class="umb-ct-pagination"&gt;
-  &lt;span&gt;Mostrando 1–10 de 1.235&lt;/span&gt;
-  &lt;div&gt;
-    &lt;button class="btn btn-icon btn-text btn-lg" disabled&gt;&lt;i class="ph ph-caret-left"&gt;&lt;/i&gt;&lt;/button&gt;
-    &lt;span&gt;1 / 124&lt;/span&gt;
-    &lt;button class="btn btn-icon btn-text btn-lg"&gt;&lt;i class="ph ph-caret-right"&gt;&lt;/i&gt;&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+</code></pre>
     </div>
     </section>
     <hr class="sec-divider">
