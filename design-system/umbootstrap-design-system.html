@@ -1271,6 +1271,41 @@
 .ds-grid-row-label { font-size: 11px; color: var(--umb-text-dim); }
 .ds-stack          { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 
+/* ── TOKEN SWATCHES — reativos ao tema ativo ──────────────────── */
+.token-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 14px;
+}
+.token-swatch { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.token-swatch-box {
+  width: 100%; height: 48px;
+  border-radius: 10px;
+  border: 1px solid var(--umb-border);
+}
+.token-swatch-name {
+  font-family: var(--bs-font-monospace);
+  font-size: 11px; color: var(--umb-text-primary);
+  line-height: 1.3; word-break: break-all;
+}
+.token-swatch-hex {
+  font-family: var(--bs-font-monospace);
+  font-size: 10px; color: var(--umb-text-dim);
+}
+/* Linha horizontal para tokens de borda */
+.token-border-row { display: flex; align-items: center; gap: 12px; padding: 6px 0; }
+.token-border-row .line { flex: 1; height: 2px; max-width: 240px; }
+.token-border-row .name { font-family: var(--bs-font-monospace); font-size: 11px; color: var(--umb-text-primary); min-width: 220px; }
+.token-border-row .hex  { font-family: var(--bs-font-monospace); font-size: 10px; color: var(--umb-text-dim); }
+/* Demo de texto colorido pelos tokens */
+.token-text-row { display: flex; align-items: baseline; gap: 14px; padding: 4px 0; }
+.token-text-row .sample { font-size: 15px; font-weight: 500; min-width: 140px; }
+.token-text-row .name   { font-family: var(--bs-font-monospace); font-size: 11px; color: var(--umb-text-dim); min-width: 180px; }
+.token-text-row .hex    { font-family: var(--bs-font-monospace); font-size: 10px; color: var(--umb-text-dim); }
+/* Chip de alerta — swatch com bg + color simultaneamente */
+.token-alert-chip { display: flex; flex-direction: column; gap: 4px; }
+.token-alert-chip-box { height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+
 /* ── BEST PRACTICES PANEL ──────────────────────────────────────── */
 .comp-practices {
   background: var(--umb-inset-bg); border: 1px solid var(--umb-border);
@@ -2656,94 +2691,123 @@
     <!-- ============================================================ SEÇÃO 1: CORES -->
     <section id="cores">
       <p class="sec-title">Cores & Tokens</p>
-      <p class="sec-subtitle">Paleta completa do Umbootstrap — tokens de cor usados em todos os componentes.</p>
+      <p class="sec-subtitle">Todos os swatches reagem ao tema ativo — troque o tema na sidebar pra ver cada token variar. O hex mostrado abaixo do nome é o valor resolvido no tema atual.</p>
 
       <div class="comp-group">
-        <p class="comp-label">Cores Principais</p>
-        <div class="comp-row flex-wrap" style="gap:12px">
-          <div class="ds-swatch-item">
-            <div style="width:72px;height:72px;border-radius:12px;background:#557CF2;margin:0 auto 6px"></div>
-            <div class="ds-color-name">Primary</div><div class="ds-color-hex">#557CF2</div>
-          </div>
-          <div class="ds-swatch-item">
-            <div style="width:72px;height:72px;border-radius:12px;background:#0C8E63;margin:0 auto 6px"></div>
-            <div class="ds-color-name">Success</div><div class="ds-color-hex">#0C8E63</div>
-          </div>
-          <div class="ds-swatch-item">
-            <div style="width:72px;height:72px;border-radius:12px;background:#A6882E;margin:0 auto 6px"></div>
-            <div class="ds-color-name">Warning</div><div class="ds-color-hex">#A6882E</div>
-          </div>
-          <div class="ds-swatch-item">
-            <div style="width:72px;height:72px;border-radius:12px;background:#9C2F27;margin:0 auto 6px"></div>
-            <div class="ds-color-name">Danger</div><div class="ds-color-hex">#9C2F27</div>
-          </div>
-          <div class="ds-swatch-item">
-            <div style="width:72px;height:72px;border-radius:12px;background:#3B59B2;margin:0 auto 6px"></div>
-            <div class="ds-color-name">Info</div><div class="ds-color-hex">#3B59B2</div>
-          </div>
-          <div class="ds-swatch-item">
-            <div style="width:72px;height:72px;border-radius:12px;background:#6c757d;margin:0 auto 6px"></div>
-            <div class="ds-color-name">Secondary</div><div class="ds-color-hex">#6c757d</div>
-          </div>
-          <div class="ds-swatch-item">
-            <div style="width:72px;height:72px;border-radius:12px;background:#7c3aed;margin:0 auto 6px"></div>
-            <div class="ds-color-name">AI Purple</div><div class="ds-color-hex">#7c3aed</div>
-          </div>
-          <div class="ds-swatch-item">
-            <div style="width:72px;height:72px;border-radius:12px;background:#ff6b35;margin:0 auto 6px"></div>
-            <div class="ds-color-name">Orange</div><div class="ds-color-hex">#ff6b35</div>
-          </div>
+        <p class="comp-label">Brand & Semântica</p>
+        <div class="token-grid">
+          <div class="token-swatch" data-token="--bs-primary"><div class="token-swatch-box" style="background:var(--bs-primary)"></div><div class="token-swatch-name">--bs-primary</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--bs-success"><div class="token-swatch-box" style="background:var(--bs-success)"></div><div class="token-swatch-name">--bs-success</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--bs-warning"><div class="token-swatch-box" style="background:var(--bs-warning)"></div><div class="token-swatch-name">--bs-warning</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--bs-danger"><div class="token-swatch-box" style="background:var(--bs-danger)"></div><div class="token-swatch-name">--bs-danger</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--bs-info"><div class="token-swatch-box" style="background:var(--bs-info)"></div><div class="token-swatch-name">--bs-info</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--bs-secondary"><div class="token-swatch-box" style="background:var(--bs-secondary)"></div><div class="token-swatch-name">--bs-secondary</div><div class="token-swatch-hex"></div></div>
         </div>
       </div>
 
       <div class="comp-group">
-        <p class="comp-label">Fundos (do mais escuro para o mais claro)</p>
-        <div class="comp-row" style="gap:8px">
-          <div class="ds-swatch-item">
-            <div style="width:80px;height:50px;border-radius:10px;background:#07080d;border:1px solid #2e3048;margin:0 auto 6px"></div>
-            <div class="ds-color-name" style="font-size:10px">bg-0</div><div class="ds-color-hex" style="font-size:10px">#07080d</div>
-          </div>
-          <div class="ds-swatch-item">
-            <div style="width:80px;height:50px;border-radius:10px;background:#0c0d14;border:1px solid #2e3048;margin:0 auto 6px"></div>
-            <div class="ds-color-name" style="font-size:10px">bg-1</div><div class="ds-color-hex" style="font-size:10px">#0c0d14</div>
-          </div>
-          <div class="ds-swatch-item">
-            <div style="width:80px;height:50px;border-radius:10px;background:#11121a;border:1px solid #2e3048;margin:0 auto 6px"></div>
-            <div class="ds-color-name" style="font-size:10px">bg-2</div><div class="ds-color-hex" style="font-size:10px">#11121a</div>
-          </div>
-          <div class="ds-swatch-item">
-            <div style="width:80px;height:50px;border-radius:10px;background:#181921;border:1px solid #2e3048;margin:0 auto 6px"></div>
-            <div class="ds-color-name" style="font-size:10px">bg-3</div><div class="ds-color-hex" style="font-size:10px">#181921</div>
-          </div>
-          <div class="ds-swatch-item">
-            <div style="width:80px;height:50px;border-radius:10px;background:#212529;border:1px solid #2e3048;margin:0 auto 6px"></div>
-            <div class="ds-color-name" style="font-size:10px">body</div><div class="ds-color-hex" style="font-size:10px">#212529</div>
-          </div>
+        <p class="comp-label">Surfaces — hierarquia de fundo</p>
+        <div class="token-grid">
+          <div class="token-swatch" data-token="--umb-bg-primary"><div class="token-swatch-box" style="background:var(--umb-bg-primary)"></div><div class="token-swatch-name">--umb-bg-primary</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-card-bg"><div class="token-swatch-box" style="background:var(--umb-card-bg)"></div><div class="token-swatch-name">--umb-card-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-surface-raised"><div class="token-swatch-box" style="background:var(--umb-surface-raised)"></div><div class="token-swatch-name">--umb-surface-raised</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-modal-bg"><div class="token-swatch-box" style="background:var(--umb-modal-bg)"></div><div class="token-swatch-name">--umb-modal-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-dropdown-bg"><div class="token-swatch-box" style="background:var(--umb-dropdown-bg)"></div><div class="token-swatch-name">--umb-dropdown-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-offcanvas-bg"><div class="token-swatch-box" style="background:var(--umb-offcanvas-bg)"></div><div class="token-swatch-name">--umb-offcanvas-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-input-bg"><div class="token-swatch-box" style="background:var(--umb-input-bg)"></div><div class="token-swatch-name">--umb-input-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-sidebar-bg"><div class="token-swatch-box" style="background:var(--umb-sidebar-bg)"></div><div class="token-swatch-name">--umb-sidebar-bg</div><div class="token-swatch-hex"></div></div>
+        </div>
+      </div>
+
+      <div class="comp-group">
+        <p class="comp-label">Estados (Hover / Active / Inset) — sobre --umb-surface-raised</p>
+        <div class="token-grid">
+          <div class="token-swatch" data-token="--umb-hover-bg"><div class="token-swatch-box" style="background:var(--umb-surface-raised);position:relative"><div style="position:absolute;inset:0;background:var(--umb-hover-bg);border-radius:inherit"></div></div><div class="token-swatch-name">--umb-hover-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-bg-active"><div class="token-swatch-box" style="background:var(--umb-bg-active)"></div><div class="token-swatch-name">--umb-bg-active</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-inset-bg"><div class="token-swatch-box" style="background:var(--umb-surface-raised);position:relative"><div style="position:absolute;inset:0;background:var(--umb-inset-bg);border-radius:inherit"></div></div><div class="token-swatch-name">--umb-inset-bg</div><div class="token-swatch-hex"></div></div>
         </div>
       </div>
 
       <div class="comp-group">
         <p class="comp-label">Texto</p>
-        <div class="comp-row" style="gap:24px">
-          <div><span style="font-size:16px;color:#f0f0f8;font-weight:600">text-primary</span> <span style="font-size:12px;color:#4a4b60">#f0f0f8</span></div>
-          <div><span style="font-size:16px;color:#9091a8;font-weight:500">text-mid</span> <span style="font-size:12px;color:#4a4b60">#9091a8</span></div>
-          <div><span style="font-size:16px;color:#4a4b60;font-weight:500">text-dim</span> <span style="font-size:12px;color:#4a4b60">#4a4b60</span></div>
+        <div>
+          <div class="token-text-row" data-token="--umb-text-primary"><span class="sample" style="color:var(--umb-text-primary);font-weight:600">Text Primary</span><span class="name">--umb-text-primary</span><span class="hex token-swatch-hex"></span></div>
+          <div class="token-text-row" data-token="--umb-text-mid"><span class="sample" style="color:var(--umb-text-mid)">Text Mid</span><span class="name">--umb-text-mid</span><span class="hex token-swatch-hex"></span></div>
+          <div class="token-text-row" data-token="--umb-text-dim"><span class="sample" style="color:var(--umb-text-dim)">Text Dim</span><span class="name">--umb-text-dim</span><span class="hex token-swatch-hex"></span></div>
         </div>
       </div>
 
       <div class="comp-group">
         <p class="comp-label">Bordas</p>
-        <div class="comp-row" style="gap:24px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:60px;height:2px;background:var(--umb-border)"></div>
-            <span style="font-size:12px;color:var(--umb-text-mid)">border-default <code style="color:var(--umb-text-dim)">#1f2030</code></span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:60px;height:2px;background:var(--umb-border)"></div>
-            <span style="font-size:12px;color:var(--umb-text-mid)">border-hover <code style="color:var(--umb-text-dim)">#2e3048</code></span>
-          </div>
+        <div>
+          <div class="token-border-row" data-token="--umb-border"><div class="line" style="background:var(--umb-border)"></div><span class="name">--umb-border</span><span class="hex token-swatch-hex"></span></div>
+          <div class="token-border-row" data-token="--umb-border-strong"><div class="line" style="background:var(--umb-border-strong)"></div><span class="name">--umb-border-strong</span><span class="hex token-swatch-hex"></span></div>
+          <div class="token-border-row" data-token="--umb-border-primary"><div class="line" style="background:var(--umb-border-primary)"></div><span class="name">--umb-border-primary</span><span class="hex token-swatch-hex"></span></div>
+          <div class="token-border-row" data-token="--umb-input-border"><div class="line" style="background:var(--umb-input-border)"></div><span class="name">--umb-input-border</span><span class="hex token-swatch-hex"></span></div>
         </div>
       </div>
+      <div class="comp-group">
+        <p class="comp-label">Alertas — 8 variantes, cada par bg + color</p>
+        <div class="token-grid">
+          <div class="token-alert-chip" data-token="--umb-alert-primary-bg"><div class="token-alert-chip-box" style="background:var(--umb-alert-primary-bg);color:var(--umb-alert-primary-color)">Primary</div><div class="token-swatch-name">--umb-alert-primary-*</div><div class="token-swatch-hex"></div></div>
+          <div class="token-alert-chip" data-token="--umb-alert-success-bg"><div class="token-alert-chip-box" style="background:var(--umb-alert-success-bg);color:var(--umb-alert-success-color)">Success</div><div class="token-swatch-name">--umb-alert-success-*</div><div class="token-swatch-hex"></div></div>
+          <div class="token-alert-chip" data-token="--umb-alert-danger-bg"><div class="token-alert-chip-box" style="background:var(--umb-alert-danger-bg);color:var(--umb-alert-danger-color)">Danger</div><div class="token-swatch-name">--umb-alert-danger-*</div><div class="token-swatch-hex"></div></div>
+          <div class="token-alert-chip" data-token="--umb-alert-warning-bg"><div class="token-alert-chip-box" style="background:var(--umb-alert-warning-bg);color:var(--umb-alert-warning-color)">Warning</div><div class="token-swatch-name">--umb-alert-warning-*</div><div class="token-swatch-hex"></div></div>
+          <div class="token-alert-chip" data-token="--umb-alert-info-bg"><div class="token-alert-chip-box" style="background:var(--umb-alert-info-bg);color:var(--umb-alert-info-color)">Info</div><div class="token-swatch-name">--umb-alert-info-*</div><div class="token-swatch-hex"></div></div>
+          <div class="token-alert-chip" data-token="--umb-alert-secondary-bg"><div class="token-alert-chip-box" style="background:var(--umb-alert-secondary-bg);color:var(--umb-alert-secondary-color)">Secondary</div><div class="token-swatch-name">--umb-alert-secondary-*</div><div class="token-swatch-hex"></div></div>
+          <div class="token-alert-chip" data-token="--umb-alert-light-bg"><div class="token-alert-chip-box" style="background:var(--umb-alert-light-bg);color:var(--umb-alert-light-color)">Light</div><div class="token-swatch-name">--umb-alert-light-*</div><div class="token-swatch-hex"></div></div>
+          <div class="token-alert-chip" data-token="--umb-alert-dark-bg"><div class="token-alert-chip-box" style="background:var(--umb-alert-dark-bg);color:var(--umb-alert-dark-color)">Dark</div><div class="token-swatch-name">--umb-alert-dark-*</div><div class="token-swatch-hex"></div></div>
+        </div>
+      </div>
+      <div class="comp-group">
+        <p class="comp-label">Tag Palette — etiquetas de contato/conversa (iguais em todos os temas)</p>
+        <div class="token-grid">
+          <div class="token-swatch" data-token="--umb-tag-geekblue-bg"><div class="token-swatch-box" style="background:var(--umb-tag-geekblue-bg)"></div><div class="token-swatch-name">--umb-tag-geekblue-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-tag-volcano-bg"><div class="token-swatch-box" style="background:var(--umb-tag-volcano-bg)"></div><div class="token-swatch-name">--umb-tag-volcano-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-tag-green-bg"><div class="token-swatch-box" style="background:var(--umb-tag-green-bg)"></div><div class="token-swatch-name">--umb-tag-green-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-tag-magenta-bg"><div class="token-swatch-box" style="background:var(--umb-tag-magenta-bg)"></div><div class="token-swatch-name">--umb-tag-magenta-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-tag-orange-bg"><div class="token-swatch-box" style="background:var(--umb-tag-orange-bg)"></div><div class="token-swatch-name">--umb-tag-orange-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-tag-red-bg"><div class="token-swatch-box" style="background:var(--umb-tag-red-bg)"></div><div class="token-swatch-name">--umb-tag-red-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-tag-cyan-bg"><div class="token-swatch-box" style="background:var(--umb-tag-cyan-bg)"></div><div class="token-swatch-name">--umb-tag-cyan-bg</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-tag-purple-bg"><div class="token-swatch-box" style="background:var(--umb-tag-purple-bg)"></div><div class="token-swatch-name">--umb-tag-purple-bg</div><div class="token-swatch-hex"></div></div>
+        </div>
+      </div>
+      <div class="comp-group">
+        <p class="comp-label">Conv Tags (Chat) — pares bg + color, variam por tema</p>
+        <div class="token-grid">
+          <div class="token-alert-chip" data-token="--umb-conv-tag-blue-bg"><div class="token-alert-chip-box" style="background:var(--umb-conv-tag-blue-bg);color:var(--umb-conv-tag-blue-color)">Blue</div><div class="token-swatch-name">--umb-conv-tag-blue-*</div><div class="token-swatch-hex"></div></div>
+          <div class="token-alert-chip" data-token="--umb-conv-tag-green-bg"><div class="token-alert-chip-box" style="background:var(--umb-conv-tag-green-bg);color:var(--umb-conv-tag-green-color)">Green</div><div class="token-swatch-name">--umb-conv-tag-green-*</div><div class="token-swatch-hex"></div></div>
+          <div class="token-alert-chip" data-token="--umb-conv-tag-amber-bg"><div class="token-alert-chip-box" style="background:var(--umb-conv-tag-amber-bg);color:var(--umb-conv-tag-amber-color)">Amber</div><div class="token-swatch-name">--umb-conv-tag-amber-*</div><div class="token-swatch-hex"></div></div>
+          <div class="token-alert-chip" data-token="--umb-conv-tag-red-bg"><div class="token-alert-chip-box" style="background:var(--umb-conv-tag-red-bg);color:var(--umb-conv-tag-red-color)">Red</div><div class="token-swatch-name">--umb-conv-tag-red-*</div><div class="token-swatch-hex"></div></div>
+          <div class="token-alert-chip" data-token="--umb-conv-tag-violet-bg"><div class="token-alert-chip-box" style="background:var(--umb-conv-tag-violet-bg);color:var(--umb-conv-tag-violet-color)">Violet</div><div class="token-swatch-name">--umb-conv-tag-violet-*</div><div class="token-swatch-hex"></div></div>
+        </div>
+      </div>
+      <div class="comp-group">
+        <p class="comp-label">Chat Bubbles — enviadas e recebidas</p>
+        <div class="token-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
+          <div class="token-swatch" data-token="--umb-chat-bubble-in-bg"><div class="token-swatch-box" style="background:var(--umb-chat-bubble-in-bg);color:var(--umb-chat-bubble-in-color);display:flex;align-items:center;padding:0 14px;font-size:13px">Oi, tudo bem?</div><div class="token-swatch-name">--umb-chat-bubble-in-*</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-chat-bubble-out-bg"><div class="token-swatch-box" style="background:var(--umb-chat-bubble-out-bg);color:var(--umb-chat-bubble-out-color);display:flex;align-items:center;padding:0 14px;font-size:13px">Tudo ótimo!</div><div class="token-swatch-name">--umb-chat-bubble-out-*</div><div class="token-swatch-hex"></div></div>
+        </div>
+      </div>
+      <div class="comp-group">
+        <p class="comp-label">Accents Especiais — cross-theme (iguais em todos os temas)</p>
+        <div class="token-grid">
+          <div class="token-swatch" data-token="--umb-ai-purple"><div class="token-swatch-box" style="background:var(--umb-ai-purple)"></div><div class="token-swatch-name">--umb-ai-purple</div><div class="token-swatch-hex"></div></div>
+          <div class="token-swatch" data-token="--umb-orange"><div class="token-swatch-box" style="background:var(--umb-orange)"></div><div class="token-swatch-name">--umb-orange</div><div class="token-swatch-hex"></div></div>
+        </div>
+      </div>
+    <div class="comp-practices">
+      <p class="comp-practices-title">Best Practices</p>
+      <ul>
+        <li><strong>Nunca use hex em inline-style.</strong> Sempre referêncie via <code>var(--bs-*)</code> ou <code>var(--umb-*)</code> — é o que garante que o componente acompanha todos os 5 temas (dark, light, emerald, dark-emerald/Bravia, auto).</li>
+        <li><strong>Surfaces vêm em hierarquia.</strong> Do fundo pra cima: <code>--umb-bg-primary</code> (tela), <code>--umb-card-bg</code> (card), <code>--umb-surface-raised</code> (popovers/dropdowns acima do card), <code>--umb-modal-bg</code>/<code>--umb-offcanvas-bg</code> (overlays).</li>
+        <li><strong>Hover e Active são tokens, não rgba mágico.</strong> Use <code>--umb-hover-bg</code> em item list/dropdown/table-row hover; <code>--umb-bg-active</code> em item selecionado. Não escreva <code>rgba(255,255,255,.05)</code> direto — no light theme esse branco some.</li>
+        <li><strong>Alertas são pares bg + color.</strong> Sempre use os dois juntos (ex: <code>bg: var(--umb-alert-success-bg); color: var(--umb-alert-success-color)</code>) — o contraste foi calibrado por tema.</li>
+        <li><strong>Tag palette é cross-theme</strong> — as 8 cores brand têm valor fixo nos 5 temas. Use pra etiquetas de contato/conversa onde a cor tem sentido semântico do usuário.</li>
+        <li><strong>Conv Tags (chat) VARIAM por tema</strong> — os 5 pares <code>--umb-conv-tag-*-bg/color</code> ajustam contraste pra dark vs light. Use em badges dentro de conversa, não em tags de perfil.</li>
+        <li><strong>Accents especiais (ai-purple, orange)</strong> não são cores de brand — são sinalizadores de conteúdo (IA, destaque pontual). Não confunda com primary.</li>
+      </ul>
+    </div>
     </section>
     <hr class="sec-divider">
 
@@ -7127,6 +7191,18 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       document.querySelectorAll('.theme-option').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.theme === theme);
       });
+      updateTokenHexLabels();
+    }
+
+    /* Le o hex resolvido de cada [data-token] e escreve no .token-swatch-hex filho.
+       Tokens variam por tema — escrever hex estatico no HTML ficaria desatualizado. */
+    function updateTokenHexLabels() {
+      const cs = getComputedStyle(document.documentElement);
+      document.querySelectorAll('[data-token]').forEach(el => {
+        const val = cs.getPropertyValue(el.dataset.token).trim();
+        const target = el.querySelector('.token-swatch-hex');
+        if (target) target.textContent = val || '—';
+      });
     }
     // Restore saved theme on load
     (function() {
@@ -7137,6 +7213,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         document.querySelectorAll('.theme-option').forEach(btn => {
           btn.classList.toggle('active', btn.dataset.theme === saved);
         });
+        updateTokenHexLabels();
       });
     })();
   </script>
