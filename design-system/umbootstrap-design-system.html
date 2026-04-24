@@ -645,6 +645,55 @@
       .umb-path-icon { font-size: 28px; }
     }
 
+    /* === ORIGIN CARD — irmão do Path Card, com ícone em caixa colorida ==
+       Usado no início de fluxos (ex: "Qual a origem dos contatos?"). Visual
+       mais "landing", convidativo, com ícone destacado em caixa colorida.
+       Diferença semântica vs .umb-path-card: o Origin convida (primeiros
+       passos), o Path informa (decisão dentro de um fluxo). */
+    .umb-origin-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      border: 2px solid var(--umb-border);
+      border-radius: 14px;
+      cursor: pointer;
+      background: var(--umb-card-bg);
+      transition: border-color .15s, background-color .15s;
+    }
+    .umb-origin-card + .umb-origin-card { margin-top: 10px; }
+    .umb-origin-card:hover {
+      border-color: var(--bs-primary);
+      background: color-mix(in srgb, var(--bs-primary) 3%, var(--umb-card-bg));
+    }
+    .umb-origin-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--bs-primary) 15%, transparent);
+      color: var(--bs-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .umb-origin-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--umb-text-primary);
+      margin: 0 0 4px;
+    }
+    .umb-origin-sub {
+      font-size: 13px;
+      color: var(--umb-text-mid);
+      margin: 0;
+    }
+
+    @media (max-width: 767.98px) {
+      .umb-origin-card { padding: 16px; }
+    }
+
     /* === STAT CARD (filtro rápido + mini-dashboard) =====================
        Card pequeno com ícone + número + label, clicável, com estado .active.
        Usado como filtro em cima de tabelas (ex: "Total · Válidos · Avisos ·
@@ -3734,7 +3783,7 @@
     <!-- ============================================================ DECISION CARDS -->
     <section id="decision-cards">
       <p class="sec-title">Cards de Decisão</p>
-      <p class="sec-subtitle">UmbPathCard — card clicável para telas de escolha, decisão ou próximo passo. Ícone neutro por padrão; cores por opção apenas em listas curtas (até 5 itens).</p>
+      <p class="sec-subtitle">UmbPathCard · UmbOriginCard — cards clicáveis para telas de escolha. O <strong>Path</strong> informa (decisão dentro de um fluxo, ícone sem caixa). O <strong>Origin</strong> convida (primeira tela de um fluxo, ícone em caixa colorida).</p>
 
       <div class="comp-group">
         <p class="comp-label">Lista curta (até 5 opções) — cores destacam semanticamente</p>
@@ -3823,6 +3872,28 @@
         </div>
       </div>
 
+      <div class="comp-group">
+        <p class="comp-label">Origin Card — primeiros passos de um fluxo, ícone em caixa colorida</p>
+        <div style="max-width:640px">
+          <div class="umb-origin-card">
+            <div class="umb-origin-icon"><i class="ph ph-users"></i></div>
+            <div style="flex:1">
+              <p class="umb-origin-title">Enviar para meus contatos</p>
+              <p class="umb-origin-sub">Envie para toda a lista ou filtre e selecione contatos específicos.</p>
+            </div>
+            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px"></i>
+          </div>
+          <div class="umb-origin-card">
+            <div class="umb-origin-icon"><i class="ph ph-file-arrow-up"></i></div>
+            <div style="flex:1">
+              <p class="umb-origin-title">Enviar para contatos de um arquivo</p>
+              <p class="umb-origin-sub">Faça o upload de um .csv ou .vcf e revise os contatos antes de enviar.</p>
+            </div>
+            <i class="ph ph-caret-right" style="color:var(--umb-text-mid);font-size:18px"></i>
+          </div>
+        </div>
+      </div>
+
     <div class="comp-practices">
       <p class="comp-practices-title">Best Practices</p>
       <ul>
@@ -3861,6 +3932,16 @@
   &lt;div style="flex:1"&gt;
     &lt;p class="umb-path-title"&gt;Ignorar e continuar&lt;/p&gt;
     &lt;p class="umb-path-sub"&gt;Os itens com erro serão removidos.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;i class="ph ph-caret-right"&gt;&lt;/i&gt;
+&lt;/div&gt;
+
+&lt;!-- Origin Card — primeiro passo de um fluxo, ícone em caixa colorida --&gt;
+&lt;div class="umb-origin-card"&gt;
+  &lt;div class="umb-origin-icon"&gt;&lt;i class="ph ph-users"&gt;&lt;/i&gt;&lt;/div&gt;
+  &lt;div style="flex:1"&gt;
+    &lt;p class="umb-origin-title"&gt;Enviar para meus contatos&lt;/p&gt;
+    &lt;p class="umb-origin-sub"&gt;Envie para toda a lista.&lt;/p&gt;
   &lt;/div&gt;
   &lt;i class="ph ph-caret-right"&gt;&lt;/i&gt;
 &lt;/div&gt;</code></pre>
