@@ -40,9 +40,9 @@ clara pedindo o token.
 
 Acionada por qualquer pedido tipo _"crie a tela de X"_, _"ajuste esta tela"_,
 _"gere o HTML de Y usando o DS"_. Toda execução começa com `git clone` fresco
-do repo público `pricardodesigner/umbler-ds`, lê `references/rules.md` e
-`umbootstrap-design-system.html`, e gera HTML single-file com shell desktop +
-shell mobile responsivo no mesmo arquivo.
+do repo público `pricardodesigner/umbler-ds`, lê `design-system/rules.md` e
+`design-system/umbootstrap-design-system.html`, e gera HTML single-file com
+shell desktop + shell mobile responsivo no mesmo arquivo.
 
 Arquitetura **install once, always latest**: o bundle do plugin contém apenas
 o `SKILL.md` bootstrap; DS e regras vêm do GitHub a cada execução, então uma

@@ -38,22 +38,24 @@ Após o `git clone`, estes são os arquivos que a skill **deve** ler:
 
 | Caminho | Conteúdo |
 |---|---|
-| `/tmp/umbler-ds-repo/umbootstrap-design-system.html` | Arquivo-mestre do DS (tokens CSS, classes de componentes, temas, templates shell/mobile) |
-| `/tmp/umbler-ds-repo/references/rules.md` | Todas as regras de implementação (leitura obrigatória antes de gerar código) |
+| `/tmp/umbler-ds-repo/design-system/umbootstrap-design-system.html` | Arquivo-mestre do DS (tokens CSS, classes de componentes, temas, templates shell/mobile) |
+| `/tmp/umbler-ds-repo/design-system/rules.md` | Todas as regras de implementação (leitura obrigatória antes de gerar código) |
+| `/tmp/umbler-ds-repo/design-system/tokens.css` + `components.css` | Tokens e componentes extraídos (usados pela landing; a fonte completa continua no HTML-mestre) |
+| `/tmp/umbler-ds-repo/design-system/template-*.html` | Templates de referência (desktop + mobile) |
 
-No futuro, novos arquivos de referência (ex: `references/tokens.json`, `references/examples/*.html`) podem ser adicionados ao repo — o workflow é sempre "clone + leia o que precisar do clone".
+No futuro, novos arquivos (ex: `design-system/tokens.json`, `design-system/examples/*.html`) podem ser adicionados ao repo — o workflow é sempre "clone + leia o que precisar do clone".
 
 ## 3. Workflow de geração
 
 ### 3.1. Leia as regras primeiro
 ```
-Read /tmp/umbler-ds-repo/references/rules.md
+Read /tmp/umbler-ds-repo/design-system/rules.md
 ```
 As regras cobrem: hierarquia de botões, input-groups, tamanhos, border-radius, espaçamentos, logo, navegação mobile, cores por tema, checkbox/radio/switch, scrollbars, Steps, breakpoints responsivos, e o que NUNCA fazer.
 
 ### 3.2. Leia o DS
 ```
-Read /tmp/umbler-ds-repo/umbootstrap-design-system.html
+Read /tmp/umbler-ds-repo/design-system/umbootstrap-design-system.html
 ```
 Extraia o bloco `<style>` completo e a estrutura dos templates (shell desktop, mobile, wizard, etc.).
 
@@ -109,8 +111,9 @@ Quando o usuário iterar sobre um novo fluxo até aprovar uma versão final:
 
 1. **Pergunte**: "Esse padrão ficou no ponto. Quer que eu adicione este componente/regra ao DS?"
 2. Se confirmar:
-   - **Edite** `umbootstrap-design-system.html` no repo local do usuário adicionando o componente/padrão
-   - **Edite** `references/rules.md` documentando a nova regra
+   - **Edite** `design-system/umbootstrap-design-system.html` no repo local do usuário adicionando o componente/padrão
+   - **Edite** `design-system/rules.md` documentando a nova regra
+   - Propague pros `design-system/template-*.html` se o bloco CSS afetado for duplicado neles
    - **Commit + push** — assim todos os usuários da skill recebem a atualização na próxima execução, sem reinstalar
 
 Essa é a promessa da arquitetura "install once, always latest".
@@ -143,7 +146,7 @@ Toda tela gerada inclui no `<head>`:
 Antes de entregar HTML:
 
 - [ ] `git clone` do repo rodou com sucesso nesta execução
-- [ ] `references/rules.md` foi lido antes de gerar código
+- [ ] `design-system/rules.md` foi lido antes de gerar código
 - [ ] Tela tem shell desktop + shell mobile no mesmo HTML com toggle responsivo (§19 do rules.md)
 - [ ] Todos os tokens de cor vêm de `var(--umb-*)` (zero hex hardcoded)
 - [ ] Botões seguem hierarquia (Text, Outlined, Primary) — §1 do rules.md

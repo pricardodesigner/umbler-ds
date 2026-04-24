@@ -1,6 +1,6 @@
 {
   "name": "umbler-design",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Umbler Design: gera telas/fluxos usando o Umbootstrap Design System e acessa dados do Umbler Talk (contatos, conversas, agentes) via MCP.",
   "author": {
     "name": "Paulo Ricardo",
