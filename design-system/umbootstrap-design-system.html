@@ -5042,27 +5042,20 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     <section id="clipboard">
       <p class="sec-title">Copy & Clipboard</p>
       <p class="sec-subtitle">CopyField · CopyToClipboard</p>
+    <div class="inset-control mb-3" id="copy-size-sw">
+      <button class="btn" onclick="setCopySize('sm')">Sm — 24px</button>
+      <button class="btn active" onclick="setCopySize('')">Md — 32px</button>
+      <button class="btn" onclick="setCopySize('lg')">Lg — 40px</button>
+    </div>
+    <div id="copy-size-demo">
       <div class="comp-group">
-        <p class="comp-label">CopyField — default (32px)</p>
+        <p class="comp-label">CopyField</p>
         <div class="input-group copy-field" style="max-width:420px">
           <input type="text" class="form-control" value="https://app.umbler.com/board/abc123" readonly>
           <button type="button" class="input-group-text" onclick="navigator.clipboard.writeText('https://app.umbler.com/board/abc123');this.innerHTML='<i class=\'ph ph-check\'></i>';setTimeout(()=>this.innerHTML='<i class=\'ph ph-copy\'></i>',1500)"><i class="ph ph-copy"></i></button>
         </div>
       </div>
-      <div class="comp-group">
-        <p class="comp-label">CopyField — large (40px)</p>
-        <div class="input-group input-group-lg copy-field" style="max-width:420px">
-          <input type="text" class="form-control" value="sk_live_51H8xYzABCdEfGhIjKl" readonly>
-          <button type="button" class="input-group-text" onclick="navigator.clipboard.writeText('sk_live_51H8xYzABCdEfGhIjKl');this.innerHTML='<i class=\'ph ph-check\'></i>';setTimeout(()=>this.innerHTML='<i class=\'ph ph-copy\'></i>',1500)"><i class="ph ph-copy"></i></button>
-        </div>
-      </div>
-      <div class="comp-group">
-        <p class="comp-label">CopyField — small (24px)</p>
-        <div class="input-group input-group-sm copy-field" style="max-width:420px">
-          <input type="text" class="form-control form-control-sm" value="cnt_8a3f9c" readonly>
-          <button type="button" class="input-group-text" onclick="navigator.clipboard.writeText('cnt_8a3f9c');this.innerHTML='<i class=\'ph ph-check\'></i>';setTimeout(()=>this.innerHTML='<i class=\'ph ph-copy\'></i>',1500)"><i class="ph ph-copy"></i></button>
-        </div>
-      </div>
+    </div>
       <div class="comp-group">
         <p class="comp-label">CopyToClipboard (botão standalone)</p>
         <div class="d-flex align-items-center gap-2 p-2" style="background:var(--umb-surface-raised);border-radius:12px;width:fit-content">
@@ -5088,7 +5081,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         <span>HTML</span>
         <button class="comp-code-copy" onclick="copyCode(this)">Copiar</button>
       </div>
-      <pre class="comp-code-pre"><code class="language-html">&lt;!-- CopyField default (32px) --&gt;
+      <pre class="comp-code-pre"><code class="language-html">&lt;!-- CopyField (default 32px) --&gt;
 &lt;div class="input-group copy-field"&gt;
   &lt;input type="text" class="form-control" value="https://..." readonly&gt;
   &lt;button type="button" class="input-group-text" onclick="copy(...)"&gt;
@@ -5096,19 +5089,11 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   &lt;/button&gt;
 &lt;/div&gt;
 
-&lt;!-- CopyField lg (40px) --&gt;
-&lt;div class="input-group input-group-lg copy-field"&gt;
-  &lt;input type="text" class="form-control" value="sk_live_..." readonly&gt;
-  &lt;button type="button" class="input-group-text"&gt;&lt;i class="ph ph-copy"&gt;&lt;/i&gt;&lt;/button&gt;
-&lt;/div&gt;
+&lt;!-- Variantes de tamanho: adicione .input-group-sm (24px) ou
+     .input-group-lg (40px) no wrapper; para .form-control também
+     acrescente .form-control-sm quando usar o sm. --&gt;
 
-&lt;!-- CopyField sm (24px) --&gt;
-&lt;div class="input-group input-group-sm copy-field"&gt;
-  &lt;input type="text" class="form-control form-control-sm" value="cnt_..." readonly&gt;
-  &lt;button type="button" class="input-group-text"&gt;&lt;i class="ph ph-copy"&gt;&lt;/i&gt;&lt;/button&gt;
-&lt;/div&gt;
-
-&lt;!-- CopyToClipboard standalone --&gt;
+&lt;!-- CopyToClipboard standalone (quando o valor já tem destaque) --&gt;
 &lt;code&gt;WEBHOOK_SECRET&lt;/code&gt;
 &lt;button class="btn btn-icon btn-sm btn-outline-primary"&gt;&lt;i class="ph ph-copy"&gt;&lt;/i&gt;&lt;/button&gt;</code></pre>
     </div>
@@ -7339,6 +7324,25 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       ig.classList.remove('input-group-sm', 'input-group-lg');
       if (size === 'sm') ig.classList.add('input-group-sm');
       else if (size === 'lg') ig.classList.add('input-group-lg');
+    });
+  }
+
+  function setCopySize(size) {
+    document.querySelectorAll('#copy-size-sw button').forEach(b => b.classList.remove('active'));
+    const activeBtn = [...document.querySelectorAll('#copy-size-sw button')]
+      .find(b => b.textContent.startsWith(size === '' ? 'Md' : size === 'sm' ? 'Sm' : 'Lg'));
+    if (activeBtn) activeBtn.classList.add('active');
+    // Atualiza wrapper .input-group (controla radius + propaga tamanho pros filhos)
+    document.querySelectorAll('#copy-size-demo .input-group').forEach(ig => {
+      ig.classList.remove('input-group-sm', 'input-group-lg');
+      if (size === 'sm') ig.classList.add('input-group-sm');
+      else if (size === 'lg') ig.classList.add('input-group-lg');
+    });
+    // Atualiza form-controls internos (radius/padding/font-size)
+    document.querySelectorAll('#copy-size-demo .form-control').forEach(el => {
+      el.classList.remove('form-control-sm', 'form-control-lg');
+      if (size === 'sm') el.classList.add('form-control-sm');
+      else if (size === 'lg') el.classList.add('form-control-lg');
     });
   }
 
