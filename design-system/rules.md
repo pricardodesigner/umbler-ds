@@ -4,6 +4,7 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 
 ## Índice
 
+0. **Regra Mestre — Só componentes do DS** (a regra que governa todas as outras)
 1. Hierarquia de botões
 2. Sistema de tamanhos
 3. Border-radius
@@ -29,6 +30,74 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 23. Tokens de borda — border e border-on-brand
 24. Font weight — máximo 600
 25. Governança — fonte única da verdade
+
+---
+
+## 0. Regra Mestre — Só componentes do DS
+
+**Esta é a regra que governa todas as outras.** Se uma geração violar esta regra, a tela está errada — mesmo que todo o resto esteja correto.
+
+### O princípio
+
+Qualquer input que o usuário fornecer — descrição em texto, screenshot/imagem, HTML colado, URL de referência — é tratado **exclusivamente como expressão de intenção** sobre a estrutura/layout da tela. A implementação usa **apenas componentes, tokens e regras do DS**. O input não é copiado; é interpretado e reconstruído com as peças do sistema.
+
+### Como processar cada tipo de input
+
+**Texto descritivo** ("crie uma tela de contatos com busca e tabela")
+- Identifique os componentes necessários (shell desktop+mobile, header, tabela, input-group de busca, botões de ação).
+- Monte exclusivamente com as classes canonicas (`.umb-shell-*`, `.table`, `.input-group`, `.btn btn-outline-primary`, etc).
+
+**Screenshot ou imagem**
+- Identifique qual componente do DS corresponde a cada elemento visual (o card virou `.card`, o avatar virou `.profile-avatar`, a barra de busca virou `.input-group.input-group-lg`).
+- **Não recrie pixel-perfect.** Se o screenshot usa um radius de 8px e o DS é 12/16, use o do DS. Se o screenshot usa uma cor custom, mapeie pro token mais próximo. A referência visual ensina a **estrutura**, não o estilo.
+
+**HTML colado** (este é o caso que mais induz ao erro)
+- **Leia e entenda** a estrutura (hierarquia de seções, quais blocos existem, como os dados fluem).
+- **Não copie o HTML.** Traduza cada elemento 1:1 para o componente equivalente do DS:
+  - `<div class="user-card">` do input → `.card` do DS
+  - `<button class="action-button primary">` do input → `.btn.btn-primary` do DS
+  - `<input class="search-box">` com ícone do input → `.input-group` com `.input-group-text` + `.form-control` do DS
+  - CSS custom do input → ignore; aplique os tokens e classes do DS
+  - Cores hex do input → mapeie pra `var(--bs-*)` ou `var(--umb-*)`
+  - Espaçamentos arbitrários do input → use utilitários Bootstrap (`mb-3`, `gap-2`, etc) seguindo as regras de espaçamento do DS
+
+**URL**
+- Mesma lógica do screenshot: extraia a estrutura conceitual, não o visual bruto.
+
+### Única exceção: conteúdo realmente único
+
+Houver **um elemento visual sem equivalente no DS** — e apenas esse elemento — pode ser implementado com CSS custom. Exemplos típicos:
+- Um gráfico de linha/barras específico (o DS não tem componente de gráfico ainda).
+- Um logotipo de terceiro (clientes, integrações).
+- Uma ilustração decorativa (hero image).
+
+**Mesmo nesse caso**, o custom precisa herdar o que for aplicável:
+- Bordas usam `var(--umb-border)`, não hex.
+- Background usa `var(--umb-card-bg)` ou `var(--umb-surface-raised)`, não hex.
+- Radius usa 12/16px (escala do DS), não valores arbitrários.
+- Tipografia usa `--bs-body-font-family` e os tamanhos da §24.
+- Cor de texto usa `--umb-text-primary/mid/dim`.
+
+### Como decidir
+
+Antes de escrever qualquer linha de HTML/CSS que não venha diretamente do DS, pare e responda:
+
+1. **Já existe um componente no DS para isso?** Abra `umbootstrap-design-system.html` e procure. O DS cobre: botoes, inputs, tabelas, tabs, cards, modais, offcanvas, alerts, badges, steps, tooltips, popovers, dropdowns, accordions, breadcrumbs, avatares, loaders, tags, chat bubbles, stat cards, map rows, empty states, copy fields, code blocks.
+2. **Se não existe exatamente, existe algo próximo que eu posso compor?** A maioria dos "novos componentes" é composição de componentes existentes (ex: uma "barra de filtros" é `.input-group` + `.btn-group` + `.dropdown`).
+3. **Só se não existe nada próximo** — custom com tokens.
+
+### O que isso proibe na prática
+
+- ❌ Copiar CSS do HTML do usuário pra dentro do resultado
+- ❌ Criar classes novas (`.minha-tela-header`, `.custom-card`) quando existe equivalente
+- ❌ Usar hex inline (`background:#557CF2`) quando existe token
+- ❌ Usar radius/padding/gap fora da escala do DS
+- ❌ Replicar um componente de um screenshot pixel-perfect ignorando o DS
+- ❌ Inline `style="color:#..."`, `style="border-radius:8px"`, `style="padding:13px"`
+
+### O que isso produz
+
+Tela gerada é **indistinguível** (em linguagem visual) de qualquer outra tela do Umbler Talk. Mesma hierarquia de botões, mesmos tamanhos, mesmos radius, mesma paleta reagindo a tema. A única coisa que varia entre telas é a composição dos componentes — não os componentes em si.
 
 ---
 

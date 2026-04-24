@@ -63,8 +63,11 @@ Extraia o bloco `<style>` completo e a estrutura dos templates (shell desktop, m
 - **Nova tela/fluxo**: "crie a tela de configurações do agente de IA"
 - **Ajuste de tela existente**: usuário envia screenshot/URL + descreve mudanças
 - **Componente isolado**: "crie o componente de tabela de créditos"
+- **Import de HTML externo**: usuário cola HTML de outro sistema pra recriar na linguagem da Umbler
 
-Para screenshots: recrie o mais próximo possível da referência visual, mas **sempre** usando componentes do DS (nunca recrie visuais do zero ignorando o DS).
+**Regra que governa todas as outras — §0 do rules.md:** qualquer que seja o input (texto, imagem, HTML, URL), ele é tratado como **expressão de intenção de estrutura**, nunca como fonte de código/visual a ser copiado. A implementação usa **só componentes, tokens e regras do DS**. No caso de HTML colado, você lê a estrutura pra entender a intenção e reconstrói 1:1 com os componentes do DS — não copia CSS, não copia cores hex, não recria classes custom. A única exceção é conteúdo visual realmente sem equivalente (gráfico, logotipo de terceiro, ilustração decorativa) — e mesmo aí o custom herda tokens de borda, background, radius e tipografia.
+
+Antes de escrever qualquer linha que não venha do DS, pare e pergunte: *já existe componente? existe algo próximo que eu posso compor?* Só em último caso, CSS custom.
 
 ### 3.4. Gere HTML single-file
 
@@ -157,3 +160,6 @@ Antes de entregar HTML:
 - [ ] Phosphor Icons (`ph ph-*`) para todos os ícones
 - [ ] 100% compatível com Bootstrap 5.3
 - [ ] Se o usuário pediu dados reais, o MCP `umbler-talk-api` foi consultado (ou mock + aviso)
+- [ ] **Regra Mestre §0**: cada elemento da tela tem correspondência 1:1 com um componente do DS (ou é uma exceção legítima — gráfico, logo de terceiro, ilustração — ainda herdando tokens)
+- [ ] Nenhum CSS copiado do input do usuário (HTML colado / screenshot) entrou no resultado
+- [ ] Nenhuma classe custom foi criada quando existia equivalente no DS
