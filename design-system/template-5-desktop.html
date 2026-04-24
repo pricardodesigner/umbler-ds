@@ -467,11 +467,9 @@
     .empty-state-sub   { font-size: 14px; color: var(--umb-text-mid); margin: 0; max-width: 280px; }
 
     /* --- COPY FIELD --- */
-    .copy-field { display: flex; align-items: center; background: var(--umb-input-bg); border: 1px solid var(--umb-input-border); border-radius: 10px; overflow: hidden; }
-    .copy-field input { flex: 1; background: transparent; border: none; color: var(--bs-body-color); padding: 8px 12px; font-size: 14px; outline: none; font-family: monospace; }
-    .copy-field .copy-btn { background: var(--umb-copy-btn-bg); border: none; border-left: 1px solid var(--umb-input-border); color: var(--umb-text-mid); padding: 8px 12px; cursor: pointer; transition: all .15s; font-size: 16px; }
-    .copy-field .copy-btn:hover { background: var(--umb-copy-btn-hover); color: var(--bs-primary); }
-    .copy-field-btn { border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; }
+    .copy-field > .form-control { font-family: var(--bs-font-monospace); }
+    button.input-group-text { cursor: pointer; transition: color .15s; }
+    button.input-group-text:hover { color: var(--bs-primary) !important; }
 
     /* --- CODE BLOCK --- */
     .code-block { background: var(--umb-code-bg); border-radius: 10px; padding: 14px 18px; font-family: 'Fira Code', 'Courier New', monospace; font-size: 13px; color: var(--umb-code-color); overflow-x: auto; border: 1px solid var(--umb-code-border); line-height: 1.7; }

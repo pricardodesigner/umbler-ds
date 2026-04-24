@@ -1161,12 +1161,20 @@
     .empty-state-title { font-size: 16px; font-weight: 600; color: var(--umb-text-primary); margin: 0; }
     .empty-state-sub   { font-size: 14px; color: var(--umb-text-mid); margin: 0; max-width: 280px; }
 
-    /* --- COPY FIELD --- */
-    .copy-field { display: flex; align-items: center; background: var(--umb-input-bg); border: 1px solid var(--umb-input-border); border-radius: 10px; overflow: hidden; }
-    .copy-field input { flex: 1; background: transparent; border: none; color: var(--bs-body-color); padding: 8px 12px; font-size: 14px; outline: none; font-family: monospace; }
-    .copy-field .copy-btn { background: var(--umb-copy-btn-bg); border: none; border-left: 1px solid var(--umb-input-border); color: var(--umb-text-mid); padding: 8px 12px; cursor: pointer; transition: all .15s; font-size: 16px; }
-    .copy-field .copy-btn:hover { background: var(--umb-copy-btn-hover); color: var(--bs-primary); }
-    .copy-field-btn { border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; }
+    /* --- COPY FIELD ---------------------------------------------------
+       Modifier de .input-group para campos de texto copiáveis (URLs, tokens,
+       IDs). Herda TODAS as regras visuais de Forms (.input-group + .form-
+       control + .input-group-text): borda 2px, radius 12/16, hover/focus,
+       variantes sm/lg. Aqui só declaramos o que é específico do conceito:
+       fonte monospace no campo. */
+    .copy-field > .form-control { font-family: var(--bs-font-monospace); }
+
+    /* input-group-text como botão clicável (slot de ação dentro do campo).
+       Usado pelo Copy Field e por qualquer input-group que precise de ação
+       inline. Sem border, sem bg extra — o hover comunica clicabilidade
+       trocando a cor do ícone pra primary. */
+    button.input-group-text { cursor: pointer; transition: color .15s; }
+    button.input-group-text:hover { color: var(--bs-primary) !important; }
 
     /* --- CODE BLOCK --- */
     .code-block { background: var(--umb-code-bg); border-radius: 10px; padding: 14px 18px; font-family: 'Fira Code', 'Courier New', monospace; font-size: 13px; color: var(--umb-code-color); overflow-x: auto; border: 1px solid var(--umb-code-border); line-height: 1.7; }
@@ -5035,19 +5043,75 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       <p class="sec-title">Copy & Clipboard</p>
       <p class="sec-subtitle">CopyField · CopyToClipboard</p>
       <div class="comp-group">
-        <p class="comp-label">CopyField</p>
-        <div class="copy-field" style="max-width:420px">
-          <input type="text" value="https://app.umbler.com/board/abc123" readonly>
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('https://app.umbler.com/board/abc123');this.innerHTML='<i class=\'ph ph-check\'></i>';setTimeout(()=>this.innerHTML='<i class=\'ph ph-copy\'></i>',1500)"><i class="ph ph-copy"></i></button>
+        <p class="comp-label">CopyField — default (32px)</p>
+        <div class="input-group copy-field" style="max-width:420px">
+          <input type="text" class="form-control" value="https://app.umbler.com/board/abc123" readonly>
+          <button type="button" class="input-group-text" onclick="navigator.clipboard.writeText('https://app.umbler.com/board/abc123');this.innerHTML='<i class=\'ph ph-check\'></i>';setTimeout(()=>this.innerHTML='<i class=\'ph ph-copy\'></i>',1500)"><i class="ph ph-copy"></i></button>
+        </div>
+      </div>
+      <div class="comp-group">
+        <p class="comp-label">CopyField — large (40px)</p>
+        <div class="input-group input-group-lg copy-field" style="max-width:420px">
+          <input type="text" class="form-control" value="sk_live_51H8xYzABCdEfGhIjKl" readonly>
+          <button type="button" class="input-group-text" onclick="navigator.clipboard.writeText('sk_live_51H8xYzABCdEfGhIjKl');this.innerHTML='<i class=\'ph ph-check\'></i>';setTimeout(()=>this.innerHTML='<i class=\'ph ph-copy\'></i>',1500)"><i class="ph ph-copy"></i></button>
+        </div>
+      </div>
+      <div class="comp-group">
+        <p class="comp-label">CopyField — small (24px)</p>
+        <div class="input-group input-group-sm copy-field" style="max-width:420px">
+          <input type="text" class="form-control form-control-sm" value="cnt_8a3f9c" readonly>
+          <button type="button" class="input-group-text" onclick="navigator.clipboard.writeText('cnt_8a3f9c');this.innerHTML='<i class=\'ph ph-check\'></i>';setTimeout(()=>this.innerHTML='<i class=\'ph ph-copy\'></i>',1500)"><i class="ph ph-copy"></i></button>
         </div>
       </div>
       <div class="comp-group">
         <p class="comp-label">CopyToClipboard (botão standalone)</p>
-        <div class="d-flex align-items-center gap-2 p-2" style="background:var(--umb-surface-raised);border-radius:10px;width:fit-content">
+        <div class="d-flex align-items-center gap-2 p-2" style="background:var(--umb-surface-raised);border-radius:12px;width:fit-content">
           <code style="font-size:13px;color:var(--umb-text-mid)">WEBHOOK_SECRET_XYZ123</code>
           <button class="btn btn-icon btn-sm btn-outline-primary" onclick="this.innerHTML='<i class=\'ph ph-check\'></i>';setTimeout(()=>this.innerHTML='<i class=\'ph ph-copy\'></i>',1500)"><i class="ph ph-copy"></i></button>
         </div>
       </div>
+
+    <div class="comp-practices">
+      <p class="comp-practices-title">Best Practices</p>
+      <ul>
+        <li><strong>CopyField = modifier de <code>.input-group</code>.</strong> Todas as regras visuais (borda 2px, radius, hover, focus, variantes sm/md/lg) vêm de Forms. <code>.copy-field</code> só aplica fonte monospace no input.</li>
+        <li><strong>Botão de ação = <code>button.input-group-text</code>.</strong> Mantém o campo unificado (mesmo fundo do input, sem divisor). Hover troca o ícone para primary — única sinalização de clicabilidade.</li>
+        <li><strong>Input sempre <code>readonly</code>.</strong> O valor não é editável; o propósito é exibir + copiar. Sem <code>readonly</code>, usuário pode editar e copiar valor errado.</li>
+        <li><strong>Variante conforme contexto:</strong> <code>sm</code> para IDs em listas/tabelas, <code>default</code> para URLs em modais/forms, <code>lg</code> para tokens destacados (API keys, webhooks em páginas de configuração).</li>
+        <li><strong>CopyToClipboard standalone</strong> quando o valor já tem destaque próprio (<code>&lt;code&gt;</code>, badge) e não precisa de campo. Use <code>.btn.btn-icon.btn-outline-primary</code>.</li>
+        <li><strong>Feedback de cópia:</strong> trocar ícone para <code>ph-check</code> por ~1.5s e voltar. Não use toast — é ruído pra essa ação micro.</li>
+      </ul>
+    </div>
+
+    <div class="comp-code-wrap">
+      <div class="comp-code-header">
+        <span>HTML</span>
+        <button class="comp-code-copy" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre class="comp-code-pre"><code class="language-html">&lt;!-- CopyField default (32px) --&gt;
+&lt;div class="input-group copy-field"&gt;
+  &lt;input type="text" class="form-control" value="https://..." readonly&gt;
+  &lt;button type="button" class="input-group-text" onclick="copy(...)"&gt;
+    &lt;i class="ph ph-copy"&gt;&lt;/i&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- CopyField lg (40px) --&gt;
+&lt;div class="input-group input-group-lg copy-field"&gt;
+  &lt;input type="text" class="form-control" value="sk_live_..." readonly&gt;
+  &lt;button type="button" class="input-group-text"&gt;&lt;i class="ph ph-copy"&gt;&lt;/i&gt;&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- CopyField sm (24px) --&gt;
+&lt;div class="input-group input-group-sm copy-field"&gt;
+  &lt;input type="text" class="form-control form-control-sm" value="cnt_..." readonly&gt;
+  &lt;button type="button" class="input-group-text"&gt;&lt;i class="ph ph-copy"&gt;&lt;/i&gt;&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- CopyToClipboard standalone --&gt;
+&lt;code&gt;WEBHOOK_SECRET&lt;/code&gt;
+&lt;button class="btn btn-icon btn-sm btn-outline-primary"&gt;&lt;i class="ph ph-copy"&gt;&lt;/i&gt;&lt;/button&gt;</code></pre>
+    </div>
     </section>
     <hr class="sec-divider">
 
