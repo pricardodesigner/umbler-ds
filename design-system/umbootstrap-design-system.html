@@ -318,8 +318,9 @@
            .umb-tag-pop-head        — título + ações (Criar, Fechar)
            .inset-control           — (opcional) segmented full-width
            .input-group             — (opcional) campo de busca
-           .umb-tag-pop-section-label "Selecionadas (N)"
-           .umb-tag-pop-item[s]     — renderizados dinamicamente
+           .umb-tag-pop-selected    — slot vazio; o JS popula com
+                                      label "Selecionadas (N)" + clones
+                                      dos items marcados (esconde com N=0)
            .umb-tag-pop-section-label "Todas"
            .umb-tag-pop-item[s]     — lista completa */
     .umb-tag-popover {
@@ -369,6 +370,60 @@
     .umb-tag-pop-item.selected { background: var(--umb-bg-active); }
     .umb-tag-pop-item.selected:hover { background: var(--umb-bg-active); }
     .umb-tag-pop-item .form-check-input { margin: 0; cursor: pointer; flex-shrink: 0; }
+
+    /* Sort menu do Tag Popover — popup custom, NÃO usa Bootstrap dropdown.
+       Dropdown aninhado em popover (dentro de outro dropdown-menu) é instável
+       no Bootstrap 5.3 (conflitos de auto-close/close event) e o overflow:hidden
+       do input-group cortaria o menu. Solução: o botão de ordenar vive FORA
+       do input-group, e o menu é posicionado absolutamente dentro do
+       .umb-tag-pop-search (anchor). Toggle/outside-click/ESC são controlados
+       por umbInitTagPopover(). */
+    .umb-tag-pop-search {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .umb-tag-pop-search > .input-group { flex: 1; min-width: 0; }
+    .umb-tag-pop-sort-menu {
+      position: absolute;
+      top: calc(100% + 4px); /* logo abaixo do trigger */
+      right: 0;
+      min-width: 180px;
+      background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border);
+      border-radius: 12px;
+      padding: 4px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+      z-index: 10;
+    }
+    [data-bs-theme="dark"] .umb-tag-pop-sort-menu,
+    [data-bs-theme="dark-emerald"] .umb-tag-pop-sort-menu {
+      box-shadow: 0 12px 32px rgba(0,0,0,.5);
+    }
+    .umb-tag-pop-sort-menu[hidden] { display: none; }
+    .umb-tag-pop-sort-opt {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 8px 10px;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      color: var(--umb-text-primary);
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .umb-tag-pop-sort-opt:hover { background: var(--umb-hover-bg); }
+    .umb-tag-pop-sort-opt .ph-check {
+      font-size: 14px;
+      color: var(--bs-primary);
+      visibility: hidden;
+    }
+    .umb-tag-pop-sort-opt.active .ph-check { visibility: visible; }
 
     /* Modificador .inset-control--block — segmented ocupando 100% da largura.
        Usado em popovers/drawers onde o segmented precisa alinhar com o container. */
@@ -3437,13 +3492,21 @@
                 <button type="button" class="btn active"><i class="ph ph-user me-1"></i>Contato</button>
                 <button type="button" class="btn"><i class="ph ph-chat me-1"></i>Conversa</button>
               </div>
-              <div class="input-group" style="margin-bottom:12px">
-                <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
-                <input type="text" class="form-control" placeholder="Pesquisar">
-                <span class="input-group-text" style="cursor:pointer"><i class="ph ph-arrows-down-up"></i></span>
+              <div class="umb-tag-pop-search">
+                <div class="input-group">
+                  <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
+                  <input type="text" class="form-control" placeholder="Pesquisar">
+                </div>
+                <button type="button" class="btn btn-icon btn-text umb-tag-pop-sort-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Ordenar" style="color:var(--bs-primary)"><i class="ph ph-arrows-down-up"></i></button>
+                <div class="umb-tag-pop-sort-menu" role="menu" hidden>
+                  <button type="button" class="umb-tag-pop-sort-opt active" role="menuitemradio" aria-checked="true" data-umb-sort="default"><i class="ph ph-check"></i><span>Padrão</span></button>
+                  <button type="button" class="umb-tag-pop-sort-opt" role="menuitemradio" aria-checked="false" data-umb-sort="alpha"><i class="ph ph-check"></i><span>Alfabética</span></button>
+                </div>
               </div>
+              <!-- Seção "Selecionadas (N)" — populada dinamicamente pelo JS (umbInitTagPopover) -->
+              <div class="umb-tag-pop-selected"></div>
               <div class="umb-tag-pop-section-label">Todas</div>
-              <div class="umb-tag-pop-item"><span class="umb-tag tag-geekblue" data-no-close="true"><i class="ph ph-user-circle"></i>Campanha VIPs</span><input type="checkbox" class="form-check-input" aria-label="Selecionar"></div>
+              <div class="umb-tag-pop-item"><span class="umb-tag tag-geekblue" data-no-close="true"><i class="ph ph-user-circle"></i>Campanha VIPs</span><input type="checkbox" class="form-check-input" aria-label="Selecionar" checked></div>
               <div class="umb-tag-pop-item"><span class="umb-tag tag-volcano" data-no-close="true"><i class="ph ph-user-circle"></i>Lead quente</span><input type="checkbox" class="form-check-input" aria-label="Selecionar"></div>
               <div class="umb-tag-pop-item"><span class="umb-tag tag-green" data-no-close="true"><i class="ph ph-user-circle"></i>Cliente ativo</span><input type="checkbox" class="form-check-input" aria-label="Selecionar"></div>
               <div class="umb-tag-pop-item"><span class="umb-tag tag-magenta" data-no-close="true"><i class="ph ph-user-circle"></i>Parceiro</span><input type="checkbox" class="form-check-input" aria-label="Selecionar"></div>
@@ -3451,7 +3514,7 @@
               <div class="umb-tag-pop-item"><span class="umb-tag tag-red" data-no-close="true"><i class="ph ph-user-circle"></i>Urgente</span><input type="checkbox" class="form-check-input" aria-label="Selecionar"></div>
             </div>
           </div>
-          <p class="comp-note" style="font-size:13px;color:var(--umb-text-mid);max-width:400px">Clique no botão à esquerda pra abrir o popover. Clique em qualquer ponto de uma linha pra selecionar/desmarcar — o checkbox acompanha. O botão X fecha o popover (o clique fora também fecha, pelo Bootstrap).</p>
+          <p class="comp-note" style="font-size:13px;color:var(--umb-text-mid);max-width:400px">Clique no botão à esquerda pra abrir o popover. Marque/desmarque em qualquer ponto da linha — o checkbox acompanha. A seção <strong>Selecionadas (N)</strong> aparece automaticamente no topo com os items marcados e some quando nenhum está selecionado. Desmarcar um clone ali em cima também desmarca o original na lista "Todas" abaixo.</p>
         </div>
       </div>
 
@@ -3461,7 +3524,8 @@
         <li>Trigger deve ter <code>data-bs-auto-close="outside"</code> — impede que cliques nos itens fechem o popover. Sem isso, o Bootstrap fecha ao primeiro clique e o usuário não consegue marcar múltiplos items.</li>
         <li>O botão X do header usa <code>aria-label="Fechar"</code> — o handler delegado do DS fecha o dropdown manualmente quando detecta esse botão.</li>
         <li>Clique em qualquer ponto de <code>.umb-tag-pop-item</code> toggle o checkbox. Isso é init automático pelo DS (delegação no document).</li>
-        <li>A seção <code>"Selecionadas (N)"</code> é <strong>opcional</strong> e deve ser renderizada dinamicamente — só aparece quando há ≥1 item marcado. Não deixe a seção vazia visível.</li>
+        <li>Seção <code>"Selecionadas (N)"</code>: basta colocar um slot vazio <code>&lt;div class="umb-tag-pop-selected"&gt;&lt;/div&gt;</code> antes da lista "Todas". O init (<code>umbInitTagPopover</code>) popula automaticamente com label + clones dos items marcados e esconde quando N === 0. Clicar/desmarcar em qualquer lado (seção ou lista) mantém os dois em sincronia — não renderize manualmente.</li>
+        <li>Ordenação: <code>.umb-tag-pop-search</code> (flex row, gap 8px) agrupa o <code>input-group</code> de busca + o trigger <code>.umb-tag-pop-sort-trigger</code> (<code>btn-icon btn-text</code>, <strong>fora</strong> do input pra evitar cortar com o <code>overflow:hidden</code>). O menu <code>.umb-tag-pop-sort-menu</code> é popup custom (não Bootstrap dropdown — conflitava com o <code>dropdown-menu</code> pai do popover) posicionado absolutamente à direita. Opções <code>data-umb-sort="default"</code> (<code>data-umb-order</code>, congelado no primeiro render) e <code>data-umb-sort="alpha"</code> (localeCompare pt-BR de <code>.umb-tag</code>). Só use duas opções — mais que isso vira filtro, não ordenação.</li>
         <li>Use <code>data-no-close="true"</code> nas tags dentro do popover — evita que o helper de X das etiquetas injete botão de remover em tags que são apenas visual.</li>
         <li>Largura fixa 320px. Não altere — foi calibrada para 6-8 itens sem scroll excessivo em desktop.</li>
       </ul>
@@ -3490,11 +3554,34 @@
       &lt;button class="btn active"&gt;&lt;i class="ph ph-user me-1"&gt;&lt;/i&gt;Contato&lt;/button&gt;
       &lt;button class="btn"&gt;&lt;i class="ph ph-chat me-1"&gt;&lt;/i&gt;Conversa&lt;/button&gt;
     &lt;/div&gt;
-    &lt;!-- Busca --&gt;
-    &lt;div class="input-group"&gt;
-      &lt;span class="input-group-text"&gt;&lt;i class="ph ph-magnifying-glass"&gt;&lt;/i&gt;&lt;/span&gt;
-      &lt;input type="text" class="form-control" placeholder="Pesquisar"&gt;
+    &lt;!-- Busca + ordenação: botão vive FORA do input-group, lado a lado.
+         O JS reordena a lista por "Padrão" (ordem de cadastro) ou "Alfabética"
+         e o menu é um popup custom (não usa Bootstrap dropdown). --&gt;
+    &lt;div class="umb-tag-pop-search"&gt;
+      &lt;div class="input-group"&gt;
+        &lt;span class="input-group-text"&gt;&lt;i class="ph ph-magnifying-glass"&gt;&lt;/i&gt;&lt;/span&gt;
+        &lt;input type="text" class="form-control" placeholder="Pesquisar"&gt;
+      &lt;/div&gt;
+      &lt;button type="button" class="btn btn-icon btn-text umb-tag-pop-sort-trigger"
+              aria-haspopup="menu" aria-expanded="false" aria-label="Ordenar"
+              style="color:var(--bs-primary)"&gt;
+        &lt;i class="ph ph-arrows-down-up"&gt;&lt;/i&gt;
+      &lt;/button&gt;
+      &lt;div class="umb-tag-pop-sort-menu" role="menu" hidden&gt;
+        &lt;button type="button" class="umb-tag-pop-sort-opt active"
+                role="menuitemradio" aria-checked="true" data-umb-sort="default"&gt;
+          &lt;i class="ph ph-check"&gt;&lt;/i&gt;&lt;span&gt;Padrão&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;button type="button" class="umb-tag-pop-sort-opt"
+                role="menuitemradio" aria-checked="false" data-umb-sort="alpha"&gt;
+          &lt;i class="ph ph-check"&gt;&lt;/i&gt;&lt;span&gt;Alfabética&lt;/span&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
     &lt;/div&gt;
+    &lt;!-- Seção "Selecionadas (N)" — populada automaticamente pelo JS.
+         Basta deixar o slot vazio; o init renderiza label + clones dos
+         items marcados, e esconde a seção quando N === 0. --&gt;
+    &lt;div class="umb-tag-pop-selected"&gt;&lt;/div&gt;
     &lt;!-- Seção "Todas" --&gt;
     &lt;div class="umb-tag-pop-section-label"&gt;Todas&lt;/div&gt;
     &lt;div class="umb-tag-pop-item"&gt;
@@ -7746,6 +7833,21 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
           popover usa data-bs-auto-close="outside" para não fechar em cliques internos.
        3) Sincroniza a classe .selected no item com o estado do checkbox —
           necessário pro CSS aplicar --umb-bg-active como fundo do item selecionado.
+       4) Renderiza a seção "Selecionadas (N)" dentro do slot .umb-tag-pop-selected:
+          - clona os items marcados pra cima da lista "Todas"
+          - label com contador é gerado pelo JS
+          - desmarcar o clone desmarca o original (e vice-versa)
+          - slot vazio quando N === 0 (nenhum item marcado).
+       5) Ordenação: trigger .umb-tag-pop-sort-trigger (btn-icon btn-text ao lado
+          do input-group) abre um popup custom .umb-tag-pop-sort-menu com opções
+          [data-umb-sort="default|alpha"]:
+          - "default" = ordem de cadastro (congelada em data-umb-order no primeiro render)
+          - "alpha"   = localeCompare pt-BR do texto da .umb-tag
+          - reordena items reais no DOM e re-renderiza a seção Selecionadas
+          - marca a opção ativa com classe .active + aria-checked="true"
+            (o CSS faz o check aparecer).
+          Menu custom (não Bootstrap dropdown) pra evitar conflito com o
+          dropdown-menu pai do popover — fecha em click fora ou ESC.
      Os handlers são delegados no document — funcionam para popovers
      adicionados dinamicamente. Chamar uma vez (auto-chamado no DS). */
   (function(){
@@ -7759,6 +7861,104 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       if (cb) item.classList.toggle('selected', !!cb.checked);
     }
 
+    // Helper: renderiza a seção "Selecionadas (N)" num popover específico.
+    // Popula o slot .umb-tag-pop-selected com label + clones dos items marcados.
+    // Clones recebem data-umb-mirror apontando pro data-umb-tag-id do original,
+    // o que permite sincronizar toggles nos dois sentidos (ver handler 3).
+    function renderSelectedSection(popover) {
+      if (!popover) return;
+      var slot = popover.querySelector('.umb-tag-pop-selected');
+      if (!slot) return;
+
+      // Só considera items reais (não-clones)
+      var allItems = popover.querySelectorAll('.umb-tag-pop-item:not([data-umb-mirror])');
+      var selected = [];
+      allItems.forEach(function(item) {
+        var cb = item.querySelector('.form-check-input');
+        if (cb && cb.checked) selected.push(item);
+      });
+
+      slot.innerHTML = '';
+      if (!selected.length) return;
+
+      var label = document.createElement('div');
+      label.className = 'umb-tag-pop-section-label';
+      label.textContent = 'Selecionadas (' + selected.length + ')';
+      slot.appendChild(label);
+
+      selected.forEach(function(orig, idx) {
+        if (!orig.dataset.umbTagId) {
+          orig.dataset.umbTagId = 'umbtag-' + Date.now().toString(36) + '-' + idx;
+        }
+        var clone = orig.cloneNode(true);
+        // Remove IDs pra não duplicar — um mesmo id em dois nós quebra a11y
+        clone.removeAttribute('id');
+        clone.querySelectorAll('[id]').forEach(function(el){ el.removeAttribute('id'); });
+        // Remove o data-umb-tag-id do clone — senão a query do handler
+        // acharia o clone antes do original e o sync reverso não funcionaria
+        clone.removeAttribute('data-umb-tag-id');
+        clone.setAttribute('data-umb-mirror', orig.dataset.umbTagId);
+        clone.classList.add('selected');
+        var cbClone = clone.querySelector('.form-check-input');
+        if (cbClone) cbClone.checked = true;
+        slot.appendChild(clone);
+      });
+    }
+
+    // Helper: congela a ordem de cadastro (data-umb-order) no primeiro uso.
+    // Idempotente — re-chamadas não sobrescrevem.
+    function seedOrder(popover) {
+      if (!popover) return;
+      var items = popover.querySelectorAll('.umb-tag-pop-item:not([data-umb-mirror])');
+      items.forEach(function(item, i) {
+        if (item.dataset.umbOrder == null) item.dataset.umbOrder = String(i);
+      });
+    }
+
+    // Helper: aplica ordenação no popover.
+    //   mode: 'default' = ordem de cadastro (data-umb-order)
+    //         'alpha'   = texto da .umb-tag (localeCompare pt-BR)
+    // Reordena items reais no DOM via appendChild (os items são os últimos
+    // filhos do popover depois do label "Todas", então não há risco de
+    // atropelar outros blocos). Re-renderiza a seção Selecionadas em seguida
+    // pros clones seguirem a mesma ordem.
+    function applySort(popover, mode) {
+      if (!popover) return;
+      seedOrder(popover);
+      var items = Array.from(popover.querySelectorAll('.umb-tag-pop-item:not([data-umb-mirror])'));
+      if (!items.length) return;
+
+      var sorted = items.slice();
+      if (mode === 'alpha') {
+        sorted.sort(function(a, b) {
+          var aTag = a.querySelector('.umb-tag');
+          var bTag = b.querySelector('.umb-tag');
+          var at = aTag ? aTag.textContent.trim().toLowerCase() : '';
+          var bt = bTag ? bTag.textContent.trim().toLowerCase() : '';
+          return at.localeCompare(bt, 'pt-BR');
+        });
+      } else {
+        sorted.sort(function(a, b) {
+          return parseInt(a.dataset.umbOrder, 10) - parseInt(b.dataset.umbOrder, 10);
+        });
+      }
+
+      var parent = items[0].parentNode;
+      sorted.forEach(function(item) { parent.appendChild(item); });
+
+      popover.setAttribute('data-umb-sort', mode);
+
+      // UI: classe .active na opção ativa (o CSS cuida da visibilidade do check)
+      // + aria-checked para menuitemradio
+      popover.querySelectorAll('.umb-tag-pop-sort-opt[data-umb-sort]').forEach(function(opt) {
+        var isActive = opt.getAttribute('data-umb-sort') === mode;
+        opt.classList.toggle('active', isActive);
+        opt.setAttribute('aria-checked', isActive ? 'true' : 'false');
+      });
+
+      renderSelectedSection(popover);
+    }
+
     // (1) Toggle do checkbox ao clicar na linha
     document.addEventListener('click', function(e) {
       var item = e.target.closest('.umb-tag-pop-item');
@@ -7768,6 +7968,61 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       if (!cb) return;
       cb.checked = !cb.checked;
       cb.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    // Helpers do sort menu custom (sem Bootstrap dropdown — ver comentário no CSS)
+    function closeSortMenu(popover) {
+      if (!popover) return;
+      var menu = popover.querySelector('.umb-tag-pop-sort-menu');
+      var trigger = popover.querySelector('.umb-tag-pop-sort-trigger');
+      if (menu) menu.hidden = true;
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    }
+    function openSortMenu(popover) {
+      // Fecha menus de sort de outros popovers abertos
+      document.querySelectorAll('.umb-tag-popover').forEach(function(p) {
+        if (p !== popover) closeSortMenu(p);
+      });
+      var menu = popover.querySelector('.umb-tag-pop-sort-menu');
+      var trigger = popover.querySelector('.umb-tag-pop-sort-trigger');
+      if (menu) menu.hidden = false;
+      if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    // (1b) Click no trigger do sort → toggle
+    document.addEventListener('click', function(e) {
+      var trigger = e.target.closest('.umb-tag-pop-sort-trigger');
+      if (!trigger) return;
+      var popover = trigger.closest('.umb-tag-popover');
+      if (!popover) return;
+      var menu = popover.querySelector('.umb-tag-pop-sort-menu');
+      if (!menu) return;
+      if (menu.hidden) openSortMenu(popover); else closeSortMenu(popover);
+    });
+
+    // (1c) Click numa opção de ordenação
+    document.addEventListener('click', function(e) {
+      var opt = e.target.closest('.umb-tag-pop-sort-opt[data-umb-sort]');
+      if (!opt) return;
+      var popover = opt.closest('.umb-tag-popover');
+      applySort(popover, opt.getAttribute('data-umb-sort'));
+      closeSortMenu(popover);
+    });
+
+    // (1d) Click fora do sort menu (mas em qualquer lugar) fecha
+    document.addEventListener('click', function(e) {
+      // Se o click foi no próprio menu/trigger, deixa os handlers acima agirem
+      if (e.target.closest('.umb-tag-pop-sort-menu, .umb-tag-pop-sort-trigger')) return;
+      document.querySelectorAll('.umb-tag-popover').forEach(closeSortMenu);
+    });
+
+    // (1e) ESC fecha o sort menu aberto (não fecha o popover)
+    document.addEventListener('keydown', function(e) {
+      if (e.key !== 'Escape') return;
+      var open = document.querySelector('.umb-tag-pop-sort-menu:not([hidden])');
+      if (!open) return;
+      e.stopPropagation();
+      closeSortMenu(open.closest('.umb-tag-popover'));
     });
 
     // (2) Botão X do header fecha o dropdown
@@ -7782,23 +8037,47 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       }
     });
 
-    // (3) Sincroniza .selected com o estado do checkbox — cobre clique na linha,
-    //     clique direto no input e mutações programáticas que disparem 'change'
+    // (3) Sincroniza estado no change do checkbox:
+    //     - se o change veio de um clone (data-umb-mirror), propaga pro original
+    //       sem dispatch (evita loop) e só então re-renderiza
+    //     - se veio de um original, atualiza sua classe .selected e re-renderiza
     document.addEventListener('change', function(e) {
       var cb = e.target;
       if (!cb || !cb.matches || !cb.matches('.umb-tag-pop-item .form-check-input')) return;
-      syncSelected(cb.closest('.umb-tag-pop-item'));
+      var item = cb.closest('.umb-tag-pop-item');
+      var popover = item.closest('.umb-tag-popover');
+
+      var mirrorId = item.getAttribute('data-umb-mirror');
+      if (mirrorId && popover) {
+        var orig = popover.querySelector('.umb-tag-pop-item[data-umb-tag-id="' + mirrorId + '"]');
+        if (orig) {
+          var origCb = orig.querySelector('.form-check-input');
+          if (origCb && origCb.checked !== cb.checked) {
+            origCb.checked = cb.checked;
+            syncSelected(orig);
+          }
+        }
+      } else {
+        syncSelected(item);
+      }
+
+      renderSelectedSection(popover);
     });
 
-    // Sync inicial para items com checkbox pré-marcado no markup
+    // Sync inicial — items pré-marcados + ordem congelada + seção Selecionadas
     function syncAll(root) {
-      (root || document).querySelectorAll('.umb-tag-pop-item').forEach(syncSelected);
+      var scope = root || document;
+      scope.querySelectorAll('.umb-tag-pop-item').forEach(syncSelected);
+      scope.querySelectorAll('.umb-tag-popover').forEach(function(pop) {
+        seedOrder(pop);
+        renderSelectedSection(pop);
+      });
     }
     syncAll();
 
     // Expõe para apps que renderizam popovers dinamicamente:
     // chamar umbInitTagPopover(rootElement) após inserir novos items
-    // sincroniza o estado .selected sem reexecutar os listeners.
+    // re-sincroniza classes e re-renderiza a seção "Selecionadas".
     window.umbInitTagPopover = syncAll;
   })();
 </script>
