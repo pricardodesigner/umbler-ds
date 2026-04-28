@@ -236,6 +236,136 @@ Nos fluxos de criação e edição, os componentes `umb-page-tabs` e `steps-cont
 <div class="umb-page-tabs px-4 my-4">...</div>
 ```
 
+## 6.1 Footer de ações em cards (wizard, modal, drawer) — sticky, sem border-top
+
+O `.umb-wiz-footer` (e qualquer barra de ações no rodapé de card central — modal, drawer, panel) tem um conjunto de regras que **só funcionam juntas**. Quebrar uma quebra o padrão inteiro. As regras existem porque cada uma resolve um bug real observado em produção.
+
+### Comportamento esperado
+
+Quando o conteúdo do card extrapola a altura da viewport, a barra de ações **fica fixa na base da viewport** durante o scroll, voltando à base natural do card quando o scroll chega ao fim. Isso garante que o usuário sempre vê "Voltar / Avançar" sem rolar.
+
+### Implementação canônica
+
+```css
+.umb-wiz-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 32px;
+
+  /* Sticky bottom — engata na base do scroll container quando há scroll */
+  position: sticky;
+  bottom: 0;
+
+  /* Background sólido tampa o conteúdo passando atrás durante o sticky */
+  background: var(--umb-card-bg);
+
+  /* Padding 16px em CIMA E EMBAIXO — o top separa do conteúdo, o bottom
+     evita que os botões encostem na base da viewport quando o sticky engata */
+  padding: 16px 0;
+
+  /* Sem border-top, sem margens laterais negativas, sem border-radius */
+  z-index: 5;
+}
+```
+
+```css
+/* Mobile: padding vertical reduzido */
+@media (max-width: 767.98px) {
+  .umb-wiz-footer {
+    padding: 12px 0;
+  }
+}
+```
+
+### Os 6 requisitos que precisam coexistir
+
+#### 1. Scroll container SEM `padding-bottom`
+
+O sticky `bottom: 0` engata no edge interno do `padding-bottom` do scroll container. Se o `.umb-shell-content` tem `padding: 24px`, o sticky vai grudar **24px acima da base real da viewport** — fica um gap visível embaixo da barra.
+
+**Regra:** o scroll container tem `padding: 24px 24px 0` (sem padding-bottom). Migre o respiro inferior para o wrapper interno:
+
+```css
+.umb-shell-content { padding: 24px 24px 0; overflow-y: auto; }
+.umb-page-inner    { padding-bottom: 24px; }   /* respiro inferior aqui */
+```
+
+#### 2. Footer NÃO pode ter wrapper sem altura própria
+
+Em telas com sub-views (`progress` / `done` / `summary` / etc), o footer trocado por sub-view **deve carregar o `data-subview` direto no `.umb-wiz-footer`**, não dentro de um wrapper que apenas envolve o footer. Esse wrapper teria altura igual à do footer (range = 0), e `position: sticky` precisa de range no pai pra ter onde "deslizar" antes de engatar.
+
+```html
+<!-- ❌ Errado — wrapper limita range do sticky a zero, sticky vira static -->
+<div data-subview="progress">
+  <div class="umb-wiz-footer">…</div>
+</div>
+
+<!-- ✅ Correto — footer é filho direto do .umb-wiz, range = altura do card -->
+<div class="umb-wiz-footer" data-subview="progress">…</div>
+```
+
+#### 3. Padding vertical igual em cima e embaixo
+
+Use `padding: 16px 0` (e não `padding: 16px 0 0`). O padding-bottom mantém os botões afastados da base da viewport quando o sticky engata — sem ele os botões ficam colados na borda inferior do browser, sensação de "desalinhado".
+
+#### 4. Sem `border-top`
+
+A barra de ações **nunca tem `border-top`** sobre o conteúdo — a separação visual é dada exclusivamente pelo `padding` interno e pela mudança de background. Adicionar uma linha cria peso desnecessário e quebra a sensação de continuidade do card.
+
+```css
+/* ❌ Errado — vira "barra de outro componente" */
+.umb-wiz-footer { border-top: 1px solid var(--umb-border); }
+
+/* ✅ Correto — só padding e background */
+.umb-wiz-footer { padding: 16px 0; background: var(--umb-card-bg); }
+```
+
+#### 5. Sem margens laterais negativas (approach minimalista)
+
+Já tentamos `margin-inline: -32px` para o footer "furar" o padding-inline do card e ocupar toda a largura. **Não funciona bem** — em alguns layouts a margem negativa quebra o engate do sticky em Chrome/Safari, e o footer fica solto no fim do card sem grudar.
+
+A abordagem canônica é manter o footer **dentro do padding-inline do `.umb-wiz`**, como uma barra inset. O card já tem padding 32px nos lados; o footer respeita esse padding e fica visualmente alinhado com o conteúdo acima.
+
+#### 6. Background sólido
+
+`background: var(--umb-card-bg)` é obrigatório — é ele que "tampa" o conteúdo passando por baixo durante o sticky. Sem isso, o conteúdo aparece atrás dos botões enquanto o usuário rola.
+
+### Por quê tudo isso
+
+- **Sticky** evita o problema clássico de "preciso rolar pra ver o botão Avançar" em formulários longos — padrão dos wizards modernos (Stripe, Notion, Figma).
+- **Sem border-top** porque a barra é parte do mesmo card. Background sólido + padding já criam separação. Linha adicional sugere "barra de outro componente" e quebra a leitura "tudo isso é uma única superfície".
+- **Sem wrappers sem altura** porque é a primeira coisa que dá bug quando você tem múltiplas sub-views — agrupar é tentador, mas zera o range do sticky.
+- **Sem padding-bottom no scroll container** porque é a segunda coisa que dá bug — o offset visual aparece "do nada" quando o sticky engata, e é difícil de debugar sem inspetor.
+- **Sem margens negativas** porque é a terceira coisa que dá bug — funciona no Firefox, falha no Chrome em alguns layouts. Approach minimalista é mais portável.
+- A combinação só funciona junta — sticky sem background tampa nada, sticky com border-top vira "ferramenta de browser" em vez de "ação do card", sticky com wrapper de range zero não engata.
+
+### Aplica-se a
+
+- `.umb-wiz-footer` (wizards / fluxos multi-passo)
+- `.modal-footer` (modais Bootstrap reestilizados, quando o conteúdo do modal é scrollável)
+- `.offcanvas-footer` (drawers)
+- Qualquer barra de ações persistente na base de um `.card` ou container similar com scroll
+
+### Auditoria rápida
+
+Antes de entregar uma tela com wizard/modal/drawer:
+
+```bash
+# 1. Footer não envolvido em wrapper sem altura:
+grep -B1 -A1 "umb-wiz-footer" arquivo.html | grep -B1 "data-subview" | grep "<div data-subview"
+# (não deve retornar — se retornar, mover data-subview pro footer)
+
+# 2. Sem border-top no footer:
+grep -A5 "\.umb-wiz-footer" arquivo.html | grep "border-top"
+# (não deve retornar)
+
+# 3. Scroll container sem padding-bottom:
+grep -A3 "\.umb-shell-content" arquivo.html | grep -E "padding:.*24px(\s|;|$)"
+# (deve retornar "padding: 24px 24px 0", não "padding: 24px")
+```
+
 ## 7. Ações em tabelas
 
 - Ações de linha usam `btn btn-text` (Md Text Primary) com ícone
@@ -677,6 +807,10 @@ Após gerar uma tela, redimensione a janela do browser cruzando os 768px e confi
 
 - Nunca use cores hex hardcoded — sempre tokens via `var(--umb-*)`
 - Nunca use `--umb-bg-primary` (nem o alias `--umb-content-bg`) como `background` de qualquer componente **dentro** de um card/wizard/drawer/modal. Essa cor é o canvas atrás dos cards, não dentro deles. Sub-blocos usam `transparent` + borda, `--umb-hover-bg`, `--umb-bg-active` ou `.alert.alert-info` — ver §22.6 para a tabela completa.
+- Nunca coloque `border-top` no `.umb-wiz-footer` (nem em `.modal-footer`, `.offcanvas-footer` ou qualquer barra de ações na base de um card). A separação é só padding + background; uma linha adicional quebra a continuidade do card. Ver §6.1 para o padrão completo de footer sticky sem border-top.
+- Nunca envolva o `.umb-wiz-footer` em um `<div>` extra que apenas o agrupe (ex: `<div data-subview="progress"><div class="umb-wiz-footer">…</div></div>`). Esse wrapper tem altura igual à do footer e zera o range do `position: sticky` — o footer não engata e some do scroll. Carregue o atributo de toggle direto no `.umb-wiz-footer`. Ver §6.1 §2.
+- Nunca aplique `padding-bottom` ao scroll container que hospeda um `.umb-wiz-footer` sticky (ex: `.umb-shell-content`). O sticky `bottom: 0` engata no edge interno do padding e gera um gap visível abaixo do footer. Migre o respiro inferior para um wrapper interno (`.umb-page-inner`). Ver §6.1 §1.
+- Nunca use margens laterais negativas no `.umb-wiz-footer` (`margin-inline: -32px`) tentando furar o padding-inline do card pra fazer barra full-bleed. Em Chrome/Safari isso quebra o engate do sticky em alguns layouts. O footer vive dentro do padding do card como barra inset. Ver §6.1 §5.
 - Nunca use `--umb-chat-canvas-bg` (removido): o fundo do chat **é** o `--umb-bg-primary` (ver §22)
 - Nunca use `--umb-chat-list-active` (removido): conversa selecionada usa `--umb-bg-active` (§22); era um token paralelo que violava a regra sistêmica de um único token semântico para seleção
 - Nunca crie um token de fundo dedicado por tela — reuse `--umb-bg-primary` para canvas e `--umb-bg-active` para seleção
@@ -1451,4 +1585,331 @@ A v1 é **aditiva** — `components.css` é usado apenas pela landing. Os 11 HTM
 | Componentes do DS ainda não extraídos | `<style>` inline do HTML | `.umb-conv-list { ... }` |
 | Estilos específicos de uma página | `<style>` inline do HTML | `.lp-hero { ... }` na landing |
 | Overrides de tema em componente | `<style>` inline do HTML | `[data-bs-theme="light"] .umb-brand-logo { filter: none; }` |
+
+---
+
+## 26. `.umb-stat-card` como filtro de lista
+
+O `.umb-stat-card` (definido na §23.4 como card interativo com borda 2px) tem dois usos canônicos: (a) **dashboard** — exibir métricas estáticas em telas de overview; (b) **filtro** — quando os mesmos números são também os filtros aplicáveis a uma lista logo abaixo.
+
+O caso (b) substitui combinações redundantes de `.inset-control` (Segmented) + 4 cards de KPI mostrando os mesmos números — pattern que aparecia em telas pré-DS e era ruído visual puro.
+
+### Quando usar como filtro
+
+Use stat-cards clicáveis **sempre** que:
+
+- A tela tem 3–5 categorias mutuamente exclusivas + uma categoria "Todos"
+- Cada categoria tem uma métrica numérica (count) que importa
+- A lista abaixo é filtrada pela categoria selecionada
+- O usuário precisa ver os totais e filtrar com um clique só (sem 2 componentes pra mesma informação)
+
+Exemplos canônicos:
+- Tela de importação em massa: Processados / Criados / Atualizados / Com erro
+- Dashboard de campanha: Enviados / Entregues / Lidos / Falhados
+- Lista de conversas com filtro: Total / Esperando / Atendendo / Resolvidos
+- Auditoria de contatos: Todos / Válidos / Com aviso / Inválidos
+
+### Markup canônico
+
+```html
+<div class="umb-stat-grid" role="tablist" aria-label="Filtrar por status">
+  <div class="umb-stat-card active" data-imp-filter="all" role="tab" tabindex="0" aria-selected="true">
+    <i class="ph ph-list umb-stat-icon total"></i>
+    <div>
+      <div class="umb-stat-num" data-imp-stat="processed">0</div>
+      <div class="umb-stat-label">Processados</div>
+    </div>
+  </div>
+  <div class="umb-stat-card" data-imp-filter="success" role="tab" tabindex="0" aria-selected="false">
+    <i class="ph ph-check-circle umb-stat-icon valid"></i>
+    <div>
+      <div class="umb-stat-num" data-imp-stat="success">0</div>
+      <div class="umb-stat-label">Criados</div>
+    </div>
+  </div>
+  <!-- … -->
+</div>
+
+<!-- Lista filtrável logo abaixo -->
+<div class="umb-ct-table-wrap" aria-live="polite">
+  <table class="table umb-ct-table">…</table>
+</div>
+
+<!-- Empty state quando o filtro retorna 0 resultados -->
+<div data-imp-empty style="display:none;text-align:center;padding:24px 16px;color:var(--umb-text-mid)">
+  <i class="ph ph-funnel" style="font-size:24px;display:block;margin-bottom:6px"></i>
+  Nenhum item com este status.
+</div>
+```
+
+### Atributos obrigatórios
+
+| Atributo | Valor | Motivo |
+|---|---|---|
+| `role="tablist"` | no `.umb-stat-grid` | Anuncia ao screen reader que é um grupo de filtros |
+| `role="tab"` | em cada `.umb-stat-card` | Cada card é um filtro |
+| `tabindex="0"` | em cada `.umb-stat-card` | Tornar tabbável (foco via teclado) |
+| `aria-selected="true/false"` | em cada `.umb-stat-card` | Estado de seleção sincronizado com `.active` |
+| `data-*-filter="<key>"` | em cada `.umb-stat-card` | Identificador do filtro (use prefixo do contexto: `data-imp-filter`, `data-conv-filter`, etc) |
+
+A classe `.active` controla o estado visual (borda + bg em primary, herdado da §23.4). O atributo `aria-selected` deve sempre acompanhar — anuncia o estado pra screen readers.
+
+### JS canônico
+
+```js
+function setFilter(filter) {
+  document.querySelectorAll('[data-imp-filter]').forEach(card => {
+    const isActive = card.dataset.impFilter === filter;
+    card.classList.toggle('active', isActive);
+    card.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+  applyFilter(filter);
+}
+function applyFilter(filter) {
+  document.querySelectorAll('[data-imp-row]').forEach(row => {
+    row.style.display = (filter === 'all' || row.dataset.impRow === filter) ? '' : 'none';
+  });
+  updateEmpty();
+}
+function updateEmpty() {
+  const visibleRows = document.querySelectorAll('[data-imp-row]:not([style*="display: none"])').length;
+  const hasAnyRow  = document.querySelectorAll('[data-imp-row]').length > 0;
+  document.querySelector('[data-imp-empty]').style.display = (hasAnyRow && visibleRows === 0) ? '' : 'none';
+}
+// Click + Enter/Space (a11y)
+document.addEventListener('click', e => {
+  const card = e.target.closest('[data-imp-filter]');
+  if (card) setFilter(card.dataset.impFilter);
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const card = e.target.closest('[data-imp-filter]');
+  if (card) { e.preventDefault(); setFilter(card.dataset.impFilter); }
+});
+```
+
+### Anti-patterns
+
+```html
+<!-- ❌ Errado — Segmented duplicando os mesmos contadores dos stat-cards -->
+<div class="umb-stat-grid">
+  <div class="umb-stat-card">200 Processados</div>
+  <div class="umb-stat-card">170 Criados</div>
+  <!-- … -->
+</div>
+<div class="inset-control">
+  <button>Todos 200</button>
+  <button>Criados 170</button>
+  <!-- … -->
+</div>
+
+<!-- ❌ Errado — stat-card sem aria-selected nem role="tab" (a11y quebrada) -->
+<div class="umb-stat-card active" onclick="filtrar('error')">
+  <i class="ph ph-x-circle umb-stat-icon error"></i>
+  <div><div class="umb-stat-num">10</div><div class="umb-stat-label">Erros</div></div>
+</div>
+
+<!-- ❌ Errado — borda 1px em stat-card clicável (viola §23.4) -->
+<div class="umb-stat-card" style="border: 1px solid var(--umb-border)">…</div>
+```
+
+### Por quê
+
+- **Eliminação de redundância:** Segmented + 4 cards mostrando os mesmos números é uma das duplicações mais comuns em telas legadas. Stat-cards clicáveis fazem ambos os trabalhos com 1 componente — economiza altura vertical e elimina a tentação de pôr os dois em desincrono.
+- **Affordance honesta:** o card clicável segue a regra dos 2px (§23.4), então o usuário "sente" pelo design que aquilo responde a clique. Sem precisar adicionar setas, hover-only states ou outras dicas extras.
+- **A11y forte:** com `role="tab"` + `aria-selected`, screen readers anunciam "Criados, 170, selecionado" — equivalente ao que um Segmented faria, sem precisar do componente extra.
+- **Empty state claro:** quando o filtro retorna 0, o `data-*-empty` aparece com ícone de funil e texto explicativo — usuário não fica vendo tabela vazia sem saber o porquê.
+
+---
+
+## 27. Tela de operação assíncrona em massa (importação, exportação, sync)
+
+Tela canônica para operações que rodam em lote e demoram o suficiente pra exigir feedback de progresso ao usuário (importação de contatos, exportação de relatório, sincronização com sistema externo, processamento de campanha).
+
+### Quando usar
+
+- O processamento leva mais de ~3 segundos
+- O resultado por item importa (não é só "sucesso"/"falha" geral)
+- O usuário pode querer cancelar ou rodar em segundo plano
+- Existem múltiplos status terminais por item (ex: criado / atualizado / com erro)
+
+### Estrutura — duas sub-views compartilhando elementos
+
+A tela tem dois estados visualmente distintos mas que **compartilham os mesmos stat-cards e a mesma tabela**. Os elementos compartilhados ficam **fora** dos `[data-subview]` para que o usuário não perca contexto entre o "rolar" da execução e o "concluído". As sub-views mudam apenas o **header** e o **footer**.
+
+```html
+<div class="umb-screen" data-screen="contacts-importing">
+
+  <!-- ===== Header sub-view A: PROGRESSO (durante a execução) ===== -->
+  <div data-subview="progress">
+    <div class="umb-wiz-header">
+      <h2 class="umb-wiz-title">Importando contatos</h2>
+      <p class="umb-wiz-sub">Pode acompanhar aqui ou seguir para outras tarefas — avisamos quando terminar.</p>
+    </div>
+    <!-- Barra de progresso linear -->
+    <div style="margin-top:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:13px">
+        <div style="display:flex;align-items:center;gap:8px;color:var(--umb-text-primary);font-weight:500">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span data-imp-status>Importando contatos…</span>
+        </div>
+        <div style="color:var(--umb-text-mid)">
+          <span data-imp-current>0</span> de <span data-imp-total>200</span>
+          · <span data-imp-eta>calculando…</span>
+        </div>
+      </div>
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="height:10px">
+        <div class="progress-bar" style="width:0%;background:var(--bs-primary)" data-imp-bar></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Header sub-view B: CONCLUÍDO (estado terminal) ===== -->
+  <div data-subview="done" style="display:none">
+    <div class="umb-wiz-header" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+      <div style="width:56px;height:56px;border-radius:50%;background:color-mix(in srgb,var(--bs-success) 15%,transparent);color:var(--bs-success);display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px">
+        <i class="ph ph-check" style="font-size:28px"></i>
+      </div>
+      <h2 class="umb-wiz-title">Importação concluída</h2>
+      <p class="umb-wiz-sub"><span data-imp-total-done>200</span> contatos processados em <span data-imp-elapsed>1m 23s</span>.</p>
+    </div>
+    <!-- Banner de erro só quando houver -->
+    <div class="alert alert-warning alert-action" data-imp-error-banner style="margin-top:16px;display:none">
+      <i class="ph ph-warning alert-icon"></i>
+      <div class="alert-body">
+        <div class="alert-title"><span data-imp-error-count>0</span> contatos não puderam ser importados</div>
+        <div style="font-size:13px;opacity:.9">Baixe o relatório para revisar e tentar novamente.</div>
+      </div>
+      <button type="button" class="btn btn-text btn-lg" style="color:inherit"><i class="ph ph-download-simple me-1"></i>Baixar relatório</button>
+    </div>
+  </div>
+
+  <!-- ===== COMPARTILHADO: stat-cards como filtros (§26) ===== -->
+  <div class="umb-stat-grid" style="margin-top:20px" role="tablist" aria-label="Filtrar por status">
+    <div class="umb-stat-card active" data-imp-filter="all" role="tab" tabindex="0" aria-selected="true">…</div>
+    <div class="umb-stat-card"        data-imp-filter="success" role="tab" tabindex="0" aria-selected="false">…</div>
+    <div class="umb-stat-card"        data-imp-filter="updated" role="tab" tabindex="0" aria-selected="false">…</div>
+    <div class="umb-stat-card"        data-imp-filter="error"   role="tab" tabindex="0" aria-selected="false">…</div>
+  </div>
+
+  <!-- ===== COMPARTILHADO: tabela com aria-live (anuncia novas linhas) ===== -->
+  <div class="umb-ct-table-wrap" style="margin-top:16px" aria-live="polite">
+    <table class="table umb-ct-table">
+      <thead>…</thead>
+      <tbody data-imp-list><!-- preenchido via JS, mais novo no topo --></tbody>
+    </table>
+  </div>
+
+  <!-- ===== COMPARTILHADO: empty state ===== -->
+  <div data-imp-empty style="display:none;padding:24px 16px;text-align:center;color:var(--umb-text-mid)">
+    <i class="ph ph-funnel" style="font-size:24px;display:block;margin-bottom:6px"></i>
+    Nenhum item com este status.
+  </div>
+
+  <!-- ===== Footer sub-view A (data-subview NO footer — §6.1 §2) ===== -->
+  <div class="umb-wiz-footer" data-subview="progress">
+    <div class="umb-wiz-footer-left">
+      <button class="btn btn-text btn-text-danger btn-lg" onclick="cancelImport()"><i class="ph ph-x me-1"></i>Cancelar importação</button>
+    </div>
+    <div class="umb-wiz-footer-right">
+      <button class="btn btn-outline-primary btn-lg" onclick="runInBackground()"><i class="ph ph-arrow-square-out me-1"></i>Rodar em segundo plano</button>
+    </div>
+  </div>
+
+  <!-- ===== Footer sub-view B ===== -->
+  <div class="umb-wiz-footer" data-subview="done" style="display:none">
+    <div class="umb-wiz-footer-left">
+      <button class="btn btn-outline-primary btn-lg" onclick="restartOperation()"><i class="ph ph-arrow-clockwise me-1"></i>Nova importação</button>
+    </div>
+    <div class="umb-wiz-footer-right">
+      <button class="btn btn-primary btn-lg" onclick="goToResultList()">Ver contatos importados<i class="ph ph-arrow-right ms-1"></i></button>
+    </div>
+  </div>
+</div>
+```
+
+### Componentes do DS reutilizados
+
+| Necessidade | Componente |
+|---|---|
+| Métrica em tempo real + filtro | `.umb-stat-card` (§23.4 + §26) |
+| Barra linear de progresso | `.progress` + `.progress-bar` (Bootstrap, com `--bs-primary` do tema) |
+| Spinner inline | `.spinner-border.spinner-border-sm` (Bootstrap) |
+| Lista por item | `.table.umb-ct-table` (§7) |
+| Status semântico (Criado/Atualizado/Erro) | `.umb-ct-status` com modificadores `.success/.warn/.error` |
+| Banner de erro pós-conclusão | `.alert.alert-warning.alert-action` |
+| Estado terminal (check verde) | Círculo de fundo `color-mix(var(--bs-success) 15%, transparent)` + `ph-check` |
+
+Zero CSS custom é necessário — tudo já existe no DS.
+
+### Pontos de integração obrigatórios
+
+A tela existe genérica e **deve** expor os seguintes hooks pra o fluxo hospedeiro sobrescrever:
+
+```js
+function startProgress(total) { /* dispara o processamento real */ }
+function cancelImport()       { /* aborta o processamento (API real) */ }
+function runInBackground()    { /* fecha a tela e mostra toast com link de tracking */ }
+function restartOperation()   { /* volta ao início do fluxo (ex: gotoScreen('upload')) */ }
+function goToResultList()     { /* navega pra lista de itens importados ou próximo passo */ }
+```
+
+A tela em si só conhece **estados visuais** — quem decide o destino dos botões é o fluxo hospedeiro (importação isolada vai pra `/contatos`; importação dentro de envio em massa vai pro próximo passo do wizard).
+
+### Comportamentos de UX obrigatórios
+
+1. **Lista cresce do topo pra baixo** (mais novo no topo) — usuário vê o que está acontecendo agora sem precisar scrollar até o fim.
+2. **ETA dinâmico** calculado pelo ritmo real (`elapsed / processed × remaining`), não estimativa fixa.
+3. **`aria-live="polite"` na tabela** + `role="progressbar"` na barra — anuncia o progresso a screen readers sem interromper.
+4. **Pós-conclusão com erros: foco automático no filtro `error`.** Se `error > 0` ao chamar `showDone()`, dispare `setFilter('error')` automaticamente — leva o usuário direto pra ação útil.
+5. **Banner de erro condicional** — só aparece quando `error > 0`. Quando 0, nem mostra.
+6. **Stepper escondido** durante a execução — não é mais "passo de configuração", é fase distinta. No `renderSteps()`, retorne cedo se `activeKey === 'contacts-importing'` (ou equivalente).
+7. **Cleanup do timer** — quando o usuário sair da tela via demo-nav, navegação ou fechar, pare o setInterval. No `gotoScreen(name)`, chame `_impStop()` se `name !== 'contacts-importing'`.
+
+### Estados de status por item
+
+Por convenção, use 3 status semânticos:
+
+| Status | Modificador `.umb-ct-status` | Ícone | Quando |
+|---|---|---|---|
+| `success` | `.success` | `ph-check` | Item criado/processado com sucesso |
+| `updated` | `.warn` | `ph-arrows-clockwise` | Item já existia e foi atualizado (não é erro, mas merece destaque visual) |
+| `error` | `.error` | `ph-x` | Item falhou (telefone inválido, campo obrigatório ausente, etc) |
+
+O status "atualizado" merece distinção do "criado" porque o usuário precisa entender o impacto no banco — se ele não esperava atualizações, é um sinal pra revisar a planilha.
+
+### Anti-patterns
+
+```html
+<!-- ❌ Errado — stepper visível na tela de execução polui sem agregar -->
+<div class="steps-container">
+  <div class="step-item done">…Selecionar arquivo</div>
+  <div class="step-item active">…Importando</div>
+</div>
+
+<!-- ❌ Errado — stat-cards SÓ na sub-view "progress", desaparecem no "done":
+     usuário perde a visão geral dos resultados -->
+<div data-subview="progress">
+  <div class="umb-stat-grid">…</div>
+  <table>…</table>
+</div>
+<div data-subview="done">
+  <div class="alert alert-success">200 processados</div>  <!-- sem detalhamento -->
+</div>
+
+<!-- ❌ Errado — Segmented redundante com stat-cards (§26) -->
+<div class="umb-stat-grid">…</div>
+<div class="inset-control">…mesmos contadores…</div>
+
+<!-- ❌ Errado — tabela com max-height + overflow:auto cria scroll interno
+     duplicado quando o card já tem sticky footer (§6.1) -->
+<div class="umb-ct-table-wrap" style="max-height:380px;overflow:auto">…</div>
+```
+
+### Por quê tudo isso
+
+- **Stat-cards compartilhados entre sub-views** porque o usuário não pode "perder a referência" do que aconteceu quando o processo termina rápido (importação de 200 contatos pode levar 5 segundos). Manter os números visíveis no done permite filtrar erros sem fechar a tela.
+- **Header diferente por sub-view** (linha de progresso vs check verde + tempo decorrido) porque são fases conceitualmente distintas — "está rolando" vs "terminou". O resto da tela (stats + lista) é a mesma "verdade" sob duas lentes diferentes.
+- **Filtro automático em `error`** pós-conclusão porque é o caminho mais útil em 90% dos casos. O usuário que tem erros precisa agir; quem não tem erros nem viu o filtro mudar (já estava vazio).
+- **Aria-live na tabela** porque uma operação que adiciona linhas dinamicamente sem aviso pra screen reader é uma operação inacessível.
 
