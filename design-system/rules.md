@@ -676,6 +676,7 @@ Após gerar uma tela, redimensione a janela do browser cruzando os 768px e confi
 ## 20. O que NUNCA fazer
 
 - Nunca use cores hex hardcoded — sempre tokens via `var(--umb-*)`
+- Nunca use `--umb-bg-primary` (nem o alias `--umb-content-bg`) como `background` de qualquer componente **dentro** de um card/wizard/drawer/modal. Essa cor é o canvas atrás dos cards, não dentro deles. Sub-blocos usam `transparent` + borda, `--umb-hover-bg`, `--umb-bg-active` ou `.alert.alert-info` — ver §22.6 para a tabela completa.
 - Nunca use `--umb-chat-canvas-bg` (removido): o fundo do chat **é** o `--umb-bg-primary` (ver §22)
 - Nunca use `--umb-chat-list-active` (removido): conversa selecionada usa `--umb-bg-active` (§22); era um token paralelo que violava a regra sistêmica de um único token semântico para seleção
 - Nunca crie um token de fundo dedicado por tela — reuse `--umb-bg-primary` para canvas e `--umb-bg-active` para seleção
@@ -1043,6 +1044,75 @@ Quando um item selecionado recebe hover, mantenha `--umb-bg-active` (não sobres
 - **Estado ativo de botão/segmented** → continua com os tokens do próprio componente.
 
 A distinção: `--umb-bg-active` é para **seleção de conteúdo** (o usuário escolheu essa linha/card/conversa). Os demais tokens de "ativo" são para **estados de UI** em componentes específicos.
+
+### 22.6 Regra inviolável — `--umb-bg-primary` NÃO entra dentro de cards
+
+`--umb-bg-primary` é o **canvas da tela** — fica por trás dos cards, não dentro deles. Qualquer componente filho de um card (`.card`, `.umb-wiz`, `.umb-chat-detail`, `.umb-shell-content > .umb-page-inner`, drawer, modal) **nunca** pode usar `--umb-bg-primary` (nem seu alias `--umb-content-bg`) como `background`.
+
+#### Por quê
+
+Nos temas claros (`light`, `emerald`) o canvas é levemente colorido (`#EEF2FE` no Claro, `#F6F7F7` no Esmeralda) e o card é branco (`#ffffff`). Quando um sub-bloco de card recebe `--umb-bg-primary`, ele vira uma "ilha colorida" dentro do branco — quebra a hierarquia visual e parece um bug de tema.
+
+Nos temas escuros (`dark`, `dark-emerald`) o efeito é mais sutil mas ainda errado: o card-bg é mais claro que o canvas, então o sub-bloco fica mais escuro que o resto do card — invertendo a regra de "elevação cresce para o topo".
+
+#### Tokens corretos para sub-blocos dentro de cards
+
+| Intenção do sub-bloco | Token correto |
+|---|---|
+| Apenas separar visualmente sem peso de cor | `background: transparent` + `border: 1px solid var(--umb-border)` (a borda já delimita) |
+| Bloco de hover transitório (linha, item de lista) | `background: var(--umb-hover-bg)` |
+| Bloco selecionado/persistente | `background: var(--umb-bg-active)` |
+| Card aninhado (raro) | `background: var(--umb-card-bg)` (mesmo do pai — borda separa) |
+| Aviso/dica informativa | converter para `.alert.alert-info` (tem fundo próprio responsivo a tema) |
+
+#### O que isso proíbe na prática
+
+```css
+/* ❌ Errado — sub-bloco dentro de .umb-wiz/.card usando canvas */
+.umb-dropzone     { background: var(--umb-bg-primary); }
+.umb-map-source   { background: var(--umb-bg-primary); }
+.minha-dica-box   { background: var(--umb-bg-primary); }
+.badge-extension  { background: var(--umb-bg-primary); }
+```
+
+```html
+<!-- ❌ Errado — inline style com canvas dentro de card -->
+<div class="card">
+  <div style="background: var(--umb-bg-primary); padding: 14px">…</div>
+</div>
+```
+
+```css
+/* ✅ Correto — transparente + borda */
+.umb-dropzone   { background: transparent; border: 2px dashed var(--umb-border-strong); }
+.umb-map-source { background: transparent; border: 1px solid var(--umb-border); }
+```
+
+```html
+<!-- ✅ Correto — alert canônico para dica/sugestão -->
+<div class="card">
+  <div class="alert alert-info alert-action">
+    <i class="ph ph-info alert-icon"></i>
+    <div class="alert-body">
+      <div class="alert-title">Título da dica</div>
+      <div style="font-size:13px;opacity:.9">Subtítulo da dica.</div>
+    </div>
+    <button class="btn btn-text btn-lg">Ação</button>
+  </div>
+</div>
+```
+
+#### Exceção única — chat detail (§21.3)
+
+`.umb-chat-detail` usa `--umb-bg-primary` como fundo da área de mensagens (§21.7) — mas isso é o **canvas do chat**, não um sub-bloco de card. Os bubbles dentro dele (`.umb-msg-bubble`) usam `--umb-card-bg`, mantendo a regra. Não generalize esse caso para outras telas.
+
+#### Auditoria rápida
+
+```bash
+# Em qualquer arquivo de tela, esta busca não pode retornar resultados — exceto
+# em definições de token (`--umb-content-bg: var(--umb-bg-primary)`):
+grep -nE "background:\s*var\(--umb-bg-primary\)" arquivo.html | grep -v "umb-content-bg:"
+```
 
 ## 23. Tokens de borda — border e border-on-brand
 
