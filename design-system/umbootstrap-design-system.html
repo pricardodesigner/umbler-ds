@@ -1258,6 +1258,23 @@
     /* Checkbox tamanho Lg */
     .form-check-input-lg { width: 18px !important; height: 18px !important; cursor: pointer; flex-shrink: 0; }
 
+    /* Record list — equivalente mobile de .table (ver rules.md §19.1).
+       Cada .umb-record-card é um <tr> traduzido pra layout vertical com
+       slots fixos: head (select + identidade + badge primário) e
+       foot (meta + ações). Renderizado apenas em <md (768px). */
+    .umb-record-list   { display: flex; flex-direction: column; gap: 8px; }
+    .umb-record-card   { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; background: var(--umb-card-bg); border: 1px solid var(--umb-border); border-radius: 12px; cursor: pointer; transition: background .12s; }
+    .umb-record-card:hover    { background: var(--umb-hover-bg); }
+    .umb-record-card.selected { background: var(--umb-bg-active); }
+    .umb-rc-head      { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .umb-rc-select    { flex-shrink: 0; }
+    .umb-rc-title     { font-size: 13px; font-weight: 600; color: var(--umb-text-primary); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .umb-rc-head-end  { margin-left: auto; flex-shrink: 0; }
+    .umb-rc-foot      { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .umb-rc-meta      { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--umb-text-mid); min-width: 0; flex-wrap: wrap; }
+    .umb-rc-meta .umb-rc-sep { opacity: .55; }
+    .umb-rc-actions   { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+
 
 /* ── DS DEMO UTILITIES ──────────────────────────────────────────── */
 .ds-swatch-item    { text-align: center; }
@@ -5241,13 +5258,49 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         </div>
       </div>
 
+      <p class="sec-subtitle" style="margin-top:24px">RecordCard — equivalente mobile (&lt;768px)</p>
+      <p class="comp-desc">Em viewport mobile, a mesma lista de registros é renderizada como <code>.umb-record-list</code> de <code>.umb-record-card</code>, com mapeamento campo-a-campo das colunas da tabela. Markup duplo no mesmo HTML (ver rules.md §19.1).</p>
+      <div class="comp-group" style="max-width:420px">
+        <div class="umb-record-list">
+          <div class="umb-record-card">
+            <div class="umb-rc-head">
+              <input type="checkbox" class="form-check-input form-check-input-lg umb-rc-select" aria-label="Selecionar Carlos Mendes">
+              <div class="profile-avatar" style="width:32px;height:32px;font-size:12px;background:var(--umb-avatar-bg)">CM</div>
+              <span class="umb-rc-title">Carlos Mendes</span>
+              <span class="umb-rc-head-end health-dot hot"></span>
+            </div>
+            <div class="umb-rc-foot">
+              <span class="umb-rc-meta"><span class="badge bg-primary" style="font-size:10px">Proposta</span> <span class="umb-rc-sep">·</span> <span style="font-weight:600;color:var(--bs-success)">R$ 8.500</span> <span class="umb-rc-sep">·</span> há 1 hora</span>
+              <div class="umb-rc-actions">
+                <div class="dropdown"><button class="btn btn-icon btn-text dropdown-toggle" data-bs-toggle="dropdown" onclick="event.stopPropagation()"><i class="ph ph-dots-three-vertical"></i></button><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="#"><i class="ph ph-eye"></i> Ver</a></li><li><a class="dropdown-item" href="#"><i class="ph ph-pencil"></i> Editar</a></li><li><hr class="dropdown-divider"></li><li><a class="dropdown-item" style="color:var(--umb-alert-danger-color)" href="#"><i class="ph ph-trash"></i> Excluir</a></li></ul></div>
+              </div>
+            </div>
+          </div>
+          <div class="umb-record-card selected">
+            <div class="umb-rc-head">
+              <input type="checkbox" class="form-check-input form-check-input-lg umb-rc-select" checked aria-label="Selecionar Ana Ribeiro">
+              <div class="profile-avatar" style="width:32px;height:32px;font-size:12px;background:var(--umb-avatar-bg)">AR</div>
+              <span class="umb-rc-title">Ana Ribeiro</span>
+              <span class="umb-rc-head-end health-dot warm"></span>
+            </div>
+            <div class="umb-rc-foot">
+              <span class="umb-rc-meta"><span class="badge bg-warning" style="font-size:10px">Negociação</span> <span class="umb-rc-sep">·</span> <span style="font-weight:600;color:var(--bs-success)">R$ 12.000</span> <span class="umb-rc-sep">·</span> há 4 dias</span>
+              <div class="umb-rc-actions">
+                <div class="dropdown"><button class="btn btn-icon btn-text dropdown-toggle" data-bs-toggle="dropdown" onclick="event.stopPropagation()"><i class="ph ph-dots-three-vertical"></i></button><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="#"><i class="ph ph-eye"></i> Ver</a></li><li><a class="dropdown-item" href="#"><i class="ph ph-pencil"></i> Editar</a></li></ul></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     <div class="comp-practices">
       <p class="comp-practices-title">Best Practices</p>
       <ul>
         <li>Use table-hover para tabelas interativas onde o usuário seleciona linhas</li>
         <li>Ações de linha devem usar <code>btn-text</code> (Md Text Primary); use <code>btn-primary</code> sólido apenas para ações imediatas de destaque (ex: "Finalizar ativação")</li>
         <li>Cabeçalhos devem ser curtos e em uppercase com letra menor (já estilizado)</li>
-        <li>Para tabelas longas, adicione paginação abaixo</li>
+        <li><strong>Toda <code>.table</code> tem que vir com sua contraparte mobile <code>.umb-record-list</code></strong> no mesmo HTML, dentro do <code>.umb-mobile-shell</code>. Lista sem versão mobile é considerada incompleta (rules.md §19.1).</li>
+        <li>Dentro de <code>.umb-record-card</code> use <code>btn btn-text</code> (32px). NUNCA invente <code>btn-xs</code> com inline <code>font-size:11px</code> — o dropdown three-dots carrega ações secundárias.</li>
       </ul>
     </div>
 

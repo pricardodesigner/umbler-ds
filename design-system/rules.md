@@ -371,6 +371,7 @@ grep -A3 "\.umb-shell-content" arquivo.html | grep -E "padding:.*24px(\s|;|$)"
 - Ações de linha usam `btn btn-text` (Md Text Primary) com ícone
 - O botão de três pontinhos é sempre o último da linha: `btn btn-icon btn-text`
 - Use `btn btn-primary` sólido APENAS para ações imediatas de destaque (ex: "Finalizar ativação")
+- Tabela desktop **sempre** tem contraparte mobile como `.umb-record-list` no mesmo HTML — ver §19.1.
 
 ```html
 <td>
@@ -803,8 +804,93 @@ Após gerar uma tela, redimensione a janela do browser cruzando os 768px e confi
 - Abaixo de 768px: apenas shell mobile visível, bottom nav fixo embaixo, campos Lg, sem sidebar
 - A partir de 768px: apenas shell desktop visível, sidebar à esquerda, header com breadcrumb, campos Md
 
+## 19.1 Tabela ↔ Lista de cards no breakpoint
+
+Caso especial da §19. Toda lista de registros (`.table`) precisa ter uma contraparte mobile (`.umb-record-list`) no mesmo HTML — não basta ter os dois shells, **os dados também precisam ser duplicados na marcação correta de cada shell**. Tabela em mobile vira ilegível (truncate, scroll horizontal, ações invisíveis), e o "card mobile" inline-styled diverge entre telas e perde funcionalidade (seleção, dropdown de ações).
+
+### Regra imutável
+
+Sempre que uma tela exibir registros tabulares, ela deve conter:
+
+- No `.umb-shell` (desktop, ≥768px): `<table class="table table-hover">` dentro de `.table-responsive`.
+- No `.umb-mobile-shell` (mobile, <768px): `<div class="umb-record-list">` com um `.umb-record-card` por registro.
+
+Gerar **só** a tabela (sem a lista mobile equivalente) é considerado incompleto — a tela está fora do contrato do DS.
+
+### Markup canônico
+
+```html
+<!-- Mobile — dentro de .umb-mobile-shell.umb-mobile-content -->
+<div class="umb-record-list">
+  <div class="umb-record-card">                                <!-- .selected destaca o item -->
+    <div class="umb-rc-head">                                  <!-- linha 1: select + identidade + badge -->
+      <input type="checkbox" class="form-check-input form-check-input-lg umb-rc-select" aria-label="…">
+      <div class="profile-avatar">…</div>                       <!-- 32×32, igual desktop -->
+      <span class="umb-rc-title">Nome do registro</span>
+      <span class="umb-rc-head-end badge text-bg-success">Ativo</span>
+    </div>
+    <div class="umb-rc-foot">                                  <!-- linha 2: meta + ações -->
+      <span class="umb-rc-meta">Tipo <span class="umb-rc-sep">·</span> há 1 hora</span>
+      <div class="umb-rc-actions">
+        <button class="btn btn-text"><i class="ph ph-pencil-simple me-1"></i>Editar</button>
+        <div class="dropdown">
+          <button class="btn btn-icon btn-text dropdown-toggle" data-bs-toggle="dropdown" onclick="event.stopPropagation()">
+            <i class="ph ph-dots-three-vertical"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">…</ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### Mapeamento campo-a-campo
+
+A coluna do desktop determina onde o campo aparece no card mobile:
+
+| `<th>` desktop | Slot mobile | Observação |
+|---|---|---|
+| Checkbox de seleção | `.umb-rc-select` (dentro de `.umb-rc-head`) | Mesma classe `form-check-input-lg` |
+| Coluna identidade (avatar + nome) | `.umb-rc-head` (avatar + `.umb-rc-title`) | Avatar mantém 32×32 — não diminuir |
+| Status crítico (1 badge único) | `.umb-rc-head-end` | Canto superior direito; reservado pra **um** indicador |
+| Colunas secundárias (Tipo, Data, Valor) | `.umb-rc-meta` separadas por `<span class="umb-rc-sep">·</span>` | Texto 12px, `--umb-text-mid` |
+| Coluna de ações | `.umb-rc-actions` | 1 ação primária visível + dropdown three-dots |
+
+### Estados visuais
+
+- `:hover` → `--umb-hover-bg`
+- `.selected` → `--umb-bg-active`
+- Card sem hover/selected → `--umb-card-bg` + `border: 1px solid var(--umb-border)` + `border-radius: 12px`
+
+### Princípios
+
+- **Card é clicável**, mas com borda 1px (não 2px) — segue `.table tbody tr` que também é clicável com 1px de delimitação. Borda 2px continua reservada a controles primários (botões, inputs).
+- **Botões dentro do card são `.btn .btn-text` (32px Md)** — NUNCA inventar `btn-xs` com inline `font-size:11px;padding:3px 8px`. Touch target abaixo de 44px é aceitável aqui porque o tap principal é na linha inteira; ações secundárias vivem no dropdown.
+- **Avatar mantém 32×32** (igual desktop). Não reduzir pra 28×28 com inline style — a redução era só pra "caber" os cards inline-styled antigos.
+- **Apenas um item visualmente destacado por `.umb-rc-head-end`** (status, badge crítico). Demais badges/meta vão pra `.umb-rc-meta`.
+- **Lista sem wrapper com border** — segue a mesma lógica de tabelas (ver memória "Tabelas no DS — sem paginação e sem wrapper com borda"). A `.umb-record-list` é direta no `.umb-mobile-content`.
+
+### Validação
+
+Cruze 768px no browser e confirme:
+
+- Mesmo número de registros nos dois lados (a `.table` desktop e o `.umb-record-list` mobile mostram a mesma fonte de dados).
+- Mesmas ações disponíveis (qualquer ação que existe na linha existe no card — visível ou via dropdown).
+- Mesma seleção mantida (`.selected` no card ↔ `tr.selected` na tabela).
+- Avatares no mesmo tamanho; badge primário (Status) consistente em ambos.
+
+### Quando NÃO usar `.umb-record-card`
+
+- Listas com 1 só campo por item (lista de strings) → `.list-group` cobre ambos viewports.
+- Linhas de chat/conversas → use `.umb-conv-item` (componente próprio com regras de avatar/timestamp/badge de canal).
+- Cards de "estatística" ou "card de ação" da home → não são registros tabulares, usam `.card` do Bootstrap ou `.umb-path-card`.
+
 ## 20. O que NUNCA fazer
 
+- Nunca gere uma tela com `.table` sem a contraparte mobile `.umb-record-list` no mesmo HTML. Tabela em viewport `<768px` é ilegível e perde funcionalidades (seleção, dropdown). Ver §19.1 para o markup canônico e mapeamento campo-a-campo.
+- Nunca use `btn-xs` ou inline `style="font-size:11px;padding:3px 8px"` em ações de card mobile. Dentro de `.umb-record-card` use `btn btn-text` (32px Md) — ações secundárias vão pro dropdown three-dots. Ver §19.1.
+- Nunca cole cards mobile improvisados (`<div class="p-3" style="background:var(--umb-card-bg);border:...">`). Use sempre `.umb-record-card` com seus slots fixos (`.umb-rc-head`, `.umb-rc-foot`, `.umb-rc-meta`, `.umb-rc-actions`). Ver §19.1.
 - Nunca use cores hex hardcoded — sempre tokens via `var(--umb-*)`
 - Nunca use `--umb-bg-primary` (nem o alias `--umb-content-bg`) como `background` de qualquer componente **dentro** de um card/wizard/drawer/modal. Essa cor é o canvas atrás dos cards, não dentro deles. Sub-blocos usam `transparent` + borda, `--umb-hover-bg`, `--umb-bg-active` ou `.alert.alert-info` — ver §22.6 para a tabela completa.
 - Nunca coloque `border-top` no `.umb-wiz-footer` (nem em `.modal-footer`, `.offcanvas-footer` ou qualquer barra de ações na base de um card). A separação é só padding + background; uma linha adicional quebra a continuidade do card. Ver §6.1 para o padrão completo de footer sticky sem border-top.

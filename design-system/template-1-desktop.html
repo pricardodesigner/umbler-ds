@@ -1198,6 +1198,23 @@
     /* Checkbox tamanho Lg */
     .form-check-input-lg { width: 18px !important; height: 18px !important; cursor: pointer; flex-shrink: 0; }
 
+    /* Record list — equivalente mobile de .table (ver rules.md §19.1).
+       Cada .umb-record-card é um <tr> traduzido pra layout vertical com
+       slots fixos: head (select + identidade + badge primário) e
+       foot (meta + ações). Renderizado apenas em <md (768px). */
+    .umb-record-list   { display: flex; flex-direction: column; gap: 8px; }
+    .umb-record-card   { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; background: var(--umb-card-bg); border: 1px solid var(--umb-border); border-radius: 12px; cursor: pointer; transition: background .12s; }
+    .umb-record-card:hover    { background: var(--umb-hover-bg); }
+    .umb-record-card.selected { background: var(--umb-bg-active); }
+    .umb-rc-head      { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .umb-rc-select    { flex-shrink: 0; }
+    .umb-rc-title     { font-size: 13px; font-weight: 600; color: var(--umb-text-primary); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .umb-rc-head-end  { margin-left: auto; flex-shrink: 0; }
+    .umb-rc-foot      { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .umb-rc-meta      { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--umb-text-mid); min-width: 0; flex-wrap: wrap; }
+    .umb-rc-meta .umb-rc-sep { opacity: .55; }
+    .umb-rc-actions   { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+
 
 /* ── DS DEMO UTILITIES ──────────────────────────────────────────── */
 .ds-swatch-item    { text-align: center; }
@@ -2666,33 +2683,50 @@
       </div>
       <button class="btn btn-primary btn-lg px-3"><i class="ph ph-plus"></i></button>
     </div>
-    <!-- Cards on mobile instead of table -->
-    <div class="d-flex flex-column gap-2">
-      <div class="p-3" style="background:var(--umb-card-bg);border:1px solid var(--umb-border);border-radius:10px">
-        <div class="d-flex align-items-center gap-2 mb-2">
-          <div class="umb-agent-avatar" style="width:28px;height:28px;font-size:12px"><i class="ph ph-robot"></i><div class="umb-agent-ai-dot">✦</div></div>
-          <span style="font-size:13px;font-weight:600">Alessandra Flexy Digital</span>
-          <span class="badge rounded-pill ms-auto badge-expert" style="font-size:10px">Expert</span>
+    <!-- Lista de cards no mobile = mesmos registros da .table do desktop (ver rules.md §19.1) -->
+    <div class="umb-record-list">
+      <div class="umb-record-card">
+        <div class="umb-rc-head">
+          <input type="checkbox" class="form-check-input form-check-input-lg umb-rc-select" aria-label="Selecionar Alessandra Flexy Digital">
+          <div class="umb-agent-avatar"><i class="ph ph-robot"></i><div class="umb-agent-ai-dot">✦</div></div>
+          <span class="umb-rc-title">Alessandra Flexy Digital</span>
+          <span class="umb-rc-head-end badge rounded-pill badge-expert" style="font-size:10px">Expert</span>
         </div>
-        <div class="d-flex align-items-center justify-content-between">
-          <span style="font-size:12px;color:var(--umb-text-mid)">Vendas · <span class="badge text-bg-success" style="font-size:10px">Ativo</span></span>
-          <div class="d-flex gap-1">
-            <button class="btn btn-xs btn-text" style="font-size:11px;padding:3px 8px">Editar</button>
-            <button class="btn btn-xs btn-text" style="font-size:11px;padding:3px 8px">Testar</button>
+        <div class="umb-rc-foot">
+          <span class="umb-rc-meta">Vendas <span class="umb-rc-sep">·</span> <span class="badge text-bg-success" style="font-size:10px">Ativo</span></span>
+          <div class="umb-rc-actions">
+            <button class="btn btn-text"><i class="ph ph-pencil-simple me-1"></i>Editar</button>
+            <div class="dropdown"><button class="btn btn-icon btn-text dropdown-toggle" data-bs-toggle="dropdown" onclick="event.stopPropagation()"><i class="ph ph-dots-three-vertical"></i></button><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="#"><i class="ph ph-play"></i> Testar</a></li><li><a class="dropdown-item" href="#"><i class="ph ph-pencil"></i> Treinar e Editar</a></li><li><hr class="dropdown-divider"></li><li><a class="dropdown-item" style="color:var(--umb-alert-danger-color)" href="#"><i class="ph ph-trash"></i> Excluir</a></li></ul></div>
           </div>
         </div>
       </div>
-      <div class="p-3" style="background:var(--umb-card-bg);border:1px solid var(--umb-border);border-radius:10px">
-        <div class="d-flex align-items-center gap-2 mb-2">
-          <div class="umb-agent-avatar standard" style="width:28px;height:28px;font-size:12px"><i class="ph ph-robot"></i></div>
-          <span style="font-size:13px;font-weight:600">Aline EMG Advogados</span>
-          <span class="badge rounded-pill ms-auto badge-standard" style="font-size:10px">Standard</span>
+      <div class="umb-record-card selected">
+        <div class="umb-rc-head">
+          <input type="checkbox" class="form-check-input form-check-input-lg umb-rc-select" checked aria-label="Selecionar Aline EMG Advogados">
+          <div class="umb-agent-avatar standard"><i class="ph ph-robot"></i></div>
+          <span class="umb-rc-title">Aline EMG Advogados</span>
+          <span class="umb-rc-head-end badge rounded-pill badge-standard" style="font-size:10px">Standard</span>
         </div>
-        <div class="d-flex align-items-center justify-content-between">
-          <span style="font-size:12px;color:var(--umb-text-mid)">Vendas · <span class="badge text-bg-success" style="font-size:10px">Ativo</span></span>
-          <div class="d-flex gap-1">
-            <button class="btn btn-xs btn-text" style="font-size:11px;padding:3px 8px">Editar</button>
-            <button class="btn btn-xs btn-text" style="font-size:11px;padding:3px 8px">Testar</button>
+        <div class="umb-rc-foot">
+          <span class="umb-rc-meta">Vendas <span class="umb-rc-sep">·</span> <span class="badge text-bg-success" style="font-size:10px">Ativo</span></span>
+          <div class="umb-rc-actions">
+            <button class="btn btn-text"><i class="ph ph-pencil-simple me-1"></i>Editar</button>
+            <div class="dropdown"><button class="btn btn-icon btn-text dropdown-toggle" data-bs-toggle="dropdown" onclick="event.stopPropagation()"><i class="ph ph-dots-three-vertical"></i></button><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="#"><i class="ph ph-play"></i> Testar</a></li><li><a class="dropdown-item" href="#"><i class="ph ph-pencil"></i> Treinar e Editar</a></li><li><hr class="dropdown-divider"></li><li><a class="dropdown-item" style="color:var(--umb-alert-danger-color)" href="#"><i class="ph ph-trash"></i> Excluir</a></li></ul></div>
+          </div>
+        </div>
+      </div>
+      <div class="umb-record-card">
+        <div class="umb-rc-head">
+          <input type="checkbox" class="form-check-input form-check-input-lg umb-rc-select" aria-label="Selecionar Alpha">
+          <div class="umb-agent-avatar"><i class="ph ph-robot"></i><div class="umb-agent-ai-dot">✦</div></div>
+          <span class="umb-rc-title">Alpha</span>
+          <span class="umb-rc-head-end badge rounded-pill badge-expert" style="font-size:10px">Expert</span>
+        </div>
+        <div class="umb-rc-foot">
+          <span class="umb-rc-meta">Vendas <span class="umb-rc-sep">·</span> <span class="badge text-bg-success" style="font-size:10px">Ativo</span></span>
+          <div class="umb-rc-actions">
+            <button class="btn btn-text"><i class="ph ph-pencil-simple me-1"></i>Editar</button>
+            <div class="dropdown"><button class="btn btn-icon btn-text dropdown-toggle" data-bs-toggle="dropdown" onclick="event.stopPropagation()"><i class="ph ph-dots-three-vertical"></i></button><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="#"><i class="ph ph-play"></i> Testar</a></li><li><a class="dropdown-item" href="#"><i class="ph ph-pencil"></i> Treinar e Editar</a></li><li><hr class="dropdown-divider"></li><li><a class="dropdown-item" style="color:var(--umb-alert-danger-color)" href="#"><i class="ph ph-trash"></i> Excluir</a></li></ul></div>
           </div>
         </div>
       </div>
