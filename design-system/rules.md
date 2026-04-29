@@ -36,6 +36,10 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 29. Hierarquia visual proporcional à frequência da ação
 30. Section header com toggle de busca
 31. .umb-account-popup — popup de perfil com organizações
+32. Iterar peso visual de baixo pra cima
+33. Single entry point para ações raras
+34. Reusar componentes do DS carrega o wrapper
+35. Validar HTML balance após edits programáticos
 
 ---
 
@@ -2316,3 +2320,212 @@ Em todo o resto (produto principal multi-org, settings, painel admin), use §31 
 - ❌ Adicionar 3ª tab além de Minha conta / Preferências — comprime demais.
 - ❌ Botão "Sair" alinhado à esquerda com `justify-content: flex-start` — herda center do `.btn` por default.
 - ❌ Logo da Umbler no header da popup — o logo já está na sidebar, repetir é ruído.
+
+## 32. Iterar peso visual de baixo pra cima
+
+Complementa §29 (calibração por frequência) com a **direção** da iteração quando o peso correto da ação é desconhecido.
+
+### O princípio
+
+Quando estiver dimensionando o peso visual de uma ação nova, **comece sempre com o peso mínimo** e só infle se testes mostrarem que usuários não acham. Nunca o contrário. A intuição "comecemos chamativo e diminuímos depois se for demais" gera comportamento errado e lixo no banco.
+
+### Por quê
+
+- **Atenção é assimétrica.** Inflar uma ação primária ENSINA o usuário que ela é importante. Descalibrar depois requer re-treinar — usuários já clicaram, exploraram, geraram dados. Reduzir peso visual depois de gerar lixo (orgs aleatórias, contatos duplicados, templates desnecessários) custa migração, não só CSS.
+- **Custo do erro é assimétrico.** Se você começa pequeno e usuários não acham → suporte recebe ticket → você infla. Custo: 1 ciclo de iteração. Se você começa grande e usuários clicam sem contexto → banco enche de lixo, métricas ficam ruidosas, fluxos de cleanup viram débito. Custo: backlog inteiro.
+- **Frequência real ≠ frequência percebida pelo time.** PMs e designers tendem a inflar ações que internamente parecem "estratégicas" (criar segunda org, virar power-user, descobrir feature avançada). Pro usuário, isso é uma curiosidade pontual.
+
+### Sequência de iteração canônica (do mínimo ao máximo)
+
+| Nível | Posicionamento | Estilo |
+|---|---|---|
+| 1 (mínimo) | Item no menu de Configurações | `.umb-settings-item` (linha clicável genérica) |
+| 2 | Junto a ações relacionadas (lupa, filtro) | `btn-icon btn-text btn-sm` no header de seção |
+| 3 | Junto a ações relacionadas com destaque | `btn-icon btn-primary btn-sm` |
+| 4 | Toolbar secundária | `btn btn-outline-primary` (Md) |
+| 5 | Toolbar primária | `btn btn-primary` (Md) |
+| 6 (máximo) | CTA proeminente | `btn btn-primary btn-lg` |
+
+Toda ação nova **começa no nível 1**. Só sobe se houver evidência empírica (ticket, métrica, teste com usuário) de que o usuário não acha.
+
+### Caso canônico — "Criar nova organização"
+
+Sequência vivida no redesign do fluxo:
+- v1: `btn-primary lg` full-width como CTA → gerou orgs aleatórias antes (motivo da remoção original)
+- v2: `btn-outline-primary md` → ainda inflado pra ação rara
+- v3: `btn-text` → quase certo
+- v4: `btn-icon btn-primary btn-sm` no header da seção → pareceu certo
+- v5 (final): removido inteiro, só item no menu de Configurações
+
+Se tivéssemos começado em v5 (item no menu), teríamos chegado mais rápido e sem lixo no banco. A intuição "vamos colocar um botão pra ser fácil de achar" parecia razoável a cada passo, mas a evidência prática mostrou que o item no menu era suficiente.
+
+### Anti-pattern
+
+- ❌ "Vamos colocar um botão grande pra teste, depois reduzimos se for demais" — não vai. Usuários já vão ter clicado e gerado dados.
+- ❌ "Essa ação é estratégica pra nós, então merece destaque" — frequência > estratégia interna.
+- ❌ Inflar uma ação ANTES de ter evidência de que está difícil de achar.
+
+### Quando começar em nível alto é justificado
+
+- **Onboarding ativo** (primeira vez): a única ação possível pode ter peso máximo, mesmo que rara depois.
+- **Empty states**: quando não há nada na tela, inflar a ação primária faz sentido.
+- **Banner promocional temporário**: peso visual maior por janela limitada.
+
+Em qualquer outro caso, default = nível 1.
+
+## 33. Single entry point para ações raras
+
+Complementa §28 (modal vs página) com a regra sobre **quantidade de entry points** pra uma ação.
+
+### O princípio
+
+Para ações raras (frequência baixa, §29), prefira **um único entry point bem posicionado** a múltiplos "convenientes". A intuição "vamos ter dois caminhos pra facilitar" gera mais problemas que resolve.
+
+### Por quê
+
+- **Múltiplos entry points = múltiplos "como fazer" pra educar.** Se a ação tem um gate educacional (modal/página explicativa), você acaba duplicando conteúdo entre os caminhos. Manutenção dobra: copy, layout, regras de negócio.
+- **Inconsistência de pattern.** Cada entry point tende a virar um pattern diferente (popup vs menu vs sidebar vs header) e usuários ficam confusos sobre "qual é o caminho oficial".
+- **Cliques sem contexto.** Quando o entry point está colado num lugar de uso frequente (como popup de perfil), usuários clicam por curiosidade, sem o contexto educacional. Isso gera lixo no banco — orgs aleatórias, recursos vazios, configurações que não fazem sentido pro usuário.
+- **Buscabilidade > onipresença.** Se a ação é rara, ela não precisa estar à mão a todo momento. Precisa estar **descobrível** quando o usuário tem a intenção. Um item bem nomeado em Configurações cumpre isso.
+
+### Caso canônico — fluxo de criar organização
+
+- **Tentativa anterior**: dois entry points — popup de perfil (`+` no header da seção) + item no menu de Configurações.
+- **Resultado**: popup gerava orgs aleatórias (clientes clicavam sem ler o modal), conteúdo educacional vivia em duas páginas (modal sobre popup vs página standalone em Configurações), padrão de navegação inconsistente (popup abria modal, menu navegava).
+- **Solução**: um único entry point — item "Criar organização" no menu de Configurações. Sem botão na popup. Páginia educacional única.
+
+### Heurística de decisão
+
+Pergunta antes de adicionar um segundo entry point:
+
+> Esse usuário, com o segundo entry point disponível, vai clicar **mais consciente** ou **menos consciente** do que pelo primeiro?
+
+Se "menos consciente" — não adicione. Se "igual" — não adicione. Se "mais consciente" (raro) — adicione.
+
+### Anti-pattern
+
+- ❌ Adicionar um botão de criação na popup de perfil porque "fica acessível durante o uso normal".
+- ❌ Mesmo conteúdo educacional duplicado em dois caminhos — modal pra um entry, página pro outro.
+- ❌ Atalho na sidebar pra ação que já existe em Configurações.
+
+### Exceção — ações de alta frequência
+
+Pra ações de alta frequência (§29 nível 5–6), múltiplos entry points fazem sentido. Ex: "Iniciar nova conversa" pode aparecer no topbar do chat E na home E em uma página de contato. Mas mesmo aí, **o pattern visual deve ser igual** entre os entry points (sempre `btn-primary lg` por exemplo).
+
+## 34. Reusar componentes do DS carrega o wrapper
+
+Complementa §0 (Regra Mestre — Só componentes do DS) com a regra de **escopo do que copiar** quando reaproveitar um pattern de outro template.
+
+### O princípio
+
+Quando reproduzir um componente/seção de outro template do DS (ex: settings list do template-4 dentro de outro fluxo), **copie o bloco completo** — incluindo o wrapper externo (card, page-inner, shell-content). Não tente extrair só o "miolo" do componente.
+
+### Por quê
+
+- **Wrappers carregam decisões de layout que não estão no componente.** Padding, border-radius, background, max-width, posicionamento — essas propriedades vivem no wrapper, não na lista/card interna. Copiar só o conteúdo perde tudo isso e gera bugs visuais sutis (sem fundo, sem padding, sem largura controlada).
+- **Wrappers carregam decisões de hierarquia.** O `<div class="card p-4">` que envolve um `<ul>` no desktop existe pra dar peso visual de "card de conteúdo". Sem ele, a lista vira "tabela solta no canvas" — visualmente quebra a hierarquia.
+- **Não há um "componente isolado" puro no DS.** Cada peça é projetada para viver dentro de seu wrapper canônico. Listas vivem em cards. Cards vivem em umb-page-inner. umb-page-inner vive em umb-shell-content.
+
+### Caso canônico
+
+**Bug observado**: copiei `<ul class="umb-settings-list">` do `template-4-mobile.html` pra dentro do `<main class="umb-mobile-content">` de um protótipo. Esqueci o `<div class="card p-3" style="border-radius:12px">` que envolve no template original.
+
+Resultado: lista renderizou direto no fundo da página (`--umb-bg-primary`), sem contraste, sem padding, parecendo "quebrada".
+
+Correção: envolveu a `<ul>` com o card wrapper canônico.
+
+### Sequência canônica de copiar uma seção
+
+1. Identifique o componente principal que você quer (ex: `.umb-settings-list`).
+2. **Suba na árvore HTML** até encontrar a primeira tag de layout (`.card`, `.umb-page-inner`, `.umb-shell-content`).
+3. Copie do wrapper de layout pra dentro — não do componente pra dentro.
+4. Cole no destino mantendo a hierarquia.
+
+### Anti-pattern
+
+- ❌ Copiar só `<ul class="umb-settings-list">` sem o `<div class="card">` envolvente — perde fundo, padding, radius.
+- ❌ Copiar `<table class="table">` sem o `<div class="table-responsive">` envolvente — perde scroll horizontal em mobile.
+- ❌ Copiar `<div class="umb-conv-item">` sem o `<div class="umb-conv-list">` envolvente — perde max-width e o spacing entre items.
+- ❌ "Vou copiar só o que eu preciso e adicionar minha própria div" — você está reinventando o wrapper. Use o canônico.
+
+### Como detectar que faltou wrapper
+
+Sinais visuais ao redimensionar/inspecionar:
+- Conteúdo aparenta "vazado" (sem margem das bordas da tela)
+- Sem fundo de card (lista renderiza direto sobre body bg)
+- Padding inconsistente comparado a outras telas similares
+- Border-radius da tela ausente ou diferente do padrão
+
+Em todos esses casos, suba a hierarquia do template original e adicione o wrapper que faltou.
+
+## 35. Validar HTML balance após edits programáticos
+
+Workflow de validação obrigatório após qualquer edição programática (script Python, sed, regex find-replace) em arquivos HTML do DS ou do prototype.
+
+### O princípio
+
+**Toda edição programática que altera HTML deve ser seguida de uma validação automática de balanceamento de tags.** Sem isso, scripts que falham silenciosamente em casos de borda deixam o HTML quebrado em formas que renderizam **mas com bugs sutis** (conteúdo órfão, divs aninhadas erradas, escape de containers).
+
+### Por quê
+
+- **HTML mal-balanceado renderiza.** Browsers são tolerantes — uma `<div>` órfã não quebra o parsing, só estraga o layout. Bugs do tipo "view duplicada", "elemento aparece fora de qualquer container", "demo-view não esconde quando deveria" são quase sempre causados por `</div>` a mais ou a menos.
+- **Falhas silenciosas em scripts são comuns.** Substituições por regex/string match podem encontrar 0 ocorrências (não substitui nada), múltiplas (substitui mais que esperado), ou casos parciais (parte da árvore HTML cortada). Sem validação, esses casos passam.
+- **Diff visual no browser é caro.** Reproduzir o bug no browser, identificar a causa, voltar pro código, corrigir, repetir — gasta minutos por iteração. Validação automática gasta segundos e evita o ciclo.
+
+### Validação canônica
+
+Após cada substituição em massa, rodar:
+
+```python
+# Conta de tags
+opens = len(re.findall(r'<div\b', body))
+closes = body.count('</div>')
+print(f"<div>: {opens} opens vs {closes} closes (diff: {opens - closes})")
+assert opens == closes, "div imbalance!"
+
+# Balanceamento por bloco-raiz (depth deve voltar a 0 em cada um)
+for n in [1, 2, 3, 4]:  # ou outros identificadores de bloco
+    pat = rf'<div class="demo-view( is-active)?" data-view="{n}">'
+    m = re.search(pat, body)
+    if not m: continue
+    start = m.end(); depth = 1; pos = start
+    while depth > 0 and pos < len(body):
+        no = body.find('<div', pos); nc = body.find('</div>', pos)
+        if nc == -1: break
+        if no != -1 and no < nc:
+            depth += 1; pos = no + 4
+        else:
+            depth -= 1; pos = nc + 6
+    assert depth == 0, f"View {n}: depth final = {depth} (deveria ser 0)"
+```
+
+Adapte os identificadores de bloco-raiz para o contexto (demo-view, section, template, etc.).
+
+### Quando rodar
+
+- Após qualquer **substituição multi-linha** (>3 linhas afetadas).
+- Após qualquer edição que **moveu blocos inteiros** de lugar (cortar e colar via script).
+- Após qualquer **find-and-replace de selectors HTML** (ex: trocar `<template id="X">` por outra coisa).
+- **Antes** de gerar o arquivo final consumido pelo usuário.
+- **Antes** de commit — `assert` no script garante que falha grita.
+
+### Sinais de quebra que essa validação pega
+
+- `<div>` opens > `</div>` closes → tag não fechou (bloco órfão se estende até o fim do body).
+- `<div>` opens < `</div>` closes → tag fechou cedo demais (conteúdo "vazou" pra fora do container).
+- Bloco-raiz com depth ≠ 0 → conteúdo de um bloco está dentro de outro indevidamente.
+
+### Caso canônico vivido
+
+Substituição de Tela 1 em um protótipo deixou 103 linhas de uma Tela 2 antiga **fora de qualquer demo-view** (no nível root do body). HTML válido, parser feliz, mas:
+- Diff de divs: `+2` (sinal de alarme imediato)
+- Bloco-raiz da Tela 2 fechou em depth 0 corretamente, mas existia conteúdo flutuante adicional fora dela
+- Bug visual: ao alternar pra Tela 2, o conteúdo órfão renderizava embaixo (ele não tinha `display:none` aplicado porque não estava dentro de nenhuma demo-view)
+
+A validação `opens != closes` teria pegado isso em segundos. Sem ela, gastei vários ciclos depurando no browser.
+
+### Anti-pattern
+
+- ❌ Confiar que a substituição "deve ter funcionado" sem validar.
+- ❌ Validar só pelo conteúdo visível (abrir no browser) — bugs estruturais não aparecem visualmente até alguém alternar de view ou redimensionar.
+- ❌ Pular validação porque "é só uma mudança pequena" — pequenas mudanças com regex são onde mais erros acontecem (anchors imprecisos, indents diferentes).
