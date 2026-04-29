@@ -586,6 +586,7 @@ A sidebar do Umbler Talk tem **8 itens principais** + **3 itens inferiores**, na
 - **Exatamente um** item pode estar com `.active` por template. Nunca deixe dois itens marcados simultaneamente (ex: "Agentes de IA" + "Configurações" ativos no mesmo template).
 - O render define o estado ativo lendo o atributo `data-active` do placeholder — basta mudar o valor para mover a seleção (ex: `data-active="Configurações"`).
 - O avatar **não participa** do estado active da sidebar — ele é um trigger de dropdown, nunca recebe `.active`.
+- **Ícone do item ativo é renderizado no peso `fill` do Phosphor**: o glyph permanece o mesmo (HTML continua `<i class="ph ph-*">`), mas a regra `.umb-si.active .ph::before { font-family: "Phosphor-Fill" !important; }` troca a fonte para a versão preenchida. Isso exige carregar `https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css` junto com `regular/style.css` e `bold/style.css` no `<head>`. Não troque a classe HTML para `ph-fill` na ativação — o swap é puramente CSS, mantendo o mesmo markup nos estados default/hover/active.
 
 ### Tooltips
 
