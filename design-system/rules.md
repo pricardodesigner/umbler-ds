@@ -2241,12 +2241,14 @@ Contém preferências pessoais do usuário, cada uma como um par `<label> + .ins
 
 Preferências canônicas (3 grupos + 1 link):
 
-| Preferência | Variantes (segmented) | Ícones |
-|---|---|---|
-| Reatribuição de chats (com `?` tooltip) | Off / Auto / Sempre | `prohibit` / `shuffle` / `arrows-clockwise` |
-| Tema | Auto / Claro / Escuro | `circle-half` / `sun` / `moon` |
-| Som de notificação | Ativado / Desativado | `speaker-high` / `speaker-slash` |
-| **Link**: "Outras preferências pessoais" (escape pra tela completa, classe `btn btn-text`) | — | `arrow-right` (prefix com `me-1`) |
+| Preferência | Componente | Variantes | Ícones |
+|---|---|---|---|
+| Reatribuição de chats (com `?` tooltip) | `inset-control--block` (segmented) | Off / Auto / Sempre | `prohibit` / `shuffle` / `arrows-clockwise` |
+| **Tema** | `nav nav-pills flex-column` (vertical pills) | Auto / Claro / Escuro / Esmeralda / Bravia | `arrows-clockwise` / `sun` / `moon` / `leaf` / `circles-four` |
+| Som de notificação | `inset-control--block` (segmented) | Ativado / Desativado | `speaker-high` / `speaker-slash` |
+| **Link**: "Outras preferências pessoais" (escape pra tela completa) | `btn btn-text` | — | `arrow-right` (prefix com `me-1`) |
+
+**Quando usar segmented vs nav-pills**: segmented (`inset-control--block`) cabe quando a preferência tem 2–3 opções binárias mutuamente exclusivas (ligado/desligado, modo simples). `nav-pills` na vertical é melhor quando há **5 ou mais opções**, cada uma com ícone próprio e identidade visual (ex: temas) — fica mais legível como lista vertical do que apertado num segmented horizontal. Para Tema especificamente, sempre use `nav-pills` (5 opções fixas, com `data-theme` + `setTheme()` canônicos do DS).
 
 Toggle de tabs é via `onclick="umbAccountPopupTab(this)"` nos botões `.umb-account-popup-tab` com `data-tab="account|prefs"`. A função global troca a `.active` da tab e o `hidden` da pane correspondente. Sair fica fora das panes — é compartilhado.
 
@@ -2257,6 +2259,25 @@ Toggle de tabs é via `onclick="umbAccountPopupTab(this)"` nos botões `.umb-acc
 - Mobile: largura full bleed com 8px de margem lateral (`left: 8px; right: 8px`)
 - **Altura fixa**: `height: min(540px, calc(100vh - 32px))` — não pode ser `max-height`. O motivo: ao alternar entre tabs (Minha conta ↔ Preferências), o conteúdo tem alturas diferentes; com `max-height` a popup encolheria/cresceria a cada toggle e a área de clique mudaria sob o cursor. Altura fixa preserva a área de clique e garante que botões fiquem onde o usuário espera.
 - A pane "Minha conta" tem scroll interno na lista de organizações (`.umb-account-popup-list`); a pane "Preferências" deixa espaço vazio na base quando o conteúdo é mais curto que a popup — aceitável.
+
+### Integração com a sidebar — substitui o `.umb-avatar-menu` (§12)
+
+Em apps com múltiplas organizações, o `.umb-account-popup` **substitui** o `.umb-avatar-menu` legado (§12 — dropdown com tema + Sair) como popup canônico do Perfil. A regra de transição:
+
+| Caso | Componente |
+|---|---|
+| App single-tenant (uma organização) | `.umb-avatar-menu` (§12) — bastante pra Tema + Sair |
+| App multi-tenant / multi-org | `.umb-account-popup` (§31) — engloba contas, orgs, busca, criação e Tema |
+
+#### Como integrar
+
+1. No `<template id="umb-tpl-sidebar">`, mantenha o `<button class="umb-avatar-trigger">` (mesma posição na sidebar — canto inferior).
+2. Remova o `data-bs-toggle="dropdown"` do trigger e o `<div class="dropdown-menu umb-avatar-dropdown">` interno.
+3. Substitua por um handler customizado que **abre/fecha** o `.umb-account-popup` posicionado próximo ao trigger.
+4. Renderize o `.umb-account-popup` como elemento fixo na página (uma instância por app), `hidden` por default. Posicione com `left: 60px; bottom: 16px` (já no CSS do componente).
+5. Click outside fecha (handler em `document` que cheque se o target está dentro do `.umb-account-popup` ou do trigger).
+
+Os dois componentes não devem coexistir na mesma sidebar — escolha um. A função global `setTheme()` continua sendo a porta única pra trocar tema; tanto o `.theme-option` legado (§12) quanto o `nav-link.theme-option` novo (§31) reagem a ela.
 
 ### Anti-pattern
 

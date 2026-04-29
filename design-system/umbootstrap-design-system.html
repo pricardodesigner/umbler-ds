@@ -5117,11 +5117,13 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 </div>
                 <div class="umb-account-popup-pref">
                   <label class="umb-account-popup-pref-label">Tema</label>
-                  <div class="inset-control inset-control--block">
-                    <button class="btn"><i class="ph ph-circle-half"></i> Auto</button>
-                    <button class="btn active"><i class="ph ph-sun"></i> Claro</button>
-                    <button class="btn"><i class="ph ph-moon"></i> Escuro</button>
-                  </div>
+                  <ul class="nav nav-pills flex-column" role="tablist">
+                    <li class="nav-item"><button class="nav-link theme-option" data-theme="auto" onclick="setTheme('auto')"><i class="ph ph-arrows-clockwise me-2"></i>Auto</button></li>
+                    <li class="nav-item"><button class="nav-link theme-option" data-theme="light" onclick="setTheme('light')"><i class="ph ph-sun me-2"></i>Claro</button></li>
+                    <li class="nav-item"><button class="nav-link theme-option active" data-theme="dark" onclick="setTheme('dark')"><i class="ph ph-moon me-2"></i>Escuro</button></li>
+                    <li class="nav-item"><button class="nav-link theme-option" data-theme="emerald" onclick="setTheme('emerald')"><i class="ph ph-leaf me-2"></i>Esmeralda</button></li>
+                    <li class="nav-item"><button class="nav-link theme-option" data-theme="dark-emerald" onclick="setTheme('dark-emerald')"><i class="ph ph-circles-four me-2"></i>Bravia</button></li>
+                  </ul>
                 </div>
                 <div class="umb-account-popup-pref">
                   <label class="umb-account-popup-pref-label">Som de notificação</label>
