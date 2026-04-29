@@ -446,18 +446,18 @@ Nos temas de **fundo escuro** (`dark` e `dark-emerald/Bravia`), `--umb-shell-hea
 
 Ao criar um tema novo, decida cedo qual dos dois padrões seguir — não deixe `--umb-shell-header-bg` sem definir (herda do `:root` e quebra a identidade visual do tema).
 
-### 11.1 Altura unificada — 56px em todos os headers
+### 11.1 Altura unificada — 62px em todos os headers
 
-Para que o símbolo/wordmark da sidebar fique alinhado horizontalmente com o conteúdo do header em qualquer tela, **todos os elementos de "topo" do DS têm altura fixa 56px**:
+Para que o símbolo/wordmark da sidebar fique alinhado horizontalmente com o conteúdo do header em qualquer tela, **todos os elementos de "topo" do DS têm altura fixa 62px**:
 
 | Elemento | Onde aparece | Altura |
 |---|---|---|
-| `.umb-shell-head` | Topo da sidebar (.umb-shell-sidebar) — abriga logo + toggle | **56px** |
-| `.umb-shell-header` | Header padrão das telas (T1–T4: breadcrumb + créditos) | **56px** |
-| `.umb-conv-topbar` | Topbar da lista de conversas (T5 — chat) | **56px** |
-| `.umb-chat-header` | Header do detail do chat (T5 — chat) | **56px** |
+| `.umb-shell-head` | Topo da sidebar (.umb-shell-sidebar) — abriga logo + toggle | **62px** |
+| `.umb-shell-header` | Header padrão das telas (T1–T4: breadcrumb + créditos) | **62px** |
+| `.umb-conv-topbar` | Topbar da lista de conversas (T5 — chat) | **62px** |
+| `.umb-chat-header` | Header do detail do chat (T5 — chat) | **62px** |
 
-Como todas as faixas têm a mesma altura, o eixo Y central (28px) é o mesmo em qualquer tela — o símbolo "U" do canto superior esquerdo alinha com breadcrumb, créditos, ícones de topbar, avatar do contato, etc. Nunca crie um header novo com altura diferente de 56px no DS — se precisar de 2 linhas de informação, empilhe logicamente (ex: header + subheader stacked) mas mantenha o bloco do topo em 56px.
+Como todas as faixas têm a mesma altura, o eixo Y central (31px) é o mesmo em qualquer tela — o símbolo "U" do canto superior esquerdo alinha com breadcrumb, créditos, ícones de topbar, avatar do contato, etc. Nunca crie um header novo com altura diferente de 62px no DS — se precisar de 2 linhas de informação, empilhe logicamente (ex: header + subheader stacked) mas mantenha o bloco do topo em 62px.
 
 ## 12. Avatar menu (theme switcher + logout)
 
@@ -499,12 +499,12 @@ O `.umb-si-avatar` no canto inferior da sidebar é **sempre** um trigger de popu
 - O avatar tem **32×32px** com `font-size: 12px`. Esse tamanho equilibra a "massa visual" com os demais `.umb-si` (36×36) — avatar menor por convenção (identidade de "perfil", não "botão"), mas sem percepção de desalinhamento. Nunca use dimensões fora dessas duas: 32px avatar vs 36px botões.
 - **No estado `.is-expanded`**, ao lado do avatar aparece `.umb-avatar-info` com nome (`.umb-avatar-name`, 13px/500) e email (`.umb-avatar-email`, 11px/opacity .7), ambos com ellipsis se estourarem a largura. No collapsed esse bloco fica `display: none` — só o círculo do avatar aparece. O trigger wrapper (`.umb-avatar-trigger`) cresce pra cobrir avatar+info no expanded (`width: 100%`, `gap: 12px`, `padding: 4px 12px`) — mesma área clicável dos demais itens do menu.
 - **Cor do nome/email:** `var(--umb-nav-color)` — o mesmo token dos itens de menu. Isso garante contraste com `--umb-sidebar-bg` em qualquer tema (inclusive Claro/Esmeralda com sidebar colorida, onde `--umb-text-primary` / `--umb-text-mid` ficariam invisíveis). O email usa `opacity: .7` pra hierarquia sobre o nome, em vez de um token paralelo — funciona consistente em todos os temas sem casos especiais.
-- O container usa `dropend` (abre à direita da sidebar, que é estreita — 52px — e fica à esquerda da tela).
+- O container usa `dropend` (abre à direita da sidebar, que é estreita — 60px — e fica à esquerda da tela).
 - O trigger **obrigatoriamente** tem `data-bs-display="static"` **e** o CSS `.umb-avatar-menu > .dropdown-menu` força `position: absolute !important; left: 100% !important; bottom: 0 !important; top: auto !important; transform: none !important`. Os dois juntos garantem posicionamento fixo: o `data-bs-display="static"` desliga o Popper.js (sem cálculo dinâmico de posição entre aberturas), e o CSS com `!important` força o menu a ficar à direita do trigger, crescendo pra cima (`bottom: 0` alinha a base do menu com a base do avatar).
 
   **Motivo do `bottom: 0` em vez de `top: 0`:** o avatar vive no **fundo da sidebar** — se o menu abrir pra baixo (top: 0), ele estoura o viewport e corta. Abrindo pra cima (bottom: 0), o menu expande dentro do espaço livre acima do avatar, cabendo naturalmente mesmo em viewports com altura menor.
 
-  **Motivo de desligar Popper:** com Popper ativo, o bug "primeira abertura OK, 2ª fecha, 3ª flipa pra baixo" reproduz mesmo com `flip` desabilitado via `popperConfig` — algum estado interno de Popper fica corrompido entre aberturas no contexto específico desse DS (sidebar estreita + trigger no fundo da viewport). Testei várias configurações de Popper e nenhuma resolveu de forma confiável. A solução cirúrgica é desligar Popper + fixar CSS. Trade-off: sem Popper, o menu não se ajusta dinamicamente se faltar espaço à direita. Como a sidebar vive na esquerda da tela (fixed, 52px) e o viewport mínimo de uso é >= 768px, sempre tem espaço — o trade-off não compromete o uso real.
+  **Motivo de desligar Popper:** com Popper ativo, o bug "primeira abertura OK, 2ª fecha, 3ª flipa pra baixo" reproduz mesmo com `flip` desabilitado via `popperConfig` — algum estado interno de Popper fica corrompido entre aberturas no contexto específico desse DS (sidebar estreita + trigger no fundo da viewport). Testei várias configurações de Popper e nenhuma resolveu de forma confiável. A solução cirúrgica é desligar Popper + fixar CSS. Trade-off: sem Popper, o menu não se ajusta dinamicamente se faltar espaço à direita. Como a sidebar vive na esquerda da tela (fixed, 60px) e o viewport mínimo de uso é >= 768px, sempre tem espaço — o trade-off não compromete o uso real.
 - Reaproveita a classe `.theme-option` já existente na sidebar de documentação do DS — o `setTheme()` global sincroniza o estado `active` em **todos** os theme-switchers do documento.
 - O separador entre temas e logout usa `hr.dropdown-divider.my-2` (8px acima e abaixo, padrão Bootstrap 5.3).
 - "Sair" usa `.umb-avatar-logout` — cor `var(--umb-alert-danger-color)`, hover `var(--umb-alert-danger-bg)`.
@@ -953,7 +953,7 @@ O `umb-chat-shell` é um container `display:flex` que ocupa altura total e divid
 
 Largura fixa **360px** no desktop. Estrutura vertical:
 
-1. **Topbar** (`.umb-conv-topbar`, 56px — bate com `.umb-chat-header`): 5 `btn-icon btn-text btn-lg` + spacer + 1 `btn-primary btn-icon btn-lg` (ph-plus).
+1. **Topbar** (`.umb-conv-topbar`, 62px — bate com `.umb-chat-header`): 5 `btn-icon btn-text btn-lg` + spacer + 1 `btn-primary btn-icon btn-lg` (ph-plus).
 2. **Toolbar** (`.umb-conv-toolbar`): busca + botão filtros.
 3. **Segmented** (`.umb-conv-segmented > .inset-control.inset-control-lg`): Entrada / Esperando / Finalizados.
 4. **Scroll** (`.umb-conv-scroll`) com a lista de `.umb-conv-item`.
@@ -1046,7 +1046,7 @@ Canais canônicos com cor fixa (não dependem do tema):
 
 Ocupa o espaço restante (`flex: 1`) e usa `var(--umb-bg-primary, var(--bs-body-bg))` como fundo (§22). Layout vertical:
 
-1. **Header** (`.umb-chat-header`, **56px** — mesma altura do `.umb-conv-topbar` para que o divisor horizontal inferior fique alinhado pixel-perfect entre as duas colunas). Substitui o shell header padrão. Contém:
+1. **Header** (`.umb-chat-header`, **62px** — mesma altura do `.umb-conv-topbar` para que o divisor horizontal inferior fique alinhado pixel-perfect entre as duas colunas). Substitui o shell header padrão. Contém:
    - `.umb-chat-header-contact` (avatar 36×36 + nome + meta com tags/setor/canal)
    - `.umb-chat-header-actions` — exatamente **8 botões icon-only** `btn btn-icon btn-text btn-lg` (§1), cada um com tooltip via `data-bs-toggle="tooltip" data-bs-placement="bottom" title="…"`, nesta ordem:
      - `ph-user` — "Detalhes do contato"
@@ -1166,7 +1166,7 @@ O fundo da área de mensagens (`.umb-chat-detail`) usa `--umb-bg-primary` (ver �
 - **Sempre** use **um** item `.umb-conv-item.active` por lista no desktop quando há chat aberto; no empty state, **nenhum** item fica ativo.
 - **Sempre** ancore o composer no rodapé (`flex-shrink: 0`) e faça o body scrollar — nunca o body empurre o composer para fora da viewport.
 - **Ações do header do chat**: sempre `btn btn-icon btn-text btn-lg` (§1), exatamente 8 botões na ordem canônica descrita em §21.3. Todos **obrigatoriamente** com tooltip (`data-bs-toggle="tooltip"`). Nunca use `btn-primary` sólido no header do chat — o único sólido desta tela está no topbar da coluna 1 (o "Iniciar nova conversa" `ph-plus`) e no botão Enviar do composer.
-- **Topbar da lista de conversas** (`.umb-conv-topbar`): 5 `btn-icon btn-text btn-lg` + spacer + 1 `btn-primary btn-icon btn-lg` (ordem fixa: `ph-chat`, `ph-users-three`, `ph-eye`, `ph-list-checks`, `ph-sort-descending`, spacer, `ph-plus`). Todos com tooltip. Altura **56px** = altura do `.umb-chat-header`, de modo que o `border-bottom` das duas colunas fique alinhado pixel-perfect.
+- **Topbar da lista de conversas** (`.umb-conv-topbar`): 5 `btn-icon btn-text btn-lg` + spacer + 1 `btn-primary btn-icon btn-lg` (ordem fixa: `ph-chat`, `ph-users-three`, `ph-eye`, `ph-list-checks`, `ph-sort-descending`, spacer, `ph-plus`). Todos com tooltip. Altura **62px** = altura do `.umb-chat-header`, de modo que o `border-bottom` das duas colunas fique alinhado pixel-perfect.
 - **Filtros de lista**: use **Segmented** (`.umb-conv-segmented > .inset-control.inset-control-lg`) com 3 segmentos "Entrada / Esperando / Finalizados" e contadores via `<span class="umb-seg-count">`. Nunca use `.umb-conv-tabs` (deprecated — mantido apenas por retrocompatibilidade).
 - **CTA do composer**: único botão sólido da tela. Use `btn btn-primary btn-icon` (microfone — gravar áudio) quando o textarea está vazio; substitua o ícone por `ph-paper-plane-right` (ou troque para `btn btn-primary` com texto `Enviar`) quando houver conteúdo. Sempre canônico (pill §3, tamanho Md §2). **Nunca** use classe custom com border-radius menor. Disable quando nenhuma ação for possível.
 - **Pinned message — usa o componente Alert canônico**: a faixa de anotação fixada (`.umb-chat-pinned`) é uma composição com `.alert .alert-warning` do DS (§5). Estrutura obrigatória:

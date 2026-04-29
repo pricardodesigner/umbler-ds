@@ -671,7 +671,7 @@
        precisa escapar pra direita; clipping do wordmark durante a animacao e
        feito em .umb-shell-head (escopo local). */
     .umb-shell-sidebar {
-      width: 52px; min-width: 52px;
+      width: 60px; min-width: 60px;
       background: var(--umb-sidebar-bg);
       border-right: 1px solid var(--umb-border-on-brand);
       display: flex; flex-direction: column; align-items: center;
@@ -688,7 +688,7 @@
        aparecer/sumir ao lado do simbolo — sem salto vertical, transicao suave. */
     .umb-shell-head {
       width: 100%;
-      height: 56px; min-height: 56px;
+      height: 62px; min-height: 62px;
       display: flex; align-items: center; justify-content: center;
       gap: 8px; padding: 0;
       flex-shrink: 0;
@@ -1136,7 +1136,7 @@
 
     /* Topbar / Header */
     .umb-shell-header {
-      height: 56px; min-height: 56px;
+      height: 62px; min-height: 62px;
       background: var(--umb-shell-header-bg, var(--umb-sidebar-bg));
       border-bottom: 1px solid var(--umb-border);
       display: flex; align-items: center; padding: 0 20px; gap: 8px;
@@ -1513,11 +1513,11 @@
     /* Botao de toggle no header do chat — herda do padrao btn-icon btn-text btn-lg.
        Apenas garante cor neutra, consistente com .umb-chat-header-actions. */
     .umb-conv-toggle { color: var(--umb-text-mid); flex-shrink: 0; }
-    /* Topbar (56px): 5 btn-icon btn-text btn-lg + spacer + 1 btn-primary btn-icon btn-lg.
+    /* Topbar (62px): 5 btn-icon btn-text btn-lg + spacer + 1 btn-primary btn-icon btn-lg.
        Altura 56px bate com .umb-chat-header E com .umb-shell-head da sidebar — eixo Y
        único em todas as faixas do topo do app (ver §11.1 do rules.md). */
     .umb-conv-topbar {
-      height: 56px; min-height: 56px;
+      height: 62px; min-height: 62px;
       padding: 8px 12px; display: flex; align-items: center; gap: 2px;
       border-bottom: 1px solid var(--umb-border);
       background: var(--umb-card-bg);
@@ -1743,7 +1743,7 @@
       background: var(--umb-bg-primary, var(--bs-body-bg));
     }
     .umb-chat-header {
-      height: 56px; min-height: 56px;
+      height: 62px; min-height: 62px;
       background: var(--umb-bg-primary, var(--bs-body-bg));
       border-bottom: 1px solid var(--umb-border);
       display: flex; align-items: center; gap: 12px; padding: 0 16px;

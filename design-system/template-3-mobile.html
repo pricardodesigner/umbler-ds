@@ -1324,14 +1324,14 @@
     .umb-shell { display: flex; height: 100%; overflow: hidden; }
 
     /* Sidebar principal — dois estados:
-         - Colapsada (default, 52px): apenas ícones, tooltips ao hover
+         - Colapsada (default, 60px): apenas ícones, tooltips ao hover
          - Expandida (.is-expanded, 240px): ícones + labels, sem tooltips
        Transição suave de largura (.2s). Padding vertical concentrado no bottom —
-       o topo é governado pela altura fixa do .umb-shell-head (73px) em ambos estados.
+       o topo é governado pela altura fixa do .umb-shell-head (62px) em ambos estados.
        NÃO aplicar overflow:hidden aqui: o dropdown do avatar-menu precisa escapar
        pra direita; clipping do wordmark durante a animação é feito no .umb-shell-head. */
     .umb-shell-sidebar {
-      width: 52px; min-width: 52px;
+      width: 60px; min-width: 60px;
       background: var(--umb-sidebar-bg);
       border-right: 1px solid var(--umb-border-on-brand);
       display: flex; flex-direction: column; align-items: center;
@@ -1342,20 +1342,20 @@
       width: 240px; min-width: 240px;
       align-items: stretch;
     }
-    /* Head com altura fixa 56px nos DOIS estados — alinha horizontalmente com
-       .umb-shell-header (56px), .umb-conv-topbar (56px) e .umb-chat-header (56px).
+    /* Head com altura fixa 62px nos DOIS estados — alinha horizontalmente com
+       .umb-shell-header (62px), .umb-conv-topbar (62px) e .umb-chat-header (62px).
        Consequência: o símbolo "U" (collapsed), o wordmark (expanded), o breadcrumb/
        créditos do header das telas normais e os ícones dos headers do chat ficam
-       todos centrados no mesmo eixo Y=28. Ao alternar collapsed/expanded a única
+       todos centrados no mesmo eixo Y=31. Ao alternar collapsed/expanded a única
        mudança é o texto aparecer/sumir ao lado do símbolo — sem salto vertical. */
     .umb-shell-head {
       width: 100%;
-      height: 56px; min-height: 56px;
+      height: 62px; min-height: 62px;
       display: flex; align-items: center; justify-content: center;
       gap: 8px; padding: 0;
       flex-shrink: 0;
       /* Clipa o wordmark (110px) que extrapola o sidebar durante a transição
-         52→240px. Escopo local evita prejudicar dropdowns que nascem em outras
+         60→240px. Escopo local evita prejudicar dropdowns que nascem em outras
          regiões do sidebar (avatar-menu, por exemplo). */
       overflow: hidden;
     }
@@ -1806,11 +1806,11 @@
     /* Main area (header + content) */
     .umb-shell-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
-    /* Topbar / Header — 56px alinha horizontalmente com .umb-shell-head (sidebar),
+    /* Topbar / Header — 62px alinha horizontalmente com .umb-shell-head (sidebar),
        .umb-conv-topbar (lista de chat) e .umb-chat-header (detail do chat).
        Consistência sistêmica: 1 altura de header em todas as telas. */
     .umb-shell-header {
-      height: 56px; min-height: 56px;
+      height: 62px; min-height: 62px;
       background: var(--umb-shell-header-bg, var(--umb-sidebar-bg));
       border-bottom: 1px solid var(--umb-border);
       display: flex; align-items: center; padding: 0 20px; gap: 8px;
@@ -2184,10 +2184,10 @@
       width: 0; min-width: 0;
       border-top-right-radius: 0;
     }
-    /* Topbar (56px): 5 btn-icon btn-text btn-lg + spacer + 1 btn-primary btn-icon btn-lg.
+    /* Topbar (62px): 5 btn-icon btn-text btn-lg + spacer + 1 btn-primary btn-icon btn-lg.
        Altura deve bater 1:1 com .umb-chat-header para o divisor alinhar pixel-perfect. */
     .umb-conv-topbar {
-      height: 56px; min-height: 56px;
+      height: 62px; min-height: 62px;
       padding: 8px 12px; display: flex; align-items: center; gap: 2px;
       border-bottom: 1px solid var(--umb-border);
       background: var(--umb-card-bg);
@@ -2413,7 +2413,7 @@
       background: var(--umb-bg-primary, var(--bs-body-bg));
     }
     .umb-chat-header {
-      height: 56px; min-height: 56px;
+      height: 62px; min-height: 62px;
       background: var(--umb-bg-primary, var(--bs-body-bg));
       border-bottom: 1px solid var(--umb-border);
       display: flex; align-items: center; gap: 12px; padding: 0 16px;
@@ -2427,7 +2427,7 @@
     .umb-conv-toggle { color: var(--umb-text-mid); flex-shrink: 0; }
     /* Avatar do header reusa o componente .umb-conv-avatar (mesma marcação da
        card da coluna 1, incluindo o badge de canal) — escopado para 40×40 pra
-       caber no header de 56px. Isso garante que o header espelha o item .active
+       caber no header de 62px. Isso garante que o header espelha o item .active
        da lista: mesma foto, mesmo canal. */
     .umb-chat-header .umb-conv-avatar {
       width: 40px; height: 40px;
