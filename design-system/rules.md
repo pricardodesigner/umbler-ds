@@ -2233,6 +2233,23 @@ Definida no `umbootstrap-design-system.html`. Veja a seção "Account Popup" do 
 
 A popup tem duas tabs canônicas: **Minha conta** e **Preferências**. Não adicione uma terceira sem antes considerar se cabe em uma das duas. Tabs em popups estreitas comprimem rapidamente.
 
+#### Aba "Minha conta"
+Contém os itens de conta (Meu perfil, Assinaturas e planos, Indique e ganhe) seguidos da seção de organizações (com busca toggle e ação de criar). É a tab default — pane com `data-tab-pane="account"`.
+
+#### Aba "Preferências"
+Contém preferências pessoais do usuário, cada uma como um par `<label> + .inset-control--block` (segmented full-width). Pane com `data-tab-pane="prefs"` (`hidden` por default).
+
+Preferências canônicas (3 grupos + 1 link):
+
+| Preferência | Variantes (segmented) | Ícones |
+|---|---|---|
+| Reatribuição de chats (com `?` tooltip) | Off / Auto / Sempre | `prohibit` / `shuffle` / `arrows-clockwise` |
+| Tema | Auto / Claro / Escuro | `circle-half` / `sun` / `moon` |
+| Som de notificação | Ativado / Desativado | `speaker-high` / `speaker-slash` |
+| **Link**: "Outras preferências pessoais" (escape pra tela completa) | — | `arrow-right` (prefix) |
+
+Toggle de tabs é via `onclick="umbAccountPopupTab(this)"` nos botões `.umb-account-popup-tab` com `data-tab="account|prefs"`. A função global troca a `.active` da tab e o `hidden` da pane correspondente. Sair fica fora das panes — é compartilhado.
+
 ### Tamanho e posicionamento
 
 - Largura desktop: **320px** fixa
