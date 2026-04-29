@@ -1730,8 +1730,14 @@
 
        Regras: §31 do rules.md. */
     .umb-account-popup {
-      position: absolute;
-      left: 60px; bottom: 16px;
+      /* Posicionamento canônico: ancorado à direita do trigger, alinhado com a base.
+         Usa o mesmo pattern do .umb-avatar-dropdown legado (§12) — left: 100% + gap,
+         bottom: 0. !important previne override de regras genéricas. */
+      position: absolute !important;
+      top: auto !important;
+      bottom: 0 !important;
+      right: auto !important;
+      left: calc(100% + 8px) !important;
       width: 320px;
       /* Altura fixa: garante que a área de clique não muda ao alternar tabs */
       height: min(540px, calc(100vh - 32px));
@@ -1894,12 +1900,14 @@
     }
 
     @media (max-width: 767.98px) {
-      .umb-account-popup { left: 8px; right: 8px; width: auto; bottom: 80px; }
+      /* Mobile: bottom-sheet quase full-width, ancorado acima da bottom-nav */
+      .umb-account-popup {
+        left: 8px !important;
+        right: 8px !important;
+        bottom: 80px !important;
+        width: auto;
+      }
     }
-
-    /* Avatar menu: precisa de position: relative pra ancorar a .umb-account-popup
-       (substitui o que o Bootstrap dropdown fazia implicitamente) */
-    .umb-avatar-menu { position: relative; }
 
     /* Permite que dropdowns/popups do avatar extrapolem containers de preview com overflow:hidden */
     .tpl-preview:has(.dropdown-menu.show),
