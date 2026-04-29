@@ -457,7 +457,9 @@ Como todas as faixas têm a mesma altura, o eixo Y central (28px) é o mesmo em 
 
 ## 12. Avatar menu (theme switcher + logout)
 
-O `.umb-si-avatar` no canto inferior da sidebar é **sempre** um trigger de dropdown. Ao clicar, abre um popover listando os 5 temas do DS (Auto, Claro, Escuro, Esmeralda, Bravia) + link Sair. Isso permite trocar o tema e visualizar a mudança instantaneamente.
+> **DEPRECATED em apps multi-org**: o `.umb-avatar-dropdown` foi substituído pelo `.umb-account-popup` (§31) no template canônico do DS. O `<template id="umb-tpl-sidebar">` agora renderiza o trigger conectado à `.umb-account-popup` em vez do dropdown legado. Esta seção (§12) permanece como referência histórica e para apps single-tenant que ainda queiram o dropdown simples (Tema + Sair), mas geração nova deve usar §31.
+
+O `.umb-si-avatar` no canto inferior da sidebar é **sempre** um trigger de popup. Ao clicar, abre um popover listando os 5 temas do DS (Auto, Claro, Escuro, Esmeralda, Bravia) + link Sair. Isso permite trocar o tema e visualizar a mudança instantaneamente.
 
 ### Markup obrigatório
 
@@ -2260,24 +2262,51 @@ Toggle de tabs é via `onclick="umbAccountPopupTab(this)"` nos botões `.umb-acc
 - **Altura fixa**: `height: min(540px, calc(100vh - 32px))` — não pode ser `max-height`. O motivo: ao alternar entre tabs (Minha conta ↔ Preferências), o conteúdo tem alturas diferentes; com `max-height` a popup encolheria/cresceria a cada toggle e a área de clique mudaria sob o cursor. Altura fixa preserva a área de clique e garante que botões fiquem onde o usuário espera.
 - A pane "Minha conta" tem scroll interno na lista de organizações (`.umb-account-popup-list`); a pane "Preferências" deixa espaço vazio na base quando o conteúdo é mais curto que a popup — aceitável.
 
-### Integração com a sidebar — substitui o `.umb-avatar-menu` (§12)
+### Integração com a sidebar — default do template canônico
 
-Em apps com múltiplas organizações, o `.umb-account-popup` **substitui** o `.umb-avatar-menu` legado (§12 — dropdown com tema + Sair) como popup canônico do Perfil. A regra de transição:
+A partir do commit em que o componente foi adicionado, o `<template id="umb-tpl-sidebar">` do DS **embute o `.umb-account-popup`** dentro do `.umb-avatar-menu` em vez do `.umb-avatar-dropdown` legado. Telas geradas via `data-umb-c="sidebar"` herdam a popup nova automaticamente — sem precisar de configuração adicional.
 
-| Caso | Componente |
-|---|---|
-| App single-tenant (uma organização) | `.umb-avatar-menu` (§12) — bastante pra Tema + Sair |
-| App multi-tenant / multi-org | `.umb-account-popup` (§31) — engloba contas, orgs, busca, criação e Tema |
+#### Markup canônico do trigger (já no template do DS)
 
-#### Como integrar
+```html
+<div class="umb-avatar-menu">
+  <button type="button" class="umb-avatar-trigger"
+          aria-expanded="false" aria-haspopup="dialog"
+          onclick="umbAccountPopupToggle(this)" title="Perfil">
+    <span class="umb-si-avatar">…iniciais…</span>
+    <span class="umb-avatar-info" aria-hidden="true">
+      <span class="umb-avatar-name">…nome…</span>
+      <span class="umb-avatar-email">…email…</span>
+    </span>
+  </button>
+  <div class="umb-account-popup" hidden role="dialog" aria-label="Perfil">
+    …conteúdo canônico (head + tabs + panes + foot)…
+  </div>
+</div>
+```
 
-1. No `<template id="umb-tpl-sidebar">`, mantenha o `<button class="umb-avatar-trigger">` (mesma posição na sidebar — canto inferior).
-2. Remova o `data-bs-toggle="dropdown"` do trigger e o `<div class="dropdown-menu umb-avatar-dropdown">` interno.
-3. Substitua por um handler customizado que **abre/fecha** o `.umb-account-popup` posicionado próximo ao trigger.
-4. Renderize o `.umb-account-popup` como elemento fixo na página (uma instância por app), `hidden` por default. Posicione com `left: 60px; bottom: 16px` (já no CSS do componente).
-5. Click outside fecha (handler em `document` que cheque se o target está dentro do `.umb-account-popup` ou do trigger).
+#### Comportamento
 
-Os dois componentes não devem coexistir na mesma sidebar — escolha um. A função global `setTheme()` continua sendo a porta única pra trocar tema; tanto o `.theme-option` legado (§12) quanto o `nav-link.theme-option` novo (§31) reagem a ela.
+- **Toggle por clique no avatar**: `umbAccountPopupToggle(trigger)` alterna `hidden` da popup. Disponível como `window.umbAccountPopupToggle` após o load do DS.
+- **Click outside fecha**: handler único no document escuta cliques fora do `.umb-avatar-menu` e fecha qualquer popup aberta.
+- **Escape fecha**: tecla Escape fecha qualquer popup aberta.
+- **Apenas uma popup visível por vez**: ao abrir uma popup com outra já aberta (sidebar desktop + mobile-header em viewports híbridos), a anterior fecha automaticamente.
+- **`aria-expanded`** é sincronizado no trigger pra leitores de tela.
+
+#### CSS de posicionamento
+
+O `.umb-avatar-menu` recebe `position: relative` (substitui o que o Bootstrap dropdown fornecia implicitamente). A popup posiciona-se com `position: absolute; left: 60px; bottom: 16px` — desktop ancorada à direita do trigger, mobile com `left: 8px; right: 8px; bottom: 80px` via media query (§31 mobile section).
+
+#### O `setTheme()` continua sendo a porta única
+
+Tanto o `.theme-option` legado (§12 — dropdown simples) quanto o `nav-link.theme-option` novo (§31 — nav-pills vertical) sincronizam o `.active` ao chamar `setTheme(themeId)`. Se você integra um theme switcher custom em outro lugar, use a mesma função global pra preservar consistência entre todos.
+
+#### Quando cair no §12 em vez do §31
+
+- App single-tenant que **não tem múltiplas organizações** e nunca terá: o `.umb-avatar-dropdown` (§12) é mais leve.
+- Telas isoladas/standalone fora do produto principal (landings, demos): pode usar o dropdown simples.
+
+Em todo o resto (produto principal multi-org, settings, painel admin), use §31 — é o que o template canônico do DS já entrega.
 
 ### Anti-pattern
 

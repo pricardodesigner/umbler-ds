@@ -1897,9 +1897,15 @@
       .umb-account-popup { left: 8px; right: 8px; width: auto; bottom: 80px; }
     }
 
-    /* Permite que o dropdown do avatar extrapole containers de preview com overflow:hidden */
+    /* Avatar menu: precisa de position: relative pra ancorar a .umb-account-popup
+       (substitui o que o Bootstrap dropdown fazia implicitamente) */
+    .umb-avatar-menu { position: relative; }
+
+    /* Permite que dropdowns/popups do avatar extrapolem containers de preview com overflow:hidden */
     .tpl-preview:has(.dropdown-menu.show),
-    .tpl-mobile-frame:has(.dropdown-menu.show) { overflow: visible; }
+    .tpl-mobile-frame:has(.dropdown-menu.show),
+    .tpl-preview:has(.umb-account-popup:not([hidden])),
+    .tpl-mobile-frame:has(.umb-account-popup:not([hidden])) { overflow: visible; }
 
     /* Main area (header + content) */
     .umb-shell-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
@@ -7880,25 +7886,105 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   <div class="umb-shell-bottom">
     <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Notificações"><i class="ph ph-bell"></i><span class="umb-si-label">Notificações</span></div>
     <div class="umb-si" data-bs-toggle="tooltip" data-bs-placement="right" title="Suporte"><i class="ph ph-question"></i><span class="umb-si-label">Suporte</span></div>
-    <div class="umb-avatar-menu dropdown dropend">
-      <button type="button" class="umb-avatar-trigger" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" title="Perfil">
-        <span class="umb-si-avatar">RC</span>
+    <div class="umb-avatar-menu">
+      <button type="button" class="umb-avatar-trigger"
+              aria-expanded="false" aria-haspopup="dialog"
+              onclick="umbAccountPopupToggle(this)" title="Perfil">
+        <span class="umb-si-avatar">PR</span>
         <span class="umb-avatar-info" aria-hidden="true">
-          <span class="umb-avatar-name">Rodrigo Costa</span>
-          <span class="umb-avatar-email">rodrigo@email.com</span>
+          <span class="umb-avatar-name">Paulo Ricardo Silva</span>
+          <span class="umb-avatar-email">paulo@umbler.com</span>
         </span>
       </button>
-      <div class="dropdown-menu umb-avatar-dropdown">
-        <p class="umb-avatar-menu-label">Tema</p>
-        <div class="umb-avatar-theme-options">
-          <button class="theme-option" data-theme="auto" onclick="setTheme('auto')"><i class="ph ph-arrows-clockwise"></i> Auto</button>
-          <button class="theme-option" data-theme="light" onclick="setTheme('light')"><i class="ph ph-sun"></i> Claro</button>
-          <button class="theme-option" data-theme="dark" onclick="setTheme('dark')"><i class="ph ph-moon"></i> Escuro</button>
-          <button class="theme-option" data-theme="emerald" onclick="setTheme('emerald')"><i class="ph ph-leaf"></i> Esmeralda</button>
-          <button class="theme-option" data-theme="dark-emerald" onclick="setTheme('dark-emerald')"><i class="ph ph-circles-four"></i> Bravia</button>
+      <!-- Popup canônica do Perfil — substitui o .umb-avatar-dropdown legado (§31).
+           Mantém os mesmos slots: Tema (nav-pills) + Sair, e adiciona contas e organizações. -->
+      <div class="umb-account-popup" hidden role="dialog" aria-label="Perfil">
+        <div class="umb-account-popup-head">
+          <div class="umb-account-popup-avatar">PR</div>
+          <p class="umb-account-popup-name">Paulo Ricardo Silva</p>
         </div>
-        <hr class="dropdown-divider my-2">
-        <button type="button" class="umb-avatar-logout"><i class="ph ph-sign-out"></i> Sair</button>
+        <div class="umb-account-popup-tabs">
+          <button class="umb-account-popup-tab active" data-tab="account" onclick="umbAccountPopupTab(this)"><i class="ph ph-user-circle"></i> Minha conta</button>
+          <button class="umb-account-popup-tab" data-tab="prefs" onclick="umbAccountPopupTab(this)"><i class="ph ph-sliders-horizontal"></i> Preferências</button>
+        </div>
+        <div class="umb-account-popup-pane" data-tab-pane="account">
+          <div class="umb-account-popup-fixed">
+            <div class="umb-account-popup-item"><i class="ph ph-user"></i> Meu perfil</div>
+            <div class="umb-account-popup-item"><i class="ph ph-currency-dollar"></i> Assinaturas e planos</div>
+            <div class="umb-account-popup-item"><i class="ph ph-gift"></i> Indique e ganhe</div>
+          </div>
+          <div class="umb-section-head" data-search="closed">
+            <span class="umb-section-title">Minhas organizações</span>
+            <div class="umb-section-actions">
+              <button class="btn btn-icon btn-text btn-sm" aria-label="Pesquisar"><i class="ph ph-magnifying-glass"></i></button>
+              <button class="btn btn-icon btn-primary btn-sm" aria-label="Nova organização"><i class="ph ph-plus"></i></button>
+            </div>
+            <div class="umb-section-search input-group input-group-sm">
+              <input type="text" class="form-control" placeholder="Pesquisar organização...">
+              <span class="input-group-text" role="button"><i class="ph ph-x"></i></span>
+            </div>
+          </div>
+          <div class="umb-account-popup-list">
+            <div class="umb-account-popup-org is-active">
+              <div class="umb-account-popup-org-avatar"><i class="ph ph-storefront"></i></div>
+              <span class="umb-account-popup-org-name">Empresa Paulo Ricardo Silva</span>
+              <button class="umb-account-popup-org-gear" aria-label="Configurações"><i class="ph ph-gear"></i></button>
+            </div>
+            <div class="umb-account-popup-org">
+              <div class="umb-account-popup-org-avatar" style="background:color-mix(in srgb, var(--bs-success) 15%, transparent);color:var(--bs-success)"><i class="ph ph-graduation-cap"></i></div>
+              <span class="umb-account-popup-org-name">Escola Vila Mariana</span>
+              <button class="umb-account-popup-org-gear" aria-label="Configurações"><i class="ph ph-gear"></i></button>
+            </div>
+            <div class="umb-account-popup-org">
+              <div class="umb-account-popup-org-avatar" style="background:color-mix(in srgb, var(--bs-warning) 18%, transparent);color:var(--bs-warning)"><i class="ph ph-graduation-cap"></i></div>
+              <span class="umb-account-popup-org-name">Escola Mooca</span>
+              <button class="umb-account-popup-org-gear" aria-label="Configurações"><i class="ph ph-gear"></i></button>
+            </div>
+            <div class="umb-account-popup-org">
+              <div class="umb-account-popup-org-avatar" style="background:color-mix(in srgb, var(--bs-danger) 15%, transparent);color:var(--bs-danger)"><i class="ph ph-graduation-cap"></i></div>
+              <span class="umb-account-popup-org-name">Escola Pinheiros</span>
+              <button class="umb-account-popup-org-gear" aria-label="Configurações"><i class="ph ph-gear"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="umb-account-popup-pane" data-tab-pane="prefs" hidden>
+          <div class="umb-account-popup-prefs">
+            <div class="umb-account-popup-pref">
+              <label class="umb-account-popup-pref-label">
+                Reatribuição de chats
+                <i class="ph ph-question" data-bs-toggle="tooltip" title="Define como conversas pendentes são reatribuídas entre operadores"></i>
+              </label>
+              <div class="inset-control inset-control--block">
+                <button class="btn active"><i class="ph ph-prohibit"></i> Off</button>
+                <button class="btn"><i class="ph ph-shuffle"></i> Auto</button>
+                <button class="btn"><i class="ph ph-arrows-clockwise"></i> Sempre</button>
+              </div>
+            </div>
+            <div class="umb-account-popup-pref">
+              <label class="umb-account-popup-pref-label">Tema</label>
+              <ul class="nav nav-pills flex-column" role="tablist">
+                <li class="nav-item"><button class="nav-link theme-option" data-theme="auto" onclick="setTheme('auto')"><i class="ph ph-arrows-clockwise me-2"></i>Auto</button></li>
+                <li class="nav-item"><button class="nav-link theme-option" data-theme="light" onclick="setTheme('light')"><i class="ph ph-sun me-2"></i>Claro</button></li>
+                <li class="nav-item"><button class="nav-link theme-option active" data-theme="dark" onclick="setTheme('dark')"><i class="ph ph-moon me-2"></i>Escuro</button></li>
+                <li class="nav-item"><button class="nav-link theme-option" data-theme="emerald" onclick="setTheme('emerald')"><i class="ph ph-leaf me-2"></i>Esmeralda</button></li>
+                <li class="nav-item"><button class="nav-link theme-option" data-theme="dark-emerald" onclick="setTheme('dark-emerald')"><i class="ph ph-circles-four me-2"></i>Bravia</button></li>
+              </ul>
+            </div>
+            <div class="umb-account-popup-pref">
+              <label class="umb-account-popup-pref-label">Som de notificação</label>
+              <div class="inset-control inset-control--block">
+                <button class="btn"><i class="ph ph-speaker-high"></i> Ativado</button>
+                <button class="btn active"><i class="ph ph-speaker-slash"></i> Desativado</button>
+              </div>
+            </div>
+            <a href="#" class="btn btn-text umb-account-popup-pref-link">
+              <i class="ph ph-arrow-right me-1"></i>Outras preferências pessoais
+            </a>
+          </div>
+        </div>
+        <div class="umb-account-popup-foot">
+          <button class="btn btn-text btn-text-danger btn-lg"><i class="ph ph-sign-out me-2"></i>Sair</button>
+        </div>
       </div>
     </div>
   </div>
@@ -7938,20 +8024,74 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     <!-- Avatar como trigger do avatar-menu (tema switcher + logout) — mesmo pattern
          da sidebar desktop, mas no mobile o dropdown vira bottom sheet via CSS do
          .umb-mobile-shell (ver §12 do rules.md). -->
-    <div class="umb-avatar-menu dropdown" style="flex-shrink:0">
+    <div class="umb-avatar-menu" style="flex-shrink:0">
       <button type="button" class="umb-mh-avatar" data-umb-part="avatar" aria-label="Perfil"
-              data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">RC</button>
-      <div class="dropdown-menu umb-avatar-dropdown">
-        <p class="umb-avatar-menu-label">Tema</p>
-        <div class="umb-avatar-theme-options">
-          <button class="theme-option" data-theme="auto"          onclick="setTheme('auto')"><i class="ph ph-arrows-clockwise"></i> Auto</button>
-          <button class="theme-option" data-theme="light"         onclick="setTheme('light')"><i class="ph ph-sun"></i> Claro</button>
-          <button class="theme-option" data-theme="dark"          onclick="setTheme('dark')"><i class="ph ph-moon"></i> Escuro</button>
-          <button class="theme-option" data-theme="emerald"       onclick="setTheme('emerald')"><i class="ph ph-leaf"></i> Esmeralda</button>
-          <button class="theme-option" data-theme="dark-emerald"  onclick="setTheme('dark-emerald')"><i class="ph ph-circles-four"></i> Bravia</button>
+              aria-expanded="false" aria-haspopup="dialog"
+              onclick="umbAccountPopupToggle(this)">PR</button>
+      <!-- Mesma popup canônica da sidebar desktop. Posicionamento ajustado por media query (§31). -->
+      <div class="umb-account-popup" hidden role="dialog" aria-label="Perfil">
+        <div class="umb-account-popup-head">
+          <div class="umb-account-popup-avatar">PR</div>
+          <p class="umb-account-popup-name">Paulo Ricardo Silva</p>
         </div>
-        <hr class="dropdown-divider my-2">
-        <button type="button" class="umb-avatar-logout"><i class="ph ph-sign-out"></i> Sair</button>
+        <div class="umb-account-popup-tabs">
+          <button class="umb-account-popup-tab active" data-tab="account" onclick="umbAccountPopupTab(this)"><i class="ph ph-user-circle"></i> Minha conta</button>
+          <button class="umb-account-popup-tab" data-tab="prefs" onclick="umbAccountPopupTab(this)"><i class="ph ph-sliders-horizontal"></i> Preferências</button>
+        </div>
+        <div class="umb-account-popup-pane" data-tab-pane="account">
+          <div class="umb-account-popup-fixed">
+            <div class="umb-account-popup-item"><i class="ph ph-user"></i> Meu perfil</div>
+            <div class="umb-account-popup-item"><i class="ph ph-currency-dollar"></i> Assinaturas e planos</div>
+          </div>
+          <div class="umb-section-head" data-search="closed">
+            <span class="umb-section-title">Minhas organizações</span>
+            <div class="umb-section-actions">
+              <button class="btn btn-icon btn-text btn-sm" aria-label="Pesquisar"><i class="ph ph-magnifying-glass"></i></button>
+              <button class="btn btn-icon btn-primary btn-sm" aria-label="Nova organização"><i class="ph ph-plus"></i></button>
+            </div>
+            <div class="umb-section-search input-group input-group-sm">
+              <input type="text" class="form-control" placeholder="Pesquisar organização...">
+              <span class="input-group-text" role="button"><i class="ph ph-x"></i></span>
+            </div>
+          </div>
+          <div class="umb-account-popup-list">
+            <div class="umb-account-popup-org is-active">
+              <div class="umb-account-popup-org-avatar"><i class="ph ph-storefront"></i></div>
+              <span class="umb-account-popup-org-name">Empresa Paulo Ricardo Silva</span>
+            </div>
+            <div class="umb-account-popup-org">
+              <div class="umb-account-popup-org-avatar" style="background:color-mix(in srgb, var(--bs-success) 15%, transparent);color:var(--bs-success)"><i class="ph ph-graduation-cap"></i></div>
+              <span class="umb-account-popup-org-name">Escola Vila Mariana</span>
+            </div>
+          </div>
+        </div>
+        <div class="umb-account-popup-pane" data-tab-pane="prefs" hidden>
+          <div class="umb-account-popup-prefs">
+            <div class="umb-account-popup-pref">
+              <label class="umb-account-popup-pref-label">Tema</label>
+              <ul class="nav nav-pills flex-column" role="tablist">
+                <li class="nav-item"><button class="nav-link theme-option" data-theme="auto" onclick="setTheme('auto')"><i class="ph ph-arrows-clockwise me-2"></i>Auto</button></li>
+                <li class="nav-item"><button class="nav-link theme-option" data-theme="light" onclick="setTheme('light')"><i class="ph ph-sun me-2"></i>Claro</button></li>
+                <li class="nav-item"><button class="nav-link theme-option active" data-theme="dark" onclick="setTheme('dark')"><i class="ph ph-moon me-2"></i>Escuro</button></li>
+                <li class="nav-item"><button class="nav-link theme-option" data-theme="emerald" onclick="setTheme('emerald')"><i class="ph ph-leaf me-2"></i>Esmeralda</button></li>
+                <li class="nav-item"><button class="nav-link theme-option" data-theme="dark-emerald" onclick="setTheme('dark-emerald')"><i class="ph ph-circles-four me-2"></i>Bravia</button></li>
+              </ul>
+            </div>
+            <div class="umb-account-popup-pref">
+              <label class="umb-account-popup-pref-label">Som de notificação</label>
+              <div class="inset-control inset-control--block">
+                <button class="btn"><i class="ph ph-speaker-high"></i> Ativado</button>
+                <button class="btn active"><i class="ph ph-speaker-slash"></i> Desativado</button>
+              </div>
+            </div>
+            <a href="#" class="btn btn-text umb-account-popup-pref-link">
+              <i class="ph ph-arrow-right me-1"></i>Outras preferências pessoais
+            </a>
+          </div>
+        </div>
+        <div class="umb-account-popup-foot">
+          <button class="btn btn-text btn-text-danger btn-lg"><i class="ph ph-sign-out me-2"></i>Sair</button>
+        </div>
       </div>
     </div>
   </div>
@@ -7972,6 +8112,50 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       p.hidden = p.dataset.tabPane !== tabName);
   }
   window.umbAccountPopupTab = umbAccountPopupTab;
+
+  /* Toggle de visibilidade da .umb-account-popup acionado pelo
+     .umb-avatar-trigger (sidebar) ou .umb-mh-avatar (mobile header).
+     Substitui o data-bs-toggle="dropdown" do .umb-avatar-dropdown legado. */
+  function umbAccountPopupToggle(trigger) {
+    const menu = trigger.closest('.umb-avatar-menu');
+    const popup = menu?.querySelector('.umb-account-popup');
+    if (!popup) return;
+    const willOpen = popup.hasAttribute('hidden');
+    // Fecha qualquer outra popup aberta (apenas uma instância visível por vez)
+    document.querySelectorAll('.umb-account-popup:not([hidden])').forEach(p => {
+      if (p !== popup) {
+        p.setAttribute('hidden', '');
+        const t = p.closest('.umb-avatar-menu')?.querySelector('[onclick*="umbAccountPopupToggle"]');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      }
+    });
+    popup.toggleAttribute('hidden');
+    trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+  }
+  window.umbAccountPopupToggle = umbAccountPopupToggle;
+
+  /* Click fora fecha — handler único no document. Verifica se o click foi
+     dentro do .umb-avatar-menu container (que envolve trigger + popup). */
+  document.addEventListener('click', function(e) {
+    document.querySelectorAll('.umb-account-popup:not([hidden])').forEach(popup => {
+      const menu = popup.closest('.umb-avatar-menu');
+      if (menu && !menu.contains(e.target)) {
+        popup.setAttribute('hidden', '');
+        const trigger = menu.querySelector('[onclick*="umbAccountPopupToggle"]');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  /* Escape fecha qualquer popup aberta */
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('.umb-account-popup:not([hidden])').forEach(popup => {
+      popup.setAttribute('hidden', '');
+      const trigger = popup.closest('.umb-avatar-menu')?.querySelector('[onclick*="umbAccountPopupToggle"]');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    });
+  });
 
     /* Renderiza sidebar, header desktop e header mobile a partir dos <template> acima.
      Uso:
