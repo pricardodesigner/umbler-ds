@@ -1713,6 +1713,154 @@
     }
     .umb-avatar-logout:hover { background: var(--umb-alert-danger-bg); }
     .umb-avatar-logout i { font-size: 15px; flex-shrink: 0; }
+
+    /* === ACCOUNT POPUP (.umb-account-popup) ============================
+       Popup de perfil com lista de organizações. Substitui o
+       .umb-avatar-menu (§12) quando o produto tem múltiplas organizações
+       por usuário. Vive flutuante sobre o app, ancorada à sidebar.
+
+       Estrutura interna (todas as classes têm prefixo .umb-account-popup-):
+         .umb-account-popup
+           .umb-account-popup-head      (avatar + nome — fixo)
+           .umb-account-popup-tabs      (tabs canônicas — fixo)
+           .umb-account-popup-fixed     (itens de conta — fixo)
+           .umb-section-head            (título de seção + busca — §30)
+           .umb-account-popup-list      (orgs — única área scrollable)
+           .umb-account-popup-foot      (Sair — fixo)
+
+       Regras: §31 do rules.md. */
+    .umb-account-popup {
+      position: absolute;
+      left: 60px; bottom: 16px;
+      width: 320px;
+      max-height: calc(100vh - 32px);
+      background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border);
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.30);
+      z-index: 1000;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .umb-account-popup-head {
+      padding: 20px 16px 0;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .umb-account-popup-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: color-mix(in srgb, var(--bs-primary) 15%, transparent);
+      color: var(--bs-primary);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 600;
+      overflow: hidden;
+    }
+    .umb-account-popup-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .umb-account-popup-name {
+      font-size: 14px; font-weight: 600; color: var(--umb-text-primary); margin: 0;
+    }
+    .umb-account-popup-tabs {
+      display: flex; gap: 0;
+      border-bottom: 1px solid var(--umb-border);
+      margin: 16px 0 0;
+      padding: 0 16px;
+    }
+    .umb-account-popup-tab {
+      padding: 8px 12px; font-size: 13px; color: var(--umb-text-mid);
+      border: 0; background: transparent; cursor: pointer;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .umb-account-popup-tab.active {
+      color: var(--bs-primary);
+      border-bottom-color: var(--bs-primary);
+      font-weight: 500;
+    }
+    /* Bloco fixo superior — itens da conta (Meu perfil, etc.) */
+    .umb-account-popup-fixed { padding: 8px 8px 0; flex-shrink: 0; }
+    .umb-account-popup-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 12px; min-height: 37px;
+      border-radius: 999px;
+      color: var(--umb-text-primary); font-size: 13px;
+      cursor: pointer;
+    }
+    .umb-account-popup-item:hover { background: var(--umb-hover-bg); }
+    .umb-account-popup-item .ph { font-size: 16px; color: var(--umb-text-mid); }
+
+    /* Section head (§30) — título da seção + ações + busca toggle */
+    .umb-account-popup .umb-section-head {
+      flex-shrink: 0;
+      border-top: 1px solid var(--umb-border);
+      margin: 8px 0 0;
+      padding: 12px 16px 6px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px;
+      min-height: 40px;
+    }
+    .umb-account-popup .umb-section-title {
+      font-size: 13px; color: var(--umb-text-primary); font-weight: 500;
+    }
+    .umb-account-popup .umb-section-actions {
+      display: flex; align-items: center; gap: 4px;
+    }
+    .umb-account-popup .umb-section-search { display: none; flex: 1; }
+    .umb-account-popup .umb-section-head[data-search="open"] .umb-section-title,
+    .umb-account-popup .umb-section-head[data-search="open"] .umb-section-actions { display: none; }
+    .umb-account-popup .umb-section-head[data-search="open"] .umb-section-search { display: flex; }
+
+    /* Lista de organizações — única área scrollable */
+    .umb-account-popup-list {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 0 8px 8px;
+    }
+    .umb-account-popup-org {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 10px; min-height: 37px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .umb-account-popup-org + .umb-account-popup-org { margin-top: 2px; }
+    .umb-account-popup-org:hover { background: var(--umb-hover-bg); }
+    .umb-account-popup-org.is-active { background: var(--umb-bg-active); }
+    .umb-account-popup-org-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: color-mix(in srgb, var(--bs-primary) 12%, transparent);
+      color: var(--bs-primary);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; flex-shrink: 0;
+      overflow: hidden;
+    }
+    .umb-account-popup-org-avatar .ph { font-size: 13px; line-height: 1; }
+    .umb-account-popup-org-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .umb-account-popup-org-name {
+      font-size: 13px; color: var(--umb-text-primary); flex: 1;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .umb-account-popup-org-gear {
+      width: 24px; height: 24px; border: 0; background: transparent;
+      color: var(--umb-text-mid); border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .umb-account-popup-org-gear:hover {
+      background: var(--umb-hover-bg);
+      color: var(--umb-text-primary);
+    }
+
+    /* Rodapé com Sair — center por default do .btn (não usar flex-start) */
+    .umb-account-popup-foot {
+      flex-shrink: 0;
+      border-top: 1px solid var(--umb-border);
+      padding: 8px;
+    }
+    .umb-account-popup-foot .btn { width: 100%; }
+
+    @media (max-width: 767.98px) {
+      .umb-account-popup { left: 8px; right: 8px; width: auto; bottom: 80px; }
+    }
+
     /* Permite que o dropdown do avatar extrapole containers de preview com overflow:hidden */
     .tpl-preview:has(.dropdown-menu.show),
     .tpl-mobile-frame:has(.dropdown-menu.show) { overflow: visible; }
@@ -2690,6 +2838,7 @@
     <a class="nav-link" href="#dropdown"><i class="ph ph-caret-circle-down"></i> Dropdown</a>
     <a class="nav-link" href="#tooltip"><i class="ph ph-info"></i> Tooltip</a>
     <a class="nav-link" href="#perfil"><i class="ph ph-user-circle"></i> Perfil</a>
+    <a class="nav-link" href="#account-popup"><i class="ph ph-user-list"></i> Account Popup</a>
     <a class="nav-link" href="#progresso"><i class="ph ph-chart-bar"></i> Progresso & Loading</a>
     <a class="nav-link" href="#modais"><i class="ph ph-square"></i> Modais</a>
     <a class="nav-link" href="#offcanvas"><i class="ph ph-sidebar-simple"></i> Offcanvas</a>
@@ -4852,6 +5001,84 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
           <div class="profile-card-umb"><div class="profile-avatar" style="width:40px;height:40px;background:#111930">AR</div><div><div class="name">Ana Ribeiro</div><div class="sub">ana@empresa.com</div></div><span class="badge bg-secondary ms-auto">Membro</span></div>
           <div class="profile-card-umb" style="opacity:.5;pointer-events:none"><div class="profile-avatar" style="width:40px;height:40px">PL</div><div><div class="name">Pedro Lima</div><div class="sub">Desabilitado</div></div></div>
         </div>
+      </div>
+    </section>
+    <hr class="sec-divider">
+
+    <!-- ============================================================ SEÇÃO ACCOUNT POPUP -->
+    <section id="account-popup">
+      <p class="sec-title">Account Popup</p>
+      <p class="sec-subtitle"><code>.umb-account-popup</code> — popup de perfil com lista de organizações. Substitui o <code>.umb-avatar-menu</code> quando o produto tem múltiplas organizações por usuário. Veja §31 do <code>rules.md</code>.</p>
+
+      <div class="comp-group">
+        <p class="comp-label">Exemplo (estado padrão)</p>
+        <div style="position:relative;background:var(--umb-bg-primary);border:1px solid var(--umb-border);border-radius:16px;height:560px;overflow:hidden">
+          <div class="umb-account-popup" style="position:absolute;left:24px;bottom:24px">
+            <div class="umb-account-popup-head">
+              <div class="umb-account-popup-avatar">PR</div>
+              <p class="umb-account-popup-name">Paulo Ricardo Silva</p>
+            </div>
+            <div class="umb-account-popup-tabs">
+              <button class="umb-account-popup-tab active"><i class="ph ph-user-circle"></i> Minha conta</button>
+              <button class="umb-account-popup-tab"><i class="ph ph-sliders-horizontal"></i> Preferências</button>
+            </div>
+            <div class="umb-account-popup-fixed">
+              <div class="umb-account-popup-item"><i class="ph ph-user"></i> Meu perfil</div>
+              <div class="umb-account-popup-item"><i class="ph ph-currency-dollar"></i> Assinaturas e planos</div>
+              <div class="umb-account-popup-item"><i class="ph ph-gift"></i> Indique e ganhe</div>
+            </div>
+            <div class="umb-section-head" data-search="closed">
+              <span class="umb-section-title">Minhas organizações</span>
+              <div class="umb-section-actions">
+                <button class="btn btn-icon btn-text btn-sm" aria-label="Pesquisar"><i class="ph ph-magnifying-glass"></i></button>
+                <button class="btn btn-icon btn-primary btn-sm" aria-label="Nova organização"><i class="ph ph-plus"></i></button>
+              </div>
+              <div class="umb-section-search input-group input-group-sm">
+                <input type="text" class="form-control" placeholder="Pesquisar organização...">
+                <span class="input-group-text" role="button"><i class="ph ph-x"></i></span>
+              </div>
+            </div>
+            <div class="umb-account-popup-list">
+              <div class="umb-account-popup-org is-active">
+                <div class="umb-account-popup-org-avatar"><i class="ph ph-storefront"></i></div>
+                <span class="umb-account-popup-org-name">Empresa Paulo Ricardo Silva</span>
+                <button class="umb-account-popup-org-gear" aria-label="Configurações"><i class="ph ph-gear"></i></button>
+              </div>
+              <div class="umb-account-popup-org">
+                <div class="umb-account-popup-org-avatar" style="background:color-mix(in srgb, var(--bs-success) 15%, transparent);color:var(--bs-success)"><i class="ph ph-graduation-cap"></i></div>
+                <span class="umb-account-popup-org-name">Escola Vila Mariana</span>
+                <button class="umb-account-popup-org-gear" aria-label="Configurações"><i class="ph ph-gear"></i></button>
+              </div>
+              <div class="umb-account-popup-org">
+                <div class="umb-account-popup-org-avatar" style="background:color-mix(in srgb, var(--bs-warning) 18%, transparent);color:var(--bs-warning)"><i class="ph ph-graduation-cap"></i></div>
+                <span class="umb-account-popup-org-name">Escola Mooca</span>
+                <button class="umb-account-popup-org-gear" aria-label="Configurações"><i class="ph ph-gear"></i></button>
+              </div>
+              <div class="umb-account-popup-org">
+                <div class="umb-account-popup-org-avatar" style="background:color-mix(in srgb, var(--bs-danger) 15%, transparent);color:var(--bs-danger)"><i class="ph ph-graduation-cap"></i></div>
+                <span class="umb-account-popup-org-name">Escola Pinheiros</span>
+                <button class="umb-account-popup-org-gear" aria-label="Configurações"><i class="ph ph-gear"></i></button>
+              </div>
+            </div>
+            <div class="umb-account-popup-foot">
+              <button class="btn btn-text btn-text-danger btn-lg"><i class="ph ph-sign-out me-2"></i>Sair</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-practices">
+        <p class="comp-practices-title">Boas práticas</p>
+        <ul style="margin:0;padding-left:18px;font-size:13px;color:var(--umb-text-mid);line-height:1.7">
+          <li>Itens são <strong>pills</strong> (radius 999px, min-height 37px) — vale tanto pros itens de conta quanto pros cards de organização.</li>
+          <li>Avatar de organização é <strong>circular 24×24</strong> com <strong>ícone Phosphor</strong> centralizado — não usar iniciais textuais.</li>
+          <li>2px de gap entre orgs consecutivas via <code>.umb-account-popup-org + .umb-account-popup-org { margin-top: 2px }</code>.</li>
+          <li>Apenas <strong>uma área scrollable</strong> (a lista de orgs). Header, tabs, itens fixos e footer não rolam.</li>
+          <li>Ação "Nova organização" é <code>btn-icon btn-primary btn-sm</code> ao lado da lupa — frequência rara segundo §29.</li>
+          <li>Botão "Sair" é <code>btn-text btn-text-danger btn-lg</code> com <code>width: 100%</code> — texto centralizado por default do <code>.btn</code> (não sobrescrever com <code>justify-content: flex-start</code>).</li>
+          <li>Busca segue <code>data-search</code> toggle (§30) — colapsada por default, expande ao clicar na lupa, fecha pelo X resetando o input.</li>
+          <li>Em mobile, popup vira full-bleed com 8px de margem lateral — animação de bottom sheet pode ser adicionada pelo produto.</li>
+        </ul>
       </div>
     </section>
     <hr class="sec-divider">

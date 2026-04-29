@@ -30,6 +30,12 @@ Este arquivo documenta todas as regras que devem ser seguidas ao gerar código c
 23. Tokens de borda — border e border-on-brand
 24. Font weight — máximo 600
 25. Governança — fonte única da verdade
+26. .umb-stat-card como filtro de lista
+27. Tela de operação assíncrona em massa (importação, exportação, sync)
+28. Modal vs Página — heurística de container
+29. Hierarquia visual proporcional à frequência da ação
+30. Section header com toggle de busca
+31. .umb-account-popup — popup de perfil com organizações
 
 ---
 
@@ -1999,3 +2005,246 @@ O status "atualizado" merece distinção do "criado" porque o usuário precisa e
 - **Filtro automático em `error`** pós-conclusão porque é o caminho mais útil em 90% dos casos. O usuário que tem erros precisa agir; quem não tem erros nem viu o filtro mudar (já estava vazio).
 - **Aria-live na tabela** porque uma operação que adiciona linhas dinamicamente sem aviso pra screen reader é uma operação inacessível.
 
+
+## 28. Modal vs Página — heurística de container
+
+Decidir entre modal e página é uma escolha de **tipo de container**, não de copy. A escolha errada gera inconsistência com o resto da aplicação e quebra padrões de navegação.
+
+### Heurística
+
+| Tipo de fluxo | Container correto |
+|---|---|
+| Confirmação destrutiva ("Tem certeza?") | Modal |
+| Decisão urgente que bloqueia o app | Modal |
+| Flow transiente curto (1–2 telas, sem URL compartilhável) | Modal |
+| Item navegável de menu (sidebar, Configurações) | **Página** (com breadcrumb) |
+| Fluxo educacional ou de criação de recurso | **Página** (eventualmente com wizard interno) |
+| Onboarding / primeira vez | **Página** |
+
+### Regra principal
+
+**Se a ação tem entry point por um item de menu, ela navega — não abre modal.** O DS não tem precedente de item de menu de Configurações que abre modal: todos os itens navegam. Quebrar isso gera dois mundos no mesmo menu (uns navegam, outros sobrepõem) e o usuário perde o modelo mental de "menu = navegação".
+
+### Por quê
+
+- **Modais sobre popups/menus criam stack confuso.** Popup já é uma camada; modal acima dela é uma segunda camada flutuante — visualmente quebra a hierarquia.
+- **Páginas têm URL compartilhável; modais não.** Para fluxos importantes (criação de recurso, educação), a URL ser compartilhável vale mais que a "leveza" do modal.
+- **Educação merece espaço.** Modais comprimem conteúdo num retângulo; páginas dão respiro pra explicar conceitos sem reduzir.
+- **Consistência ganha sobre conveniência.** Um único pattern (item de menu navega) é mais previsível que duas regras conflitantes.
+
+### Quando aparece a tentação de usar modal pra um fluxo de criação
+
+Se o fluxo tem:
+- (a) Conteúdo educacional / explicativo
+- (b) Múltiplos passos
+- (c) Entry point por menu
+
+→ É **página**. Tente colocar isso num modal e você vai duplicar conteúdo, gerar URLs não-compartilháveis, e quebrar o padrão do menu de Configurações.
+
+### Anti-pattern
+
+- ❌ Item "Criar X" do menu de Configurações abrindo modal — quebra padrão do menu.
+- ❌ Modal sobre popup — segunda camada confunde hierarquia visual.
+- ❌ Confirmação simples virando página — força navegação desnecessária.
+- ❌ Ter dois entry points pra mesma feature, um abrindo modal e outro navegando pra página — duplicação de conteúdo + manutenção dobrada.
+
+### Migração
+
+Quando uma feature usa modal mas tem entry point por menu, converta pra página. Mantenha o conteúdo: o markup do modal-content vira o conteúdo do card central da página, geralmente envolto num `.umb-wiz` (§26 do rules.md original — wizards).
+
+## 29. Hierarquia visual proporcional à frequência da ação
+
+**Importância ≠ frequência.** A variável que define o peso visual de uma ação é quão frequentemente o usuário vai usá-la — não quão "estratégica" ela é. Inflar uma ação rara porque ela é importante gera ruído visual e dilui o que realmente é frequente.
+
+### Tabela de calibração
+
+| Frequência esperada | Posicionamento | Estilo recomendado |
+|---|---|---|
+| Múltiplas vezes por dia | CTA proeminente | `btn btn-primary btn-lg` no topbar/toolbar primário |
+| Diariamente / algumas vezes por semana | Toolbar secundária | `btn btn-primary` (Md) ou `btn btn-outline-primary` |
+| Semanal / mensal | Junto a outras ações | `btn btn-outline-primary` ou `btn btn-text` (Md) |
+| Rara (poucas vezes na vida do usuário) | Junto a ações relacionadas (lupa, filtro) | `btn btn-icon btn-primary btn-sm` em header de seção |
+
+### Casos canônicos
+
+- **"Iniciar nova conversa"** → `btn btn-primary btn-icon btn-lg` na topbar do chat. Frequência: várias vezes por hora.
+- **"Adicionar contato"** → `btn btn-primary btn-lg` no toolbar da página de Contatos. Frequência: várias vezes por dia.
+- **"Criar nova organização"** → `btn btn-icon btn-primary btn-sm` no header da seção de orgs no popup de perfil (§31). Frequência: poucas vezes na vida do usuário (talvez 1–5x).
+- **"Excluir conta"** → `btn btn-text btn-text-danger btn-sm` em settings. Frequência: raríssima.
+
+### Pergunta de calibração
+
+Antes de definir o tamanho/estilo de um botão, pergunte:
+
+> "Esse usuário vai clicar nesse botão **uma vez na vida** ou **todo dia**?"
+
+Se for raro → ação enxuta, colada com ações relacionadas (lupa, filtro, settings de seção). Se for frequente → ação proeminente, com o peso da `btn-primary lg`.
+
+### Por que isso importa
+
+- **Atenção é finita.** Se cada ação clama por destaque, nenhuma se destaca.
+- **A "ação rara" infla com ego do PM, não com necessidade do usuário.** Times de produto tendem a inflar ações que internamente são consideradas "estratégicas" (ex: criar segunda org, virar power-user). Pro usuário, isso é uma curiosidade pontual.
+- **Ações inflada ensinam comportamento errado.** Botão grande convida exploração — gera lixo no banco (orgs criadas sem propósito, contatos duplicados, etc.).
+
+### Anti-pattern
+
+- ❌ "Criar nova organização" como CTA primário full-width no rodapé do popup de perfil (foi nosso caso anterior — gerou orgs aleatórias).
+- ❌ "Convidar amigo" / "Indicar e ganhe" como `btn-primary lg` na home — é rara, deveria ser secundária.
+- ❌ "Trocar plano" como botão proeminente no menu — feito 1–2x por ano por usuário.
+
+### Quando inflar é aceitável
+
+- Onboarding ativo (primeira vez): a ação chave do passo pode ser proeminente, mesmo que rara depois.
+- Empty states: quando a única ação possível é "criar primeiro X", inflar faz sentido.
+- Banner promocional temporário: pode usar peso visual maior por janela limitada de tempo.
+
+## 30. Section header com toggle de busca
+
+Pattern reutilizável pra listas dentro de painéis estreitos (popup, drawer, sidebar) onde uma busca permanentemente visível custaria altura demais. **Lupa colapsada por padrão; ao clicar, título/ações somem e dão lugar a um `input-group-sm` com X de fechar.**
+
+### Quando usar
+
+- Lista dentro de popup/drawer com 5+ itens onde busca é útil mas não principal
+- Painéis laterais com listas filtráveis (member picker, tag picker, account switcher)
+- Headers de seção dentro de settings/admin com lista grande
+
+### Quando NÃO usar
+
+- Lista é a tela inteira → use `input-group-lg` permanente no toolbar (§4 do rules.md)
+- Lista tem ≤4 itens → busca é overengineering
+- Lista mobile fullscreen → mobile não tem hover pra "descobrir" a lupa; deixe a busca visível
+- Lista crítica onde o usuário SEMPRE filtra antes (ex: contatos com 10k+ entries) → busca permanente
+
+### Markup canônico
+
+```html
+<div class="umb-section-head" data-search="closed">
+  <span class="umb-section-title">Título da seção</span>
+  <div class="umb-section-actions">
+    <button class="btn btn-icon btn-text btn-sm"
+            onclick="toggleSearch(this)"
+            aria-label="Pesquisar"
+            data-bs-toggle="tooltip" title="Pesquisar">
+      <i class="ph ph-magnifying-glass"></i>
+    </button>
+    <!-- demais ações de seção (ex: + Novo) -->
+  </div>
+  <div class="umb-section-search input-group input-group-sm">
+    <input type="text" class="form-control" placeholder="Pesquisar..."
+           oninput="filterList(this)">
+    <span class="input-group-text" onclick="toggleSearch(this)"
+          role="button" aria-label="Fechar pesquisa" style="cursor:pointer">
+      <i class="ph ph-x"></i>
+    </span>
+  </div>
+</div>
+```
+
+### CSS canônico
+
+```css
+.umb-section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; padding: 12px 16px 6px; min-height: 40px;
+}
+.umb-section-actions { display: flex; align-items: center; gap: 4px; }
+.umb-section-search { display: none; flex: 1; }
+.umb-section-head[data-search="open"] .umb-section-title,
+.umb-section-head[data-search="open"] .umb-section-actions { display: none; }
+.umb-section-head[data-search="open"] .umb-section-search { display: flex; }
+```
+
+### JS canônico
+
+```js
+function toggleSearch(scope) {
+  const head = scope.closest('[data-search]');
+  if (!head) return;
+  const isOpen = head.dataset.search === 'open';
+  head.dataset.search = isOpen ? 'closed' : 'open';
+  const input = head.querySelector('input');
+  if (!isOpen) {
+    setTimeout(() => input?.focus(), 50);
+  } else if (input) {
+    input.value = '';
+    // restaurar visibilidade da lista (se filtrada)
+    const root = head.closest('[data-list-root]') || head.parentElement;
+    root.querySelectorAll('[data-item], .org-card').forEach(el => el.style.display = '');
+  }
+}
+```
+
+### Regras
+
+- **Toggle bidirecional via `data-search`** (`closed` ↔ `open`) no container do header. Não usar classe `.is-open` — atributo data permite seletores CSS limpos.
+- **Foco automático** ao abrir (`setTimeout` 50ms pra esperar reflow).
+- **Reset do filtro** ao fechar — campo limpo + lista restaurada. Não preservar busca anterior.
+- **Botão X dentro do `input-group-text`** (não fora do input) — segue pattern de input-group do DS (§4) com borda no wrapper.
+- **Lupa usa `btn-icon btn-text btn-sm`** — não `btn-primary`. É um disclose, não uma CTA.
+- **Outras ações de seção** (criar, filtrar) ficam **junto** da lupa dentro de `.umb-section-actions`. Quando a busca abre, o conjunto inteiro some (lupa + ações irmãs).
+
+### Por que esconder ações irmãs ao abrir busca
+
+A lupa, quando aberta, **vira o foco da seção** — o usuário está procurando algo. Manter outras ações (criar nova, filtros) visíveis nesse momento confunde porque competem com a digitação. Uma vez que a busca fecha (X), as ações reaparecem. Isso é coerente com o modelo "uma intenção por vez".
+
+### Anti-pattern
+
+- ❌ Lupa fora do `umb-section-actions`, separada visualmente — quebra o agrupamento visual.
+- ❌ Manter botão "+ Novo" visível quando a busca está aberta — duas intenções competindo.
+- ❌ Usar `btn-primary` na lupa (a ação principal não é "buscar", é o conteúdo da lista).
+- ❌ Não resetar o input ao fechar — usuário abre, fecha, abre de novo, encontra o termo antigo lá.
+
+## 31. .umb-account-popup — popup de perfil com organizações
+
+Componente que vive flutuante sobre o app, acionado pelo avatar da sidebar. Contém: dados da conta, lista de organizações com troca/criação, e logout. Substitui o `.umb-avatar-menu` legado quando há lista de organizações pra exibir.
+
+### Quando usar
+
+- Aplicação tem múltiplas organizações por usuário
+- Avatar da sidebar precisa abrir um menu mais rico que o `.umb-avatar-menu` (§12)
+- Há ações secundárias de conta (Meu perfil, Assinaturas, Indique e ganhe) que não cabem na sidebar
+
+### Estrutura
+
+Definida no `umbootstrap-design-system.html`. Veja a seção "Account Popup" do DS pra markup, classes e exemplo. Resumo da hierarquia interna:
+
+```
+.umb-account-popup
+├── .umb-account-popup-head    (avatar + nome — fixo)
+├── .umb-account-popup-tabs    (Minha conta / Preferências — fixo)
+├── .umb-account-popup-fixed   (itens de conta — fixo)
+├── .umb-section-head          (título da seção + ações — fixo, §30)
+├── .umb-account-popup-list    (orgs — única área scrollable)
+└── .umb-account-popup-foot    (Sair — fixo)
+```
+
+### Regras de uso
+
+- **Apenas uma área scrollable** (a lista de orgs). Header, tabs, itens de conta e footer ficam fixos. Esse é o padrão de popup denso — scroll global da popup é confuso.
+- **Itens da popup são pills** (`border-radius: 999px`, `min-height: 37px`). Vale tanto pros itens de conta (Meu perfil, etc.) quanto pros cards de organização.
+- **Avatar de organização é circular** (24×24, `border-radius: 50%`) com **ícone Phosphor centralizado** dentro — não usar iniciais em letras (lê como "letras formando círculo", não como avatar).
+- **Espaçamento de 2px entre itens** consecutivos da lista de orgs (`.org-card + .org-card { margin-top: 2px }`) — separa visualmente sem expandir altura.
+- **Linha divisora** entre os itens de conta (Meu perfil, etc.) e a seção de organizações via `border-top: 1px solid var(--umb-border)` no `.umb-section-head`.
+- **Ação "criar nova organização"** segue §29: ação rara → `btn-icon btn-primary btn-sm` colado na lupa de busca, dentro de `.umb-section-actions`. **Nunca** como CTA grande no rodapé.
+- **Busca da lista** segue §30 — toggle por lupa, troca título por input-group-sm.
+- **Botão "Sair"** centralizado, `btn-text-danger btn-lg`, ocupa a largura do footer (`width: 100%`). Não usar `justify-content: flex-start` (default do `.btn` é center).
+
+### Tabs internas
+
+A popup tem duas tabs canônicas: **Minha conta** e **Preferências**. Não adicione uma terceira sem antes considerar se cabe em uma das duas. Tabs em popups estreitas comprimem rapidamente.
+
+### Tamanho e posicionamento
+
+- Largura desktop: **320px** fixa
+- Posicionamento desktop: ancorada à sidebar — `left: 60px; bottom: 16px` (alinhada com avatar da sidebar)
+- Mobile: largura full bleed com 8px de margem lateral (`left: 8px; right: 8px`)
+- Altura: `max-height: calc(100vh - 32px)`; o conteúdo ajusta via `flex` (única área scrollable é a lista)
+
+### Anti-pattern
+
+- ❌ Múltiplas áreas scrollable na popup — confunde gestos.
+- ❌ Iniciais textuais como avatar de organização — usar ícone Phosphor.
+- ❌ "Criar nova organização" como CTA primário no rodapé da popup — ação rara não deveria ter esse peso.
+- ❌ Adicionar 3ª tab além de Minha conta / Preferências — comprime demais.
+- ❌ Botão "Sair" alinhado à esquerda com `justify-content: flex-start` — herda center do `.btn` por default.
+- ❌ Logo da Umbler no header da popup — o logo já está na sidebar, repetir é ruído.
