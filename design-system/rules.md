@@ -2530,3 +2530,71 @@ A validação `opens != closes` teria pegado isso em segundos. Sem ela, gastei v
 - ❌ Confiar que a substituição "deve ter funcionado" sem validar.
 - ❌ Validar só pelo conteúdo visível (abrir no browser) — bugs estruturais não aparecem visualmente até alguém alternar de view ou redimensionar.
 - ❌ Pular validação porque "é só uma mudança pequena" — pequenas mudanças com regex são onde mais erros acontecem (anchors imprecisos, indents diferentes).
+
+
+## 36. Alert — estrutura canônica
+
+A partir do redesign de abr/2026, o componente `.alert` segue uma estrutura uniforme: ícone num círculo colorido (cor do botão sólido do tipo) + corpo (título + descrição opcional + ações) + botão de fechar opcional.
+
+### Markup canônico
+
+```html
+<!-- Compact (sem descrição) — uma linha só -->
+<div class="alert alert-danger alert-compact">
+  <span class="alert-icon-circle"><i class="ph-bold ph-x"></i></span>
+  <div class="alert-title">Alert title</div>
+  <div class="alert-actions">
+    <button class="btn btn-danger btn-sm">Button</button>
+    <button class="btn btn-outline-danger btn-sm">Button</button>
+  </div>
+  <button class="alert-close" aria-label="Fechar"><i class="ph ph-x"></i></button>
+</div>
+
+<!-- Com descrição — stacked -->
+<div class="alert alert-success">
+  <span class="alert-icon-circle"><i class="ph-bold ph-check"></i></span>
+  <div class="alert-body">
+    <div class="alert-title">Alert title</div>
+    <div class="alert-desc">Texto descritivo.</div>
+    <div class="alert-actions">
+      <button class="btn btn-success btn-sm">Button</button>
+      <button class="btn btn-outline-success btn-sm">Button</button>
+    </div>
+  </div>
+  <button class="alert-close" aria-label="Fechar"><i class="ph ph-x"></i></button>
+</div>
+```
+
+### Tipos × ícones canônicos (Phosphor weight: bold)
+
+| Tipo | Classe modifier | Ícone | Cor do círculo / botão |
+|---|---|---|---|
+| Error | `.alert-danger` | `ph-bold ph-x` | `var(--bs-danger)` |
+| Info | `.alert-info` | `ph-bold ph-info` | `var(--bs-info)` |
+| Success | `.alert-success` | `ph-bold ph-check` | `var(--bs-success)` |
+| Warning | `.alert-warning` | `ph-bold ph-warning` | `var(--bs-warning)` |
+
+### Variantes ortogonais
+
+- `.alert-compact` — colapsa para uma linha só. Use quando NÃO houver descrição. As ações ficam à direita via `margin-left:auto`.
+- `.alert-banner` — bg mais saturado (mistura `var(--bs-{type})` 14% com `var(--umb-card-bg)`). Use para notificações sistêmicas/full-width. Compatível com `.alert-compact`.
+
+### Hierarquia das ações
+
+Sempre 2 botões no máximo: o primeiro **sólido** (`btn-{type}`) é a ação primária; o segundo **outlined** (`btn-outline-{type}`) é a alternativa/cancelar. Use `btn-sm`. Nunca inverta a ordem nem use `btn-text` aqui — o alerta carrega ações relevantes, não secundárias.
+
+### Cores de texto
+
+Título e descrição usam **cores de body** (`--umb-text-primary` e `--umb-text-mid`), **não** a cor brand do tipo. A cor brand fica concentrada no círculo do ícone e nos botões — isso evita a "wallpaper de cor" que acontece quando texto + bg + buttons são todos do mesmo matiz.
+
+### Backward compat
+
+A classe legada `.alert-icon` (ícone plano sem círculo) continua funcionando para componentes existentes (ex: `.umb-chat-pinned`, banner de erro pós-import). **Implementações novas** devem usar `.alert-icon-circle`. Se for migrar uma área, substitua o `<i class="ph ... alert-icon">` por `<span class="alert-icon-circle"><i class="ph-bold ph-...">...</i></span>` — o resto da estrutura (`.alert-body`, `.alert-title`) já bate.
+
+### Anti-patterns
+
+- ❌ Texto da descrição usando a cor brand do tipo (`--umb-alert-{type}-color`) — fica saturado demais. Use `--umb-text-mid`.
+- ❌ Botão sólido como ação secundária — quebra a hierarquia. O sólido é a ação primária; o outlined é a secundária.
+- ❌ Mais de 2 botões na linha de ações — se precisar de mais, é sinal que o alerta está fazendo muito. Considere drawer ou modal.
+- ❌ Cor hex hardcoded no círculo do ícone — sempre `var(--bs-{type})` para responder a tema.
+- ❌ Composição inline com `style="flex-direction:column;align-items:flex-start"` — esse era o workaround antigo. Agora use `.alert-body` (já é coluna) e o título/descrição já vêm na ordem certa.

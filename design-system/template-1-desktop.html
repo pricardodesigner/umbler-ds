@@ -819,8 +819,25 @@
     [data-bs-theme="emerald"] .badge-standard { background: transparent; color: var(--umb-tag-standard-color); border-color: var(--umb-tag-standard-color); }
     .text-bg-primary { background-color: var(--bs-primary) !important; color: #fff !important; }
 
-    /* --- ALERTS --- */
-    .alert { border-radius: 12px !important; padding: 10px 16px !important; font-size: 14px; display: flex !important; align-items: flex-start; gap: 10px; border: none !important; transition: background .25s, color .25s; }
+    /* --- ALERTS ---
+       Estrutura canônica: .alert > .alert-icon-circle + .alert-body + .alert-close.
+       O ícone vive dentro de um círculo preenchido com a cor do tipo (mesma cor do
+       botão sólido correspondente — var(--bs-{type})). Texto usa cores de body
+       (--umb-text-primary/--umb-text-mid), não a cor do tema do alerta. */
+    .alert {
+      border-radius: 12px !important;
+      padding: 12px 16px !important;
+      font-size: 14px;
+      display: flex !important;
+      align-items: flex-start;
+      gap: 12px;
+      border: none !important;
+      position: relative;
+      transition: background .25s, color .25s;
+    }
+    /* Background tinted por tema + cor brand do tipo (cor brand é "color:" — usada
+       só pelo legacy .alert-icon e textos inline; .alert-title/.alert-desc/.alert-icon-circle
+       sobrescrevem com cores próprias). */
     .alert-primary   { background: var(--umb-alert-primary-bg);   color: var(--umb-alert-primary-color); }
     .alert-secondary { background: var(--umb-alert-secondary-bg); color: var(--umb-alert-secondary-color); }
     .alert-success   { background: var(--umb-alert-success-bg);   color: var(--umb-alert-success-color); }
@@ -829,7 +846,61 @@
     .alert-info      { background: var(--umb-alert-info-bg);      color: var(--umb-alert-info-color); }
     .alert-light     { background: var(--umb-alert-light-bg);     color: var(--umb-alert-light-color); }
     .alert-dark      { background: var(--umb-alert-dark-bg);      color: var(--umb-alert-dark-color); }
-    .alert .alert-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+
+    /* Variante banner: bg mais saturado pra notificação sistêmica.
+       Mistura a cor brand do tipo (14%) com o canvas do card pra preservar contraste em qualquer tema. */
+    .alert.alert-banner.alert-primary { background: color-mix(in srgb, var(--bs-primary) 14%, var(--umb-card-bg)); }
+    .alert.alert-banner.alert-success { background: color-mix(in srgb, var(--bs-success) 14%, var(--umb-card-bg)); }
+    .alert.alert-banner.alert-danger  { background: color-mix(in srgb, var(--bs-danger)  14%, var(--umb-card-bg)); }
+    .alert.alert-banner.alert-warning { background: color-mix(in srgb, var(--bs-warning) 14%, var(--umb-card-bg)); }
+    .alert.alert-banner.alert-info    { background: color-mix(in srgb, var(--bs-info)    14%, var(--umb-card-bg)); }
+
+    /* Icon circle: bolinha com cor do tipo (= cor do botão sólido), ícone branco dentro */
+    .alert-icon-circle {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 16px;
+      color: #fff;
+    }
+    .alert-primary   .alert-icon-circle { background: var(--bs-primary); }
+    .alert-secondary .alert-icon-circle { background: var(--umb-text-mid); }
+    .alert-success   .alert-icon-circle { background: var(--bs-success); }
+    .alert-danger    .alert-icon-circle { background: var(--bs-danger); }
+    .alert-warning   .alert-icon-circle { background: var(--bs-warning); }
+    .alert-info      .alert-icon-circle { background: var(--bs-info); }
+
+    /* Body: coluna com título + descrição + ações */
+    .alert-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .alert .alert-title { font-weight: 600; font-size: 14px; line-height: 1.35; color: var(--umb-text-primary); margin: 0; }
+    .alert .alert-desc  { font-size: 13px; line-height: 1.45; color: var(--umb-text-mid); margin: 0; }
+
+    /* Linha de ações (botões pill: 1º solid, 2º outlined — usar btn-{type} + btn-outline-{type}) */
+    .alert-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+    /* Botão de fechar (X) — top-right, neutro, sem fundo */
+    .alert-close {
+      background: transparent; border: 0; padding: 0;
+      width: 24px; height: 24px;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--umb-text-dim);
+      cursor: pointer;
+      font-size: 16px;
+      flex-shrink: 0;
+      align-self: flex-start;
+      border-radius: 6px;
+      transition: color .15s, background .15s;
+    }
+    .alert-close:hover { color: var(--umb-text-mid); background: var(--umb-hover-bg); }
+
+    /* Variante compacta (sem descrição): tudo numa linha só, ações encostam à direita */
+    .alert.alert-compact { align-items: center; }
+    .alert.alert-compact .alert-body { flex-direction: row; align-items: center; gap: 12px; flex: 1; }
+    .alert.alert-compact .alert-actions { margin-top: 0; margin-left: auto; flex-wrap: nowrap; }
+
+    /* Legacy: .alert-icon (ícone plano sem círculo) — mantido pra compat com componentes existentes
+       (.umb-chat-pinned, banner de erro pós-import, etc). Novas implementações devem usar .alert-icon-circle. */
     .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
 
     /* --- FORMS --- */
