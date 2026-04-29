@@ -1486,9 +1486,9 @@
     .umb-shell-sidebar.is-expanded .umb-shell-logo-word { display: block; }
     /* Toggle de expand/collapse — mesma dimensão/visual de .umb-si */
     .umb-sidebar-toggle {
-      width: 36px; height: 36px; border-radius: 8px;
+      width: 40px; height: 40px; border-radius: 0.75rem;
       display: flex; align-items: center; justify-content: center;
-      color: var(--umb-nav-color); font-size: 19px;
+      color: var(--umb-nav-color); font-size: 18px;
       background: transparent; border: 0; padding: 0; cursor: pointer;
       transition: all .15s; flex-shrink: 0;
     }
@@ -5764,7 +5764,7 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       <!-- SHELL COMPONENTS -->
       <div class="comp-group">
         <p class="comp-label">Shell do App — Sidebar (colapsada e expandida)</p>
-        <p style="font-size:13px;color:var(--umb-text-mid);margin-bottom:16px">A sidebar tem dois estados: <strong>colapsada</strong> (52px, default — apenas ícones com tooltips no hover) e <strong>expandida</strong> (240px — ícones + labels, tooltips desativados). Alterne via botão <code>.umb-sidebar-toggle</code> (ou adicione <code>.is-expanded</code> via JS). O estado é persistido em <code>localStorage</code>.</p>
+        <p style="font-size:13px;color:var(--umb-text-mid);margin-bottom:16px">A sidebar tem dois estados: <strong>colapsada</strong> (60px, default — apenas ícones com tooltips no hover) e <strong>expandida</strong> (240px — ícones + labels, tooltips desativados). Alterne via botão <code>.umb-sidebar-toggle</code> (ou adicione <code>.is-expanded</code> via JS). O estado é persistido em <code>localStorage</code>.</p>
         <div class="comp-row">
           <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
             <!-- Sidebar colapsada -->
