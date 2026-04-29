@@ -1733,7 +1733,8 @@
       position: absolute;
       left: 60px; bottom: 16px;
       width: 320px;
-      max-height: calc(100vh - 32px);
+      /* Altura fixa: garante que a área de clique não muda ao alternar tabs */
+      height: min(540px, calc(100vh - 32px));
       background: var(--umb-card-bg);
       border: 1px solid var(--umb-border);
       border-radius: 16px;
@@ -1886,14 +1887,11 @@
     .umb-account-popup-pref .inset-control--block .btn .ph {
       font-size: 14px;
     }
+    /* Link "Outras preferências" — usa .btn .btn-text canônico, centralizado na coluna */
     .umb-account-popup-pref-link {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 12px 0 4px;
-      font-size: 13px; color: var(--bs-primary); text-decoration: none;
-      font-weight: 500;
+      align-self: center;
+      margin-top: 4px;
     }
-    .umb-account-popup-pref-link:hover { text-decoration: underline; }
-    .umb-account-popup-pref-link .ph { font-size: 14px; }
 
     @media (max-width: 767.98px) {
       .umb-account-popup { left: 8px; right: 8px; width: auto; bottom: 80px; }
@@ -5132,8 +5130,8 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                     <button class="btn active"><i class="ph ph-speaker-slash"></i> Desativado</button>
                   </div>
                 </div>
-                <a href="#" class="umb-account-popup-pref-link">
-                  <i class="ph ph-arrow-right"></i> Outras preferências pessoais
+                <a href="#" class="btn btn-text umb-account-popup-pref-link">
+                  <i class="ph ph-arrow-right me-1"></i>Outras preferências pessoais
                 </a>
               </div>
             </div>

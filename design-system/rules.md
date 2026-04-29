@@ -2246,7 +2246,7 @@ Preferências canônicas (3 grupos + 1 link):
 | Reatribuição de chats (com `?` tooltip) | Off / Auto / Sempre | `prohibit` / `shuffle` / `arrows-clockwise` |
 | Tema | Auto / Claro / Escuro | `circle-half` / `sun` / `moon` |
 | Som de notificação | Ativado / Desativado | `speaker-high` / `speaker-slash` |
-| **Link**: "Outras preferências pessoais" (escape pra tela completa) | — | `arrow-right` (prefix) |
+| **Link**: "Outras preferências pessoais" (escape pra tela completa, classe `btn btn-text`) | — | `arrow-right` (prefix com `me-1`) |
 
 Toggle de tabs é via `onclick="umbAccountPopupTab(this)"` nos botões `.umb-account-popup-tab` com `data-tab="account|prefs"`. A função global troca a `.active` da tab e o `hidden` da pane correspondente. Sair fica fora das panes — é compartilhado.
 
@@ -2255,7 +2255,8 @@ Toggle de tabs é via `onclick="umbAccountPopupTab(this)"` nos botões `.umb-acc
 - Largura desktop: **320px** fixa
 - Posicionamento desktop: ancorada à sidebar — `left: 60px; bottom: 16px` (alinhada com avatar da sidebar)
 - Mobile: largura full bleed com 8px de margem lateral (`left: 8px; right: 8px`)
-- Altura: `max-height: calc(100vh - 32px)`; o conteúdo ajusta via `flex` (única área scrollable é a lista)
+- **Altura fixa**: `height: min(540px, calc(100vh - 32px))` — não pode ser `max-height`. O motivo: ao alternar entre tabs (Minha conta ↔ Preferências), o conteúdo tem alturas diferentes; com `max-height` a popup encolheria/cresceria a cada toggle e a área de clique mudaria sob o cursor. Altura fixa preserva a área de clique e garante que botões fiquem onde o usuário espera.
+- A pane "Minha conta" tem scroll interno na lista de organizações (`.umb-account-popup-list`); a pane "Preferências" deixa espaço vazio na base quando o conteúdo é mais curto que a popup — aceitável.
 
 ### Anti-pattern
 
