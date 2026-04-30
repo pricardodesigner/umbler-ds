@@ -4,34 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Umbootstrap Design System — Umbler</title>
-  <meta name="description" content="Design System proprietário da Umbler — fonte da verdade dos tokens, componentes e templates compartilhados entre os produtos da empresa.">
+  <meta name="description" content="Design System proprietário da Umbler — fonte da verdade dos tokens, componentes, padrões e templates compartilhados entre os produtos da empresa.">
 
-  <!-- Fonts — mesmas do DS (Plus Jakarta Sans + Poppins) -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Bootstrap 5.3 base -->
+  <!-- Bootstrap 5.3 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Phosphor icons -->
   <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" rel="stylesheet">
   <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" rel="stylesheet">
+  <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" rel="stylesheet">
   <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css" rel="stylesheet">
 
-  <!-- DS — tokens + componentes compartilhados (single source of truth, rules.md §21) -->
+  <!-- DS — tokens + componentes compartilhados -->
   <link rel="stylesheet" href="design-system/tokens.css">
   <link rel="stylesheet" href="design-system/components.css">
 
   <style>
     /* ============================================================
-       LANDING — usa componentes do DS (umb-shell-header, umb-path-card,
-       umb-path-icon, theme-option, btn + variantes). CSS local abaixo
-       cobre APENAS layout de página (hero, seções, footer) e 1
-       override horizontal do theme-switcher. Nenhum componente novo.
+       LANDING — Layout v2 (inspirado em Stripe/Carbon/Polaris/Linear).
+       Reusa componentes do DS sempre que possível; .lp-* prefixa
+       APENAS estruturas de layout que não têm equivalente direto no DS
+       (grid de templates, feed de changelog, top nav). Cores e
+       tipografia vêm 100% dos tokens --umb-* / --bs-*.
     ============================================================ */
 
-    /* --- Reset básico (nos templates é feito via .umb-shell) --- */
     * { box-sizing: border-box; }
     html, body {
       background: var(--bs-body-bg);
@@ -52,160 +53,312 @@
     *::-webkit-scrollbar-thumb { background: var(--umb-border-strong); border-radius: 999px; border: 2px solid transparent; background-clip: padding-box; }
     [data-bs-theme="light"] *::-webkit-scrollbar-thumb { background: rgba(0,0,0,.18); background-clip: padding-box; border: 2px solid transparent; }
 
-    /* --- Sticky wrapper pro .umb-shell-header do DS (no DS é position:static dentro do shell; na landing é sticky no topo) --- */
+    /* Header sticky */
     .umb-shell-header {
-      position: sticky; top: 0; z-index: 10;
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(8px);
+      gap: 0;
     }
 
-    /* --- Brand dentro do header.
-           Usa --umb-text-* (não --umb-brand-*) porque o shell-header da
-           landing tem bg variável (branco em Claro/Esmeralda, preto em
-           Dark/Bravia). --umb-brand-* é pro sidebar onde o bg é sempre
-           primary-colored. --- */
-    .lp-brand {
-      display: flex; align-items: center; gap: 10px;
-      font-weight: 600; font-size: 15px;
-      color: var(--umb-text-primary);
-      letter-spacing: -0.02em;
-    }
-    .lp-brand-mark {
-      width: 28px; height: 28px;
-      border-radius: 8px;
-      background: var(--bs-primary);
-      display: grid; place-items: center;
-      color: #fff; font-weight: 700; font-size: 13px;
-    }
-    .lp-brand-sub {
-      color: var(--umb-text-mid);
-      font-weight: 400;
-    }
+    /* Brand (mantido) */
+    .lp-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; color: var(--umb-text-primary); letter-spacing: -.02em; }
+    .lp-brand-mark { width: 28px; height: 28px; border-radius: 8px; background: var(--bs-primary); display: grid; place-items: center; }
+    .lp-brand-version { color: var(--umb-text-mid); font-weight: 400; font-size: 13px; }
 
-    /* --- Theme switcher usa .inset-control do DS (LabeledSwitch).
-           Só escondemos o label em telas pequenas pra economizar espaço. --- */
-    @media (max-width: 720px) {
-      .inset-control .theme-label { display: none; }
-      .inset-control .btn { padding: 0 10px !important; }
-    }
+    /* Top nav inline no header — só no desktop */
+    .lp-nav { margin-left: 28px; display: flex; gap: 18px; font-size: 13px; }
+    .lp-nav a { color: var(--umb-text-mid); text-decoration: none; transition: color .15s; padding: 4px 0; }
+    .lp-nav a:hover, .lp-nav a.active { color: var(--umb-text-primary); }
 
-    /* --- Conteúdo principal (equivalente a .umb-shell-content + .umb-page-inner) --- */
-    .lp-content {
-      padding: 24px;
-      max-width: 960px;
-      margin: 0 auto;
+    .umb-shell-header-right { gap: 8px; }
+    .lp-header-github {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      color: var(--umb-text-mid); text-decoration: none;
+      font-size: 18px; transition: color .15s, background .15s;
     }
+    .lp-header-github:hover { color: var(--umb-text-primary); background: var(--umb-hover-bg); }
 
-    /* --- Hero (layout local, só tipografia via tokens) --- */
-    .lp-hero {
-      padding: 72px 0 40px;
-      text-align: center;
-    }
+    /* Conteúdo (max-width maior pra suportar grids) */
+    .lp-content { padding: 24px; max-width: 1100px; margin: 0 auto; }
+
+    /* HERO */
+    .lp-hero { padding: 56px 0 40px; text-align: center; max-width: 640px; margin: 0 auto; }
     .lp-hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 10px;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 4px 12px; border-radius: 999px;
       background: rgba(var(--bs-primary-rgb), .12);
       color: var(--bs-primary);
-      border-radius: 999px;
+      border: 1px solid rgba(var(--bs-primary-rgb), .25);
       font-size: 12px; font-weight: 500;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
+    .lp-hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
     .lp-hero h1 {
-      font-size: 40px; font-weight: 700;
-      letter-spacing: -0.025em; line-height: 1.1;
-      margin: 0 0 14px;
+      font-size: 36px; font-weight: 600;
+      letter-spacing: -.025em; line-height: 1.1;
+      margin: 0 0 12px;
       color: var(--umb-text-primary);
     }
     .lp-hero p {
-      font-size: 16px; line-height: 1.55;
+      font-size: 15px; line-height: 1.55;
       color: var(--umb-text-mid);
-      margin: 0 auto; max-width: 640px;
+      margin: 0 auto 24px; max-width: 520px;
     }
 
-    /* --- Seções (título + lista vertical de path-cards do DS) --- */
-    .lp-section { margin-top: 40px; }
+    /* Search bar — usa .form-control do DS com wrapper (regra §4 input-groups) */
+    .lp-search-wrapper {
+      position: relative; max-width: 480px; margin: 0 auto;
+    }
+    .lp-search-wrapper .form-control {
+      height: 44px !important;
+      padding: 0 50px 0 42px !important;
+      border-radius: 999px !important;
+      font-size: 14px !important;
+    }
+    .lp-search-icon {
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      color: var(--umb-text-mid); font-size: 16px; pointer-events: none;
+    }
+    .lp-search-kbd {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      padding: 3px 8px; border-radius: 6px;
+      background: var(--umb-bg-primary, var(--bs-body-bg));
+      border: 1px solid var(--umb-border);
+      color: var(--umb-text-mid);
+      font-size: 11px; font-family: inherit;
+      pointer-events: none;
+    }
+
+    /* Section head (label uppercase + count à direita) */
+    .lp-section { margin-top: 36px; }
     .lp-section-head {
       display: flex; align-items: baseline; justify-content: space-between;
       margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--umb-border);
     }
     .lp-section-head h2 {
-      font-size: 12px; font-weight: 600;
+      font-size: 11px; font-weight: 600;
       color: var(--umb-text-mid);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: .08em;
       margin: 0;
     }
-    .lp-section-count {
-      font-size: 12px;
-      color: var(--umb-text-dim);
+    .lp-section-count, .lp-section-link {
+      font-size: 11px;
+      color: var(--umb-text-mid);
       font-variant-numeric: tabular-nums;
+      text-decoration: none;
     }
+    .lp-section-link { color: var(--bs-primary); }
 
-    /* Subheader por template — agrupamento visual SEM borda (respeita
-       a regra do DS: borda 2px só em elementos clicáveis).
-       Path-cards Desktop/Mobile ficam lado a lado (grid 2 colunas);
-       em viewport estreito colapsam pra coluna única. */
-    .lp-template-group {
-      margin-top: 20px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    /* PATHWAYS — 3 path-cards lado a lado */
+    .lp-pathways {
+      display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 10px;
     }
-    .lp-template-group:first-of-type { margin-top: 0; }
-    .lp-template-group-head {
-      grid-column: 1 / -1;  /* subheader ocupa a linha toda */
-      display: flex; align-items: baseline; gap: 10px;
-      margin-bottom: 0;
-      padding: 0 4px;
+    .lp-pathway {
+      padding: 18px;
+      background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: inherit;
+      display: flex; flex-direction: column; gap: 4px;
+      transition: border-color .15s, transform .15s;
     }
-    .lp-template-group-head h3 {
-      font-size: 14px; font-weight: 600;
+    .lp-pathway:hover { border-color: var(--bs-primary); transform: translateY(-1px); }
+    .lp-pathway-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: rgba(var(--bs-primary-rgb), .15);
+      color: var(--bs-primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .lp-pathway-title { font-size: 14px; font-weight: 600; color: var(--umb-text-primary); }
+    .lp-pathway-desc { font-size: 12px; color: var(--umb-text-mid); margin: 0 0 10px; line-height: 1.45; flex: 1; }
+    .lp-pathway-link {
+      font-size: 12px; color: var(--bs-primary); font-weight: 500;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+
+    /* DOC + CHANGELOG GRID (1.4fr / 1fr) */
+    .lp-doc-changelog { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; }
+    .lp-doc-changelog .umb-path-card { height: 100%; }
+
+    /* CHANGELOG (feed de mudanças do GitHub) */
+    .lp-changelog {
+      background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border);
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 154px;
+    }
+    .lp-changelog-item {
+      padding: 11px 14px;
+      display: flex; gap: 10px; align-items: flex-start;
+      border-bottom: 1px solid var(--umb-border);
+      text-decoration: none;
+      color: inherit;
+      transition: background .15s;
+    }
+    .lp-changelog-item:hover { background: var(--umb-hover-bg); }
+    .lp-changelog-item:last-child { border-bottom: 0; }
+    .lp-changelog-badge {
+      font-size: 9px; padding: 2px 7px; border-radius: 999px;
+      font-weight: 600; letter-spacing: .04em;
+      flex-shrink: 0; margin-top: 2px;
+      line-height: 1.4;
+    }
+    .lp-changelog-badge--new {
+      background: rgba(var(--bs-success-rgb), .2);
+      color: var(--bs-success);
+    }
+    .lp-changelog-badge--upd {
+      background: rgba(var(--bs-primary-rgb), .2);
+      color: var(--bs-primary);
+    }
+    .lp-changelog-content { flex: 1; min-width: 0; }
+    .lp-changelog-title {
+      font-size: 12px; line-height: 1.35;
       color: var(--umb-text-primary);
-      margin: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .lp-template-group-head p {
-      font-size: 12px;
+    .lp-changelog-meta {
+      font-size: 10px; color: var(--umb-text-mid);
+      margin-top: 2px;
+    }
+    .lp-changelog-loading, .lp-changelog-error {
+      padding: 24px 16px; text-align: center;
+      font-size: 12px; color: var(--umb-text-mid);
+    }
+    .lp-changelog-error a { color: var(--bs-primary); text-decoration: none; }
+
+    /* TEMPLATES GRID (2 cols, T5 ocupa fileira inteira como destaque) */
+    .lp-templates-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .lp-template-card {
+      padding: 14px;
+      background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border);
+      border-radius: 12px;
+      transition: border-color .15s;
+    }
+    .lp-template-card:hover { border-color: var(--bs-primary); }
+    .lp-template-wireframe {
+      width: 100%; height: 48px;
+      background: var(--umb-sidebar-bg);
+      border-radius: 6px; margin-bottom: 10px; display: block;
+    }
+    .lp-template-card--featured { grid-column: 1 / -1; display: flex; gap: 14px; align-items: stretch; }
+    .lp-template-card--featured .lp-template-wireframe { width: 180px; flex-shrink: 0; height: auto; min-height: 100%; }
+    .lp-template-card--featured .lp-template-body { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+    .lp-template-title { font-size: 13px; font-weight: 600; color: var(--umb-text-primary); display: flex; align-items: center; gap: 8px; margin: 0 0 4px; }
+    .lp-template-desc { font-size: 12px; color: var(--umb-text-mid); margin: 0 0 8px; line-height: 1.45; }
+    .lp-template-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
+    .lp-template-tag {
+      font-size: 10px; padding: 2px 7px; border-radius: 999px;
+      background: var(--umb-hover-bg);
       color: var(--umb-text-mid);
-      margin: 0;
     }
-    /* Override do DS: .umb-path-card + .umb-path-card tem margin-top:10px
-       (pra lista vertical). No grid usamos gap, então zerar a margin. */
-    .lp-template-group .umb-path-card + .umb-path-card {
-      margin-top: 0;
+    .lp-template-actions {
+      display: flex; gap: 2px;
+      border-top: 1px solid var(--umb-border);
+      padding-top: 8px;
+      margin-top: auto;
+    }
+    .lp-template-card--featured .lp-template-actions { border-top: 0; padding-top: 0; }
+    .lp-template-action {
+      font-size: 11px; padding: 0 8px; height: 24px; border-radius: 999px;
+      color: var(--umb-text-mid);
+      display: inline-flex; align-items: center; gap: 4px;
+      text-decoration: none;
+      transition: color .15s, background .15s;
+    }
+    .lp-template-action:hover { color: var(--umb-text-primary); background: var(--umb-hover-bg); }
+    .lp-template-badge {
+      font-size: 9px; padding: 2px 7px; border-radius: 999px;
+      background: var(--umb-hover-bg);
+      color: var(--umb-text-mid);
+      font-weight: 600; letter-spacing: .04em;
     }
 
-    @media (max-width: 640px) {
-      .lp-hero { padding: 48px 0 32px; }
-      .lp-hero h1 { font-size: 28px; }
-      .lp-hero p { font-size: 14px; }
-      .lp-template-group { grid-template-columns: 1fr; }  /* colapsa pra coluna única */
-      .lp-template-group-head { flex-direction: column; gap: 2px; }
+    /* RECURSOS — 3 cards estreitos */
+    .lp-resources {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
+    .lp-resource {
+      padding: 12px 14px;
+      background: var(--umb-card-bg);
+      border: 1px solid var(--umb-border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: inherit;
+      display: flex; gap: 10px; align-items: center;
+      transition: border-color .15s;
+    }
+    .lp-resource:hover { border-color: var(--bs-primary); }
+    .lp-resource i { color: var(--umb-text-mid); font-size: 18px; flex-shrink: 0; }
+    .lp-resource-info { flex: 1; min-width: 0; }
+    .lp-resource-title { font-size: 12px; font-weight: 600; color: var(--umb-text-primary); }
+    .lp-resource-desc { font-size: 11px; color: var(--umb-text-mid); }
 
-    /* --- Footer --- */
+    /* FOOTER */
     .lp-footer {
       margin-top: 40px;
-      padding: 24px 0;
+      padding: 18px 24px;
       border-top: 1px solid var(--umb-border);
       display: flex; align-items: center; justify-content: space-between;
-      font-size: 12px; color: var(--umb-text-dim);
+      font-size: 12px; color: var(--umb-text-mid);
       gap: 16px; flex-wrap: wrap;
+      max-width: 1100px; margin-left: auto; margin-right: auto;
     }
-    .lp-footer a { color: var(--umb-text-mid); text-decoration: none; }
-    .lp-footer a:hover { color: var(--umb-text-primary); }
+    .lp-footer-stats { display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .lp-footer-stats span:not(:last-child)::after {
+      content: '·'; margin-left: 12px; color: var(--umb-text-dim);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .lp-nav { display: none; }
+      .lp-pathways { grid-template-columns: 1fr; }
+      .lp-doc-changelog { grid-template-columns: 1fr; }
+      .lp-templates-grid { grid-template-columns: 1fr; }
+      .lp-template-card--featured { flex-direction: column; }
+      .lp-template-card--featured .lp-template-wireframe { width: 100%; height: 80px; }
+      .lp-resources { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .lp-hero { padding: 36px 0 28px; }
+      .lp-hero h1 { font-size: 28px; }
+      .lp-search-kbd { display: none; }
+      .inset-control .theme-label { display: none; }
+      .inset-control .btn { padding: 0 10px !important; }
+    }
   </style>
 </head>
 <body>
 
   <!-- ============================================================
-       HEADER — usa .umb-shell-header do DS (via components.css)
+       HEADER
        ============================================================ -->
   <header class="umb-shell-header">
     <div class="lp-brand">
       <div class="lp-brand-mark"><svg width="18" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M17.8431 11.4306C17.5608 12.1241 17.0622 12.7081 16.4214 13.0955C15.7807 13.483 15.032 13.6533 14.2867 13.5811C13.5414 13.5089 12.8393 13.1981 12.2848 12.6949C11.7303 12.1916 11.353 11.5229 11.2091 10.7881C11.1772 10.6216 11.1579 10.453 11.1514 10.2836C11.1452 10.0614 11.0627 9.84803 10.9178 9.67944C10.7728 9.51085 10.5742 9.39731 10.3554 9.3579L8.70067 9.06865C8.54463 9.0399 8.3842 9.04543 8.2305 9.08485C8.07681 9.12427 7.93352 9.19663 7.81058 9.29694C7.68763 9.39725 7.58798 9.52309 7.51851 9.66574C7.44904 9.8084 7.41142 9.96445 7.40826 10.1231C7.40826 10.1338 7.40826 10.1445 7.40826 10.1566C7.42419 11.847 8.03278 13.4782 9.12796 14.766C10.2231 16.0537 11.7355 16.9163 13.4014 17.2035C15.0673 17.4907 16.7811 17.1842 18.2442 16.3374C19.7073 15.4906 20.8269 14.1573 21.4079 12.5698C21.4594 12.4203 21.4777 12.2613 21.4614 12.104C21.4451 11.9467 21.3946 11.7949 21.3135 11.6591C21.2325 11.5233 21.1227 11.4069 20.992 11.3179C20.8612 11.2289 20.7126 11.1696 20.5566 11.144L18.9009 10.8544C18.6852 10.8152 18.4627 10.851 18.2703 10.9559C18.0779 11.0607 17.9271 11.2282 17.8431 11.4306Z" fill="#FCD7DB"/><path d="M24.5813 5.73039C24.2777 5.83957 24.0225 6.0527 23.861 6.33201C23.6994 6.61132 23.642 6.93879 23.6988 7.25641C23.8133 7.90652 23.8707 8.5654 23.8704 9.22552C23.8704 14.9103 19.6751 19.5185 14.5001 19.5185C9.32508 19.5185 5.12978 14.9103 5.12978 9.22552C5.12128 7.24122 5.65073 5.2917 6.66183 3.5843C6.8199 3.32329 6.88567 3.01673 6.84859 2.71385C6.81151 2.41097 6.67374 2.12934 6.45738 1.91416L4.93136 0.400874C4.78362 0.254338 4.60471 0.143047 4.40796 0.0753028C4.21122 0.00755899 4.00171 -0.0148896 3.79508 0.0096306C3.58845 0.0341508 3.39002 0.105006 3.21459 0.216914C3.03916 0.328822 2.89126 0.478896 2.78192 0.655938C1.22576 3.24258 0.409783 6.20688 0.42301 9.22552C0.42301 17.7656 6.72417 24.6888 14.5001 24.6888C22.276 24.6888 28.5771 17.7656 28.5771 9.22552C28.5777 8.17556 28.4809 7.1278 28.2879 6.09572C28.251 5.89904 28.1719 5.71273 28.0559 5.54968C27.9399 5.38663 27.7898 5.25075 27.6161 5.15144C27.4424 5.05214 27.2492 4.99178 27.0498 4.97455C26.8505 4.95732 26.6497 4.98364 26.4616 5.05167L24.5813 5.73039Z" fill="white"/></svg></div>
       <span>Umbootstrap DS</span>
-      <span class="lp-brand-sub">· home</span>
+      <span class="lp-brand-version" data-version-tag>v0.6</span>
     </div>
+
+    <nav class="lp-nav" aria-label="Navegação principal">
+      <a href="design-system/umbootstrap-design-system.html">Documentação</a>
+      <a href="#templates">Templates</a>
+      <a href="design-system/umbootstrap-design-system.html#botoes">Componentes</a>
+      <a href="#mudancas">Mudanças</a>
+    </nav>
+
     <div class="umb-shell-header-right">
       <div class="inset-control" role="group" aria-label="Alternar tema">
         <button class="btn" data-theme="dark"         title="Escuro"><i class="ph ph-moon me-1"></i><span class="theme-label">Escuro</span></button>
@@ -213,6 +366,9 @@
         <button class="btn" data-theme="emerald"      title="Esmeralda"><i class="ph ph-leaf me-1"></i><span class="theme-label">Esmeralda</span></button>
         <button class="btn" data-theme="dark-emerald" title="Bravia"><i class="ph ph-circles-four me-1"></i><span class="theme-label">Bravia</span></button>
       </div>
+      <a class="lp-header-github" href="https://github.com/pricardodesigner/umbler-ds" target="_blank" rel="noopener" aria-label="GitHub">
+        <i class="ph ph-github-logo"></i>
+      </a>
     </div>
   </header>
 
@@ -223,189 +379,212 @@
 
     <!-- HERO -->
     <section class="lp-hero">
-      <span class="lp-hero-eyebrow"><i class="ph ph-sparkle"></i> v0.6 — usando componentes do DS</span>
-      <h1>Umbootstrap Design System</h1>
-      <p>
-        Fonte da verdade do Design System da Umbler — tokens, componentes, padrões
-        e templates compartilhados entre os produtos da empresa, para times de produto,
-        design e engenharia.
-      </p>
+      <span class="lp-hero-eyebrow">
+        <span class="lp-hero-eyebrow-dot"></span>
+        <span data-eyebrow-version>v0.6</span> · <span data-eyebrow-summary>fonte da verdade do DS dos produtos da Umbler</span>
+      </span>
+      <h1>O Design System dos produtos da Umbler</h1>
+      <p>Tokens, componentes, padrões e templates compartilhados — uma fonte da verdade pra design, engenharia e produto entregarem em ritmo.</p>
+
+      <form class="lp-search-wrapper" onsubmit="return submitSearch(event)">
+        <i class="ph ph-magnifying-glass lp-search-icon"></i>
+        <input type="text" id="lp-search" class="form-control" placeholder="Buscar componentes, tokens, padrões..." autocomplete="off" aria-label="Buscar na documentação">
+        <kbd class="lp-search-kbd">⌘K</kbd>
+      </form>
     </section>
 
-    <!-- DOCUMENTAÇÃO -->
+    <!-- PATHWAYS -->
     <section class="lp-section">
       <div class="lp-section-head">
-        <h2>Documentação</h2>
-        <span class="lp-section-count">1 arquivo</span>
+        <h2>Por onde começar</h2>
       </div>
-
-      <!-- Path card recommended (glow primary + borda primary) — link único -->
-      <a href="design-system/umbootstrap-design-system.html" class="umb-path-card recommended" style="text-decoration: none;">
-        <span class="umb-path-icon primary"><i class="ph-duotone ph-book-open-text"></i></span>
-        <div style="flex: 1; min-width: 0;">
-          <h3 class="umb-path-title">
-            Umbootstrap — DS Completo
-            <span class="umb-path-badge">recomendado</span>
-          </h3>
-          <p class="umb-path-sub">
-            Documentação viva: foundations (cores, tipografia, spacing), componentes
-            atômicos e compostos, padrões de uso e shell templates.
-          </p>
-        </div>
-      </a>
+      <div class="lp-pathways">
+        <a href="design-system/umbootstrap-design-system.html#cores" class="lp-pathway">
+          <div class="lp-pathway-icon"><i class="ph-duotone ph-pen-nib"></i></div>
+          <div class="lp-pathway-title">Sou designer</div>
+          <p class="lp-pathway-desc">Tokens, foundations e regras visuais. Comece pelas cores, tipografia e padrões de espaçamento.</p>
+          <span class="lp-pathway-link">Ir pra foundations <i class="ph ph-arrow-right"></i></span>
+        </a>
+        <a href="design-system/umbootstrap-design-system.html#botoes" class="lp-pathway">
+          <div class="lp-pathway-icon"><i class="ph-duotone ph-code"></i></div>
+          <div class="lp-pathway-title">Sou engenheiro</div>
+          <p class="lp-pathway-desc">Componentes Bootstrap-compatíveis, snippets HTML prontos e o <code>rules.md</code> com decisões de implementação.</p>
+          <span class="lp-pathway-link">Ir pra componentes <i class="ph ph-arrow-right"></i></span>
+        </a>
+        <a href="#templates" class="lp-pathway">
+          <div class="lp-pathway-icon"><i class="ph-duotone ph-strategy"></i></div>
+          <div class="lp-pathway-title">Sou PM</div>
+          <p class="lp-pathway-desc">Templates de tela, padrões de fluxo e exemplos canônicos — pra alinhar escopo de feature já no vocabulário do DS.</p>
+          <span class="lp-pathway-link">Ir pra templates <i class="ph ph-arrow-right"></i></span>
+        </a>
+      </div>
     </section>
 
-    <!-- SHELL & TEMPLATES -->
+    <!-- DOC + CHANGELOG -->
     <section class="lp-section">
+      <div class="lp-doc-changelog">
+        <div>
+          <div class="lp-section-head">
+            <h2>Documentação completa</h2>
+          </div>
+          <a href="design-system/umbootstrap-design-system.html" class="umb-path-card recommended" style="text-decoration:none">
+            <span class="umb-path-icon primary"><i class="ph-duotone ph-book-open-text"></i></span>
+            <div style="flex:1;min-width:0">
+              <h3 class="umb-path-title">Umbootstrap — DS Completo<span class="umb-path-badge">recomendado</span></h3>
+              <p class="umb-path-sub">143 componentes, 4 temas, 36 regras de implementação. Tudo num arquivo single-page navegável — foundations, componentes atômicos e compostos, padrões, templates de shell.</p>
+            </div>
+            <i class="ph ph-arrow-right" style="color:var(--bs-primary);font-size:18px;flex-shrink:0;align-self:center"></i>
+          </a>
+        </div>
+        <div id="mudancas">
+          <div class="lp-section-head">
+            <h2>Mudanças recentes</h2>
+            <a class="lp-section-link" href="https://github.com/pricardodesigner/umbler-ds/commits/main" target="_blank" rel="noopener">Ver todas</a>
+          </div>
+          <div class="lp-changelog" id="lp-changelog" aria-live="polite">
+            <div class="lp-changelog-loading">
+              <i class="ph ph-circle-notch" style="animation:spin 1s linear infinite;display:inline-block"></i> Carregando mudanças do GitHub…
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEMPLATES -->
+    <section class="lp-section" id="templates">
       <div class="lp-section-head">
         <h2>Shell &amp; Templates</h2>
         <span class="lp-section-count">5 templates · 10 arquivos</span>
       </div>
+      <div class="lp-templates-grid">
 
-      <!-- Template 1 — grupo visual (sem borda) + 2 path-cards clicáveis -->
-      <div class="lp-template-group">
-        <div class="lp-template-group-head">
-          <h3>Template 1</h3>
-          <p>Shell base — sidebar + conteúdo principal.</p>
+        <div class="lp-template-card">
+          <svg class="lp-template-wireframe" viewBox="0 0 220 48" preserveAspectRatio="none"><rect x="0" y="0" width="22" height="48" fill="var(--bs-primary)" opacity=".5"/><rect x="30" y="6" width="184" height="6" rx="2" fill="var(--umb-text-mid)" opacity=".4"/><rect x="30" y="18" width="184" height="24" rx="3" fill="var(--umb-text-mid)" opacity=".15"/></svg>
+          <div class="lp-template-title">T1 · Shell base</div>
+          <p class="lp-template-desc">Sidebar + header com breadcrumb + área de conteúdo. Use em settings, listas simples, formulários.</p>
+          <div class="lp-template-tags">
+            <span class="lp-template-tag">sidebar</span>
+            <span class="lp-template-tag">header</span>
+          </div>
+          <div class="lp-template-actions">
+            <a class="lp-template-action" href="design-system/template-1-desktop.html" target="_blank" rel="noopener"><i class="ph ph-monitor"></i>Desktop</a>
+            <a class="lp-template-action" href="design-system/template-1-mobile.html" target="_blank" rel="noopener"><i class="ph ph-device-mobile"></i>Mobile</a>
+          </div>
         </div>
-        <a href="design-system/template-1-desktop.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
-          <span class="umb-path-icon"><i class="ph ph-monitor"></i></span>
-          <div style="flex: 1; min-width: 0;">
-            <h4 class="umb-path-title">Desktop</h4>
-            <p class="umb-path-sub">viewport ≥ 768px</p>
-          </div>
-        </a>
-        <a href="design-system/template-1-mobile.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
-          <span class="umb-path-icon"><i class="ph ph-device-mobile"></i></span>
-          <div style="flex: 1; min-width: 0;">
-            <h4 class="umb-path-title">Mobile</h4>
-            <p class="umb-path-sub">frame 390×844</p>
-          </div>
-        </a>
-      </div>
 
-      <!-- Template 2 -->
-      <div class="lp-template-group">
-        <div class="lp-template-group-head">
-          <h3>Template 2</h3>
-          <p>Shell com lista + detalhe (two-panel).</p>
+        <div class="lp-template-card">
+          <svg class="lp-template-wireframe" viewBox="0 0 220 48" preserveAspectRatio="none"><rect x="0" y="0" width="22" height="48" fill="var(--bs-primary)" opacity=".5"/><rect x="30" y="6" width="60" height="36" rx="3" fill="var(--umb-text-mid)" opacity=".25"/><rect x="98" y="6" width="116" height="36" rx="3" fill="var(--umb-text-mid)" opacity=".15"/></svg>
+          <div class="lp-template-title">T2 · Lista + Detalhe</div>
+          <p class="lp-template-desc">Two-panel: lista navegável + detalhe ao lado. Use em master-detail (contatos, tickets, projetos).</p>
+          <div class="lp-template-tags">
+            <span class="lp-template-tag">two-panel</span>
+            <span class="lp-template-tag">list</span>
+          </div>
+          <div class="lp-template-actions">
+            <a class="lp-template-action" href="design-system/template-2-desktop.html" target="_blank" rel="noopener"><i class="ph ph-monitor"></i>Desktop</a>
+            <a class="lp-template-action" href="design-system/template-2-mobile.html" target="_blank" rel="noopener"><i class="ph ph-device-mobile"></i>Mobile</a>
+          </div>
         </div>
-        <a href="design-system/template-2-desktop.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
-          <span class="umb-path-icon"><i class="ph ph-monitor"></i></span>
-          <div style="flex: 1; min-width: 0;">
-            <h4 class="umb-path-title">Desktop</h4>
-            <p class="umb-path-sub">viewport ≥ 768px</p>
-          </div>
-        </a>
-        <a href="design-system/template-2-mobile.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
-          <span class="umb-path-icon"><i class="ph ph-device-mobile"></i></span>
-          <div style="flex: 1; min-width: 0;">
-            <h4 class="umb-path-title">Mobile</h4>
-            <p class="umb-path-sub">frame 390×844</p>
-          </div>
-        </a>
-      </div>
 
-      <!-- Template 3 -->
-      <div class="lp-template-group">
-        <div class="lp-template-group-head">
-          <h3>Template 3</h3>
-          <p>Shell com tabela / lista densa.</p>
+        <div class="lp-template-card">
+          <svg class="lp-template-wireframe" viewBox="0 0 220 48" preserveAspectRatio="none"><rect x="0" y="0" width="22" height="48" fill="var(--bs-primary)" opacity=".5"/><rect x="30" y="6" width="184" height="5" rx="2" fill="var(--umb-text-mid)" opacity=".4"/><rect x="30" y="15" width="184" height="6" rx="2" fill="var(--umb-text-mid)" opacity=".18"/><rect x="30" y="24" width="184" height="6" rx="2" fill="var(--umb-text-mid)" opacity=".18"/><rect x="30" y="33" width="184" height="6" rx="2" fill="var(--umb-text-mid)" opacity=".18"/></svg>
+          <div class="lp-template-title">T3 · Tabela densa</div>
+          <p class="lp-template-desc">Listagens com filtros, stat-cards e ações inline. Use em CRMs, importações, dashboards de operação.</p>
+          <div class="lp-template-tags">
+            <span class="lp-template-tag">table</span>
+            <span class="lp-template-tag">filters</span>
+          </div>
+          <div class="lp-template-actions">
+            <a class="lp-template-action" href="design-system/template-3-desktop.html" target="_blank" rel="noopener"><i class="ph ph-monitor"></i>Desktop</a>
+            <a class="lp-template-action" href="design-system/template-3-mobile.html" target="_blank" rel="noopener"><i class="ph ph-device-mobile"></i>Mobile</a>
+          </div>
         </div>
-        <a href="design-system/template-3-desktop.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
-          <span class="umb-path-icon"><i class="ph ph-monitor"></i></span>
-          <div style="flex: 1; min-width: 0;">
-            <h4 class="umb-path-title">Desktop</h4>
-            <p class="umb-path-sub">viewport ≥ 768px</p>
-          </div>
-        </a>
-        <a href="design-system/template-3-mobile.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
-          <span class="umb-path-icon"><i class="ph ph-device-mobile"></i></span>
-          <div style="flex: 1; min-width: 0;">
-            <h4 class="umb-path-title">Mobile</h4>
-            <p class="umb-path-sub">frame 390×844</p>
-          </div>
-        </a>
-      </div>
 
-      <!-- Template 4 -->
-      <div class="lp-template-group">
-        <div class="lp-template-group-head">
-          <h3>Template 4 — Menu de Configurações</h3>
-          <p>Menu de settings em card com 22 itens agrupados.</p>
+        <div class="lp-template-card">
+          <svg class="lp-template-wireframe" viewBox="0 0 220 48" preserveAspectRatio="none"><rect x="0" y="0" width="22" height="48" fill="var(--bs-primary)" opacity=".5"/><rect x="30" y="6" width="60" height="6" rx="2" fill="var(--umb-text-mid)" opacity=".4"/><rect x="30" y="16" width="184" height="26" rx="4" fill="var(--umb-text-mid)" opacity=".12" stroke="var(--umb-text-mid)" stroke-opacity=".3"/></svg>
+          <div class="lp-template-title">T4 · Settings</div>
+          <p class="lp-template-desc">Card de configurações com 22 itens agrupados por seção. Use em conta, organização, integrações.</p>
+          <div class="lp-template-tags">
+            <span class="lp-template-tag">settings</span>
+            <span class="lp-template-tag">groups</span>
+          </div>
+          <div class="lp-template-actions">
+            <a class="lp-template-action" href="design-system/template-4-desktop.html" target="_blank" rel="noopener"><i class="ph ph-monitor"></i>Desktop</a>
+            <a class="lp-template-action" href="design-system/template-4-mobile.html" target="_blank" rel="noopener"><i class="ph ph-device-mobile"></i>Mobile</a>
+          </div>
         </div>
-        <a href="design-system/template-4-desktop.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
-          <span class="umb-path-icon"><i class="ph ph-monitor"></i></span>
-          <div style="flex: 1; min-width: 0;">
-            <h4 class="umb-path-title">Desktop</h4>
-            <p class="umb-path-sub">viewport ≥ 768px</p>
-          </div>
-        </a>
-        <a href="design-system/template-4-mobile.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
-          <span class="umb-path-icon"><i class="ph ph-device-mobile"></i></span>
-          <div style="flex: 1; min-width: 0;">
-            <h4 class="umb-path-title">Mobile</h4>
-            <p class="umb-path-sub">frame 390×844</p>
-          </div>
-        </a>
-      </div>
 
-      <!-- Template 5 -->
-      <div class="lp-template-group">
-        <div class="lp-template-group-head">
-          <h3>Template 5 — Chat</h3>
-          <p>Shell de conversa — lista + área de mensagens + composer.</p>
+        <div class="lp-template-card lp-template-card--featured">
+          <svg class="lp-template-wireframe" viewBox="0 0 220 80" preserveAspectRatio="none"><rect x="0" y="0" width="22" height="80" fill="var(--bs-primary)" opacity=".5"/><rect x="30" y="6" width="50" height="68" rx="3" fill="var(--umb-text-mid)" opacity=".22"/><rect x="88" y="6" width="126" height="50" rx="3" fill="var(--umb-text-mid)" opacity=".1"/><rect x="94" y="14" width="60" height="6" rx="3" fill="var(--bs-primary)" opacity=".5"/><rect x="150" y="26" width="58" height="6" rx="3" fill="var(--umb-text-mid)" opacity=".4"/><rect x="94" y="38" width="80" height="6" rx="3" fill="var(--bs-primary)" opacity=".5"/><rect x="88" y="60" width="126" height="14" rx="7" fill="var(--umb-text-mid)" opacity=".18"/></svg>
+          <div class="lp-template-body">
+            <div class="lp-template-title">T5 · Chat <span class="lp-template-badge">DESTAQUE</span></div>
+            <p class="lp-template-desc">Three-panel completo: lista de conversas + área de mensagens (bubbles, anotações, ações em cima) + composer com anexos. Substitui o shell padrão (sem header de breadcrumb).</p>
+            <div class="lp-template-tags">
+              <span class="lp-template-tag">chat-shell</span>
+              <span class="lp-template-tag">conv-list</span>
+              <span class="lp-template-tag">composer</span>
+              <span class="lp-template-tag">pinned</span>
+            </div>
+            <div class="lp-template-actions">
+              <a class="lp-template-action" href="design-system/template-5-desktop.html" target="_blank" rel="noopener"><i class="ph ph-monitor"></i>Desktop</a>
+              <a class="lp-template-action" href="design-system/template-5-mobile.html" target="_blank" rel="noopener"><i class="ph ph-device-mobile"></i>Mobile</a>
+            </div>
+          </div>
         </div>
-        <a href="design-system/template-5-desktop.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
-          <span class="umb-path-icon"><i class="ph ph-monitor"></i></span>
-          <div style="flex: 1; min-width: 0;">
-            <h4 class="umb-path-title">Desktop</h4>
-            <p class="umb-path-sub">viewport ≥ 768px</p>
-          </div>
-        </a>
-        <a href="design-system/template-5-mobile.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
-          <span class="umb-path-icon"><i class="ph ph-device-mobile"></i></span>
-          <div style="flex: 1; min-width: 0;">
-            <h4 class="umb-path-title">Mobile</h4>
-            <p class="umb-path-sub">frame 390×844</p>
-          </div>
-        </a>
+
       </div>
     </section>
 
-    <!-- UTILITÁRIOS -->
+    <!-- RECURSOS -->
     <section class="lp-section">
       <div class="lp-section-head">
-        <h2>Utilitários</h2>
-        <span class="lp-section-count">1 arquivo</span>
+        <h2>Recursos</h2>
       </div>
-
-      <a href="design-system/preview-tokens-bg.html" target="_blank" rel="noopener" class="umb-path-card" style="text-decoration: none;">
-        <span class="umb-path-icon"><i class="ph ph-swatches"></i></span>
-        <div style="flex: 1; min-width: 0;">
-          <h3 class="umb-path-title">Preview · Tokens de fundo</h3>
-          <p class="umb-path-sub">Visualização lado a lado dos tokens <code>--umb-bg*</code> em cada tema.</p>
-        </div>
-      </a>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="lp-footer">
-      <span>Umbler · Design System</span>
-      <span>
-        <a href="https://github.com/pricardodesigner/umbler-ds" target="_blank" rel="noopener">
-          <i class="ph ph-github-logo"></i> github.com/pricardodesigner/umbler-ds
+      <div class="lp-resources">
+        <a class="lp-resource" href="design-system/preview-tokens-bg.html" target="_blank" rel="noopener">
+          <i class="ph ph-swatches"></i>
+          <div class="lp-resource-info">
+            <div class="lp-resource-title">Preview tokens</div>
+            <div class="lp-resource-desc"><code style="background:var(--umb-hover-bg);padding:1px 5px;border-radius:4px;font-size:10px">--umb-bg*</code> lado a lado</div>
+          </div>
         </a>
-      </span>
-    </footer>
+        <a class="lp-resource" href="https://github.com/pricardodesigner/umbler-ds/tree/main/umbler-talk-plugin" target="_blank" rel="noopener">
+          <i class="ph ph-puzzle-piece"></i>
+          <div class="lp-resource-info">
+            <div class="lp-resource-title">Plugin Cowork</div>
+            <div class="lp-resource-desc">install once, always latest</div>
+          </div>
+        </a>
+        <a class="lp-resource" href="https://github.com/pricardodesigner/umbler-ds" target="_blank" rel="noopener">
+          <i class="ph ph-github-logo"></i>
+          <div class="lp-resource-info">
+            <div class="lp-resource-title">Repositório</div>
+            <div class="lp-resource-desc">pricardodesigner/umbler-ds</div>
+          </div>
+        </a>
+      </div>
+    </section>
 
   </main>
 
-  <!-- Bootstrap JS (pra dropdowns/tooltips futuros — consistente com DS) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="lp-footer">
+    <span>Umbler · Design System · <span data-version-tag>v0.6</span></span>
+    <span class="lp-footer-stats">
+      <span>143 componentes</span>
+      <span>5 templates</span>
+      <span>4 temas</span>
+      <span>36 regras</span>
+    </span>
+  </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // setTheme — mesma chave e assinatura do DS (rules.md §21)
+    /* ============================================================
+       THEME — mesma chave 'umb-theme' do DS, persiste entre páginas
+       ============================================================ */
     function setTheme(theme) {
       document.documentElement.setAttribute('data-bs-theme', theme);
       try { localStorage.setItem('umb-theme', theme); } catch (e) {}
@@ -413,8 +592,6 @@
         btn.classList.toggle('active', btn.dataset.theme === theme);
       });
     }
-
-    // Restore tema salvo (mesma chave 'umb-theme' do DS — persiste entre páginas)
     (function () {
       var saved = 'dark';
       try { saved = localStorage.getItem('umb-theme') || 'dark'; } catch (e) {}
@@ -426,6 +603,197 @@
         });
       });
     })();
+
+    /* ============================================================
+       SEARCH — ⌘K (ou Ctrl+K) foca o input. Enter abre a doc com hash
+       do termo (browser tenta scrollar pra qualquer id que bata; se
+       não bater, o usuário usa Cmd+F na própria doc).
+       ============================================================ */
+    document.addEventListener('keydown', function (e) {
+      var isMac = /Mac/.test(navigator.platform);
+      var modifier = isMac ? e.metaKey : e.ctrlKey;
+      if (modifier && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        var input = document.getElementById('lp-search');
+        if (input) { input.focus(); input.select(); }
+      }
+      if (e.key === 'Escape') {
+        var input = document.getElementById('lp-search');
+        if (input && document.activeElement === input) { input.blur(); }
+      }
+    });
+    function submitSearch(e) {
+      e.preventDefault();
+      var q = (document.getElementById('lp-search').value || '').trim();
+      var url = 'design-system/umbootstrap-design-system.html';
+      if (q) {
+        // anchor por id mais provável (lowercase, sem acento, hifenado)
+        var slug = q.toLowerCase()
+          .normalize('NFD').replace(/[̀-ͯ]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+        url += '#' + slug;
+      }
+      window.location.href = url;
+      return false;
+    }
+
+    /* ============================================================
+       CHANGELOG — fetch direto da GitHub API pública.
+       Cache em localStorage por 5 min pra não estourar rate limit
+       (60 req/h por IP sem auth — mais que suficiente, mas o cache
+       evita request duplicado quando o usuário navega pra doc e volta).
+       ============================================================ */
+    var REPO = 'pricardodesigner/umbler-ds';
+    var CACHE_TTL_MS = 5 * 60 * 1000; // 5 min
+
+    function loadFromCache(key) {
+      try {
+        var raw = localStorage.getItem(key);
+        if (!raw) return null;
+        var obj = JSON.parse(raw);
+        if (Date.now() - obj.t > CACHE_TTL_MS) return null;
+        return obj.data;
+      } catch (e) { return null; }
+    }
+    function saveToCache(key, data) {
+      try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), data: data })); } catch (e) {}
+    }
+
+    function fetchChangelog() {
+      var cached = loadFromCache('lp-changelog');
+      if (cached) return Promise.resolve(cached);
+      return fetch('https://api.github.com/repos/' + REPO + '/commits?per_page=4')
+        .then(function (res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        })
+        .then(function (data) {
+          saveToCache('lp-changelog', data);
+          return data;
+        });
+    }
+
+    function fetchLatestTag() {
+      var cached = loadFromCache('lp-tag');
+      if (cached) return Promise.resolve(cached);
+      return fetch('https://api.github.com/repos/' + REPO + '/tags?per_page=1')
+        .then(function (res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        })
+        .then(function (data) {
+          saveToCache('lp-tag', data);
+          return data;
+        });
+    }
+
+    function relativeTime(iso) {
+      var date = new Date(iso);
+      var diff = Math.floor((Date.now() - date.getTime()) / 1000);
+      if (diff < 60) return 'agora há pouco';
+      var mins = Math.floor(diff / 60);
+      if (mins < 60) return 'há ' + mins + ' min';
+      var hrs = Math.floor(mins / 60);
+      if (hrs < 24) return 'há ' + hrs + 'h';
+      var days = Math.floor(hrs / 24);
+      if (days === 1) return 'ontem';
+      if (days < 30) return 'há ' + days + ' dias';
+      var months = Math.floor(days / 30);
+      if (months < 12) return 'há ' + months + ' ' + (months === 1 ? 'mês' : 'meses');
+      var years = Math.floor(months / 12);
+      return 'há ' + years + ' ano' + (years === 1 ? '' : 's');
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function parseCommit(c) {
+      var firstLine = (c.commit && c.commit.message || '').split('\n')[0];
+      // Remove prefixo "DS:" (com/sem espaço)
+      var title = firstLine.replace(/^DS\s*:\s*/i, '');
+      // Extrai referência §NN(.N) se houver
+      var sectionMatch = title.match(/§\d+(\.\d+)?/);
+      var section = sectionMatch ? sectionMatch[0] : null;
+      // Determina badge: NEW se mensagem contém new/redesign/feat/adicionar
+      var isNew = /\b(new|redesign|feat|adicion(ar|ado|ada)|cri(ar|ado|ada))\b/i.test(firstLine);
+      // Capitaliza primeira letra
+      title = title.charAt(0).toUpperCase() + title.slice(1);
+      return {
+        title: title,
+        section: section,
+        isNew: isNew,
+        date: c.commit && c.commit.author && c.commit.author.date,
+        url: c.html_url
+      };
+    }
+
+    function renderChangelog(commits) {
+      var container = document.getElementById('lp-changelog');
+      if (!container || !commits || !commits.length) return;
+      var html = commits.map(function (c) {
+        var p = parseCommit(c);
+        var badge = p.isNew
+          ? '<span class="lp-changelog-badge lp-changelog-badge--new">NEW</span>'
+          : '<span class="lp-changelog-badge lp-changelog-badge--upd">UPD</span>';
+        var meta = relativeTime(p.date) + (p.section ? ' · ' + p.section : '');
+        return '<a class="lp-changelog-item" href="' + escapeHtml(p.url) + '" target="_blank" rel="noopener">' +
+                 badge +
+                 '<div class="lp-changelog-content">' +
+                   '<div class="lp-changelog-title" title="' + escapeHtml(p.title) + '">' + escapeHtml(p.title) + '</div>' +
+                   '<div class="lp-changelog-meta">' + escapeHtml(meta) + '</div>' +
+                 '</div>' +
+               '</a>';
+      }).join('');
+      container.innerHTML = html;
+    }
+
+    function renderChangelogError() {
+      var container = document.getElementById('lp-changelog');
+      if (!container) return;
+      container.innerHTML = '<div class="lp-changelog-error">' +
+        'Não foi possível carregar mudanças.<br>' +
+        '<a href="https://github.com/' + REPO + '/commits/main" target="_blank" rel="noopener">Ver no GitHub →</a>' +
+      '</div>';
+    }
+
+    function renderVersion(tags) {
+      if (!tags || !tags.length) return;
+      var v = tags[0].name;
+      // Garante prefixo "v"
+      if (v && !/^v/i.test(v)) v = 'v' + v;
+      document.querySelectorAll('[data-version-tag]').forEach(function (el) { el.textContent = v; });
+      var ev = document.querySelector('[data-eyebrow-version]');
+      if (ev) ev.textContent = v;
+    }
+
+    /* Eyebrow — mostra o título do último commit (curto) abaixo da versão */
+    function renderEyebrowSummary(commits) {
+      if (!commits || !commits.length) return;
+      var p = parseCommit(commits[0]);
+      var summary = p.title;
+      // Trunca pra caber bem no eyebrow
+      if (summary.length > 60) summary = summary.slice(0, 57) + '…';
+      var el = document.querySelector('[data-eyebrow-summary]');
+      if (el) el.textContent = summary;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      fetchChangelog().then(function (commits) {
+        renderChangelog(commits);
+        renderEyebrowSummary(commits);
+      }).catch(renderChangelogError);
+
+      fetchLatestTag().then(renderVersion).catch(function () { /* tag opcional */ });
+    });
+
+    /* CSS keyframe inline (loading spinner) */
+    var st = document.createElement('style');
+    st.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+    document.head.appendChild(st);
   </script>
 
 </body>
