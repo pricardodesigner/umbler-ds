@@ -328,15 +328,41 @@
       .lp-doc-changelog { grid-template-columns: 1fr; }
       .lp-templates-grid { grid-template-columns: 1fr; }
       .lp-template-card--featured { flex-direction: column; }
-      .lp-template-card--featured .lp-template-wireframe { width: 100%; height: 80px; }
+      .lp-template-card--featured .lp-template-wireframe { width: 100%; height: 80px; min-height: 80px; }
       .lp-resources { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
-      .lp-hero { padding: 36px 0 28px; }
-      .lp-hero h1 { font-size: 28px; }
-      .lp-search-kbd { display: none; }
+      .umb-shell-header { padding: 0 14px !important; gap: 8px; }
+      .lp-brand { gap: 8px; font-size: 14px; }
+      .lp-brand-version { display: none; }
+      .lp-header-github { display: none; }
+      .umb-shell-header-right { gap: 4px; }
+      .inset-control { padding: 2px !important; }
       .inset-control .theme-label { display: none; }
-      .inset-control .btn { padding: 0 10px !important; }
+      .inset-control .btn { padding: 0 8px !important; height: 26px !important; }
+
+      .lp-content { padding: 18px 14px; }
+      .lp-hero { padding: 32px 0 24px; }
+      .lp-hero h1 { font-size: 26px; line-height: 1.15; }
+      .lp-hero p { font-size: 14px; }
+      .lp-hero-eyebrow { font-size: 11px; padding: 3px 10px; }
+
+      .lp-search-wrapper { max-width: 100%; }
+      .lp-search-wrapper .form-control { font-size: 14px !important; padding-right: 16px !important; }
+      .lp-search-kbd { display: none; }
+
+      .lp-section { margin-top: 28px; }
+      .lp-pathway { padding: 14px; }
+      .lp-section-head { flex-wrap: wrap; gap: 6px; }
+
+      .lp-changelog-title { white-space: normal; }
+      .lp-footer { padding: 14px 14px; flex-direction: column; align-items: flex-start; gap: 8px; }
+      .lp-footer-stats { flex-wrap: wrap; gap: 8px; }
+      .lp-footer-stats span:not(:last-child)::after { margin-left: 8px; }
+    }
+    @media (max-width: 380px) {
+      .inset-control .btn { padding: 0 6px !important; }
+      .inset-control .btn .me-1 { margin-right: 0 !important; }
     }
   </style>
 </head>
