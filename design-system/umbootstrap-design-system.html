@@ -88,6 +88,56 @@
     .theme-option.active { color: var(--umb-nav-active-color); background: var(--umb-nav-active-bg); font-weight: 600; }
     .theme-option i { font-size: 15px; flex-shrink: 0; }
 
+    /* --- SIDEBAR SEARCH --- */
+    .ds-sidebar-search { position: relative; padding: 0 8px 16px; margin-bottom: 16px; border-bottom: 1px solid var(--umb-border-on-brand); }
+    .ds-sidebar-search-input {
+      width: 100%; height: 32px;
+      padding: 0 36px 0 30px;
+      border-radius: 8px;
+      background: var(--umb-nav-hover-bg);
+      border: 1px solid transparent;
+      color: var(--umb-nav-color);
+      font-size: 13px; font-family: inherit;
+      transition: border-color .15s, background .15s;
+      box-sizing: border-box;
+    }
+    .ds-sidebar-search-input::placeholder { color: var(--umb-nav-color); opacity: .55; }
+    .ds-sidebar-search-input:focus { outline: 0; border-color: var(--bs-primary); background: var(--umb-nav-hover-bg); }
+    .ds-sidebar-search-icon {
+      position: absolute; left: 16px; top: 5px;
+      color: var(--umb-nav-color); opacity: .6;
+      font-size: 14px; pointer-events: none;
+    }
+    .ds-sidebar-search-kbd {
+      position: absolute; right: 12px; top: 7px;
+      padding: 2px 6px; border-radius: 4px;
+      background: var(--umb-sidebar-bg);
+      border: 1px solid var(--umb-border-on-brand);
+      color: var(--umb-nav-color); opacity: .55;
+      font-size: 10px; font-family: inherit;
+      pointer-events: none;
+    }
+    .ds-sidebar-search-clear {
+      position: absolute; right: 12px; top: 5px;
+      width: 22px; height: 22px;
+      display: none; align-items: center; justify-content: center;
+      border: 0; background: transparent; padding: 0;
+      color: var(--umb-nav-color); opacity: .6;
+      font-size: 14px; cursor: pointer;
+      border-radius: 4px;
+    }
+    .ds-sidebar-search-clear:hover { opacity: 1; background: var(--umb-nav-hover-bg); }
+    .ds-sidebar-search.has-query .ds-sidebar-search-kbd { display: none; }
+    .ds-sidebar-search.has-query .ds-sidebar-search-clear { display: flex; }
+    .ds-sidebar-empty {
+      display: none;
+      padding: 16px 10px;
+      font-size: 12px; color: var(--umb-nav-color); opacity: .55;
+      text-align: center;
+      font-style: italic;
+    }
+    .ds-sidebar.has-empty-results .ds-sidebar-empty { display: block; }
+
     /* --- SECTION TITLES --- */
     .sec-title { font-size: 24px; font-weight: 600; color: var(--umb-text-primary); margin: 0 0 6px; }
     .sec-subtitle { font-size: 14px; color: var(--umb-text-mid); margin: 0 0 28px; }
@@ -2941,6 +2991,15 @@
         <button class="theme-option" data-theme="dark-emerald" onclick="setTheme('dark-emerald')"><i class="ph ph-circles-four"></i> Bravia</button>
       </div>
     </div>
+
+    <div class="ds-sidebar-search" data-search-wrap>
+      <i class="ph ph-magnifying-glass ds-sidebar-search-icon"></i>
+      <input type="text" class="ds-sidebar-search-input" id="ds-search" placeholder="Buscar..." autocomplete="off" aria-label="Buscar componentes na sidebar">
+      <kbd class="ds-sidebar-search-kbd" aria-hidden="true">⌘K</kbd>
+      <button type="button" class="ds-sidebar-search-clear" aria-label="Limpar busca"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="ds-sidebar-empty" data-search-empty>Nenhum item encontrado</div>
+
     <h6>Fundação</h6>
     <a class="nav-link" href="#cores"><i class="ph ph-palette"></i> Cores & Tokens</a>
     <a class="nav-link" href="#tipografia"><i class="ph ph-text-t"></i> Tipografia</a>
@@ -7769,6 +7828,106 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
           btn.classList.toggle('active', btn.dataset.theme === saved);
         });
         updateTokenHexLabels();
+      });
+    })();
+
+    /* ============================================================
+       SIDEBAR SEARCH — filtra os nav-links da sidebar conforme o
+       usuário digita. Esconde <h6> de seções sem matches. ⌘K (Mac)
+       ou Ctrl+K (Win/Linux) foca; Esc limpa e desfoca.
+
+       Fluxo de hash: se o usuário chega via /umbootstrap-...html#X
+       e #X não bate com nenhum id de seção, pré-preenche a busca com
+       o termo (que pode vir slugificado da landing — então
+       "alert" abre a doc filtrada em "alert", revelando "Alertas").
+    ============================================================ */
+    (function () {
+      function normalize(s) {
+        return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      }
+
+      function filterSidebar(query) {
+        const sidebar = document.querySelector('.ds-sidebar');
+        if (!sidebar) return;
+        const wrap = document.querySelector('[data-search-wrap]');
+        const empty = document.querySelector('[data-search-empty]');
+        const q = normalize(query.trim());
+
+        if (wrap) wrap.classList.toggle('has-query', q.length > 0);
+
+        // Walk: cada h6 é o início de um grupo; nav-links seguintes são dele
+        const items = sidebar.querySelectorAll('h6, .nav-link');
+        let currentH6 = null;
+        let groupHasMatch = false;
+        let totalMatches = 0;
+
+        function flush() {
+          if (currentH6) currentH6.style.display = groupHasMatch ? '' : 'none';
+        }
+
+        if (!q) {
+          items.forEach(el => { el.style.display = ''; });
+          if (sidebar) sidebar.classList.remove('has-empty-results');
+          return;
+        }
+
+        items.forEach(el => {
+          if (el.tagName === 'H6') {
+            flush();
+            currentH6 = el;
+            groupHasMatch = false;
+          } else {
+            const text = normalize(el.textContent);
+            const match = text.includes(q);
+            el.style.display = match ? '' : 'none';
+            if (match) { groupHasMatch = true; totalMatches++; }
+          }
+        });
+        flush();
+
+        if (sidebar) sidebar.classList.toggle('has-empty-results', totalMatches === 0);
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const input = document.getElementById('ds-search');
+        const clearBtn = document.querySelector('.ds-sidebar-search-clear');
+        if (!input) return;
+
+        input.addEventListener('input', function () { filterSidebar(input.value); });
+        if (clearBtn) {
+          clearBtn.addEventListener('click', function () {
+            input.value = '';
+            filterSidebar('');
+            input.focus();
+          });
+        }
+
+        // ⌘K / Ctrl+K
+        document.addEventListener('keydown', function (e) {
+          const isMac = /Mac/.test(navigator.platform);
+          const modifier = isMac ? e.metaKey : e.ctrlKey;
+          if (modifier && (e.key === 'k' || e.key === 'K')) {
+            e.preventDefault();
+            input.focus();
+            input.select();
+          }
+          if (e.key === 'Escape' && document.activeElement === input) {
+            input.value = '';
+            filterSidebar('');
+            input.blur();
+          }
+        });
+
+        // Hash não-resolvido (ex: vindo da landing) → vira search query
+        if (location.hash) {
+          const hashId = location.hash.slice(1);
+          if (hashId && !document.getElementById(hashId)) {
+            // Tenta o slug como termo de busca
+            const term = decodeURIComponent(hashId).replace(/-/g, ' ');
+            input.value = term;
+            filterSidebar(term);
+          }
+        }
       });
     })();
   </script>
