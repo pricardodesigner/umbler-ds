@@ -107,16 +107,24 @@
     }
 
     /* Search bar — usa o padrão canônico do DS (§Busca do umbootstrap-design-system.html):
-       .input-group + .input-group-text (ícone) + .form-control. Border-radius e
-       background vêm 100% das regras :has(.input-group-text) do DS. Sem override. */
+       .input-group + .input-group-text (ícone) + .form-control. Sem override em
+       cima do componente — todo o styling vem do :has(.input-group-text) do DS. */
     .lp-search-wrapper { max-width: 480px; margin: 0 auto; }
-    .lp-search-wrapper .input-group-text kbd {
-      padding: 2px 7px; border-radius: 4px;
+    /* Hint sutil abaixo do campo (não conflita com o componente do DS) */
+    .lp-search-hint {
+      margin: 8px 0 0;
+      font-size: 11px; color: var(--umb-text-mid);
+      text-align: center;
+    }
+    .lp-search-hint kbd {
+      display: inline-block;
+      padding: 1px 6px; border-radius: 4px;
       background: var(--umb-card-bg);
       border: 1px solid var(--umb-border);
-      color: var(--umb-text-mid);
-      font-size: 11px; font-family: inherit;
-      line-height: 1;
+      color: var(--umb-text-primary);
+      font-size: 10px; font-family: inherit;
+      line-height: 1.2;
+      vertical-align: baseline;
     }
 
     /* Section head (label uppercase + count à direita) */
@@ -378,7 +386,7 @@
       .lp-hero-eyebrow .lp-eyebrow-sep { display: none; }
 
       .lp-search-wrapper { max-width: 100%; }
-      .lp-search-wrapper .input-group-text:last-child { display: none; }
+      .lp-search-hint { display: none; }
 
       .lp-section { margin-top: 36px; }
       .lp-pathway { padding: 14px; }
@@ -445,8 +453,8 @@
         <div class="input-group input-group-lg">
           <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
           <input type="search" id="lp-search" class="form-control" placeholder="Buscar componentes, tokens, padrões..." autocomplete="off" aria-label="Buscar na documentação">
-          <span class="input-group-text"><kbd>⌘K</kbd></span>
         </div>
+        <p class="lp-search-hint">Pressione <kbd>⌘K</kbd> em qualquer página pra abrir a busca</p>
       </form>
     </section>
 
