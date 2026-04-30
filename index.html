@@ -106,17 +106,17 @@
       margin: 0 auto 24px; max-width: 520px;
     }
 
-    /* Search bar — .input-group input-group-lg do DS (rules §4 wrapper approach):
-       wrapper recebe a borda, ícone e kbd ficam em .input-group-text */
+    /* Search bar — usa o padrão canônico do DS (§Busca do umbootstrap-design-system.html):
+       .input-group + .input-group-text (ícone) + .form-control. Border-radius e
+       background vêm 100% das regras :has(.input-group-text) do DS. Sem override. */
     .lp-search-wrapper { max-width: 480px; margin: 0 auto; }
-    .lp-search-wrapper .input-group { border-radius: 999px !important; overflow: hidden; }
     .lp-search-wrapper .input-group-text kbd {
-      padding: 3px 8px; border-radius: 6px;
+      padding: 2px 7px; border-radius: 4px;
       background: var(--umb-card-bg);
       border: 1px solid var(--umb-border);
       color: var(--umb-text-mid);
       font-size: 11px; font-family: inherit;
-      line-height: 1.2;
+      line-height: 1;
     }
 
     /* Section head (label uppercase + count à direita) */
@@ -444,7 +444,7 @@
       <form class="lp-search-wrapper" onsubmit="return submitSearch(event)">
         <div class="input-group input-group-lg">
           <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
-          <input type="text" id="lp-search" class="form-control" placeholder="Buscar componentes, tokens, padrões..." autocomplete="off" aria-label="Buscar na documentação">
+          <input type="search" id="lp-search" class="form-control" placeholder="Buscar componentes, tokens, padrões..." autocomplete="off" aria-label="Buscar na documentação">
           <span class="input-group-text"><kbd>⌘K</kbd></span>
         </div>
       </form>
