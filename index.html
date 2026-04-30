@@ -279,12 +279,13 @@
       position: relative; z-index: 1;
       line-height: 1;
     }
-    .lp-template-card:hover .lp-template-icon-frame {
+    /* Hover do icon-frame — mantém efeito sutil quando o usuário hover-a
+       qualquer link interno do card (delegação via has(), com fallback) */
+    .lp-template-card:has(a:hover) .lp-template-icon-frame {
       background:
         radial-gradient(circle at 25% 30%, rgba(var(--bs-primary-rgb), .3), transparent 60%),
         var(--umb-hover-bg);
     }
-    .lp-template-card--featured { grid-column: 1 / -1; display: flex; gap: 14px; align-items: stretch; }
     .lp-template-card--featured .lp-template-icon-frame {
       width: 180px; flex-shrink: 0; height: auto; min-height: 140px;
       margin-bottom: 0;
@@ -363,7 +364,7 @@
       .lp-pathways { grid-template-columns: 1fr; }
       .lp-doc-changelog { grid-template-columns: 1fr; }
       .lp-templates-grid { grid-template-columns: 1fr; }
-      .lp-template-card--featured { flex-direction: column; }
+      .lp-template-card--featured { flex-direction: column; align-items: stretch; }
       .lp-template-card--featured .lp-template-icon-frame { width: 100%; min-height: 84px; }
       .lp-resources { grid-template-columns: 1fr; }
     }
@@ -461,22 +462,22 @@
         <h2>Por onde começar</h2>
       </div>
       <div class="lp-pathways">
-        <a href="design-system/umbootstrap-design-system.html#cores" class="lp-pathway">
-          <div class="lp-pathway-icon"><i class="ph-duotone ph-pen-nib"></i></div>
-          <div class="lp-pathway-title">Sou designer</div>
-          <p class="lp-pathway-desc">Tokens, foundations e regras visuais. Comece pelas cores, tipografia e padrões de espaçamento.</p>
+        <a href="design-system/umbootstrap-design-system.html#cores" class="umb-path-card">
+          <span class="umb-path-icon primary"><i class="ph-duotone ph-pen-nib"></i></span>
+          <h3 class="umb-path-title">Sou designer</h3>
+          <p class="umb-path-sub">Tokens, foundations e regras visuais. Comece pelas cores, tipografia e padrões de espaçamento.</p>
           <span class="lp-pathway-link">Ir pra foundations <i class="ph ph-arrow-right"></i></span>
         </a>
-        <a href="design-system/umbootstrap-design-system.html#botoes" class="lp-pathway">
-          <div class="lp-pathway-icon"><i class="ph-duotone ph-code"></i></div>
-          <div class="lp-pathway-title">Sou engenheiro</div>
-          <p class="lp-pathway-desc">Componentes Bootstrap-compatíveis, snippets HTML prontos e o <code>rules.md</code> com decisões de implementação.</p>
+        <a href="design-system/umbootstrap-design-system.html#botoes" class="umb-path-card">
+          <span class="umb-path-icon primary"><i class="ph-duotone ph-code"></i></span>
+          <h3 class="umb-path-title">Sou engenheiro</h3>
+          <p class="umb-path-sub">Componentes Bootstrap-compatíveis, snippets HTML prontos e o <code>rules.md</code> com decisões de implementação.</p>
           <span class="lp-pathway-link">Ir pra componentes <i class="ph ph-arrow-right"></i></span>
         </a>
-        <a href="#templates" class="lp-pathway">
-          <div class="lp-pathway-icon"><i class="ph-duotone ph-strategy"></i></div>
-          <div class="lp-pathway-title">Sou PM</div>
-          <p class="lp-pathway-desc">Templates de tela, padrões de fluxo e exemplos canônicos — pra alinhar escopo de feature já no vocabulário do DS.</p>
+        <a href="#templates" class="umb-path-card">
+          <span class="umb-path-icon primary"><i class="ph-duotone ph-strategy"></i></span>
+          <h3 class="umb-path-title">Sou PM</h3>
+          <p class="umb-path-sub">Templates de tela, padrões de fluxo e exemplos canônicos — pra alinhar escopo de feature já no vocabulário do DS.</p>
           <span class="lp-pathway-link">Ir pra templates <i class="ph ph-arrow-right"></i></span>
         </a>
       </div>
@@ -520,7 +521,7 @@
       </div>
       <div class="lp-templates-grid">
 
-        <div class="umb-path-card">
+        <div class="lp-template-card">
           <div class="lp-template-icon-frame"><i class="ph-duotone ph-layout"></i></div>
           <h4 class="umb-path-title">T1 · Shell base</h4>
           <p class="umb-path-sub">Sidebar + header com breadcrumb + área de conteúdo. Use em settings, listas simples, formulários.</p>
@@ -534,7 +535,7 @@
           </div>
         </div>
 
-        <div class="umb-path-card">
+        <div class="lp-template-card">
           <div class="lp-template-icon-frame"><i class="ph-duotone ph-columns"></i></div>
           <h4 class="umb-path-title">T2 · Lista + Detalhe</h4>
           <p class="umb-path-sub">Two-panel: lista navegável + detalhe ao lado. Use em master-detail (contatos, tickets, projetos).</p>
@@ -548,7 +549,7 @@
           </div>
         </div>
 
-        <div class="umb-path-card">
+        <div class="lp-template-card">
           <div class="lp-template-icon-frame"><i class="ph-duotone ph-table"></i></div>
           <h4 class="umb-path-title">T3 · Tabela densa</h4>
           <p class="umb-path-sub">Listagens com filtros, stat-cards e ações inline. Use em CRMs, importações, dashboards de operação.</p>
@@ -562,7 +563,7 @@
           </div>
         </div>
 
-        <div class="umb-path-card">
+        <div class="lp-template-card">
           <div class="lp-template-icon-frame"><i class="ph-duotone ph-gear-six"></i></div>
           <h4 class="umb-path-title">T4 · Settings</h4>
           <p class="umb-path-sub">Card de configurações com 22 itens agrupados por seção. Use em conta, organização, integrações.</p>
@@ -576,7 +577,7 @@
           </div>
         </div>
 
-        <div class="umb-path-card lp-template-card--featured">
+        <div class="lp-template-card lp-template-card--featured">
           <div class="lp-template-icon-frame"><i class="ph-duotone ph-chat-circle-dots"></i></div>
           <div class="lp-template-body">
             <h4 class="umb-path-title">T5 · Chat <span class="umb-path-badge">DESTAQUE</span></h4>
