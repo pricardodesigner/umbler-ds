@@ -106,28 +106,17 @@
       margin: 0 auto 24px; max-width: 520px;
     }
 
-    /* Search bar — usa .form-control do DS com wrapper (regra §4 input-groups) */
-    .lp-search-wrapper {
-      position: relative; max-width: 480px; margin: 0 auto;
-    }
-    .lp-search-wrapper .form-control {
-      height: 44px !important;
-      padding: 0 50px 0 42px !important;
-      border-radius: 999px !important;
-      font-size: 14px !important;
-    }
-    .lp-search-icon {
-      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-      color: var(--umb-text-mid); font-size: 16px; pointer-events: none;
-    }
-    .lp-search-kbd {
-      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    /* Search bar — .input-group input-group-lg do DS (rules §4 wrapper approach):
+       wrapper recebe a borda, ícone e kbd ficam em .input-group-text */
+    .lp-search-wrapper { max-width: 480px; margin: 0 auto; }
+    .lp-search-wrapper .input-group { border-radius: 999px !important; overflow: hidden; }
+    .lp-search-wrapper .input-group-text kbd {
       padding: 3px 8px; border-radius: 6px;
-      background: var(--umb-bg-primary, var(--bs-body-bg));
+      background: var(--umb-card-bg);
       border: 1px solid var(--umb-border);
       color: var(--umb-text-mid);
       font-size: 11px; font-family: inherit;
-      pointer-events: none;
+      line-height: 1.2;
     }
 
     /* Section head (label uppercase + count à direita) */
@@ -151,40 +140,38 @@
     }
     .lp-section-link { color: var(--bs-primary); }
 
-    /* PATHWAYS — 3 path-cards lado a lado */
+    /* PATHWAYS — usa .umb-path-card do DS (regra DS: cards-link têm 2px border + hover).
+       Override só pra layout em coluna (DS é flex-row por default). */
     .lp-pathways {
       display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 14px;
+      align-items: stretch;
     }
-    .lp-pathway {
-      padding: 18px;
-      background: var(--umb-card-bg);
-      border: 1px solid var(--umb-border);
-      border-radius: 12px;
-      text-decoration: none;
-      color: inherit;
-      display: flex; flex-direction: column; gap: 4px;
-      transition: border-color .15s, transform .15s;
+    .lp-pathways .umb-path-card {
+      flex-direction: column; align-items: flex-start;
+      gap: 0; padding: 18px;
+      height: 100%;
+      margin-top: 0 !important;
+      text-decoration: none !important;
+      color: inherit !important;
     }
-    .lp-pathway:hover { border-color: var(--bs-primary); transform: translateY(-1px); }
-    .lp-pathway-icon {
+    .lp-pathways .umb-path-card * { text-decoration: none !important; }
+    .lp-pathways .umb-path-icon {
       width: 36px; height: 36px; border-radius: 10px;
       background: rgba(var(--bs-primary-rgb), .15);
-      color: var(--bs-primary);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-      margin-bottom: 8px;
+      font-size: 20px; margin-bottom: 10px;
     }
-    .lp-pathway-title { font-size: 14px; font-weight: 600; color: var(--umb-text-primary); }
-    .lp-pathway-desc { font-size: 12px; color: var(--umb-text-mid); margin: 0 0 10px; line-height: 1.45; flex: 1; }
+    .lp-pathways .umb-path-title { font-size: 14px; margin: 0 0 4px; }
+    .lp-pathways .umb-path-sub { font-size: 12px; line-height: 1.45; margin: 0 0 10px; flex: 1; }
     .lp-pathway-link {
       font-size: 12px; color: var(--bs-primary); font-weight: 500;
       display: inline-flex; align-items: center; gap: 4px;
     }
 
     /* DOC + CHANGELOG GRID (1.4fr / 1fr) */
-    .lp-doc-changelog { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
-    .lp-doc-changelog .umb-path-card { height: 100%; }
+    .lp-doc-changelog { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; align-items: stretch; }
+    .lp-doc-changelog .umb-path-card { height: 100%; text-decoration: none !important; color: inherit !important; }
+    .lp-doc-changelog .umb-path-card * { text-decoration: none !important; }
 
     /* CHANGELOG (feed de mudanças do GitHub) */
     .lp-changelog {
@@ -204,19 +191,19 @@
     }
     .lp-changelog-item:hover { background: var(--umb-hover-bg); }
     .lp-changelog-item:last-child { border-bottom: 0; }
-    .lp-changelog-badge {
-      font-size: 9px; padding: 2px 7px; border-radius: 999px;
-      font-weight: 600; letter-spacing: .04em;
-      flex-shrink: 0; margin-top: 2px;
-      line-height: 1.4;
+    /* Changelog badges — .badge do DS + modifiers .lp-badge--* */
+    .lp-changelog-item .badge {
+      font-size: 9px !important; padding: 2px 7px !important;
+      letter-spacing: .04em; flex-shrink: 0; margin-top: 2px; line-height: 1.4;
+      font-weight: 600 !important;
     }
-    .lp-changelog-badge--new {
-      background: rgba(var(--bs-success-rgb), .2);
-      color: var(--bs-success);
+    .lp-changelog-item .badge.lp-badge--new {
+      background: rgba(var(--bs-success-rgb), .2) !important;
+      color: var(--bs-success) !important;
     }
-    .lp-changelog-badge--upd {
-      background: rgba(var(--bs-primary-rgb), .2);
-      color: var(--bs-primary);
+    .lp-changelog-item .badge.lp-badge--upd {
+      background: rgba(var(--bs-primary-rgb), .2) !important;
+      color: var(--bs-primary) !important;
     }
     .lp-changelog-content { flex: 1; min-width: 0; }
     .lp-changelog-title {
@@ -234,19 +221,27 @@
     }
     .lp-changelog-error a { color: var(--bs-primary); text-decoration: none; }
 
-    /* TEMPLATES GRID (2 cols, T5 ocupa fileira inteira como destaque) */
+    /* TEMPLATES GRID — cards de LAYOUT (não são links, contêm Desktop/Mobile como
+       links internos). Por regra DS: cards-link têm 2px + hover; cards-layout têm
+       border 1px discreta SEM hover, pra não competir com os links internos. */
     .lp-templates-grid {
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 14px;
     }
     .lp-template-card {
-      padding: 14px;
       background: var(--umb-card-bg);
       border: 1px solid var(--umb-border);
       border-radius: 12px;
-      transition: border-color .15s;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
     }
-    .lp-template-card:hover { border-color: var(--bs-primary); }
+    .lp-template-card.lp-template-card--featured {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      gap: 14px;
+      align-items: stretch;
+    }
     /* Icon frame — substitui o wireframe. Container com gradiente brand sutil
        + grid de dots, ícone Phosphor duotone centralizado. Tudo derivado de
        --bs-primary, então responde naturalmente ao tema (azul claro/escuro,
@@ -292,56 +287,51 @@
     }
     .lp-template-card--featured .lp-template-icon-frame i { font-size: 56px; }
     .lp-template-card--featured .lp-template-body { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-    .lp-template-title { font-size: 13px; font-weight: 600; color: var(--umb-text-primary); display: flex; align-items: center; gap: 8px; margin: 0 0 4px; }
-    .lp-template-desc { font-size: 12px; color: var(--umb-text-mid); margin: 0 0 8px; line-height: 1.45; }
+
+    /* Tipografia DS dentro do card-layout (.umb-path-title/-sub usadas como
+       classes de typography, sem trazer o card-link junto). */
+    .lp-template-card .umb-path-title {
+      font-size: 13px; margin: 0 0 4px;
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+      font-weight: 600; color: var(--umb-text-primary);
+    }
+    .lp-template-card .umb-path-sub { font-size: 12px; color: var(--umb-text-mid); margin: 0 0 8px; line-height: 1.45; }
+    .lp-template-card .umb-path-badge { font-size: 9px; padding: 2px 7px; border-radius: 999px; }
+
     .lp-template-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
-    .lp-template-tag {
-      font-size: 10px; padding: 2px 7px; border-radius: 999px;
-      background: var(--umb-hover-bg);
-      color: var(--umb-text-mid);
+    /* Chips neutras dentro do template card — .badge do DS reduzida */
+    .lp-template-tags .badge {
+      font-size: 10px !important; padding: 2px 7px !important; font-weight: 400 !important;
+      background: var(--umb-hover-bg) !important; color: var(--umb-text-mid) !important;
     }
     .lp-template-actions {
-      display: flex; gap: 2px;
+      display: flex; gap: 4px;
       border-top: 1px solid var(--umb-border);
       padding-top: 8px;
       margin-top: auto;
     }
     .lp-template-card--featured .lp-template-actions { border-top: 0; padding-top: 0; }
-    .lp-template-action {
-      font-size: 11px; padding: 0 8px; height: 24px; border-radius: 999px;
-      color: var(--umb-text-mid);
-      display: inline-flex; align-items: center; gap: 4px;
-      text-decoration: none;
-      transition: color .15s, background .15s;
-    }
-    .lp-template-action:hover { color: var(--umb-text-primary); background: var(--umb-hover-bg); }
-    .lp-template-badge {
-      font-size: 9px; padding: 2px 7px; border-radius: 999px;
-      background: var(--umb-hover-bg);
-      color: var(--umb-text-mid);
-      font-weight: 600; letter-spacing: .04em;
-    }
+    .lp-template-actions .btn-text { color: var(--umb-text-mid) !important; gap: 4px; }
+    .lp-template-actions .btn-text:hover { color: var(--umb-text-primary) !important; }
 
-    /* RECURSOS — 3 cards estreitos */
+    /* RECURSOS — usa .umb-path-card compacto do DS */
     .lp-resources {
       display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 14px;
+      align-items: stretch;
     }
-    .lp-resource {
+    .lp-resources .umb-path-card {
       padding: 12px 14px;
-      background: var(--umb-card-bg);
-      border: 1px solid var(--umb-border);
-      border-radius: 12px;
-      text-decoration: none;
-      color: inherit;
-      display: flex; gap: 10px; align-items: center;
-      transition: border-color .15s;
+      gap: 10px;
+      height: 100%;
+      margin-top: 0 !important;
+      text-decoration: none !important;
+      color: inherit !important;
     }
-    .lp-resource:hover { border-color: var(--bs-primary); }
-    .lp-resource i { color: var(--umb-text-mid); font-size: 18px; flex-shrink: 0; }
-    .lp-resource-info { flex: 1; min-width: 0; }
-    .lp-resource-title { font-size: 12px; font-weight: 600; color: var(--umb-text-primary); }
-    .lp-resource-desc { font-size: 11px; color: var(--umb-text-mid); }
+    .lp-resources .umb-path-card * { text-decoration: none !important; }
+    .lp-resources .umb-path-icon { font-size: 18px; }
+    .lp-resources .umb-path-title { font-size: 12px; margin: 0 0 2px; }
+    .lp-resources .umb-path-sub { font-size: 11px; margin: 0 !important; line-height: 1.4; }
 
     /* FOOTER */
     .lp-footer {
@@ -362,7 +352,8 @@
     @media (max-width: 900px) {
       .lp-nav { display: none; }
       .lp-pathways { grid-template-columns: 1fr; }
-      .lp-doc-changelog { grid-template-columns: 1fr; }
+      .lp-doc-changelog { grid-template-columns: 1fr; gap: 16px; }
+      .lp-doc-changelog > div { min-width: 0; }
       .lp-templates-grid { grid-template-columns: 1fr; }
       .lp-template-card--featured { flex-direction: column; align-items: stretch; }
       .lp-template-card--featured .lp-template-icon-frame { width: 100%; min-height: 84px; }
@@ -382,11 +373,12 @@
       .lp-hero { padding: 32px 0 24px; }
       .lp-hero h1 { font-size: 26px; line-height: 1.15; }
       .lp-hero p { font-size: 14px; }
-      .lp-hero-eyebrow { font-size: 11px; padding: 3px 10px; }
+      .lp-hero-eyebrow { font-size: 11px; padding: 3px 10px; max-width: 100%; }
+      .lp-hero-eyebrow [data-eyebrow-summary] { display: none; }
+      .lp-hero-eyebrow .lp-eyebrow-sep { display: none; }
 
       .lp-search-wrapper { max-width: 100%; }
-      .lp-search-wrapper .form-control { font-size: 14px !important; padding-right: 16px !important; }
-      .lp-search-kbd { display: none; }
+      .lp-search-wrapper .input-group-text:last-child { display: none; }
 
       .lp-section { margin-top: 36px; }
       .lp-pathway { padding: 14px; }
@@ -444,15 +436,17 @@
     <section class="lp-hero">
       <span class="lp-hero-eyebrow">
         <span class="lp-hero-eyebrow-dot"></span>
-        <span data-eyebrow-version>v0.6</span> · <span data-eyebrow-summary>fonte da verdade do DS dos produtos da Umbler</span>
+        <span data-eyebrow-version>v0.6</span><span class="lp-eyebrow-sep"> · </span><span data-eyebrow-summary>fonte da verdade do DS dos produtos da Umbler</span>
       </span>
       <h1>O Design System dos produtos da Umbler</h1>
       <p>Tokens, componentes, padrões e templates compartilhados — uma fonte da verdade pra design, engenharia e produto entregarem em ritmo.</p>
 
       <form class="lp-search-wrapper" onsubmit="return submitSearch(event)">
-        <i class="ph ph-magnifying-glass lp-search-icon"></i>
-        <input type="text" id="lp-search" class="form-control" placeholder="Buscar componentes, tokens, padrões..." autocomplete="off" aria-label="Buscar na documentação">
-        <kbd class="lp-search-kbd">⌘K</kbd>
+        <div class="input-group input-group-lg">
+          <span class="input-group-text"><i class="ph ph-magnifying-glass"></i></span>
+          <input type="text" id="lp-search" class="form-control" placeholder="Buscar componentes, tokens, padrões..." autocomplete="off" aria-label="Buscar na documentação">
+          <span class="input-group-text"><kbd>⌘K</kbd></span>
+        </div>
       </form>
     </section>
 
@@ -490,7 +484,7 @@
           <div class="lp-section-head">
             <h2>Documentação completa</h2>
           </div>
-          <a href="design-system/umbootstrap-design-system.html" class="umb-path-card recommended" style="text-decoration:none">
+          <a href="design-system/umbootstrap-design-system.html" class="umb-path-card recommended">
             <span class="umb-path-icon primary"><i class="ph-duotone ph-book-open-text"></i></span>
             <div style="flex:1;min-width:0">
               <h3 class="umb-path-title">Umbootstrap — DS Completo<span class="umb-path-badge">recomendado</span></h3>
@@ -800,8 +794,8 @@
       var html = commits.map(function (c) {
         var p = parseCommit(c);
         var badge = p.isNew
-          ? '<span class="badge rounded-pill text-bg-success-soft">NEW</span>'
-          : '<span class="badge rounded-pill text-bg-primary-soft">UPD</span>';
+          ? '<span class="badge rounded-pill lp-badge--new">NEW</span>'
+          : '<span class="badge rounded-pill lp-badge--upd">UPD</span>';
         var meta = relativeTime(p.date) + (p.section ? ' · ' + p.section : '');
         return '<a class="lp-changelog-item" href="' + escapeHtml(p.url) + '" target="_blank" rel="noopener">' +
                  badge +
@@ -825,9 +819,10 @@
 
     function renderVersion(tags) {
       if (!tags || !tags.length) return;
-      var v = tags[0].name;
-      // Garante prefixo "v"
-      if (v && !/^v/i.test(v)) v = 'v' + v;
+      var raw = tags[0].name;
+      if (raw && !/^v/i.test(raw)) raw = 'v' + raw;
+      // Trunca em primeiro hífen/underscore — "v0.4-standalone-templates" → "v0.4"
+      var v = raw.split(/[-_]/)[0];
       document.querySelectorAll('[data-version-tag]').forEach(function (el) { el.textContent = v; });
       var ev = document.querySelector('[data-eyebrow-version]');
       if (ev) ev.textContent = v;
