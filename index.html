@@ -247,14 +247,49 @@
       transition: border-color .15s;
     }
     .lp-template-card:hover { border-color: var(--bs-primary); }
-    .lp-template-wireframe {
-      width: 100%; height: 48px;
-      background: #141619;
-      border: 1px solid rgba(255,255,255,.06);
-      border-radius: 6px; margin-bottom: 10px; display: block;
+    /* Icon frame — substitui o wireframe. Container com gradiente brand sutil
+       + grid de dots, ícone Phosphor duotone centralizado. Tudo derivado de
+       --bs-primary, então responde naturalmente ao tema (azul claro/escuro,
+       esmeralda, bravia). */
+    .lp-template-icon-frame {
+      width: 100%; height: 84px;
+      border-radius: 10px;
+      background:
+        radial-gradient(circle at 25% 30%, rgba(var(--bs-primary-rgb), .22), transparent 60%),
+        var(--umb-hover-bg);
+      border: 1px solid var(--umb-border);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: background .25s, border-color .15s;
+    }
+    .lp-template-icon-frame::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+      background-size: 14px 14px;
+      color: var(--bs-primary);
+      opacity: .14;
+      pointer-events: none;
+    }
+    .lp-template-icon-frame i {
+      font-size: 36px;
+      color: var(--bs-primary);
+      position: relative; z-index: 1;
+      line-height: 1;
+    }
+    .lp-template-card:hover .lp-template-icon-frame {
+      background:
+        radial-gradient(circle at 25% 30%, rgba(var(--bs-primary-rgb), .3), transparent 60%),
+        var(--umb-hover-bg);
     }
     .lp-template-card--featured { grid-column: 1 / -1; display: flex; gap: 14px; align-items: stretch; }
-    .lp-template-card--featured .lp-template-wireframe { width: 180px; flex-shrink: 0; height: auto; min-height: 100%; }
+    .lp-template-card--featured .lp-template-icon-frame {
+      width: 180px; flex-shrink: 0; height: auto; min-height: 140px;
+      margin-bottom: 0;
+    }
+    .lp-template-card--featured .lp-template-icon-frame i { font-size: 56px; }
     .lp-template-card--featured .lp-template-body { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
     .lp-template-title { font-size: 13px; font-weight: 600; color: var(--umb-text-primary); display: flex; align-items: center; gap: 8px; margin: 0 0 4px; }
     .lp-template-desc { font-size: 12px; color: var(--umb-text-mid); margin: 0 0 8px; line-height: 1.45; }
@@ -329,7 +364,7 @@
       .lp-doc-changelog { grid-template-columns: 1fr; }
       .lp-templates-grid { grid-template-columns: 1fr; }
       .lp-template-card--featured { flex-direction: column; }
-      .lp-template-card--featured .lp-template-wireframe { width: 100%; height: 80px; min-height: 80px; }
+      .lp-template-card--featured .lp-template-icon-frame { width: 100%; min-height: 84px; }
       .lp-resources { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
@@ -486,7 +521,7 @@
       <div class="lp-templates-grid">
 
         <div class="lp-template-card">
-          <svg class="lp-template-wireframe" viewBox="0 0 220 48" preserveAspectRatio="none"><rect x="0" y="0" width="22" height="48" fill="#557CF2" opacity=".5"/><rect x="30" y="6" width="184" height="6" rx="2" fill="#ffffff" opacity=".4"/><rect x="30" y="18" width="184" height="24" rx="3" fill="#ffffff" opacity=".15"/></svg>
+          <div class="lp-template-icon-frame"><i class="ph-duotone ph-layout"></i></div>
           <div class="lp-template-title">T1 · Shell base</div>
           <p class="lp-template-desc">Sidebar + header com breadcrumb + área de conteúdo. Use em settings, listas simples, formulários.</p>
           <div class="lp-template-tags">
@@ -500,7 +535,7 @@
         </div>
 
         <div class="lp-template-card">
-          <svg class="lp-template-wireframe" viewBox="0 0 220 48" preserveAspectRatio="none"><rect x="0" y="0" width="22" height="48" fill="#557CF2" opacity=".5"/><rect x="30" y="6" width="60" height="36" rx="3" fill="#ffffff" opacity=".25"/><rect x="98" y="6" width="116" height="36" rx="3" fill="#ffffff" opacity=".15"/></svg>
+          <div class="lp-template-icon-frame"><i class="ph-duotone ph-columns"></i></div>
           <div class="lp-template-title">T2 · Lista + Detalhe</div>
           <p class="lp-template-desc">Two-panel: lista navegável + detalhe ao lado. Use em master-detail (contatos, tickets, projetos).</p>
           <div class="lp-template-tags">
@@ -514,7 +549,7 @@
         </div>
 
         <div class="lp-template-card">
-          <svg class="lp-template-wireframe" viewBox="0 0 220 48" preserveAspectRatio="none"><rect x="0" y="0" width="22" height="48" fill="#557CF2" opacity=".5"/><rect x="30" y="6" width="184" height="5" rx="2" fill="#ffffff" opacity=".4"/><rect x="30" y="15" width="184" height="6" rx="2" fill="#ffffff" opacity=".18"/><rect x="30" y="24" width="184" height="6" rx="2" fill="#ffffff" opacity=".18"/><rect x="30" y="33" width="184" height="6" rx="2" fill="#ffffff" opacity=".18"/></svg>
+          <div class="lp-template-icon-frame"><i class="ph-duotone ph-table"></i></div>
           <div class="lp-template-title">T3 · Tabela densa</div>
           <p class="lp-template-desc">Listagens com filtros, stat-cards e ações inline. Use em CRMs, importações, dashboards de operação.</p>
           <div class="lp-template-tags">
@@ -528,7 +563,7 @@
         </div>
 
         <div class="lp-template-card">
-          <svg class="lp-template-wireframe" viewBox="0 0 220 48" preserveAspectRatio="none"><rect x="0" y="0" width="22" height="48" fill="#557CF2" opacity=".5"/><rect x="30" y="6" width="60" height="6" rx="2" fill="#ffffff" opacity=".4"/><rect x="30" y="16" width="184" height="26" rx="4" fill="#ffffff" opacity=".12" stroke="#ffffff" stroke-opacity=".3"/></svg>
+          <div class="lp-template-icon-frame"><i class="ph-duotone ph-gear-six"></i></div>
           <div class="lp-template-title">T4 · Settings</div>
           <p class="lp-template-desc">Card de configurações com 22 itens agrupados por seção. Use em conta, organização, integrações.</p>
           <div class="lp-template-tags">
@@ -542,7 +577,7 @@
         </div>
 
         <div class="lp-template-card lp-template-card--featured">
-          <svg class="lp-template-wireframe" viewBox="0 0 220 80" preserveAspectRatio="none"><rect x="0" y="0" width="22" height="80" fill="#557CF2" opacity=".5"/><rect x="30" y="6" width="50" height="68" rx="3" fill="#ffffff" opacity=".22"/><rect x="88" y="6" width="126" height="50" rx="3" fill="#ffffff" opacity=".1"/><rect x="94" y="14" width="60" height="6" rx="3" fill="#557CF2" opacity=".5"/><rect x="150" y="26" width="58" height="6" rx="3" fill="#ffffff" opacity=".4"/><rect x="94" y="38" width="80" height="6" rx="3" fill="#557CF2" opacity=".5"/><rect x="88" y="60" width="126" height="14" rx="7" fill="#ffffff" opacity=".18"/></svg>
+          <div class="lp-template-icon-frame"><i class="ph-duotone ph-chat-circle-dots"></i></div>
           <div class="lp-template-body">
             <div class="lp-template-title">T5 · Chat <span class="lp-template-badge">DESTAQUE</span></div>
             <p class="lp-template-desc">Three-panel completo: lista de conversas + área de mensagens (bubbles, anotações, ações em cima) + composer com anexos. Substitui o shell padrão (sem header de breadcrumb).</p>
