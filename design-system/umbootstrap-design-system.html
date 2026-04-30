@@ -897,29 +897,33 @@
     .alert-light     { background: var(--umb-alert-light-bg);     color: var(--umb-alert-light-color); }
     .alert-dark      { background: var(--umb-alert-dark-bg);      color: var(--umb-alert-dark-color); }
 
-    /* Variante banner: bg mais saturado pra notificação sistêmica.
-       Mistura a cor brand do tipo (14%) com o canvas do card pra preservar contraste em qualquer tema. */
+    /* Variante banner: bg mais saturado pra notificação sistêmica + cantos retos.
+       Cantos retos porque o banner é usado em layouts que ocupam 100% da largura do
+       container pai, encostando nas laterais (sem padding lateral entre banner e
+       borda do container). Mistura a cor brand do tipo (14%) com o canvas do card
+       pra preservar contraste em qualquer tema. */
+    .alert.alert-banner { border-radius: 0 !important; }
     .alert.alert-banner.alert-primary { background: color-mix(in srgb, var(--bs-primary) 14%, var(--umb-card-bg)); }
     .alert.alert-banner.alert-success { background: color-mix(in srgb, var(--bs-success) 14%, var(--umb-card-bg)); }
     .alert.alert-banner.alert-danger  { background: color-mix(in srgb, var(--bs-danger)  14%, var(--umb-card-bg)); }
     .alert.alert-banner.alert-warning { background: color-mix(in srgb, var(--bs-warning) 14%, var(--umb-card-bg)); }
     .alert.alert-banner.alert-info    { background: color-mix(in srgb, var(--bs-info)    14%, var(--umb-card-bg)); }
 
-    /* Icon circle: bolinha com cor do tipo (= cor do botão sólido), ícone branco dentro */
+    /* Icon: Phosphor fill (a "bolinha" é o próprio glyph do ícone — ph-fill ph-x-circle,
+       ph-fill ph-info, ph-fill ph-check-circle, ph-fill ph-warning-circle).
+       A cor brand do tipo é aplicada DIRETAMENTE no ícone (color), sem wrapper com bg. */
     .alert-icon-circle {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      line-height: 1;
       flex-shrink: 0;
-      font-size: 16px;
-      color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
     }
-    .alert-primary   .alert-icon-circle { background: var(--bs-primary); }
-    .alert-secondary .alert-icon-circle { background: var(--umb-text-mid); }
-    .alert-success   .alert-icon-circle { background: var(--bs-success); }
-    .alert-danger    .alert-icon-circle { background: var(--bs-danger); }
-    .alert-warning   .alert-icon-circle { background: var(--bs-warning); }
-    .alert-info      .alert-icon-circle { background: var(--bs-info); }
+    .alert-primary   .alert-icon-circle { color: var(--bs-primary); }
+    .alert-secondary .alert-icon-circle { color: var(--umb-text-mid); }
+    .alert-success   .alert-icon-circle { color: var(--bs-success); }
+    .alert-danger    .alert-icon-circle { color: var(--bs-danger); }
+    .alert-warning   .alert-icon-circle { color: var(--bs-warning); }
+    .alert-info      .alert-icon-circle { color: var(--bs-info); }
 
     /* Body: coluna com título + descrição + ações */
     .alert-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
@@ -4506,7 +4510,7 @@
       <div class="comp-group">
         <p class="comp-label">Compact (sem descrição) — uma linha só</p>
         <div class="alert alert-danger alert-compact mb-2">
-          <span class="alert-icon-circle"><i class="ph-bold ph-x"></i></span>
+          <i class="ph-fill ph-x-circle alert-icon-circle"></i>
           <div class="alert-title">Alert title</div>
           <div class="alert-actions">
             <button class="btn btn-danger btn-sm">Button</button>
@@ -4515,7 +4519,7 @@
           <button class="alert-close" aria-label="Fechar"><i class="ph ph-x"></i></button>
         </div>
         <div class="alert alert-info alert-compact mb-2">
-          <span class="alert-icon-circle"><i class="ph-bold ph-info"></i></span>
+          <i class="ph-fill ph-info alert-icon-circle"></i>
           <div class="alert-title">Alert title</div>
           <div class="alert-actions">
             <button class="btn btn-info btn-sm">Button</button>
@@ -4524,7 +4528,7 @@
           <button class="alert-close" aria-label="Fechar"><i class="ph ph-x"></i></button>
         </div>
         <div class="alert alert-success alert-compact mb-2">
-          <span class="alert-icon-circle"><i class="ph-bold ph-check"></i></span>
+          <i class="ph-fill ph-check-circle alert-icon-circle"></i>
           <div class="alert-title">Alert title</div>
           <div class="alert-actions">
             <button class="btn btn-success btn-sm">Button</button>
@@ -4533,7 +4537,7 @@
           <button class="alert-close" aria-label="Fechar"><i class="ph ph-x"></i></button>
         </div>
         <div class="alert alert-warning alert-compact mb-0">
-          <span class="alert-icon-circle"><i class="ph-bold ph-warning"></i></span>
+          <i class="ph-fill ph-warning-circle alert-icon-circle"></i>
           <div class="alert-title">Alert title</div>
           <div class="alert-actions">
             <button class="btn btn-warning btn-sm">Button</button>
@@ -4546,7 +4550,7 @@
       <div class="comp-group">
         <p class="comp-label">Com descrição — título + texto + ações abaixo</p>
         <div class="alert alert-danger mb-2">
-          <span class="alert-icon-circle"><i class="ph-bold ph-x"></i></span>
+          <i class="ph-fill ph-x-circle alert-icon-circle"></i>
           <div class="alert-body">
             <div class="alert-title">Alert title</div>
             <div class="alert-desc">Interactively monetize corporate alignments and fully tested niche markets.</div>
@@ -4558,7 +4562,7 @@
           <button class="alert-close" aria-label="Fechar"><i class="ph ph-x"></i></button>
         </div>
         <div class="alert alert-info mb-2">
-          <span class="alert-icon-circle"><i class="ph-bold ph-info"></i></span>
+          <i class="ph-fill ph-info alert-icon-circle"></i>
           <div class="alert-body">
             <div class="alert-title">Alert title</div>
             <div class="alert-desc">Interactively monetize corporate alignments and fully tested niche markets.</div>
@@ -4570,7 +4574,7 @@
           <button class="alert-close" aria-label="Fechar"><i class="ph ph-x"></i></button>
         </div>
         <div class="alert alert-success mb-2">
-          <span class="alert-icon-circle"><i class="ph-bold ph-check"></i></span>
+          <i class="ph-fill ph-check-circle alert-icon-circle"></i>
           <div class="alert-body">
             <div class="alert-title">Alert title</div>
             <div class="alert-desc">Interactively monetize corporate alignments and fully tested niche markets.</div>
@@ -4582,7 +4586,7 @@
           <button class="alert-close" aria-label="Fechar"><i class="ph ph-x"></i></button>
         </div>
         <div class="alert alert-warning mb-0">
-          <span class="alert-icon-circle"><i class="ph-bold ph-warning"></i></span>
+          <i class="ph-fill ph-warning-circle alert-icon-circle"></i>
           <div class="alert-body">
             <div class="alert-title">Alert title</div>
             <div class="alert-desc">Interactively monetize corporate alignments and fully tested niche markets.</div>
@@ -4598,7 +4602,7 @@
       <div class="comp-group">
         <p class="comp-label">Variante banner — bg mais saturado, p/ notificação sistêmica</p>
         <div class="alert alert-banner alert-danger alert-compact mb-2">
-          <span class="alert-icon-circle"><i class="ph-bold ph-x"></i></span>
+          <i class="ph-fill ph-x-circle alert-icon-circle"></i>
           <div class="alert-title">Alert title</div>
           <div class="alert-actions">
             <button class="btn btn-danger btn-sm">Button</button>
@@ -4607,7 +4611,7 @@
           <button class="alert-close" aria-label="Fechar"><i class="ph ph-x"></i></button>
         </div>
         <div class="alert alert-banner alert-warning mb-0">
-          <span class="alert-icon-circle"><i class="ph-bold ph-warning"></i></span>
+          <i class="ph-fill ph-warning-circle alert-icon-circle"></i>
           <div class="alert-body">
             <div class="alert-title">Alert title</div>
             <div class="alert-desc">Interactively monetize corporate alignments and fully tested niche markets.</div>
@@ -4624,7 +4628,7 @@
         <p class="comp-practices-title">Best Practices</p>
         <ul>
           <li><strong>Estrutura canônica:</strong> <code>.alert</code> &gt; <code>.alert-icon-circle</code> + (<code>.alert-title</code> | <code>.alert-body</code>) + <code>.alert-close</code>. Use <code>.alert-body</code> quando houver descrição; senão coloque o título direto no flex root.</li>
-          <li><strong>Ícone no círculo:</strong> sempre <code>.alert-icon-circle</code> com cor de fundo igual à do botão sólido do tipo (<code>var(--bs-danger/info/success/warning)</code>). O ícone interno é Phosphor branco — use <code>ph-bold ph-x</code> (error), <code>ph-bold ph-info</code> (info), <code>ph-bold ph-check</code> (success), <code>ph-bold ph-warning</code> (warning).</li>
+          <li><strong>Ícone no círculo:</strong> o glyph é um Phosphor fill (que JÁ tem forma de círculo preenchido) com a classe <code>.alert-icon-circle</code>. A cor brand do tipo é aplicada via <code>color:</code> direto no ícone — não há wrapper com background. O ícone é um Phosphor fill direto (sem wrapper com background) — use <code>ph-fill ph-x-circle</code> (error), <code>ph-fill ph-info</code> (info), <code>ph-fill ph-check-circle</code> (success), <code>ph-fill ph-warning-circle</code> (warning). A cor brand do tipo (<code>var(--bs-{type})</code>) é aplicada via <code>color:</code> direto no glyph.</li>
           <li><strong>Hierarquia das ações:</strong> 1ª <code>.btn-{type}</code> (sólida, ação primária), 2ª <code>.btn-outline-{type}</code> (alternativa). Use <code>.btn-sm</code>. Nunca inverta a ordem nem use <code>.btn-text</code> aqui.</li>
           <li><strong>Variante banner:</strong> aplique <code>.alert-banner</code> quando o alerta for sistêmico/full-width (ex: faixa no topo da tela). O fundo fica mais saturado mas o resto da estrutura é idêntico.</li>
           <li><strong>Layout compacto:</strong> aplique <code>.alert-compact</code> quando NÃO houver descrição — colapsa tudo numa linha só, com ações encostadas à direita via <code>margin-left:auto</code>.</li>
@@ -4639,7 +4643,7 @@
         </div>
         <pre class="comp-code-pre"><code class="language-html">&lt;!-- Compact (uma linha só) --&gt;
 &lt;div class="alert alert-danger alert-compact"&gt;
-  &lt;span class="alert-icon-circle"&gt;&lt;i class="ph-bold ph-x"&gt;&lt;/i&gt;&lt;/span&gt;
+  &lt;i class="ph-fill ph-x-circle alert-icon-circle"&gt;&lt;/i&gt;
   &lt;div class="alert-title"&gt;Alert title&lt;/div&gt;
   &lt;div class="alert-actions"&gt;
     &lt;button class="btn btn-danger btn-sm"&gt;Button&lt;/button&gt;
@@ -4650,7 +4654,7 @@
 
 &lt;!-- Com descrição (stacked) --&gt;
 &lt;div class="alert alert-success"&gt;
-  &lt;span class="alert-icon-circle"&gt;&lt;i class="ph-bold ph-check"&gt;&lt;/i&gt;&lt;/span&gt;
+  &lt;i class="ph-fill ph-check-circle alert-icon-circle"&gt;&lt;/i&gt;
   &lt;div class="alert-body"&gt;
     &lt;div class="alert-title"&gt;Alert title&lt;/div&gt;
     &lt;div class="alert-desc"&gt;Texto descritivo da mensagem.&lt;/div&gt;

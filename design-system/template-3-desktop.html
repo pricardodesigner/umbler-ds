@@ -847,29 +847,33 @@
     .alert-light     { background: var(--umb-alert-light-bg);     color: var(--umb-alert-light-color); }
     .alert-dark      { background: var(--umb-alert-dark-bg);      color: var(--umb-alert-dark-color); }
 
-    /* Variante banner: bg mais saturado pra notificação sistêmica.
-       Mistura a cor brand do tipo (14%) com o canvas do card pra preservar contraste em qualquer tema. */
+    /* Variante banner: bg mais saturado pra notificação sistêmica + cantos retos.
+       Cantos retos porque o banner é usado em layouts que ocupam 100% da largura do
+       container pai, encostando nas laterais (sem padding lateral entre banner e
+       borda do container). Mistura a cor brand do tipo (14%) com o canvas do card
+       pra preservar contraste em qualquer tema. */
+    .alert.alert-banner { border-radius: 0 !important; }
     .alert.alert-banner.alert-primary { background: color-mix(in srgb, var(--bs-primary) 14%, var(--umb-card-bg)); }
     .alert.alert-banner.alert-success { background: color-mix(in srgb, var(--bs-success) 14%, var(--umb-card-bg)); }
     .alert.alert-banner.alert-danger  { background: color-mix(in srgb, var(--bs-danger)  14%, var(--umb-card-bg)); }
     .alert.alert-banner.alert-warning { background: color-mix(in srgb, var(--bs-warning) 14%, var(--umb-card-bg)); }
     .alert.alert-banner.alert-info    { background: color-mix(in srgb, var(--bs-info)    14%, var(--umb-card-bg)); }
 
-    /* Icon circle: bolinha com cor do tipo (= cor do botão sólido), ícone branco dentro */
+    /* Icon: Phosphor fill (a "bolinha" é o próprio glyph do ícone — ph-fill ph-x-circle,
+       ph-fill ph-info, ph-fill ph-check-circle, ph-fill ph-warning-circle).
+       A cor brand do tipo é aplicada DIRETAMENTE no ícone (color), sem wrapper com bg. */
     .alert-icon-circle {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      line-height: 1;
       flex-shrink: 0;
-      font-size: 16px;
-      color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
     }
-    .alert-primary   .alert-icon-circle { background: var(--bs-primary); }
-    .alert-secondary .alert-icon-circle { background: var(--umb-text-mid); }
-    .alert-success   .alert-icon-circle { background: var(--bs-success); }
-    .alert-danger    .alert-icon-circle { background: var(--bs-danger); }
-    .alert-warning   .alert-icon-circle { background: var(--bs-warning); }
-    .alert-info      .alert-icon-circle { background: var(--bs-info); }
+    .alert-primary   .alert-icon-circle { color: var(--bs-primary); }
+    .alert-secondary .alert-icon-circle { color: var(--umb-text-mid); }
+    .alert-success   .alert-icon-circle { color: var(--bs-success); }
+    .alert-danger    .alert-icon-circle { color: var(--bs-danger); }
+    .alert-warning   .alert-icon-circle { color: var(--bs-warning); }
+    .alert-info      .alert-icon-circle { color: var(--bs-info); }
 
     /* Body: coluna com título + descrição + ações */
     .alert-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }

@@ -2541,7 +2541,7 @@ A partir do redesign de abr/2026, o componente `.alert` segue uma estrutura unif
 ```html
 <!-- Compact (sem descrição) — uma linha só -->
 <div class="alert alert-danger alert-compact">
-  <span class="alert-icon-circle"><i class="ph-bold ph-x"></i></span>
+  <i class="ph-fill ph-x-circle alert-icon-circle"></i>
   <div class="alert-title">Alert title</div>
   <div class="alert-actions">
     <button class="btn btn-danger btn-sm">Button</button>
@@ -2552,7 +2552,7 @@ A partir do redesign de abr/2026, o componente `.alert` segue uma estrutura unif
 
 <!-- Com descrição — stacked -->
 <div class="alert alert-success">
-  <span class="alert-icon-circle"><i class="ph-bold ph-check"></i></span>
+  <i class="ph-fill ph-check-circle alert-icon-circle"></i>
   <div class="alert-body">
     <div class="alert-title">Alert title</div>
     <div class="alert-desc">Texto descritivo.</div>
@@ -2565,19 +2565,23 @@ A partir do redesign de abr/2026, o componente `.alert` segue uma estrutura unif
 </div>
 ```
 
-### Tipos × ícones canônicos (Phosphor weight: bold)
+### Tipos × ícones canônicos (Phosphor weight: fill)
 
-| Tipo | Classe modifier | Ícone | Cor do círculo / botão |
+O glyph fill **já é uma bolinha preenchida** com o símbolo recortado dentro — não precisa de wrapper com background. A cor brand é aplicada direto no ícone via `color:`.
+
+| Tipo | Classe modifier | Ícone (Phosphor fill) | Cor aplicada |
 |---|---|---|---|
-| Error | `.alert-danger` | `ph-bold ph-x` | `var(--bs-danger)` |
-| Info | `.alert-info` | `ph-bold ph-info` | `var(--bs-info)` |
-| Success | `.alert-success` | `ph-bold ph-check` | `var(--bs-success)` |
-| Warning | `.alert-warning` | `ph-bold ph-warning` | `var(--bs-warning)` |
+| Error | `.alert-danger` | `ph-fill ph-x-circle` | `var(--bs-danger)` |
+| Info | `.alert-info` | `ph-fill ph-info` | `var(--bs-info)` |
+| Success | `.alert-success` | `ph-fill ph-check-circle` | `var(--bs-success)` |
+| Warning | `.alert-warning` | `ph-fill ph-warning-circle` | `var(--bs-warning)` |
+
+> **Pré-requisito**: o stylesheet `https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css` precisa estar carregado no `<head>`. Já é dependência padrão do DS desde o redesign de abr/2026 (junto com `regular` e `bold`).
 
 ### Variantes ortogonais
 
 - `.alert-compact` — colapsa para uma linha só. Use quando NÃO houver descrição. As ações ficam à direita via `margin-left:auto`.
-- `.alert-banner` — bg mais saturado (mistura `var(--bs-{type})` 14% com `var(--umb-card-bg)`). Use para notificações sistêmicas/full-width. Compatível com `.alert-compact`.
+- `.alert-banner` — bg mais saturado (mistura `var(--bs-{type})` 14% com `var(--umb-card-bg)`) **e cantos retos** (`border-radius: 0`). Use em layouts onde o banner ocupa **100% da largura do container pai**, encostado nas laterais (ex: faixa fixa no topo da tela, faixa entre header e conteúdo, dentro de um drawer/modal full-width). Não use o banner em contextos com padding lateral — os cantos retos só fazem sentido quando o componente está realmente flush com as bordas do container. Compatível com `.alert-compact`.
 
 ### Hierarquia das ações
 
@@ -2596,5 +2600,5 @@ A classe legada `.alert-icon` (ícone plano sem círculo) continua funcionando p
 - ❌ Texto da descrição usando a cor brand do tipo (`--umb-alert-{type}-color`) — fica saturado demais. Use `--umb-text-mid`.
 - ❌ Botão sólido como ação secundária — quebra a hierarquia. O sólido é a ação primária; o outlined é a secundária.
 - ❌ Mais de 2 botões na linha de ações — se precisar de mais, é sinal que o alerta está fazendo muito. Considere drawer ou modal.
-- ❌ Cor hex hardcoded no círculo do ícone — sempre `var(--bs-{type})` para responder a tema.
+- ❌ Voltar pro padrão antigo de `<span class="alert-icon-circle"><i class="ph-bold...">…</i></span>` (wrapper + ícone) — o canônico agora é o glyph fill direto. O wrapper com bg só faz sentido se você precisa de uma cor que NÃO existe na palette Phosphor fill (caso raro).
 - ❌ Composição inline com `style="flex-direction:column;align-items:flex-start"` — esse era o workaround antigo. Agora use `.alert-body` (já é coluna) e o título/descrição já vêm na ordem certa.
