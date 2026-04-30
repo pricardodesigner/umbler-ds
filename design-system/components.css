@@ -277,3 +277,98 @@
   .umb-path-card { padding: 16px; }
   .umb-path-icon { font-size: 28px; }
 }
+
+/* ────────────────────────────────────────────────────────────
+   FORMS — form-control + input-group (com input-group-text)
+   Extraído verbatim de umbootstrap-design-system.html.
+   ──────────────────────────────────────────────────────────── */
+
+.form-control, .form-select {
+  background: var(--umb-input-bg) !important; color: var(--bs-body-color) !important;
+  border: 2px solid var(--umb-input-border) !important; border-radius: 12px !important;
+  padding: 0 12px !important; font-size: 14px !important; font-family: inherit;
+  transition: border-color .15s; box-sizing: border-box;
+}
+.form-control:not(textarea), .form-select { height: 32px; }
+.form-control-sm, .form-select-sm {
+  height: 24px !important; padding: 0 10px !important;
+  border-radius: 12px !important; font-size: 12px !important;
+}
+.form-control-lg, .form-select-lg {
+  height: 40px !important; padding: 0 16px !important;
+  border-radius: 16px !important; font-size: 14px !important;
+}
+.form-control:hover:not(:disabled):not([readonly]):not(:focus),
+.form-select:hover:not(:disabled):not(:focus) {
+  border-color: var(--bs-primary) !important;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--bs-primary) !important;
+  box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb),.18) !important; outline: none;
+}
+.form-control::placeholder { color: var(--umb-text-mid) !important; }
+.form-control:disabled, .form-select:disabled { opacity: .5; }
+
+/* Input group — wrapper recebe a borda; filhos sem borda própria (campo unificado) */
+.input-group:has(.input-group-text) {
+  border: 2px solid var(--umb-input-border);
+  border-radius: 12px;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  transition: border-color .15s, box-shadow .15s;
+}
+.input-group-lg:has(.input-group-text) { border-radius: 16px; }
+.input-group-sm:has(.input-group-text) { border-radius: 12px; }
+
+.input-group:has(.input-group-text) > .input-group-text {
+  background: var(--umb-input-bg) !important;
+  border: none !important; border-radius: 0 !important;
+  color: var(--umb-text-mid) !important;
+  font-size: 14px; padding: 0 4px;
+  display: inline-flex; align-items: center;
+}
+.input-group:has(.input-group-text) > .input-group-text:first-child  { padding-left: 12px; }
+.input-group:has(.input-group-text) > .input-group-text:last-child   { padding-right: 12px; }
+.input-group-lg:has(.input-group-text) > .input-group-text:first-child { padding-left: 16px; }
+.input-group-lg:has(.input-group-text) > .input-group-text:last-child  { padding-right: 16px; }
+
+.input-group:has(.input-group-text) > .form-control,
+.input-group:has(.input-group-text) > .form-select {
+  border: none !important; border-radius: 0 !important;
+  background: var(--umb-input-bg) !important;
+  box-shadow: none !important;
+  padding-left: 4px !important; padding-right: 4px !important;
+}
+.input-group:has(.input-group-text) > .form-control:first-child,
+.input-group:has(.input-group-text) > .form-select:first-child  { padding-left: 12px !important; }
+.input-group:has(.input-group-text) > .form-control:last-child,
+.input-group:has(.input-group-text) > .form-select:last-child   { padding-right: 12px !important; }
+.input-group-lg:has(.input-group-text) > .form-control:first-child,
+.input-group-lg:has(.input-group-text) > .form-select:first-child  { padding-left: 16px !important; }
+.input-group-lg:has(.input-group-text) > .form-control:last-child,
+.input-group-lg:has(.input-group-text) > .form-select:last-child   { padding-right: 16px !important; }
+
+.input-group-lg:has(.input-group-text) > .form-control:not(textarea),
+.input-group-lg:has(.input-group-text) > .form-select { height: 40px !important; font-size: 14px !important; }
+.input-group-sm:has(.input-group-text) > .form-control:not(textarea),
+.input-group-sm:has(.input-group-text) > .form-select { height: 24px !important; font-size: 12px !important; }
+
+.input-group:has(.input-group-text):hover:not(:focus-within) {
+  border-color: var(--bs-primary);
+}
+.input-group:has(.input-group-text):focus-within {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), .15);
+}
+
+/* Modifier: .input-group-flat — remove chrome do input-group (toolbar/header inline) */
+.input-group.input-group-flat:has(.input-group-text),
+.input-group.input-group-flat:has(.input-group-text):hover:not(:focus-within),
+.input-group.input-group-flat:has(.input-group-text):focus-within {
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible;
+}
+
