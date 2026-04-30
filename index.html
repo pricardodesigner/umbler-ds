@@ -360,11 +360,26 @@
     @media (max-width: 900px) {
       .lp-nav { display: none; }
       .lp-pathways { grid-template-columns: 1fr; }
-      .lp-doc-changelog { grid-template-columns: 1fr; gap: 16px; }
+      /* Doc + Changelog: stackam verticalmente, sem stretch (cada cell é independente) */
+      .lp-doc-changelog {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        align-items: start;
+      }
       .lp-doc-changelog > div { min-width: 0; }
+      /* Reset do height: 100% que vinha do desktop — no mobile cada cell tem altura natural */
+      .lp-doc-changelog .umb-path-card { height: auto !important; }
       .lp-templates-grid { grid-template-columns: 1fr; }
-      .lp-template-card--featured { flex-direction: column; align-items: stretch; }
-      .lp-template-card--featured .lp-template-icon-frame { width: 100%; min-height: 84px; }
+      /* T5 featured: especificidade alta pra vencer .lp-template-card.lp-template-card--featured do desktop */
+      .lp-template-card.lp-template-card--featured {
+        flex-direction: column !important;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .lp-template-card.lp-template-card--featured .lp-template-icon-frame {
+        width: 100% !important;
+        min-height: 100px;
+      }
       .lp-resources { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
