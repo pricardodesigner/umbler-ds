@@ -19,3 +19,4 @@ push-to-github.sh
 
 # OS
 .DS_Store
+.claude/
