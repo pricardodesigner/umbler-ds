@@ -1408,7 +1408,7 @@
     .offcanvas-body { padding-left: 24px; padding-right: 24px; padding-bottom: 0; }
     .offcanvas-footer { padding: 24px; border-top: none; }
     .modal-content { background: var(--umb-modal-bg); border: 1px solid var(--umb-border); border-radius: 16px; }
-    .modal-header { border-bottom: none; }
+    .modal-header { border-bottom: none; justify-content: space-between; align-items: center; }
     .modal-footer { border-top: none; }
 
     /* ── Modal variants (info/success/warning/error/danger) — ph-fill colorido, sem X ── */
@@ -5538,7 +5538,6 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         <div class="comp-row">
           <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalBasico">Modal Básico</button>
           <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalCentrado">Modal Centrado</button>
-          <button class="btn btn-outline-danger btn-lg" data-bs-toggle="modal" data-bs-target="#modalConfirm">Modal de Confirmação</button>
           <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalLg">Modal Grande</button>
           <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalInfo">Modal Info</button>
           <button class="btn btn-outline-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalSuccess">Modal Success</button>
@@ -5563,11 +5562,6 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       <div class="modal-footer justify-content-center"><button class="btn btn-primary btn-lg" data-bs-dismiss="modal">Começar agora</button></div>
     </div></div></div>
 
-    <!-- Modal Confirmação -->
-    <div class="modal fade" id="modalConfirm" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal-content">
-      <div class="modal-body" style="padding:24px;text-align:center"><i class="ph ph-warning-circle" style="font-size:40px;color:var(--bs-warning);margin-bottom:12px;display:block"></i><h6>Excluir deal?</h6><p style="font-size:13px;color:var(--umb-text-mid)">Esta ação não pode ser desfeita. O deal e todo o histórico serão removidos permanentemente.</p></div>
-      <div class="modal-footer border-0 justify-content-center gap-2 pt-0 pb-4"><button class="btn btn-outline-primary btn-lg" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-danger btn-lg" data-bs-dismiss="modal">Sim, excluir</button></div>
-    </div></div></div>
 
     <!-- Modal Grande -->
     <div class="modal fade" id="modalLg" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
