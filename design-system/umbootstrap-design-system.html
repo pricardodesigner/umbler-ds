@@ -1410,6 +1410,19 @@
     .modal-content { background: var(--umb-modal-bg); border: 1px solid var(--umb-border); border-radius: 16px; }
     .modal-header { border-bottom: none; }
     .modal-footer { border-top: none; }
+
+    /* ── Modal variants (info/success/warning/error/danger) — ph-fill colorido, sem X ── */
+    .modal-icon { flex-shrink: 0; font-size: 28px; line-height: 1; }
+    .modal-icon-info    { color: var(--bs-info); }
+    .modal-icon-success { color: var(--bs-success); }
+    .modal-icon-warning { color: var(--bs-warning); }
+    .modal-icon-error   { color: var(--bs-danger); }
+    .modal-icon-danger  { color: var(--bs-danger); }
+    .modal-header:has(.modal-icon) { align-items: flex-start; gap: 12px; }
+    .modal-header:has(.modal-icon) > .btn-icon[aria-label="Fechar"],
+    .modal-header:has(.modal-icon) > .btn-close { display: none; }
+    .modal-content-text { flex: 1; min-width: 0; }
+    .modal-description { font-size: 14px; color: var(--umb-text-mid); margin: 4px 0 0; line-height: 1.4; }
     .list-group-item { background: var(--umb-card-bg); border-color: var(--umb-border); color: var(--bs-body-color); padding: 10px 14px; font-size: 14px; }
     .list-group-item.active { background: rgba(var(--bs-primary-rgb),.12); border-color: var(--bs-primary); color: var(--bs-primary); }
     .table { color: var(--bs-body-color); font-size: 14px; }
