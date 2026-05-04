@@ -5540,6 +5540,11 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
           <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalCentrado">Modal Centrado</button>
           <button class="btn btn-outline-danger btn-lg" data-bs-toggle="modal" data-bs-target="#modalConfirm">Modal de Confirmação</button>
           <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalLg">Modal Grande</button>
+          <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalInfo">Modal Info</button>
+          <button class="btn btn-outline-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalSuccess">Modal Success</button>
+          <button class="btn btn-outline-warning btn-lg" data-bs-toggle="modal" data-bs-target="#modalWarning">Modal Warning</button>
+          <button class="btn btn-outline-danger btn-lg" data-bs-toggle="modal" data-bs-target="#modalError">Modal Error</button>
+          <button class="btn btn-outline-danger btn-lg" data-bs-toggle="modal" data-bs-target="#modalDanger">Modal Danger</button>
         </div>
       </div>
     </section>
@@ -5569,6 +5574,36 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       <div class="modal-header"><h5 class="modal-title">Configurações do Board</h5><button type="button" class="btn btn-icon btn-text btn-lg" data-bs-dismiss="modal" aria-label="Fechar"><i class="ph ph-x"></i></button></div>
       <div class="modal-body"><div class="row g-3"><div class="col-md-6"><label class="form-label">Nome do board</label><input type="text" class="form-control" value="Pipeline de Vendas"></div><div class="col-md-6"><label class="form-label">Tipo</label><select class="form-select"><option selected>Vendas</option><option>Suporte</option></select></div><div class="col-12"><label class="form-label">Dias para Morno</label><input type="range" class="range-input" value="3"></div><div class="col-12"><label class="form-label">Dias para Frio</label><input type="range" class="range-input" value="5"></div></div></div>
       <div class="modal-footer"><button class="btn btn-outline-primary btn-lg" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary btn-lg">Salvar</button></div>
+    </div></div></div>
+
+    <!-- Modal Info -->
+    <div class="modal fade" id="modalInfo" tabindex="-1"><div class="modal-dialog modal-sm modal-dialog-centered"><div class="modal-content">
+      <div class="modal-header"><i class="ph-fill ph-info modal-icon modal-icon-info"></i><div class="modal-content-text"><h5 class="modal-title">Atualização disponível</h5><p class="modal-description">Uma nova versão do app está disponível. Recarregue a página pra obter as últimas funcionalidades.</p></div></div>
+      <div class="modal-footer"><button class="btn btn-outline-primary btn-lg" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary btn-lg" data-bs-dismiss="modal">OK</button></div>
+    </div></div></div>
+
+    <!-- Modal Success -->
+    <div class="modal fade" id="modalSuccess" tabindex="-1"><div class="modal-dialog modal-sm modal-dialog-centered"><div class="modal-content">
+      <div class="modal-header"><i class="ph-fill ph-check-circle modal-icon modal-icon-success"></i><div class="modal-content-text"><h5 class="modal-title">Salvo com sucesso</h5><p class="modal-description">Suas alterações foram aplicadas. Você pode continuar editando ou voltar à listagem.</p></div></div>
+      <div class="modal-footer"><button class="btn btn-outline-primary btn-lg" data-bs-dismiss="modal">Continuar</button><button class="btn btn-primary btn-lg" data-bs-dismiss="modal">OK</button></div>
+    </div></div></div>
+
+    <!-- Modal Warning -->
+    <div class="modal fade" id="modalWarning" tabindex="-1"><div class="modal-dialog modal-sm modal-dialog-centered"><div class="modal-content">
+      <div class="modal-header"><i class="ph-fill ph-warning-circle modal-icon modal-icon-warning"></i><div class="modal-content-text"><h5 class="modal-title">Você tem alterações não salvas</h5><p class="modal-description">Sair agora vai descartar as edições no formulário. Tem certeza que deseja continuar?</p></div></div>
+      <div class="modal-footer"><button class="btn btn-outline-primary btn-lg" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary btn-lg" data-bs-dismiss="modal">OK</button></div>
+    </div></div></div>
+
+    <!-- Modal Error -->
+    <div class="modal fade" id="modalError" tabindex="-1"><div class="modal-dialog modal-sm modal-dialog-centered"><div class="modal-content">
+      <div class="modal-header"><i class="ph-fill ph-x-circle modal-icon modal-icon-error"></i><div class="modal-content-text"><h5 class="modal-title">Falha ao processar</h5><p class="modal-description">Não foi possível concluir a operação. Verifique sua conexão e tente novamente em alguns instantes.</p></div></div>
+      <div class="modal-footer"><button class="btn btn-outline-primary btn-lg" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary btn-lg" data-bs-dismiss="modal">OK</button></div>
+    </div></div></div>
+
+    <!-- Modal Danger -->
+    <div class="modal fade" id="modalDanger" tabindex="-1"><div class="modal-dialog modal-sm modal-dialog-centered"><div class="modal-content">
+      <div class="modal-header"><i class="ph-fill ph-trash modal-icon modal-icon-danger"></i><div class="modal-content-text"><h5 class="modal-title">Excluir contato?</h5><p class="modal-description">Esta ação não pode ser desfeita. Todas as mensagens e tags associadas serão removidas permanentemente.</p></div></div>
+      <div class="modal-footer"><button class="btn btn-outline-primary btn-lg" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-danger btn-lg" data-bs-dismiss="modal">Excluir</button></div>
     </div></div></div>
 
     
