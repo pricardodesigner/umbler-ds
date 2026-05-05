@@ -1,0 +1,25 @@
+{
+  "name": "umbler-design",
+  "version": "0.7.0",
+  "description": "Umbler Design: gera telas, fluxos e componentes do Umbler Talk em duas stacks — V1 (Bootstrap 5.3 + HTML) e V2 (Next.js 14 + React + Tailwind + @umbler/ui). Ao ser ativado, pergunta qual stack o usuário quer usar.",
+  "author": {
+    "name": "Paulo Ricardo",
+    "email": "paulo@umbler.com"
+  },
+  "homepage": "https://github.com/pricardodesigner/umbler-ds",
+  "repository": "https://github.com/pricardodesigner/umbler-ds",
+  "license": "UNLICENSED",
+  "keywords": [
+    "umbler",
+    "umbler-talk",
+    "design-system",
+    "umbootstrap",
+    "bootstrap",
+    "react",
+    "nextjs",
+    "tailwind",
+    "prototyping",
+    "html",
+    "jsx"
+  ]
+}
